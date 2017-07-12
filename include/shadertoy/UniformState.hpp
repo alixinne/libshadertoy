@@ -1,6 +1,12 @@
 #ifndef _SHADERTOY_UNIFORM_STATE_HPP_
 #define _SHADERTOY_UNIFORM_STATE_HPP_
 
+#include <boost/variant.hpp>
+#include <boost/archive/xml_oarchive.hpp>
+#include <boost/archive/xml_iarchive.hpp>
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/array.hpp>
+
 #include "shadertoy/pre.hpp"
 #include "shadertoy/Misc.hpp"
 

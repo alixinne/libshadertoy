@@ -82,7 +82,8 @@ set_property(TARGET shadertoy PROPERTY CXX_STANDARD 14)
 # Include directories for install
 set_property(TARGET shadertoy APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
 			 $<BUILD_INTERFACE:${INCLUDE_DIR}/shadertoy>
-			 $<INSTALL_INTERFACE:include/shadertoy>)
+			 $<INSTALL_INTERFACE:include/shadertoy>
+			 $<INSTALL_INTERFACE:${Boost_INCLUDE_DIR}>)
 
 # Precompiled header optimization
 set_target_properties(shadertoy PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT ${INCLUDE_DIR}/stdafx.hpp)
@@ -101,6 +102,8 @@ install(TARGETS shadertoy
 install(EXPORT shadertoy
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
 install(FILES shadertoy-config.cmake
+		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
+install(DIRECTORY examples
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
 
 file(GLOB SHADERTOY_HEADERS ${INCLUDE_DIR}/shadertoy/*.hpp)

@@ -3,6 +3,9 @@
 
 #include "shadertoy/config.hpp"
 
+#include <oglplus/all.hpp>
+#include <boost/filesystem.hpp>
+
 namespace shadertoy
 {
 	struct InputConfig;
