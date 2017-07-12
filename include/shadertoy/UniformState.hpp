@@ -6,7 +6,7 @@
 
 namespace shadertoy
 {
-#ifndef IMPLEMENT_UNIFORM_STATE
+
 /**
  * @brief      A typed shader input uniform.
  *
@@ -257,37 +257,15 @@ public:
 	{
 	}
 };
+}
 
-	/**
- * @brief          Helper macro to declare a uniform instance
- */
-#define DECLARE_UNIFORM(type, name) extern const char name ## Name []; typedef shadertoy::ShaderInput<name ## Name, type> name
-/**
- * @brief          Helper macro to declare a uniform instance as an array
- */
-#define DECLARE_UNIFORM_N(type, name, n) extern const char name ## Name []; typedef shadertoy::ShaderInput<name ## Name, type, n> name
-#else /* IMPLEMENT_UNIFORM_STATE */
-#undef DECLARE_UNIFORM
-#undef DECLARE_UNIFORM_N
-#define DECLARE_UNIFORM(type, name) const char name ## Name [] = #name
-#define DECLARE_UNIFORM_N(type, name, n) const char name ## Name [] = #name
-#endif /* IMPLEMENT_UNIFORM_STATE */
+// Definitions for shader inputs
+#include "shadertoy/UniformState_impl.hpp"
 
-DECLARE_UNIFORM(oglplus::Vec3f, iResolution);
-DECLARE_UNIFORM(GLfloat, iGlobalTime);
-DECLARE_UNIFORM(GLfloat, iTimeDelta);
-DECLARE_UNIFORM(GLint, iFrame);
-DECLARE_UNIFORM(GLfloat, iFrameRate);
-DECLARE_UNIFORM(oglplus::Vec4f, iMouse);
-DECLARE_UNIFORM(GLint, iChannel0);
-DECLARE_UNIFORM(GLint, iChannel1);
-DECLARE_UNIFORM(GLint, iChannel2);
-DECLARE_UNIFORM(GLint, iChannel3);
-DECLARE_UNIFORM(oglplus::Vec4f, iDate);
-DECLARE_UNIFORM_N(oglplus::Vec3f, iChannelResolution, 4);
+namespace shadertoy
+{
 
 /// Default program state typedef
-#ifndef IMPLEMENT_UNIFORM_STATE
 typedef ShaderInputs<
 	iResolution,
 	iGlobalTime,
@@ -302,7 +280,7 @@ typedef ShaderInputs<
 	iDate,
 	iChannelResolution
 > ShaderInputsType;
-#endif /* IMPLEMENT_UNIFORM_STATE */
+
 }
 
 #endif /* _SHADERTOY_UNIFORM_STATE_HPP_ */
