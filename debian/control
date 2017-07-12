@@ -1,0 +1,27 @@
+Source: libshadertoy
+Priority: optional
+Maintainer: Vincent Tavernier <vince.tavernier@gmail.com>
+Build-Depends: debhelper (>= 9),
+ libboost-all-dev, libc6-dev, libstdc++6, libsoil-dev,
+ libglew-dev, libglfw3-dev, libpng-dev,
+ doxygen, graphviz, cmake, git
+Standards-Version: 3.9.8
+Section: libs
+Homepage: https://gitlab.inria.fr/vtaverni/libshadertoy
+Vcs-Git: https://gitlab.inria.fr/vtaverni/libshadertoy.git
+Vcs-Browser: https://gitlab.inria.fr/vtaverni/libshadertoy/tree/master
+
+Package: libshadertoy-dev
+Version: 0.0.1
+Section: libdevel
+Architecture: any
+Depends: libshadertoy0 (= ${binary:Version}), ${misc:Depends}
+Description: Development files for libshadertoy
+ Development headers and documentation for libshadertoy
+
+Package: libshadertoy0
+Version: 0.0.1
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Library for rendering ShaderToy programs using OpenGL
+ C++ Library for rendering ShaderToy programs using OpenGL desktop

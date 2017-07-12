@@ -1,0 +1,6 @@
+#include "shadertoy/pre.hpp"
+#include "shadertoy/BufferConfig.hpp"
+#include "shadertoy/ContextConfig.hpp"
+#include "shadertoy/UniformState.hpp"
+#include "shadertoy/ToyBuffer.hpp"
+#include "shadertoy/RenderContext.hpp"
