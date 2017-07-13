@@ -1,7 +1,8 @@
 # Load oglplus from a local installation or from a clone of the
 # source repository.
 
-find_package(oglplus)
+find_package(oglplus QUIET)
+
 if (NOT oglplus_FOUND)
 	# oglplus was not found, get it from the source repositories
 	set(oglplus_GIT "https://github.com/matus-chochlik/oglplus.git")
@@ -29,12 +30,19 @@ if (NOT oglplus_FOUND)
 
 	if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/_build/include)
 		message("-- Configuring oglplus")
+
+		set(oglplus_CONFIGURE_ARGS
+				--no-examples
+				--no-docs
+				--quiet
+				--build
+				${oglplus_CONFIGURE_EXTR_ARGS})
 		execute_process(COMMAND ${oglplus_TARGET}/configure.py
-								--no-examples
-								--no-docs
-								--use-glew
-								--quiet
-								--build)
+								${oglplus_CONFIGURE_ARGS}
+						RESULT_VARIABLE oglplus_CONFIGURE_RESULT)
+		if (NOT oglplus_CONFIGURE_RESULT EQUAL 0)
+			message(FATAL_ERROR "Failed to configure oglplus.")
+		endif()
 	else()
 		message("-- oglplus is already configured. Remove ${CMAKE_CURRENT_SOURCE_DIR}/_build to reconfigure.")
 	endif()

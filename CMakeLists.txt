@@ -21,6 +21,8 @@ find_package(Boost 1.58 REQUIRED COMPONENTS filesystem log serialization date_ti
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(SOIL REQUIRED)
+
+set(oglplus_CONFIGURE_EXTRA_ARGS --use-glew)
 include(liboglplus)
 
 # Copy shaders to source
@@ -103,6 +105,9 @@ install(EXPORT shadertoy
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
 install(FILES shadertoy-config.cmake
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
+install(FILES modules/liboglplus.cmake
+		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy
+		RENAME shadertoy-liboglplus.cmake)
 install(DIRECTORY examples
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
 

@@ -4,7 +4,7 @@ Maintainer: Vincent Tavernier <vince.tavernier@gmail.com>
 Build-Depends: debhelper (>= 9),
  libboost-all-dev, libc6-dev, libstdc++6, libsoil-dev,
  libglew-dev, libglfw3-dev, libpng-dev,
- doxygen, graphviz, cmake, git
+ doxygen, graphviz, cmake, git, ca-certificates
 Standards-Version: 3.9.8
 Section: libs
 Homepage: https://gitlab.inria.fr/vtaverni/libshadertoy
@@ -15,7 +15,8 @@ Package: libshadertoy-dev
 Version: 0.0.1
 Section: libdevel
 Architecture: any
-Depends: libshadertoy0 (= ${binary:Version}), ${misc:Depends}
+Depends: libshadertoy0 (= ${binary:Version}), ${misc:Depends},
+ libboost-all-dev, libsoil-dev, libglew-dev, libgl-dev
 Description: Development files for libshadertoy
  Development headers and documentation for libshadertoy
 

@@ -1,0 +1,3 @@
+Tests: 00-build
+Restrictions: allow-stderr
+Depends: @, libglfw3-dev, cmake, git, g++, ca-certificates, pkg-config

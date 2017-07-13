@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Copy example from datadir
+cp -r /usr/share/shadertoy/examples/00-build "$AUTOPKGTEST_TMP"
+cd "$AUTOPKGTEST_TMP/00-build"
+
+# Configure
+set -eo pipefail
+
+mkdir build
+cd build
+cmake ..
+
+# Build
+make -j VERBOSE=1
+
+# Execute
+./example00-build
