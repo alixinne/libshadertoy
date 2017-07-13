@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 project(shadertoy)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules")
 
+include(CMakeDependentOption)
 include(cotire)
 include(GNUInstallDirs)
 
