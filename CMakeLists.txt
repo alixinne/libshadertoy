@@ -102,19 +102,25 @@ install(TARGETS shadertoy
 		EXPORT shadertoy)
 
 install(EXPORT shadertoy
+		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
 install(FILES shadertoy-config.cmake
+		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
 install(FILES modules/liboglplus.cmake
+		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy
+		COMPONENT shadertoy-dev
 		RENAME shadertoy-liboglplus.cmake)
 install(DIRECTORY examples
+		COMPONENT shadertoy-examples
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
 
 file(GLOB SHADERTOY_HEADERS ${INCLUDE_DIR}/shadertoy/*.hpp)
 set(SHADERTOY_HEADERS ${SHADERTOY_HEADERS}
 					  ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/config.hpp)
 install(FILES ${SHADERTOY_HEADERS}
+		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
 
 # Enable warnings
@@ -126,9 +132,11 @@ endif()
 
 # Documentation
 find_package(Doxygen)
-option(BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" ${DOXYGEN_FOUND})
+cmake_dependent_option(SHADERTOY_BUILD_DOCUMENTATION
+	"Build the HTML docs" ON
+	"DOXYGEN_FOUND;LIBSHADERTOY_BUILD_DOCUMENTATION" OFF)
 
-if(BUILD_DOCUMENTATION)
+if(SHADERTOY_BUILD_DOCUMENTATION)
 	if(NOT DOXYGEN_FOUND)
 		message(FATAL_ERROR "Doxygen is needed to build the documentation.")
 	endif()
@@ -146,5 +154,6 @@ if(BUILD_DOCUMENTATION)
 		VERBATIM)
 
 	install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
+			COMPONENT shadertoy-docs
 			DESTINATION ${CMAKE_INSTALL_DOCDIR})
 endif()
