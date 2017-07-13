@@ -79,6 +79,7 @@ sudo chroot ../../chroot
 #  Enable non-free
 sed -i 's/main$/main contrib non-free/' /etc/apt/sources.list
 #  Install driver
+apt-get update
 apt-get install -y nvidia-driver
 
 # You can also install the build dependencies beforehand
