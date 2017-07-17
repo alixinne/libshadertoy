@@ -42,14 +42,11 @@ private:
 	/// Screen quad source texture
 	oglplus::Texture screenQuadTexture;
 
+	/// Input texture engine
+	std::shared_ptr<TextureEngine> textureEngine;
+
 	/// Aux buffers
 	std::map<std::string, std::shared_ptr<ToyBuffer>> auxBuffers;
-
-	/// Input texture state
-	std::map<std::string, std::shared_ptr<oglplus::Texture>> inputTextures;
-
-	/// The empty texture
-	std::shared_ptr<oglplus::Texture> emptyTexture;
 
 	// Cache for sources
 	std::map<std::string, std::string> sourceCache;
@@ -65,6 +62,22 @@ private:
 
 	// Callbacks
 	
+	/**
+	 * @brief      When implemented in a derived class, provides a callback for
+	 *             initializing a custom texture engine instead of the default
+	 *             one. Note that this field is invoked after all other member
+	 *             fields of this class have been initialized, including the
+	 *             config reference.
+	 *
+	 *             The derived class may also invoke this method to allocate a
+	 *             texture engine with `buffer` texture type support, and add
+	 *             its own handlers on the allocated instance.
+	 *
+	 * @return     A pointer to a TextureEngine derived instance, which will be
+	 *             used by this instance.
+	 */
+	virtual std::shared_ptr<TextureEngine> BuildTextureEngine();
+
 	/**
 	 * @brief      When implemented in a derived class, provides a callback for
 	 *             executing code before the ShaderToy buffers are compiled and
@@ -165,14 +178,12 @@ public:
 	void PostRender();
 
 	/**
-	 * @brief      Get the texture for the given input
+	 * @brief      Get a reference to the texture engine of this render context.
 	 *
-	 * @param[in]  inputConfig  The input configuration
-	 *
-	 * @return     A texture instance to be used for rendering. If the actual
-	 *             input configuration is invalid, an empty texture is returned.
+	 * @return     The texture engine.
 	 */
-	oglplus::Texture &GetInputTexture(const InputConfig &inputConfig);
+	inline TextureEngine &GetTextureEngine()
+	{ return *textureEngine; }
 
 	/**
 	 * @brief      Compiles a fragment shader for use in a ToyBuffer.
@@ -235,9 +246,6 @@ public:
      * @brief      Get the default screen quad vertex shader
      */
 	oglplus::VertexShader &GetScreenQuadVertexShader();
-
-private:
-	void ApplyTextureOptions(const InputConfig &inputConfig, std::shared_ptr<oglplus::Texture> &texture);
 };
 
 }

@@ -2,6 +2,7 @@
 #include "shadertoy/BufferConfig.hpp"
 #include "shadertoy/UniformState.hpp"
 #include "shadertoy/ToyBuffer.hpp"
+#include "shadertoy/TextureEngine.hpp"
 #include "shadertoy/RenderContext.hpp"
 
 #include "Resources.h"
@@ -69,7 +70,8 @@ void ToyBuffer::Render()
 	// Setup the texture targets
 	for (int i = 0; i < 4; ++i)
 	{
-		auto &texture = context.GetInputTexture(config.inputConfig[i]);
+		auto &texture = context.GetTextureEngine()
+							   .GetInputTexture(config.inputConfig[i]);
 		Texture::Active(i + 1);
 		texture.Bind(TextureTarget::_2D);
 

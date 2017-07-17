@@ -51,6 +51,7 @@ add_library(shadertoy SHARED
 	src/ContextConfig.cpp
 	src/Misc.cpp
 	src/RenderContext.cpp
+	src/TextureEngine.cpp
 	src/ToyBuffer.cpp
 	src/UniformState.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/Resources.c)

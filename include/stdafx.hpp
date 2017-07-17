@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sstream>
+#include <memory>
 
 #include <SOIL/SOIL.h>
 #include <GL/glew.h>

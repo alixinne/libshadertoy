@@ -4,12 +4,51 @@
 #include "shadertoy/UniformState.hpp"
 #include "shadertoy/BufferConfig.hpp"
 #include "shadertoy/ToyBuffer.hpp"
+#include "shadertoy/TextureEngine.hpp"
 #include "shadertoy/RenderContext.hpp"
 
 namespace fs = boost::filesystem;
 using namespace std;
 using namespace oglplus;
 using namespace shadertoy;
+
+shared_ptr<TextureEngine> RenderContext::BuildTextureEngine()
+{
+	auto engine =  make_shared<TextureEngine>(config);
+
+	engine->RegisterHandler("buffer", InputHandler([this]
+		(const InputConfig &inputConfig,
+		 bool &skipTextureOptions,
+		 bool &skipCache)
+	{
+		skipTextureOptions = true;
+		skipCache = true;
+
+		auto &bufferConfigs = config.bufferConfigs;
+		auto bufferIt = bufferConfigs.find(inputConfig.source);
+
+		if (bufferIt == bufferConfigs.end())
+		{
+			BOOST_LOG_TRIVIAL(warning) << "buffer '" << inputConfig.source
+									   << "' not found for input " << inputConfig.id;
+			return shared_ptr<Texture>();
+		}
+		else
+		{
+			if (frameCount == 0)
+			{
+				BOOST_LOG_TRIVIAL(info) << "binding '" << inputConfig.source
+										<< "' to input " << inputConfig.id;
+				BOOST_LOG_TRIVIAL(warning)
+					<< "wrapping and filtering options not yet supported, defaulted to wrap/nearest";
+			}
+
+			return auxBuffers[inputConfig.source]->GetSourceTexture();
+		}
+	}));
+
+	return engine;
+}
 
 void RenderContext::PreInitializeBuffers()
 {
@@ -36,11 +75,11 @@ void RenderContext::BindInputs(vector<shared_ptr<BoundInputsBase>> &inputs,
 RenderContext::RenderContext(ContextConfig &config)
 	: buffer(),
 	config(config),
+	textureEngine(),
 	auxBuffers(),
-	inputTextures(),
-	emptyTexture(),
 	frameCount(0)
 {
+	textureEngine = BuildTextureEngine();
 }
 
 void RenderContext::Initialize()
@@ -84,15 +123,8 @@ void RenderContext::Initialize()
 				 config.width, config.height, 0, PixelDataFormat::BGRA,
 				 PixelDataType::Float, nullptr);
 
-	// Prepare the empty texture, a nice magenta checkerboard
-	emptyTexture = make_shared<Texture>();
-	gl.DirectEXT(TextureTarget::_2D, *emptyTexture)
-		.MinFilter(TextureMinFilter::Nearest)
-		.MagFilter(TextureMagFilter::Nearest)
-		.WrapS(TextureWrap::Repeat)
-		.WrapT(TextureWrap::Repeat)
-		.SwizzleB(TextureSwizzle::Red)
-		.Image2D(images::CheckerRedBlack(config.width, config.height, 10, 10));
+	// Initialize the texture engine
+	textureEngine->Initialize();
 
 	// Prepare screen quad geometry
 	GLfloat coords[] = {
@@ -196,7 +228,7 @@ void RenderContext::InitializeBuffers()
 void RenderContext::ClearState()
 {
 	// Clear previous input textures
-	inputTextures.clear();
+	textureEngine->ClearState();
 	// Clear previous buffers
 	auxBuffers.clear();
 	// Clear previous image buffer
@@ -238,107 +270,6 @@ void RenderContext::PostRender()
 {
 	// Swap rendering buffers
 	buffer->SwapBuffers();
-}
-
-// Error message from SOIL
-extern char *result_string_pointer;
-
-Texture &RenderContext::GetInputTexture(const InputConfig &inputConfig)
-{
-	if (!inputConfig.enabled())
-	{
-		return *emptyTexture;
-	}
-
-	auto it = inputTextures.find(inputConfig.id);
-	if (it == inputTextures.end())
-	{
-		if (inputConfig.type == "texture")
-		{
-			auto texture = make_shared<Texture>();
-			GLuint texid = SOIL_load_OGL_texture(inputConfig.source.c_str(),
-												 SOIL_LOAD_AUTO,
-												 GetName(*texture),
-												 SOIL_FLAG_INVERT_Y);
-
-			if (texid == 0)
-			{
-				BOOST_LOG_TRIVIAL(warning) << "failed to load '"
-										   << inputConfig.source << "' for input " << inputConfig.id
-										   << ": " << result_string_pointer;
-				inputTextures.insert(make_pair(inputConfig.id, emptyTexture));
-			}
-			else
-			{
-				ApplyTextureOptions(inputConfig, texture);
-
-				BOOST_LOG_TRIVIAL(info) << "loaded '" << inputConfig.source
-										<< "' for input " << inputConfig.id;
-				inputTextures.insert(make_pair(inputConfig.id, texture));
-			}
-		}
-		else if (inputConfig.type == "buffer")
-		{
-			auto &bufferConfigs = config.bufferConfigs;
-			auto bufferIt = bufferConfigs.find(inputConfig.source);
-
-			if (bufferIt == bufferConfigs.end())
-			{
-				BOOST_LOG_TRIVIAL(warning) << "buffer '" << inputConfig.source
-										   << "' not found for input " << inputConfig.id;
-				inputTextures.insert(make_pair(inputConfig.id, emptyTexture));
-			}
-			else
-			{
-				if (frameCount == 0)
-				{
-					BOOST_LOG_TRIVIAL(info) << "binding '" << inputConfig.source
-											<< "' to input " << inputConfig.id;
-					BOOST_LOG_TRIVIAL(warning)
-						<< "wrapping and filtering options not yet supported, defaulted to wrap/nearest";
-				}
-
-				return *auxBuffers[inputConfig.source]->GetSourceTexture();
-			}
-		}
-		else if (inputConfig.type == "noise")
-		{
-			// A noise texture
-			auto noiseTexture = make_shared<Texture>();
-			gl.DirectEXT(TextureTarget::_2D, *noiseTexture)
-				.SwizzleB(TextureSwizzle::Red)
-				.SwizzleG(TextureSwizzle::Red)
-				.Image2D(images::RandomRedUByte(config.width, config.height));
-			ApplyTextureOptions(inputConfig, noiseTexture);
-
-			BOOST_LOG_TRIVIAL(warning) << "generated noise texture for input "
-									   << inputConfig.id;
-			inputTextures.insert(make_pair(inputConfig.id, noiseTexture));
-		}
-		else if (inputConfig.type == "checker")
-		{
-			stringstream ss(inputConfig.source);
-			int size = 0;
-			ss >> size;
-			if (ss.fail()) size = 10;
-
-			// A checkerboard texture
-			auto checkerTexture = make_shared<Texture>();
-			gl.DirectEXT(TextureTarget::_2D, *checkerTexture)
-				.SwizzleB(TextureSwizzle::Red)
-				.SwizzleG(TextureSwizzle::Red)
-				.Image2D(images::CheckerRedBlack(config.width, config.height,
-												 config.width / size, config.height / size));
-			ApplyTextureOptions(inputConfig, checkerTexture);
-
-			BOOST_LOG_TRIVIAL(warning) << "generated " << size << "x" << size
-									   <<" checker texture for input "
-									   << inputConfig.id;
-			inputTextures.insert(make_pair(inputConfig.id, checkerTexture));
-		}
-	}
-
-	return *inputTextures.find(inputConfig.id)->second;
 }
 
 void RenderContext::BuildBufferShader(const BufferConfig &bufferConfig,
@@ -425,21 +356,4 @@ void RenderContext::RenderScreenQuad()
 VertexShader &RenderContext::GetScreenQuadVertexShader()
 {
 	return screenVs;
-}
-
-void RenderContext::ApplyTextureOptions(const InputConfig &inputConfig, std::shared_ptr<Texture> &texture)
-{
-	auto minFilter = inputConfig.minFilter;
-
-	gl.DirectEXT(TextureTarget::_2D, *texture)
-		.MinFilter(minFilter)
-		.MagFilter(inputConfig.magFilter)
-		.WrapS(inputConfig.wrap)
-		.WrapT(inputConfig.wrap);
-
-	if ((int)minFilter > GL_LINEAR)
-	{
-		gl.DirectEXT(TextureTarget::_2D, *texture)
-			.GenerateMipmap();
-	}
 }
