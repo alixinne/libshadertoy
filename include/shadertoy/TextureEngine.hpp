@@ -24,7 +24,7 @@ typedef std::function<std::shared_ptr<oglplus::Texture>(
  * @brief      Represents the engine responsible for loading input textures for
  *             the current rendering context.
  */
-class TextureEngine
+class shadertoy_EXPORT TextureEngine
 {
 	/// Context configuration reference
 	ContextConfig &config;

@@ -9,7 +9,7 @@ namespace shadertoy
 /**
  * @brief      Holds the configuration for a ShaderToy rendering context.
  */
-struct ContextConfig
+struct shadertoy_EXPORT ContextConfig
 {
 	/// Width of the rendering
 	int width;

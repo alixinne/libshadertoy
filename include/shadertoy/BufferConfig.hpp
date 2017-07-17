@@ -9,7 +9,7 @@ namespace shadertoy
 /**
  * @brief      Represents the configuration of a ToyBuffer channel input
  */
-struct InputConfig
+struct shadertoy_EXPORT InputConfig
 {
 	/// Input identifier, in the form <buffer>.<input-id>
 	std::string id;
@@ -45,7 +45,7 @@ struct InputConfig
 /**
  * @brief      Represents the configuration of a ToyBuffer
  */
-struct BufferConfig
+struct shadertoy_EXPORT BufferConfig
 {
 	/// Name of the current buffer
 	std::string name;

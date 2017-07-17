@@ -9,7 +9,7 @@ namespace shadertoy
 /**
  * @brief      Represents a context for rendering a specific ShaderToy program.
  */
-class RenderContext
+class shadertoy_EXPORT RenderContext
 {
 protected:
 	/// Stateless OpenGL context

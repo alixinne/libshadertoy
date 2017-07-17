@@ -6,14 +6,14 @@
 namespace boost {
 namespace serialization {
 template<class Archive>
-void serialize(Archive &ar, oglplus::Vec3f &vec, const unsigned int version) {
+void shadertoy_EXPORT serialize(Archive &ar, oglplus::Vec3f &vec, const unsigned int version) {
 	ar & make_nvp("x", vec[0]);
 	ar & make_nvp("y", vec[1]);
 	ar & make_nvp("z", vec[2]);
 }
 
 template<class Archive>
-void serialize(Archive &ar, oglplus::Vec4f &vec, const unsigned int version) {
+void shadertoy_EXPORT serialize(Archive &ar, oglplus::Vec4f &vec, const unsigned int version) {
 	ar & make_nvp("x", vec[0]);
 	ar & make_nvp("y", vec[1]);
 	ar & make_nvp("z", vec[2]);

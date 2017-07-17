@@ -22,7 +22,7 @@ namespace shadertoy
  */
 template<const char *UniformName, typename TUniform, size_t Count = 1,
 	typename = typename std::enable_if<(Count >= 1)>::type>
-struct ShaderInput
+struct shadertoy_EXPORT ShaderInput
 {
 	static constexpr const char *Name = UniformName;
 	static constexpr size_t N = Count;
@@ -59,7 +59,7 @@ private:
  * @brief      A base class for representing the state of inputs bound to
  *             particular shader program.
  */
-class BoundInputsBase
+class shadertoy_EXPORT BoundInputsBase
 {
 protected:
 	virtual ~BoundInputsBase() = default;
@@ -78,7 +78,7 @@ public:
  * @tparam Inputs ShaderInput definitions
  */
 template<class ...Inputs>
-class ShaderInputs
+class shadertoy_EXPORT ShaderInputs
 {
 public:
 	/// Templated shader input type itself

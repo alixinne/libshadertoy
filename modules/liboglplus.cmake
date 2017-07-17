@@ -37,11 +37,12 @@ if (NOT oglplus_FOUND)
 				--quiet
 				--build
 				${oglplus_CONFIGURE_EXTR_ARGS})
-		execute_process(COMMAND ${oglplus_TARGET}/configure.py
+		execute_process(COMMAND python
+                                ${oglplus_TARGET}/configure.py
 								${oglplus_CONFIGURE_ARGS}
 						RESULT_VARIABLE oglplus_CONFIGURE_RESULT)
 		if (NOT oglplus_CONFIGURE_RESULT EQUAL 0)
-			message(FATAL_ERROR "Failed to configure oglplus.")
+            message(FATAL_ERROR "Failed to configure oglplus: error ${oglplus_CONFIGURE_RESULT}.")
 		endif()
 	else()
 		message("-- oglplus is already configured. Remove ${CMAKE_CURRENT_SOURCE_DIR}/_build to reconfigure.")

@@ -3,7 +3,7 @@
 function(create_resources dir output output_h h_id)
 	# Create empty output file
 	file(WRITE ${output} "#include <stddef.h>\n")
-	file(WRITE ${output_h} "#ifndef ${h_id}\n#define ${h_id}\n\n")
+	file(WRITE ${output_h} "#ifndef ${h_id}\n#define ${h_id}\nextern \"C\" {\n")
 	# Collect input files
 	file(GLOB bins ${dir}/*)
 	# Iterate through input files
@@ -21,7 +21,7 @@ function(create_resources dir output output_h h_id)
 		file(APPEND ${output_h} "extern const char ${filename}[];\nextern const size_t ${filename}_size;\n")
 	endforeach()
 	# Complete .h
-	file(APPEND ${output_h} "\n#endif /* ${h_id} */\n")
+	file(APPEND ${output_h} "\n}\n#endif /* ${h_id} */\n")
 endfunction()
 
 create_resources(${RESOURCES_INPUT} ${RESOURCES_OUTPUT}

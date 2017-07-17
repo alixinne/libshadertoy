@@ -8,7 +8,9 @@ using namespace oglplus;
 using namespace shadertoy;
 
 // Error message from SOIL
+extern "C" {
 extern char *result_string_pointer;
+}
 
 shared_ptr<Texture> TextureEngine::SOILTextureHandler(const InputConfig &inputConfig,
 													  bool &skipTextureOptions,

@@ -9,7 +9,7 @@ namespace shadertoy
 /**
  * @brief      Represents a ShaderToy-like buffer with inputs, programs and output
  */
-class ToyBuffer
+class shadertoy_EXPORT ToyBuffer
 {
 private:
 	/// Stateless OpenGl context

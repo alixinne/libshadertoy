@@ -6,6 +6,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules")
 include(CMakeDependentOption)
 include(cotire)
 include(GNUInstallDirs)
+include(GenerateExportHeader)
 
 # The project version number.
 set(VERSION_MAJOR   0   CACHE STRING "Project major version number.")
@@ -55,6 +56,10 @@ add_library(shadertoy SHARED
 	src/ToyBuffer.cpp
 	src/UniformState.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/Resources.c)
+generate_export_header(shadertoy
+	BASE_NAME shadertoy
+	EXPORT_MACRO_NAME shadertoy_EXPORT
+	EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/shadertoy_export.h)
 
 # Include directories
 target_include_directories(shadertoy PRIVATE
@@ -114,7 +119,8 @@ install(DIRECTORY examples
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
 
 file(GLOB SHADERTOY_HEADERS ${INCLUDE_DIR}/shadertoy/*.hpp)
-set(SHADERTOY_HEADERS ${SHADERTOY_HEADERS})
+set(SHADERTOY_HEADERS ${SHADERTOY_HEADERS}
+					  ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/shadertoy_export.h)
 install(FILES ${SHADERTOY_HEADERS}
 		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)

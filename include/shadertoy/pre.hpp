@@ -3,6 +3,7 @@
 
 #include <oglplus/all.hpp>
 #include <boost/filesystem.hpp>
+#include "shadertoy/shadertoy_export.h"
 
 namespace shadertoy
 {
