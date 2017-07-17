@@ -1,2 +1,4 @@
 libshadertoy-dev_0.0.1_amd64.deb libdevel optional
+libshadertoy0-dbgsym_0.0.1_amd64.deb debug extra
 libshadertoy0_0.0.1_amd64.deb libs optional
+libshadertoy_0.0.1_amd64.buildinfo libs optional

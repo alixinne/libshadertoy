@@ -243,6 +243,14 @@ public:
 	void RenderScreenQuad();
 
 	/**
+	 * @brief      Binds the texture containing the shadertoy result as well as
+	 *             a program which renders this texture to the viewport. Useful
+	 *             for rendering to screen by calling
+	 *             RenderContext::RenderScreenQuad().
+	 */
+	void BindResult();
+
+	/**
      * @brief      Get the default screen quad vertex shader
      */
 	oglplus::VertexShader &GetScreenQuadVertexShader();

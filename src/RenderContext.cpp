@@ -353,6 +353,15 @@ void RenderContext::RenderScreenQuad()
 	gl.DrawElements(PrimitiveType::Triangles, 3 * 2, DataType::UnsignedInt);
 }
 
+void RenderContext::BindResult()
+{
+	// Prepare prog and texture
+	screenProg.Use();
+
+	Texture::Active(0);
+	Texture::Bind(TextureTarget::_2D, *lastTexture);
+}
+
 VertexShader &RenderContext::GetScreenQuadVertexShader()
 {
 	return screenVs;
