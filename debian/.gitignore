@@ -1,5 +1,6 @@
 .debhelper/
 debhelper-build-stamp
+files
 libshadertoy-dev.debhelper.log
 libshadertoy-dev.substvars
 libshadertoy-dev/
