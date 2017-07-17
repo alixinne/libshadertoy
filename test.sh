@@ -12,7 +12,7 @@ for TEST_FILE in debian/tests/*; do
 
 		# Setup special vars
 		export LIBSHADERTOY_DIR=$(pwd)/build/install/usr/local/share/shadertoy
-		export CMAKE_EXTRA_OPTS="-DCMAKE_PREFIX_PATH=$(pwd)/build/install/usr/local"
+		export CMAKE_EXTRA_OPTS="-DCMAKE_PREFIX_PATH=$(pwd)/build/install/usr/local -DCMAKE_MODULE_PATH=$(pwd)/modules"
 
 		# Execute test
 		"$TEST_FILE"
