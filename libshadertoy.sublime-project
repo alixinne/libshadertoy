@@ -2,6 +2,7 @@
 	"folders": [
 		{
 			"folder_exclude_patterns": [
+				"build",
 				"obj-x86_64-linux-gnu",
 				"debian/tmp",
 				"debian/.debhelper",

@@ -39,11 +39,6 @@ add_custom_command(
 		-DRESOURCES_H_ID=RESOURCES_H
 		-P ${CMAKE_MODULE_PATH}/resources.cmake)
 
-# Create configuration header
-configure_file(${INCLUDE_DIR}/shadertoy/config.hpp.in
-			   ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/config.hpp
-			   @ONLY)
-
 set(shadertoy_INCLUDE_DIRS
 	${CMAKE_CURRENT_BINARY_DIR} # for Resources.h
 	${INCLUDE_DIR})
@@ -118,8 +113,7 @@ install(DIRECTORY examples
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
 
 file(GLOB SHADERTOY_HEADERS ${INCLUDE_DIR}/shadertoy/*.hpp)
-set(SHADERTOY_HEADERS ${SHADERTOY_HEADERS}
-					  ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/config.hpp)
+set(SHADERTOY_HEADERS ${SHADERTOY_HEADERS})
 install(FILES ${SHADERTOY_HEADERS}
 		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
