@@ -1,8 +1,6 @@
 #ifndef _SHADERTOY_PRE_HPP_
 #define _SHADERTOY_PRE_HPP_
 
-#include "shadertoy/config.hpp"
-
 #include <oglplus/all.hpp>
 #include <boost/filesystem.hpp>
 

@@ -1,7 +1,15 @@
 #!/bin/bash
 
+if [ -z "$LIBSHADERTOY_DIR" ]; then
+	LIBSHADERTOY_DIR=/usr/share/shadertoy
+fi
+
+if [ -z "$CMAKE_EXTRA_OPTS" ]; then
+	CMAKE_EXTRA_OPTS=""
+fi
+
 # Copy example from datadir
-cp -r /usr/share/shadertoy/examples/00-build "$AUTOPKGTEST_TMP"
+cp -r "$LIBSHADERTOY_DIR/examples/00-build" "$AUTOPKGTEST_TMP"
 cd "$AUTOPKGTEST_TMP/00-build"
 
 # Configure
@@ -9,7 +17,7 @@ set -eo pipefail
 
 mkdir build
 cd build
-cmake ..
+cmake $CMAKE_EXTRA_OPTS ..
 
 # Build
 make -j VERBOSE=1

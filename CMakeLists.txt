@@ -84,8 +84,8 @@ set_property(TARGET shadertoy PROPERTY CXX_STANDARD 14)
 
 # Include directories for install
 set_property(TARGET shadertoy APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
-			 $<BUILD_INTERFACE:${INCLUDE_DIR}/shadertoy>
-			 $<INSTALL_INTERFACE:include/shadertoy>
+			 $<BUILD_INTERFACE:${INCLUDE_DIR}>
+			 $<INSTALL_INTERFACE:include>
 			 $<INSTALL_INTERFACE:${Boost_INCLUDE_DIR}>)
 
 # Precompiled header optimization

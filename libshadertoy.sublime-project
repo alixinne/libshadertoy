@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"folder_exclude_patterns": [
+				"obj-x86_64-linux-gnu",
+				"debian/tmp",
+				"debian/.debhelper",
+				"debian/libshadertoy0",
+				"debian/libshadertoy-dev"
+			],
+			"path": "."
+		}
+	]
+}

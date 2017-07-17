@@ -3,11 +3,11 @@
 /**
  * @brief          Helper macro to declare a uniform instance
  */
-#define DECLARE_UNIFORM(type, name) extern const char name ## Name []; typedef shadertoy::ShaderInput<name ## Name, type> name
+#define DECLARE_UNIFORM(type, name) extern const char name ## Name []; typedef ShaderInput<name ## Name, type> name
 /**
  * @brief          Helper macro to declare a uniform instance as an array
  */
-#define DECLARE_UNIFORM_N(type, name, n) extern const char name ## Name []; typedef shadertoy::ShaderInput<name ## Name, type, n> name
+#define DECLARE_UNIFORM_N(type, name, n) extern const char name ## Name []; typedef ShaderInput<name ## Name, type, n> name
 #endif
 #else /* IMPLEMENT_UNIFORM_STATE */
 #undef DECLARE_UNIFORM
