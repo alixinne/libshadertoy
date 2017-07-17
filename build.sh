@@ -1,11 +1,14 @@
 #!/bin/bash
 
+# Safe mode
+set -e
+
 build_docker () {
 	# Build deb using docker
 	docker build -t libshadertoy/$OPTARG -f Dockerfile.$OPTARG .
 
 	# Run container
-	docker run --rm -it -v $(pwd)/..:/app -v $HOME/.gnupg:/root/.gnupg \
+	docker run --rm -it -v $(pwd)/..:/app -v $HOME/.gnupg:/root/.gnupg-src:ro \
 		libshadertoy/$OPTARG:latest
 
 	# Quit

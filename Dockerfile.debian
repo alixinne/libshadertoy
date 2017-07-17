@@ -7,5 +7,5 @@ RUN apt-get update -qq && \
 	doxygen graphviz cmake git devscripts
 VOLUME /app
 WORKDIR /app/libshadertoy-0.0.1
+ENV SHADERTOY_ENTRYPOINT ubuntu
 ENTRYPOINT ["/app/libshadertoy-0.0.1/entrypoint.sh"]
-

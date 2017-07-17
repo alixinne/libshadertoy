@@ -30,3 +30,6 @@ target_link_libraries(example00-build
 	${GLEW_LIBRARIES}
 	${glfw3_LIBRARIES}
 	${shadertoy_LIBRARIES})
+
+# C++14
+set_property(TARGET example00-build PROPERTY CXX_STANDARD 14)
