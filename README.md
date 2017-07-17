@@ -33,6 +33,31 @@ Note that only `iResolution`, `iTimeDelta`, `iFrameRate`, `iChannel0`,
 library render context. The host is responsible for updating other uniforms,
 such as `iFrame`, `iGlobalTime` and such.
 
+## Building the examples
+
+These are the instructions to build the *00-build* sample from scratch.
+
+```bash
+# Copy the sample to a working directory
+cp -r /usr/share/shadertoy/examples/00-build shadertoy-example
+cd shadertoy-example
+
+# With libshadertoy-dev and libshadertoy0, install additional dependencies
+sudo apt-get install libglfw3-dev cmake git g++ ca-certificates pkg-config
+
+# Create a build directory and make the project
+mkdir build
+cd build
+cmake ..
+make -j9
+
+# Run the example
+./example00-build
+```
+
+Other examples may require more dependencies, see the associated README for more
+details.
+
 ## Dependencies (package build)
 
 In order to build the Debian packages for this library, the easiest way is to
@@ -99,3 +124,7 @@ xhost +local:
 # Run tests
 sudo autopkgtest ../*.deb -- chroot ../../chroot
 ```
+
+## Copyright
+
+libshadertoy - Vincent Tavernier <vince.tavernier@gmail.com>
