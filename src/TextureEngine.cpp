@@ -99,7 +99,7 @@ void TextureEngine::Initialize()
 		.WrapS(TextureWrap::Repeat)
 		.WrapT(TextureWrap::Repeat)
 		.SwizzleB(TextureSwizzle::Red)
-		.Image2D(images::CheckerRedBlack(config.width, config.height, 10, 10));
+		.Image2D(images::CheckerRedBlack(32, 32, 16, 16));
 }
 
 void TextureEngine::ClearState()
