@@ -60,45 +60,33 @@ details.
 
 ## Dependencies (package build)
 
-In order to build the Debian packages for this library, the easiest way is to
-use the provided `build.sh` script. It uses Docker to create a suitable build
-environment, mounting the current source tree as a volume in order to fetch
-the build artifacts. It is used as follows:
+To build the library on the development machine (needed for running tests) the
+`build.sh` script should be used. See `debian/control` for the up-to-date list
+of build dependencies.
+
+The packages for Ubuntu Xenial and Debian Stretch can be built using
+[sbuild](https://wiki.debian.org/sbuild) and a suitably setup
+[schroot](https://wiki.debian.org/Schroot). Here is a reminder on how to setup
+such an environment (Debian Stretch instructions, based on provided links).
 
 ```bash
-./build.sh -d [debian]
+# Debian Stretch amd64
+sudo sbuild-createchroot --include=eatmydata,ccache,gnupg stretch /disc/schroot/stretch-amd64-sbuild http://deb.debian.org/debian
+
+# Ubuntu Xenial amd64
+sudo sbuild-createchroot --include=eatmydata,ccache,gnupg xenial /disc/schroot/xenial-amd64-sbuild http://archive.ubuntu.com/ubuntu/
+# The Ubuntu schroot must be edited to add universe and multiverse repositories
+sudo schroot -c xenial-amd64-sbuild # then edit /etc/apt/sources.list accordingly
 ```
 
-Note that your user account should be able to use the Docker command (ie. being
-part of the *docker* system group). The first steps include creating the base
-images with all the build dependencies, which can be a lengthy process.
-Subsequent runs reuse the base image and are much faster.
-
 In order to test the build packages, you can use the `autopkgtest` package. Note
-that at this time, only the chroot method has been working. Here are the steps
-to build a working chroot for autopkgtest.
+that at this time, only the schroot method has been working. Here are the steps
+to build a working schroot for autopkgtest, using the schroot created for
+building the packages.
 
 ```bash
-# Required packages
-sudo apt-get install -y binutils debootstrap
-
-# Create the chroot *OUTSIDE* the build tree
-mkdir ../../chroot
-
-# Bootstrap Debian
-sudo debootstrap --arch amd64 stretch ../../chroot
-
-# Mount partitions from host system
-sudo mount --rbind /dev ../../chroot/dev
-sudo mount --bind /proc ../../chroot/proc
-sudo mount --bind /sys ../../chroot/sys
-
-# Mount the X11 socket
-sudo mkdir -p  ../../chroot/tmp/.X11-unix
-sudo mount --bind /tmp/.X11-unix ../../chroot/tmp/.X11-unix
-
 # Switch into chroot
-sudo chroot ../../chroot
+sudo schroot -c stretch-amd64-sbuild
 
 # You need to install the same GL driver as the host, here for Nvidia
 #  Enable non-free
@@ -122,7 +110,7 @@ You can then run the tests using autopkgtest:
 xhost +local:
 
 # Run tests
-sudo autopkgtest ../*.deb -- chroot ../../chroot
+sudo autopkgtest ../*.deb -- schroot stretch-amd64-sbuild
 ```
 
 ## Copyright
