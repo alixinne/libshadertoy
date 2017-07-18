@@ -57,9 +57,36 @@ int main(int argc, char *argv[])
 			shadertoy::RenderContext context(contextConfig);
 			std::cout << "Created context based on config" << std::endl;
 
-			// Initialize context
-			context.Initialize();
-			std::cout << "Initialized rendering context" << std::endl;
+			try
+			{
+				// Initialize context
+				context.Initialize();
+				std::cout << "Initialized rendering context" << std::endl;
+			}
+			catch (oglplus::ProgramBuildError &pbe)
+			{
+				std::cerr << "Program build error: "
+						  << pbe.what()
+						  << " ["
+						  << pbe.SourceFile()
+						  << ":"
+						  << pbe.SourceLine()
+						  << "] "
+						  << std::endl
+						  << pbe.Log();
+				code = 2;
+			}
+			catch (oglplus::Error &err)
+			{
+				std::cerr << "Error: "
+						  << err.what()
+						  << " ["
+						  << err.SourceFile()
+						  << ":"
+						  << err.SourceLine()
+						  << "] ";
+				code = 2;
+			}
 
 			// Now render for 5s
 			int frameCount = 0;
