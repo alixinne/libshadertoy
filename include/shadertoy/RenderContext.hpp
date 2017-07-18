@@ -99,7 +99,7 @@ private:
 	 *
 	 * @param      sources  List which should hold the sources to be inserted.
 	 */
-	virtual void LoadBufferSources(std::vector<std::string> &sources);
+	virtual void LoadBufferSources(std::vector<std::pair<std::string, std::string>> &sources);
 
 	/**
 	 * @brief      When implemented in a derived class, provides a callback for

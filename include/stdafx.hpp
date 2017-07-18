@@ -3,6 +3,7 @@
 #include <vector>
 #include <sstream>
 #include <memory>
+#include <algorithm>
 
 #include <SOIL/SOIL.h>
 #include <GL/glew.h>

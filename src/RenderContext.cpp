@@ -5,6 +5,7 @@
 #include "shadertoy/BufferConfig.hpp"
 #include "shadertoy/ToyBuffer.hpp"
 #include "shadertoy/TextureEngine.hpp"
+#include "shadertoy/ShaderCompiler.hpp"
 #include "shadertoy/RenderContext.hpp"
 
 namespace fs = boost::filesystem;
@@ -58,7 +59,7 @@ void RenderContext::PostInitializeBuffers()
 {
 }
 
-void RenderContext::LoadBufferSources(vector<string> &sources)
+void RenderContext::LoadBufferSources(vector<pair<string, string>> &sources)
 {
 }
 
@@ -276,39 +277,39 @@ void RenderContext::BuildBufferShader(const BufferConfig &bufferConfig,
 									  FragmentShader &fs)
 {
 	// Load all source parts
-	vector<string> sources;
+	ShaderCompiler compiler;
+	auto &sources(compiler.Sources());
 
 	// Load callback sources
 	LoadBufferSources(sources);
 
 	// Add define wrapper
-	sources.insert(sources.begin(), defineWrapper);
+	sources.insert(sources.begin(),
+		make_pair(string("generated:define-wrapper"), defineWrapper));
 
 	// Add sources
 	for (auto &shaderFile : bufferConfig.shaderFiles)
 	{
-		sources.push_back(LoadShaderSource(shaderFile));
+		sources.push_back(make_pair(shaderFile.string(), LoadShaderSource(shaderFile)));
 	}
 
 	// Add default wrapper around code
-	sources.insert(sources.begin(), string(wrapper_header_fsh,
-										   wrapper_header_fsh + wrapper_header_fsh_size));
+	sources.insert(sources.begin(), make_pair(
+		string("internal:wrapper-header"),
+		string(wrapper_header_fsh, wrapper_header_fsh + wrapper_header_fsh_size)));
 
 	// Add source from uniform declarations
-	sources.insert(sources.begin() + 1, ShaderInputsType::GetDefinitions());
+	sources.insert(sources.begin() + 1, make_pair(
+		string("generated:shader-inputs"),
+		ShaderInputsType::GetDefinitions()));
 
 	// Add footer
-	sources.push_back(string(wrapper_footer_fsh,
-							 wrapper_footer_fsh + wrapper_footer_fsh_size));
+	sources.push_back(make_pair(
+		string("internal:wrapper-footer"),
+		string(wrapper_footer_fsh, wrapper_footer_fsh + wrapper_footer_fsh_size)));
 
 	// Load sources into fragment shader and compile
-	vector<const GLchar*> csrc(sources.size());
-	transform(sources.begin(), sources.end(),
-			  csrc.begin(), [] (const string &src) {
-		return src.c_str();
-	});
-	fs.Source(GLSLStrings(csrc));
-	fs.Compile();
+	compiler.Compile(fs);
 }
 
 const GLchar *RenderContext::LoadShaderSource(const fs::path &path) throw(runtime_error)

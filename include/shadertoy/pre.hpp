@@ -10,6 +10,7 @@ namespace shadertoy
 	struct InputConfig;
 	struct BufferConfig;
 	struct ContextConfig;
+	class ShaderCompiler;
 	class TextureEngine;
 	class RenderContext;
 	class ToyBuffer;

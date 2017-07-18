@@ -52,6 +52,7 @@ add_library(shadertoy SHARED
 	src/ContextConfig.cpp
 	src/Misc.cpp
 	src/RenderContext.cpp
+	src/ShaderCompiler.cpp
 	src/TextureEngine.cpp
 	src/ToyBuffer.cpp
 	src/UniformState.cpp
