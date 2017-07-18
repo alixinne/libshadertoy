@@ -17,14 +17,16 @@ namespace shadertoy
  * @brief      A typed shader input uniform.
  *
  * @tparam UniformName Name of the uniform in the shader program
+ * @tparam UniformType Type of the associated GLSL uniform
  * @tparam TUniform    Type of the uniform (GLfloat, GLint, oglplus::Vec3f, etc)
  * @tparam Count       Number of instances of the type. Must be strictly positive
  */
-template<const char *UniformName, typename TUniform, size_t Count = 1,
-	typename = typename std::enable_if<(Count >= 1)>::type>
+template<const char *UniformName, const char *UniformType, typename TUniform,
+	size_t Count = 1, typename = typename std::enable_if<(Count >= 1)>::type>
 struct shadertoy_EXPORT ShaderInput
 {
 	static constexpr const char *Name = UniformName;
+	static constexpr const char *GLSLTypeName = UniformType;
 	static constexpr size_t N = Count;
 	using ValueType = TUniform;
 	using ArrayType = std::array<ValueType, N>;
@@ -116,6 +118,19 @@ private:
 	void serialize(Archive &ar, const unsigned version)
 	{
 		serialize_members(ar, version, Indices());
+	}
+
+	template<class Input>
+	static void AppendDefinition(std::ostream &os)
+	{
+		os << "uniform " << Input::GLSLTypeName << " " << Input::Name;
+		
+		if (Input::N > 1)
+		{
+			os << "[" << Input::N << "]";
+		}
+
+		os << ";" << std::endl;
 	}
 
 public:
@@ -253,6 +268,23 @@ public:
 	}
 
 	/**
+	 * @brief      Get the GLSL code for defining the uniforms part of this
+	 *             template instance.
+	 *
+	 * @return     GLSL code to include in the shader compilation stage.
+	 */
+	static std::string GetDefinitions()
+	{
+		std::stringstream ss;
+
+		// Invoke append definition for each input
+		int _[] = {(AppendDefinition<Inputs>(ss), 0)...};
+		(void) _;
+
+		return ss.str();
+	}
+
+	/**
 	 * @brief      Initialize a new instance of the ShaderInputs class.
 	 */
 	ShaderInputs()
@@ -278,13 +310,13 @@ typedef ShaderInputs<
 	iTimeDelta,
 	iFrame,
 	iFrameRate,
+	iChannelResolution,
 	iMouse,
 	iChannel0,
 	iChannel1,
 	iChannel2,
 	iChannel3,
-	iDate,
-	iChannelResolution
+	iDate
 > ShaderInputsType;
 
 }

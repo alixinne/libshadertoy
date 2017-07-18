@@ -293,6 +293,11 @@ void RenderContext::BuildBufferShader(const BufferConfig &bufferConfig,
 	// Add default wrapper around code
 	sources.insert(sources.begin(), string(wrapper_header_fsh,
 										   wrapper_header_fsh + wrapper_header_fsh_size));
+
+	// Add source from uniform declarations
+	sources.insert(sources.begin() + 1, ShaderInputsType::GetDefinitions());
+
+	// Add footer
 	sources.push_back(string(wrapper_footer_fsh,
 							 wrapper_footer_fsh + wrapper_footer_fsh_size));
 
