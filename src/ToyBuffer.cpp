@@ -100,26 +100,6 @@ void ToyBuffer::Render()
 							FramebufferAttachment::Color, *targetTex, 0);
 }
 
-shared_ptr<Texture> ToyBuffer::GetSourceTexture()
-{
-	return sourceTex;
-}
-
-shared_ptr<Texture> ToyBuffer::GetTargetTexture()
-{
-	return targetTex;
-}
-
-const BufferConfig &ToyBuffer::GetConfig() const
-{
-	return config;
-}
-
-Program &ToyBuffer::GetProgram()
-{
-	return program;
-}
-
 void ToyBuffer::InitializeRenderTexture(shared_ptr<Texture> &texptr, int width, int height)
 {
 	texptr = make_shared<Texture>();

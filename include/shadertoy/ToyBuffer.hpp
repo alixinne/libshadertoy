@@ -69,28 +69,16 @@ public:
 	 *
 	 * @return     Source texture for this buffer.
 	 */
-	std::shared_ptr<oglplus::Texture> GetSourceTexture();
+	inline std::shared_ptr<oglplus::Texture> GetSourceTexture()
+	{ return sourceTex; }
 
 	/**
 	 * @brief      Get a reference to the current texture for this buffer
 	 *
 	 * @return     Target (current) texture for this buffer.
 	 */
-	std::shared_ptr<oglplus::Texture> GetTargetTexture();
-
-	/**
-	 * @brief      Gets the current configuration object for this buffer.
-	 *
-	 * @return     BufferConfig reference.
-	 */
-	const BufferConfig &GetConfig() const;
-
-	/**
-	 * @brief      Get the program for this buffer.
-	 *
-	 * @return     The shader program associated with this buffer.
-	 */
-	oglplus::Program &GetProgram();
+	inline std::shared_ptr<oglplus::Texture> GetTargetTexture()
+	{ return targetTex; }
 
 private:
 	void InitializeRenderTexture(std::shared_ptr<oglplus::Texture> &texptr,
