@@ -65,11 +65,6 @@ public:
 	void Render();
 
 	/**
-	 * @brief      Swaps the textures used for rendering.
-	 */
-	void SwapBuffers();
-
-	/**
 	 * @brief      Get a reference to the source texture for this buffer
 	 *
 	 * @return     Source texture for this buffer.

@@ -230,7 +230,6 @@ void RenderContext::Render()
 	for (auto pair : buffers)
 	{
 		pair.second->Render();
-		pair.second->SwapBuffers();
 		lastTexture = pair.second->GetSourceTexture();
 
 		PostAuxBufferRender(pair.first, pair.second);

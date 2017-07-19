@@ -89,10 +89,7 @@ void ToyBuffer::Render()
 
 	// Render the program
 	context.RenderScreenQuad();
-}
 
-void ToyBuffer::SwapBuffers()
-{
 	// Swap texture object pointers
 	swap(sourceTex, targetTex);
 
