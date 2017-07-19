@@ -109,8 +109,8 @@ private:
 	 * @param[in]  name    Name of the current buffer
 	 * @param      buffer  Buffer object
 	 */
-	virtual void PostAuxBufferRender(const std::string &name,
-									 std::shared_ptr<ToyBuffer> &buffer);
+	virtual void PostBufferRender(const std::string &name,
+								  std::shared_ptr<ToyBuffer> &buffer);
 
 	/**
 	 * @brief      When implemented in a dervied class, provides a callback for

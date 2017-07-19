@@ -63,8 +63,8 @@ void RenderContext::LoadBufferSources(vector<pair<string, string>> &sources)
 {
 }
 
-void RenderContext::PostAuxBufferRender(const string &name,
-										shared_ptr<ToyBuffer> &buffer)
+void RenderContext::PostBufferRender(const string &name,
+									 shared_ptr<ToyBuffer> &buffer)
 {
 }
 
@@ -232,7 +232,7 @@ void RenderContext::Render()
 		pair.second->Render();
 		lastTexture = pair.second->GetSourceTexture();
 
-		PostAuxBufferRender(pair.first, pair.second);
+		PostBufferRender(pair.first, pair.second);
 	}
 
 	frameCount++;
