@@ -124,7 +124,7 @@ private:
 	 * @param      program  Target shader program.
 	 */
 	virtual void BindInputs(std::vector<std::shared_ptr<BoundInputsBase>> &inputs,
-							oglplus::ProgramName &program);
+							oglplus::Program &program);
 
 public:
 	/**
@@ -228,7 +228,7 @@ public:
 	 * @param program Program to bind to
 	 * @return
 	 */
-	std::vector<std::shared_ptr<BoundInputsBase>> GetBoundInputs(oglplus::ProgramName program);
+	std::vector<std::shared_ptr<BoundInputsBase>> GetBoundInputs(oglplus::Program &program);
 
 	/**
 	 * @brief      Resets the current context target using the default viewport size

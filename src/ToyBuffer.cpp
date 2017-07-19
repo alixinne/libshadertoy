@@ -17,7 +17,7 @@ ToyBuffer::ToyBuffer(RenderContext &context,
 					 const BufferConfig &config)
 	: context(context),
 	  config(config),
-	  boundInputs(context.GetBoundInputs(program))
+	  boundInputs()
 {
 }
 
@@ -34,6 +34,9 @@ void ToyBuffer::Initialize(int width, int height)
 
 	// Link the program
 	program.Link();
+
+	// Bind uniform inputs
+	boundInputs = context.GetBoundInputs(program);
 
 	// Use the program
 	program.Use();

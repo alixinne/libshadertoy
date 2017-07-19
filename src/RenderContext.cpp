@@ -69,7 +69,7 @@ void RenderContext::PostAuxBufferRender(const string &name,
 }
 
 void RenderContext::BindInputs(vector<shared_ptr<BoundInputsBase>> &inputs,
-							   ProgramName &program)
+							   Program &program)
 {
 }
 
@@ -333,7 +333,7 @@ const GLchar *RenderContext::GetDefineWrapper() const
 	return defineWrapper.c_str();
 }
 
-vector<shared_ptr<BoundInputsBase>> RenderContext::GetBoundInputs(oglplus::ProgramName program)
+vector<shared_ptr<BoundInputsBase>> RenderContext::GetBoundInputs(oglplus::Program &program)
 {
 	vector<shared_ptr<BoundInputsBase>> result;
 

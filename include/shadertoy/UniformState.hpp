@@ -144,11 +144,24 @@ public:
 		StateType &State;
 
 	private:
-		/// Lazy uniform objects tuple
-		std::tuple<oglplus::Lazy<oglplus::Uniform<typename Inputs::ValueType>>...> Uniforms;
+		template<typename Input>
+		struct Uniform
+		{
+			oglplus::UniformLoc Location;
+			oglplus::Uniform<typename Input::ValueType> Var;
+
+			Uniform(oglplus::Program &program)
+				: Location(program, Input::Name, false),
+				  Var(Location)
+			{
+			}
+		};
+
+		/// Uniform objects tuple
+		std::tuple<Uniform<Inputs>...> Uniforms;
 
 		/**
-		 * @brief      Sets the value of a given lazy uniform in this bound input object
+		 * @brief      Sets the value of a given uniform in this bound input object
 		 *
 		 * @tparam Index Index of the uniform in the parent state type declaration
 		 * @tparam Type  Type of the shader input object in the parent state type declaration
@@ -158,18 +171,18 @@ public:
 		bool SetValue()
 		{
 			auto valptr = std::get<Index>(State.AllInputs);
-			try
+			auto &uniform(std::get<Index>(Uniforms));
+
+			if (uniform.Location.IsActive())
 			{
 				// Set uniform using state value
-				std::get<Index>(Uniforms).Set(static_cast<size_t>(valptr->Values.size()),
-											  static_cast<const typename Type::ValueType *>(valptr->Values.data()));
+				uniform.Var.Set(static_cast<size_t>(valptr->Values.size()),
+								static_cast<const typename Type::ValueType *>(valptr->Values.data()));
+
 				return true;
-			} catch (oglplus::ProgVarError &ex)
-			{
-				// Inactive uniform error, other errors are propagated
-				/*std::cerr << valptr->Name << ": " << ex.what() << std::endl;*/
-				return false;
 			}
+
+			return false;
 		}
 
 		/**
@@ -193,9 +206,9 @@ public:
 		 * @param program Program to bind to
 		 */
 		template<size_t... Indices>
-		BoundInputs(StateType &state, oglplus::ProgramName program, std::index_sequence<Indices...>)
+		BoundInputs(StateType &state, oglplus::Program &program, std::index_sequence<Indices...>)
 			: State(state),
-			  Uniforms(oglplus::Lazy<oglplus::Uniform<typename Inputs::ValueType>>(program, Inputs::Name)...)
+			  Uniforms(Uniform<Inputs>(program)...)
 		{
 		}
 
@@ -262,7 +275,7 @@ public:
 	 * @param program Program to bind to.
 	 * @return
 	 */
-	std::shared_ptr<BoundInputs> GetBoundInputs(oglplus::ProgramName program)
+	std::shared_ptr<BoundInputs> GetBoundInputs(oglplus::Program &program)
 	{
 		return std::make_shared<BoundInputs>(*this, program, Indices());
 	}
