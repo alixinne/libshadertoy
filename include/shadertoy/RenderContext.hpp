@@ -58,7 +58,7 @@ private:
 	ShaderInputsType state;
 
 	// Callbacks
-	
+
 	/**
 	 * @brief      When implemented in a derived class, provides a callback for
 	 *             initializing a custom texture engine instead of the default
@@ -230,8 +230,8 @@ public:
 	void Clear(float level);
 
 	/**
-     * @brief      Render a screen quad using the current context
-     */
+	 * @brief      Render a screen quad using the current context
+	 */
 	void RenderScreenQuad();
 
 	/**
@@ -243,8 +243,8 @@ public:
 	void BindResult();
 
 	/**
-     * @brief      Get the default screen quad vertex shader
-     */
+	 * @brief      Get the default screen quad vertex shader
+	 */
 	oglplus::VertexShader &GetScreenQuadVertexShader();
 };
 
