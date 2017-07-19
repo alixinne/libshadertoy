@@ -319,7 +319,7 @@ namespace shadertoy
 /// Default program state typedef
 typedef ShaderInputs<
 	iResolution,
-	iGlobalTime,
+	iTime,
 	iTimeDelta,
 	iFrame,
 	iFrameRate,

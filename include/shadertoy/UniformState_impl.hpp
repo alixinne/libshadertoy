@@ -7,7 +7,7 @@ namespace shadertoy
 DECLARE_UNIFORM(oglplus::Vec3f, iResolution, "vec3");
 
 // Current time in seconds
-DECLARE_UNIFORM(GLfloat, iGlobalTime, "float");
+DECLARE_UNIFORM(GLfloat, iTime, "float");
 
 // Time it takes to render a frame, in seconds
 DECLARE_UNIFORM(GLfloat, iTimeDelta, "float");

@@ -31,7 +31,7 @@ See the `examples/` folder on how to use this library.
 Note that only `iResolution`, `iTimeDelta`, `iFrameRate`, `iChannel0`,
 `iChannel1`, `iChannel2` and `iChannel3` are automatically maintained by the
 library render context. The host is responsible for updating other uniforms,
-such as `iFrame`, `iGlobalTime` and such.
+such as `iFrame`, `iTime` and such.
 
 ## Building the examples
 

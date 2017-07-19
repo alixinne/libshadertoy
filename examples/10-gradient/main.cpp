@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 			while (t < 5.)
 			{
 				// Update uniforms
-				context.GetState().V<shadertoy::iGlobalTime>() = t;
+				context.GetState().V<shadertoy::iTime>() = t;
 				context.GetState().V<shadertoy::iFrame>() = frameCount;
 
 				// Render to texture
