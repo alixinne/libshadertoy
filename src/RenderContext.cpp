@@ -44,7 +44,7 @@ shared_ptr<TextureEngine> RenderContext::BuildTextureEngine()
 					<< "wrapping and filtering options not yet supported, defaulted to wrap/nearest";
 			}
 
-			return auxBuffers[inputConfig.source]->GetSourceTexture();
+			return buffers[inputConfig.source]->GetSourceTexture();
 		}
 	}));
 
@@ -74,10 +74,10 @@ void RenderContext::BindInputs(vector<shared_ptr<BoundInputsBase>> &inputs,
 }
 
 RenderContext::RenderContext(ContextConfig &config)
-	: buffer(),
-	config(config),
+	: config(config),
+	screenQuadTexture(make_shared<Texture>()),
 	textureEngine(),
-	auxBuffers(),
+	buffers(),
 	frameCount(0)
 {
 	textureEngine = BuildTextureEngine();
@@ -115,7 +115,7 @@ void RenderContext::Initialize()
 	Uniform<GLint>(screenProg, "screenTexture").Set(0);
 
 	// Setup screenQuadTexture
-	gl.DirectEXT(TextureTarget::_2D, screenQuadTexture)
+	gl.DirectEXT(TextureTarget::_2D, *screenQuadTexture)
 		.MinFilter(TextureMinFilter::Nearest)
 		.MagFilter(TextureMagFilter::Nearest)
 		.WrapS(TextureWrap::Repeat)
@@ -173,17 +173,9 @@ void RenderContext::InitializeBuffers()
 	auto bufferConfigs = config.bufferConfigs;
 	for (auto it = bufferConfigs.begin(); it != bufferConfigs.end(); ++it)
 	{
-		if (it->first == "image")
-		{
-			buffer = make_shared<ToyBuffer>(*this, it->second);
-			buffer->Initialize(config.width, config.height);
-		}
-		else
-		{
-			auto buf = make_shared<ToyBuffer>(*this, it->second);
-			buf->Initialize(config.width, config.height);
-			auxBuffers.insert(make_pair(it->first, buf));
-		}
+		auto buf = make_shared<ToyBuffer>(*this, it->second);
+		buf->Initialize(config.width, config.height);
+		buffers.insert(make_pair(it->first, buf));
 	}
 
 	// Setup position and texCoord attributes for shaders
@@ -192,9 +184,6 @@ void RenderContext::InitializeBuffers()
 
 	vector<Program *> programs{&screenProg};
 	vector<const char *> names{"default screen shader"};
-
-	programs.push_back(&buffer->GetProgram());
-	names.push_back(buffer->GetConfig().name.c_str());
 
 	for (auto it = programs.begin(); it != programs.end(); ++it)
 	{
@@ -220,7 +209,7 @@ void RenderContext::InitializeBuffers()
 		}
 	}
 
-	lastTexture = nullptr;
+	lastTexture = weak_ptr<Texture>();
 
 	// Invoke callback
 	PostInitializeBuffers();
@@ -231,46 +220,50 @@ void RenderContext::ClearState()
 	// Clear previous input textures
 	textureEngine->ClearState();
 	// Clear previous buffers
-	auxBuffers.clear();
-	// Clear previous image buffer
-	buffer = shared_ptr<ToyBuffer>();
+	buffers.clear();
 	// Clear the source cache
 	sourceCache.clear();
 }
 
 void RenderContext::Render()
 {
-	for (auto pair : auxBuffers)
+	for (auto pair : buffers)
 	{
 		pair.second->Render();
 		pair.second->SwapBuffers();
+		lastTexture = pair.second->GetSourceTexture();
 
 		PostAuxBufferRender(pair.first, pair.second);
 	}
 
-	buffer->Render();
-
 	frameCount++;
-	lastTexture = buffer->GetTargetTexture().get();
 }
 
 void RenderContext::DoReadWriteCurrentFrame(GLint &texIn, GLint &texOut)
 {
-	Texture *currentTex = lastTexture;
-	lastTexture = &screenQuadTexture;
-	texIn = GetName(*currentTex);
-	texOut = GetName(*lastTexture);
+	if (auto currentTex = lastTexture.lock())
+	{
+		texIn = GetName(*currentTex);
+		texOut = GetName(*screenQuadTexture);
+
+		lastTexture = screenQuadTexture;
+	}
+	else
+	{
+		throw runtime_error("DoReadWriteCurrentFrame: lastTexture pointer has expired!");
+	}
 }
 
 void RenderContext::DoReadCurrentFrame(GLint &texIn)
 {
-	texIn = GetName(*lastTexture);
-}
-
-void RenderContext::PostRender()
-{
-	// Swap rendering buffers
-	buffer->SwapBuffers();
+	if (auto currentTex = lastTexture.lock())
+	{
+		texIn = GetName(*currentTex);
+	}
+	else
+	{
+		throw runtime_error("DoReadCurrentFrame: lastTexture pointer has expired!");
+	}
 }
 
 void RenderContext::BuildBufferShader(const BufferConfig &bufferConfig,
@@ -365,7 +358,7 @@ void RenderContext::BindResult()
 	screenProg.Use();
 
 	Texture::Active(0);
-	Texture::Bind(TextureTarget::_2D, *lastTexture);
+	Texture::Bind(TextureTarget::_2D, *lastTexture.lock());
 }
 
 VertexShader &RenderContext::GetScreenQuadVertexShader()

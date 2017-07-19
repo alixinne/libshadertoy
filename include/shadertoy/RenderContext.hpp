@@ -15,11 +15,8 @@ protected:
 	/// Stateless OpenGL context
 	oglplus::Context gl;
 
-	/// Main buffer
-	std::shared_ptr<ToyBuffer> buffer;
-
 	/// Last rendered-to texture
-	oglplus::Texture *lastTexture;
+	std::weak_ptr<oglplus::Texture> lastTexture;
 
 	/// Program for screen quad
 	oglplus::Program screenProg;
@@ -40,13 +37,13 @@ private:
 	oglplus::Buffer screenQuadIndices;
 
 	/// Screen quad source texture
-	oglplus::Texture screenQuadTexture;
+	std::shared_ptr<oglplus::Texture> screenQuadTexture;
 
 	/// Input texture engine
 	std::shared_ptr<TextureEngine> textureEngine;
 
 	/// Aux buffers
-	std::map<std::string, std::shared_ptr<ToyBuffer>> auxBuffers;
+	std::map<std::string, std::shared_ptr<ToyBuffer>> buffers;
 
 	// Cache for sources
 	std::map<std::string, std::string> sourceCache;
@@ -171,11 +168,6 @@ public:
 	 * @param      texIn  Input texture
 	 */
 	void DoReadCurrentFrame(GLint &texIn);
-
-	/**
-	 * @brief      Performs the post-render routines
-	 */
-	void PostRender();
 
 	/**
 	 * @brief      Get a reference to the texture engine of this render context.
