@@ -95,6 +95,9 @@ void RenderContext::Initialize()
 	state.V<iChannel2>() = 3;
 	state.V<iChannel3>() = 4;
 
+	state.V<iChannelTime>() = { 0.f, 0.f, 0.f, 0.f };
+	state.V<iSampleRate>() = 48000.f;
+
 	// Compile screen quad vertex shader
 	screenVs.Source(string(screenQuad_vsh, screenQuad_vsh + screenQuad_vsh_size));
 	screenVs.Compile();

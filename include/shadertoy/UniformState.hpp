@@ -323,13 +323,15 @@ typedef ShaderInputs<
 	iTimeDelta,
 	iFrame,
 	iFrameRate,
+	iChannelTime,
 	iChannelResolution,
 	iMouse,
 	iChannel0,
 	iChannel1,
 	iChannel2,
 	iChannel3,
-	iDate
+	iDate,
+	iSampleRate
 > ShaderInputsType;
 
 }

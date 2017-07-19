@@ -19,7 +19,8 @@ DECLARE_UNIFORM(GLint, iFrame, "int");
 DECLARE_UNIFORM(GLfloat, iFrameRate, "float");
 
 // Time for channel (if video or sound), in seconds
-// uniform float iChannelTime[4];
+// Currently not used because video and sound is not supported
+DECLARE_UNIFORM_N(GLfloat, iChannelTime, 4, "float");
 
 // Input texture resolution for each channel
 DECLARE_UNIFORM_N(oglplus::Vec3f, iChannelResolution, 4, "vec3");
@@ -43,6 +44,7 @@ DECLARE_UNIFORM(GLint, iChannel3, "sampler2D");
 DECLARE_UNIFORM(oglplus::Vec4f, iDate, "vec4");
 
 // The sound sample rate
-// uniform float iSampleRate;
+// Currently not used because sound is not supported
+DECLARE_UNIFORM(GLfloat, iSampleRate, "float");
 
 }
