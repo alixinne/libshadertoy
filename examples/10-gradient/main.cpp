@@ -111,8 +111,11 @@ int main(int argc, char *argv[])
 			glfwSetWindowUserPointer(window, &context);
 			glfwSetFramebufferSizeCallback(window, SetFramebufferSize);
 
-			while (t < 5.)
+			while (!glfwWindowShouldClose(window))
 			{
+				// Poll events
+				glfwPollEvents();
+
 				// Update uniforms
 				context.GetState().V<shadertoy::iTime>() = t;
 				context.GetState().V<shadertoy::iFrame>() = frameCount;
@@ -137,6 +140,9 @@ int main(int argc, char *argv[])
 				// Update time and framecount
 				t = glfwGetTime();
 				frameCount++;
+
+				if (t > 5.)
+					glfwSetWindowShouldClose(window, true);
 			}
 		}
 
