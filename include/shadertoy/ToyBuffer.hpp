@@ -60,6 +60,15 @@ public:
 	void Initialize(int width, int height);
 
 	/**
+	 * @brief      Allocates the textures for this buffer. Note that the current
+	 *             contents of previous textures are discarded.
+	 *
+	 * @param[in]  width   Width of the texture
+	 * @param[in]  height  Height of the texture
+	 */
+	void AllocateTextures(int width, int height);
+
+	/**
 	 * @brief      Render the buffer using the current OpenGL context
 	 */
 	void Render();
@@ -81,8 +90,8 @@ public:
 	{ return targetTex; }
 
 private:
-	void InitializeRenderTexture(std::shared_ptr<oglplus::Texture> &texptr,
-								 int width, int height);
+	std::shared_ptr<oglplus::Texture> InitializeRenderTexture(int width,
+															  int height);
 };
 
 }

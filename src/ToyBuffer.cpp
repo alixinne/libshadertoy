@@ -41,9 +41,15 @@ void ToyBuffer::Initialize(int width, int height)
 	// Use the program
 	program.Use();
 
+	// Allocate render textures
+	AllocateTextures(width, height);
+}
+
+void ToyBuffer::AllocateTextures(int width, int height)
+{
 	// Initialize buffer textures
-	InitializeRenderTexture(sourceTex, width, height);
-	InitializeRenderTexture(targetTex, width, height);
+	sourceTex = InitializeRenderTexture(width, height);
+	targetTex = InitializeRenderTexture(width, height);
 
 	// Setup render buffers
 	targetTex->Bind(TextureTarget::_2D);
@@ -51,14 +57,16 @@ void ToyBuffer::Initialize(int width, int height)
 	targetRbo.Bind(Renderbuffer::Target::Renderbuffer);
 	targetRbo.Storage(Renderbuffer::Target::Renderbuffer,
 					  PixelDataInternalFormat::DepthComponent, width, height);
-
-	targetFbo.Bind(Framebuffer::Target::Draw);
-	targetFbo.AttachTexture(Framebuffer::Target::Draw,
-							FramebufferAttachment::Color, *targetTex, 0);
 }
 
 void ToyBuffer::Render()
 {
+	// Update renderbuffer to use the correct target texture
+	targetTex->Bind(TextureTarget::_2D);
+	targetFbo.Bind(Framebuffer::Target::Draw);
+	targetFbo.AttachTexture(Framebuffer::Target::Draw,
+							FramebufferAttachment::Color, *targetTex, 0);
+
 	// Prepare the render target
 	targetFbo.Bind(Framebuffer::Target::Draw);
 	context.Clear(0.f);
@@ -92,17 +100,11 @@ void ToyBuffer::Render()
 
 	// Swap texture object pointers
 	swap(sourceTex, targetTex);
-
-	// Update renderbuffer
-	targetTex->Bind(TextureTarget::_2D);
-	targetFbo.Bind(Framebuffer::Target::Draw);
-	targetFbo.AttachTexture(Framebuffer::Target::Draw,
-							FramebufferAttachment::Color, *targetTex, 0);
 }
 
-void ToyBuffer::InitializeRenderTexture(shared_ptr<Texture> &texptr, int width, int height)
+shared_ptr<Texture> ToyBuffer::InitializeRenderTexture(int width, int height)
 {
-	texptr = make_shared<Texture>();
+	auto texptr = make_shared<Texture>();
 	gl.DirectEXT(TextureTarget::_2D, *texptr)
 		.MinFilter(TextureMinFilter::Nearest)
 		.MagFilter(TextureMagFilter::Nearest)
@@ -120,4 +122,6 @@ void ToyBuffer::InitializeRenderTexture(shared_ptr<Texture> &texptr, int width, 
 		GL_BGRA,
 		GL_FLOAT,
 		black);
+
+	return texptr;
 }
