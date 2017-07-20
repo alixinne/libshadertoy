@@ -4,6 +4,7 @@
 #include "shadertoy/TextureEngine.hpp"
 
 using namespace std;
+using namespace std::placeholders;
 using namespace oglplus;
 using namespace shadertoy;
 
@@ -91,6 +92,9 @@ shared_ptr<Texture> TextureEngine::CheckerTextureHandler(const InputConfig &inpu
 TextureEngine::TextureEngine(ContextConfig &config)
 	: config(config)
 {
+	RegisterHandler("texture", bind(&TextureEngine::SOILTextureHandler, this, _1, _2, _3, _4));
+	RegisterHandler("noise", bind(&TextureEngine::NoiseTextureHandler, this, _1, _2, _3, _4));
+	RegisterHandler("checker", bind(&TextureEngine::CheckerTextureHandler, this, _1, _2, _3, _4));
 }
 
 void TextureEngine::Initialize()
