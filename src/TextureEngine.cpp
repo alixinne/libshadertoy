@@ -167,12 +167,19 @@ Texture &TextureEngine::GetInputTexture(const InputConfig &inputConfig)
 				if (!skipCache)
 					inputTextures.insert(make_pair(inputConfig.id,
 						make_tuple(texture, framebufferSized)));
+				else
+					return *texture;
 			}
 			else
 			{
+				BOOST_LOG_TRIVIAL(error) << "failed loading " <<
+					inputConfig.type << " texture for input " << inputConfig.id;
+
 				if (!skipCache)
 					inputTextures.insert(make_pair(inputConfig.id,
 						make_tuple(emptyTexture, false)));
+				else
+					return *emptyTexture;
 			}
 		}
 		else
