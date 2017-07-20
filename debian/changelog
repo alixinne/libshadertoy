@@ -1,6 +1,8 @@
 libshadertoy (0.0.2) unstable; urgency=medium
 
   * Add buffer resizing support
+  * Add ShaderToy API example
+  * Fix: TextureEngine does not have any handlers registered by default
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Thu, 20 Jul 2017 11:33:20i +0200
 
