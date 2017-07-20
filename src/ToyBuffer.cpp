@@ -48,8 +48,8 @@ void ToyBuffer::Initialize(int width, int height)
 void ToyBuffer::AllocateTextures(int width, int height)
 {
 	// Initialize buffer textures
-	sourceTex = InitializeRenderTexture(width, height);
-	targetTex = InitializeRenderTexture(width, height);
+	InitializeRenderTexture(sourceTex, width, height);
+	InitializeRenderTexture(targetTex, width, height);
 
 	// Setup render buffers
 	targetTex->Bind(TextureTarget::_2D);
@@ -102,9 +102,13 @@ void ToyBuffer::Render()
 	swap(sourceTex, targetTex);
 }
 
-shared_ptr<Texture> ToyBuffer::InitializeRenderTexture(int width, int height)
+void ToyBuffer::InitializeRenderTexture(shared_ptr<Texture> &texptr, int width, int height)
 {
-	auto texptr = make_shared<Texture>();
+	// Only create a texture object if it is necessary
+	if (!texptr)
+		texptr = make_shared<Texture>();
+
+	// Allocate texture storage according to width/height
 	gl.DirectEXT(TextureTarget::_2D, *texptr)
 		.MinFilter(TextureMinFilter::Nearest)
 		.MagFilter(TextureMagFilter::Nearest)
@@ -115,13 +119,10 @@ shared_ptr<Texture> ToyBuffer::InitializeRenderTexture(int width, int height)
 				 PixelDataType::UnsignedByte, nullptr);
 
 	// Clear the frame accumulator so it doesn't contain garbage
-	float black[4];
-	memset(black, 0, sizeof(black));
+	float black[4] = {0.f};
 	glClearTexImage(GetName(*texptr),
 		0,
 		GL_BGRA,
 		GL_FLOAT,
 		black);
-
-	return texptr;
 }

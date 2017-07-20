@@ -90,8 +90,8 @@ public:
 	{ return targetTex; }
 
 private:
-	std::shared_ptr<oglplus::Texture> InitializeRenderTexture(int width,
-															  int height);
+	void InitializeRenderTexture(std::shared_ptr<oglplus::Texture> &texptr,
+								 int width, int height);
 };
 
 }
