@@ -37,6 +37,7 @@ private:
 	oglplus::Buffer screenQuadIndices;
 
 	/// Screen quad source texture
+	/// Note that this texture will only be allocated if needed
 	std::shared_ptr<oglplus::Texture> screenQuadTexture;
 
 	/// Input texture engine
@@ -140,6 +141,14 @@ public:
 	 * @brief      Initializes the ShaderToy-like buffers
 	 */
 	void InitializeBuffers();
+
+	/**
+	 * @brief      Allocates textures based on the current config width and
+	 *             height. This can be useful for implementing framebuffer
+	 *             resize, but is more lightweight than calling Initialize,
+	 *             which recompiles shaders.
+	 */
+	void AllocateTextures();
 
 	/**
 	 * @brief      Clears all caches and buffers, call InitializeBuffers for

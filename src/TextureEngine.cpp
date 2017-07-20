@@ -14,7 +14,8 @@ extern char *result_string_pointer;
 
 shared_ptr<Texture> TextureEngine::SOILTextureHandler(const InputConfig &inputConfig,
 													  bool &skipTextureOptions,
-													  bool &skipCache)
+													  bool &skipCache,
+													  bool &framebufferSized)
 {
 	auto texture = make_shared<Texture>();
 	GLuint texid = SOIL_load_OGL_texture(inputConfig.source.c_str(),
@@ -40,7 +41,8 @@ shared_ptr<Texture> TextureEngine::SOILTextureHandler(const InputConfig &inputCo
 
 shared_ptr<Texture> TextureEngine::NoiseTextureHandler(const InputConfig &inputConfig,
 													   bool &skipTextureOptions,
-													   bool &skipCache)
+													   bool &skipCache,
+													   bool &framebufferSized)
 {
 	// A noise texture
 	auto noiseTexture = make_shared<Texture>();
@@ -53,12 +55,15 @@ shared_ptr<Texture> TextureEngine::NoiseTextureHandler(const InputConfig &inputC
 	BOOST_LOG_TRIVIAL(warning) << "generated noise texture for input "
 							   << inputConfig.id;
 
+	framebufferSized = true;
+
 	return noiseTexture;
 }
 
 shared_ptr<Texture> TextureEngine::CheckerTextureHandler(const InputConfig &inputConfig,
 														 bool &skipTextureOptions,
-														 bool &skipCache)
+														 bool &skipCache,
+														 bool &framebufferSized)
 {
 	stringstream ss(inputConfig.source);
 	int size = 0;
@@ -78,14 +83,13 @@ shared_ptr<Texture> TextureEngine::CheckerTextureHandler(const InputConfig &inpu
 							   <<" checker texture for input "
 							   << inputConfig.id;
 
+	framebufferSized = true;
+
 	return checkerTexture;
 }
 
 TextureEngine::TextureEngine(ContextConfig &config)
-	: config(config),
-	inputTextures(),
-	emptyTexture(),
-	handlers()
+	: config(config)
 {
 }
 
@@ -101,10 +105,33 @@ void TextureEngine::Initialize()
 		.SwizzleB(TextureSwizzle::Red)
 		.Image2D(images::CheckerRedBlack(32, 32, 16, 16));
 }
-
-void TextureEngine::ClearState()
+void TextureEngine::ClearState(bool framebufferSizeChange)
 {
-	inputTextures.clear();
+	if (!framebufferSizeChange)
+	{
+		// Clear all textures
+		inputTextures.clear();
+	}
+	else
+	{
+		// Clear only framebuffer textures
+		vector<string> clearTextures;
+
+		// Find framebuffer textures
+		for (auto &pair : inputTextures)
+		{
+			if (get<1>(pair.second))
+			{
+				clearTextures.push_back(pair.first);
+			}
+		}
+
+		// Clear textures
+		for (auto &obsoleteId : clearTextures)
+		{
+			inputTextures.erase(obsoleteId);
+		}
+	}
 }
 
 Texture &TextureEngine::GetInputTexture(const InputConfig &inputConfig)
@@ -121,10 +148,12 @@ Texture &TextureEngine::GetInputTexture(const InputConfig &inputConfig)
 		if (handlerIt != handlers.end())
 		{
 			bool skipTextureOptions = false,
-				 skipCache = false;
+				 skipCache = false,
+				 framebufferSized = false;
 			auto texture = handlerIt->second(inputConfig,
 											 skipTextureOptions,
-											 skipCache);
+											 skipCache,
+											 framebufferSized);
 
 			if (texture)
 			{
@@ -132,12 +161,14 @@ Texture &TextureEngine::GetInputTexture(const InputConfig &inputConfig)
 					ApplyTextureOptions(inputConfig, texture);
 
 				if (!skipCache)
-					inputTextures.insert(make_pair(inputConfig.id, texture));
+					inputTextures.insert(make_pair(inputConfig.id,
+						make_tuple(texture, framebufferSized)));
 			}
 			else
 			{
 				if (!skipCache)
-					inputTextures.insert(make_pair(inputConfig.id, emptyTexture));
+					inputTextures.insert(make_pair(inputConfig.id,
+						make_tuple(emptyTexture, false)));
 			}
 		}
 		else
@@ -147,7 +178,7 @@ Texture &TextureEngine::GetInputTexture(const InputConfig &inputConfig)
 		}
 	}
 
-	return *inputTextures.find(inputConfig.id)->second;
+	return *get<0>(inputTextures.find(inputConfig.id)->second);
 }
 
 void TextureEngine::ApplyTextureOptions(const InputConfig &inputConfig, std::shared_ptr<Texture> &texture)

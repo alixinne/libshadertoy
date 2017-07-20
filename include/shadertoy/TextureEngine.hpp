@@ -14,11 +14,14 @@ namespace shadertoy
  * `skipTextureOptions` should be set to true if no wrapping or filtering
  * options should be automatically applied. `skipCache` should be set to true if
  * the method should be invoked each time a texture for this input is requested.
+ * `framebufferSized` should be set to true if any change in framebuffer
+ * resolution should require generating a new instance of this texture.
  */
 typedef std::function<std::shared_ptr<oglplus::Texture>(
 	const InputConfig &inputConfig,
 	bool &skipTextureOptions,
-	bool &skipCache)> InputHandler;
+	bool &skipCache,
+	bool &framebufferSized)> InputHandler;
 
 /**
  * @brief      Represents the engine responsible for loading input textures for
@@ -33,7 +36,8 @@ class shadertoy_EXPORT TextureEngine
 	oglplus::Context gl;
 
 	/// Input texture state
-	std::map<std::string, std::shared_ptr<oglplus::Texture>> inputTextures;
+	std::map<std::string, std::tuple<
+		std::shared_ptr<oglplus::Texture>, bool> > inputTextures;
 
 	/// The empty texture
 	std::shared_ptr<oglplus::Texture> emptyTexture;
@@ -44,13 +48,16 @@ class shadertoy_EXPORT TextureEngine
 	// Default texture handlers
 	std::shared_ptr<oglplus::Texture> SOILTextureHandler(const InputConfig &inputConfig,
 		bool &skipTextureOptions,
-		bool &skipCache);
+		bool &skipCache,
+		bool &framebufferSized);
 	std::shared_ptr<oglplus::Texture> NoiseTextureHandler(const InputConfig &inputConfig,
 		bool &skipTextureOptions,
-		bool &skipCache);
+		bool &skipCache,
+		bool &framebufferSized);
 	std::shared_ptr<oglplus::Texture> CheckerTextureHandler(const InputConfig &inputConfig,
 		bool &skipTextureOptions,
-		bool &skipCache);
+		bool &skipCache,
+		bool &framebufferSized);
 
 protected:
 	/**
@@ -77,9 +84,17 @@ public:
 	void Initialize();
 
 	/**
-	 * @brief      Clears all loaded textures.
+	 * @brief      Clears loaded textures.
+	 *
+	 * @param      framebufferSizeChange  true if this event is being triggered
+	 *                                    by a change in framebuffer size, which
+	 *                                    should then only clear the textures
+	 *                                    whose size is the same as the
+	 *                                    framebuffer. false if all textures
+	 *                                    should be reloaded, including
+	 *                                    framebuffer-independent textures.
 	 */
-	void ClearState();
+	void ClearState(bool framebufferSizeChange = false);
 
 	/**
 	 * @brief      Get the texture for the given input

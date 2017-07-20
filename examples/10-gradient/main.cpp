@@ -7,6 +7,18 @@
 
 namespace fs = boost::filesystem;
 
+void SetFramebufferSize(GLFWwindow *window, int width, int height)
+{
+	// Get the context from the window user pointer
+	shadertoy::RenderContext &context = 
+		*static_cast<shadertoy::RenderContext*>(glfwGetWindowUserPointer(window));
+
+	// Reallocate textures
+	context.GetConfig().width = width;
+	context.GetConfig().height = height;
+	context.AllocateTextures();
+}
+
 int main(int argc, char *argv[])
 {
 	int code = 0;
@@ -94,6 +106,10 @@ int main(int argc, char *argv[])
 
 			oglplus::Context gl;
 			oglplus::DefaultFramebuffer dfb;
+
+			// Set the resize callback
+			glfwSetWindowUserPointer(window, &context);
+			glfwSetFramebufferSizeCallback(window, SetFramebufferSize);
 
 			while (t < 5.)
 			{

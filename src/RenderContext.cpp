@@ -20,10 +20,14 @@ shared_ptr<TextureEngine> RenderContext::BuildTextureEngine()
 	engine->RegisterHandler("buffer", InputHandler([this]
 		(const InputConfig &inputConfig,
 		 bool &skipTextureOptions,
-		 bool &skipCache)
+		 bool &skipCache,
+		 bool &framebufferSized)
 	{
 		skipTextureOptions = true;
 		skipCache = true;
+		// No need to reallocate buffer textures, this is handled by the buffer
+		// itself
+		framebufferSized = false;
 
 		auto &bufferConfigs = config.bufferConfigs;
 		auto bufferIt = bufferConfigs.find(inputConfig.source);
@@ -75,9 +79,6 @@ void RenderContext::BindInputs(vector<shared_ptr<BoundInputsBase>> &inputs,
 
 RenderContext::RenderContext(ContextConfig &config)
 	: config(config),
-	screenQuadTexture(make_shared<Texture>()),
-	textureEngine(),
-	buffers(),
 	frameCount(0)
 {
 	textureEngine = BuildTextureEngine();
@@ -116,16 +117,6 @@ void RenderContext::Initialize()
 	// Setup screen textures
 	screenProg.Use();
 	Uniform<GLint>(screenProg, "screenTexture").Set(0);
-
-	// Setup screenQuadTexture
-	gl.DirectEXT(TextureTarget::_2D, *screenQuadTexture)
-		.MinFilter(TextureMinFilter::Nearest)
-		.MagFilter(TextureMagFilter::Nearest)
-		.WrapS(TextureWrap::Repeat)
-		.WrapT(TextureWrap::Repeat)
-		.Image2D(0, PixelDataInternalFormat::RGBA32F,
-				 config.width, config.height, 0, PixelDataFormat::BGRA,
-				 PixelDataType::Float, nullptr);
 
 	// Initialize the texture engine
 	textureEngine->Initialize();
@@ -218,6 +209,19 @@ void RenderContext::InitializeBuffers()
 	PostInitializeBuffers();
 }
 
+void RenderContext::AllocateTextures()
+{
+	// Drop the reference to screenQuadTexture, it will be recreated if needed
+	screenQuadTexture = shared_ptr<Texture>();
+
+	// Reallocate buffer textures
+	for (auto &pair : buffers)
+		pair.second->AllocateTextures(config.width, config.height);
+
+	// Reallocate inputs
+	textureEngine->ClearState(true);
+}
+
 void RenderContext::ClearState()
 {
 	// Clear previous input textures
@@ -245,6 +249,23 @@ void RenderContext::DoReadWriteCurrentFrame(GLint &texIn, GLint &texOut)
 {
 	if (auto currentTex = lastTexture.lock())
 	{
+		// Allocate the target screen quad texture as it is requested
+		if (!screenQuadTexture)
+		{
+			// Create texture object
+			screenQuadTexture = make_shared<Texture>();
+
+			// Setup screenQuadTexture
+			gl.DirectEXT(TextureTarget::_2D, *screenQuadTexture)
+				.MinFilter(TextureMinFilter::Nearest)
+				.MagFilter(TextureMagFilter::Nearest)
+				.WrapS(TextureWrap::Repeat)
+				.WrapT(TextureWrap::Repeat)
+				.Image2D(0, PixelDataInternalFormat::RGBA32F,
+						 config.width, config.height, 0, PixelDataFormat::BGRA,
+						 PixelDataType::Float, nullptr);
+		}
+
 		texIn = GetName(*currentTex);
 		texOut = GetName(*screenQuadTexture);
 
