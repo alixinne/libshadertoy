@@ -8,4 +8,9 @@ set -e
 cd build
 if make -j9; then
 	make DESTDIR=$(pwd)/install install
+	exit $?
+else
+	exit $?
 fi
+
+exit 0
