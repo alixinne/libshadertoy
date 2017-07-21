@@ -19,7 +19,8 @@ set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # Required packages
-find_package(Boost 1.58 REQUIRED COMPONENTS filesystem log serialization date_time)
+find_package(Boost 1.58 REQUIRED COMPONENTS filesystem log serialization
+	date_time)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(SOIL REQUIRED)

@@ -228,8 +228,8 @@ int loadRemote(const string &shaderId, const string &shaderApiKey,
 					conf.wrap = oglplus::TextureWrap::ClampToEdge;
 				}
 
-				if (input["ctype"].asString().compare("texture") == 0
-					|| input["ctype"].asString().compare("cubemap") == 0)
+				if (input["ctype"].compare("texture") == 0
+					|| input["ctype"].compare("cubemap") == 0)
 				{
 					conf.type = "texture";
 
@@ -271,7 +271,7 @@ int loadRemote(const string &shaderId, const string &shaderApiKey,
 
 					conf.source = dstpath.string();
 				}
-				else if (input["ctype"].asString().compare("buffer") == 0)
+				else if (input["ctype"].compare("buffer") == 0)
 				{
 					conf.type = "buffer";
 					conf.source = "Buf A";
@@ -288,7 +288,7 @@ int loadRemote(const string &shaderId, const string &shaderApiKey,
 					ss << "Unsupported input " << input["ctype"].asString()
 					   << " for pass " << i << ", input " << input["channel"].asInt();
 
-					if (!(input["ctype"].asString().compare("keyboard") == 0))
+					if (!(input["ctype"].compare("keyboard") == 0))
 					{
 						throw runtime_error(ss.str().c_str());
 					}
