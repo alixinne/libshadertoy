@@ -35,11 +35,11 @@ void ToyBuffer::Initialize(int width, int height)
 	// Link the program
 	program.Link();
 
-	// Bind uniform inputs
-	boundInputs = context.GetBoundInputs(program);
-
 	// Use the program
 	program.Use();
+
+	// Bind uniform inputs
+	boundInputs = context.GetBoundInputs(program);
 
 	// Allocate render textures
 	AllocateTextures(width, height);
@@ -53,7 +53,6 @@ void ToyBuffer::AllocateTextures(int width, int height)
 
 	// Setup render buffers
 	targetTex->Bind(TextureTarget::_2D);
-
 	targetRbo.Bind(Renderbuffer::Target::Renderbuffer);
 	targetRbo.Storage(Renderbuffer::Target::Renderbuffer,
 					  PixelDataInternalFormat::DepthComponent, width, height);
@@ -63,12 +62,13 @@ void ToyBuffer::Render()
 {
 	// Update renderbuffer to use the correct target texture
 	targetTex->Bind(TextureTarget::_2D);
+	targetRbo.Bind(Renderbuffer::Target::Renderbuffer);
 	targetFbo.Bind(Framebuffer::Target::Draw);
+
 	targetFbo.AttachTexture(Framebuffer::Target::Draw,
 							FramebufferAttachment::Color, *targetTex, 0);
 
 	// Prepare the render target
-	targetFbo.Bind(Framebuffer::Target::Draw);
 	context.Clear(0.f);
 
 	// Setup program and its uniforms
@@ -81,9 +81,11 @@ void ToyBuffer::Render()
 	// Setup the texture targets
 	for (int i = 0; i < 4; ++i)
 	{
+		Texture::Active(i + 1);
+		// Following have side effects, ensure it runs after we selected the new
+		// texture unit
 		auto &texture = context.GetTextureEngine()
 							   .GetInputTexture(config.inputConfig[i]);
-		Texture::Active(i + 1);
 		texture.Bind(TextureTarget::_2D);
 
 		resolutions[i][0] = Texture::Width(TextureTarget::_2D);
