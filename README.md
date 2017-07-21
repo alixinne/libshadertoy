@@ -13,6 +13,7 @@ The following tools and libraries are required:
 * [CMake](https://launchpad.net/ubuntu/xenial/+source/cmake)
 * [Boost 1.58+](https://launchpad.net/ubuntu/xenial/+package/libboost-all-dev)
 * [SOIL](https://launchpad.net/ubuntu/xenial/+package/libsoil-dev)
+* [libjpeg](https://launchpad.net/ubuntu/xenial/+package/libjpeg-dev)
 * [GLEW](https://launchpad.net/ubuntu/xenial/+source/glew)
 * [oglplus](https://oglplus.org/). Automatically downloaded from GitHub if
 needed, but an installed version will be used if available. Requires GLEW and
@@ -58,7 +59,7 @@ make -j9
 Other examples may require more dependencies, see the associated README for more
 details.
 
-## Dependencies (package build)
+## Building the packages
 
 To build the library on the development machine (needed for running tests) the
 `build.sh` script should be used. See `debian/control` for the up-to-date list
