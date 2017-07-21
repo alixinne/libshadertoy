@@ -100,6 +100,8 @@ TextureEngine::TextureEngine(ContextConfig &config)
 void TextureEngine::Initialize()
 {
 	// Prepare the empty texture, a nice magenta checkerboard
+	if (emptyTexture) return;
+
 	emptyTexture = make_shared<Texture>();
 	gl.DirectEXT(TextureTarget::_2D, *emptyTexture)
 		.MinFilter(TextureMinFilter::Nearest)
