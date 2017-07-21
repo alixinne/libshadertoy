@@ -114,8 +114,8 @@ void ToyBuffer::InitializeRenderTexture(shared_ptr<Texture> &texptr, int width, 
 	gl.DirectEXT(TextureTarget::_2D, *texptr)
 		.MinFilter(TextureMinFilter::Nearest)
 		.MagFilter(TextureMagFilter::Nearest)
-		.WrapS(TextureWrap::Repeat)
-		.WrapT(TextureWrap::Repeat)
+		.WrapS(TextureWrap::ClampToEdge)
+		.WrapT(TextureWrap::ClampToEdge)
 		.Image2D(0, PixelDataInternalFormat::RGBA32F,
 				 width, height, 0, PixelDataFormat::BGRA,
 				 PixelDataType::UnsignedByte, nullptr);

@@ -44,11 +44,20 @@ shared_ptr<TextureEngine> RenderContext::BuildTextureEngine()
 			{
 				BOOST_LOG_TRIVIAL(info) << "binding '" << inputConfig.source
 										<< "' to input " << inputConfig.id;
-				BOOST_LOG_TRIVIAL(warning)
-					<< "wrapping and filtering options not yet supported, defaulted to wrap/nearest";
 			}
 
-			return buffers[inputConfig.source]->GetSourceTexture();
+			auto texture = buffers[inputConfig.source]->GetSourceTexture();
+
+			int minFilter = max((int)inputConfig.minFilter, GL_LINEAR),
+				magFilter = (int)inputConfig.magFilter;
+
+			gl.DirectEXT(TextureTarget::_2D, *texture)
+				.MinFilter(static_cast<TextureMinFilter>(minFilter))
+				.MagFilter(static_cast<TextureMagFilter>(magFilter))
+				.WrapS(inputConfig.wrap)
+				.WrapT(inputConfig.wrap);
+
+			return texture;
 		}
 	}));
 
