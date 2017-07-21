@@ -2,7 +2,7 @@
 
 This example implements a desktop version of ShaderToy using the implemented
 functionality in libshadertoy. Note that in order to support progressive JPEG
-(not supported by SOIL), ImageMagick is required to convert JPEG images to PNG.
+(not supported by SOIL).
 
 ## Example of invocation
 
@@ -25,7 +25,6 @@ functionality in libshadertoy. Note that in order to support progressive JPEG
 
 ## Dependencies
 
-* imagemagick
 * libcurl4-openssl-dev
 * libjsoncpp-dev
 * libboost-all-dev

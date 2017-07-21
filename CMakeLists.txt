@@ -24,6 +24,7 @@ find_package(Boost 1.58 REQUIRED COMPONENTS filesystem log serialization
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(SOIL REQUIRED)
+find_package(JPEG REQUIRED)
 
 set(oglplus_CONFIGURE_EXTRA_ARGS --use-glew)
 include(liboglplus)
@@ -69,6 +70,7 @@ target_include_directories(shadertoy PRIVATE
 	${OPENGL_INCLUDE_DIRS}
 	${oglplus_INCLUDE_DIRS}
 	${SOIL_INCLUDE_DIRS}
+	${JPEG_INCLUDE_DIRS}
 	${shadertoy_INCLUDE_DIRS})
 
 # Link dependencies
@@ -76,6 +78,7 @@ target_link_libraries(shadertoy
 	${Boost_LIBRARIES}
 	${OPENGL_LIBRARY}
 	${GLEW_LIBRARIES}
+	${JPEG_LIBRARIES}
 	${SOIL_LIBRARIES})
 
 # Fix Boost

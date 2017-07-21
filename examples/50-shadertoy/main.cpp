@@ -228,6 +228,8 @@ int loadRemote(const string &shaderId, const string &shaderApiKey,
 					conf.wrap = oglplus::TextureWrap::ClampToEdge;
 				}
 
+				conf.vflip = sampler["vflip"].compare("true") == 0;
+
 				if (input["ctype"].compare("texture") == 0
 					|| input["ctype"].compare("cubemap") == 0)
 				{
@@ -247,26 +249,6 @@ int loadRemote(const string &shaderId, const string &shaderApiKey,
 					else
 					{
 						BOOST_LOG_TRIVIAL(info) << "Using cache for " << url;
-					}
-
-					if (dstpath.extension().compare(".jpg") == 0)
-					{
-						// jpeg to png
-						stringstream sscmd;
-						fs::path npath(dstpath);
-						npath.replace_extension(".png");
-
-						if (!fs::exists(npath))
-						{
-							sscmd << "convert " << dstpath << " "
-								  << npath;
-							BOOST_LOG_TRIVIAL(debug) << sscmd.str();
-							if (system(sscmd.str().c_str()) != 0)
-							{
-								throw runtime_error("Converting JPEG to PNG failed!");
-							}
-						}
-						dstpath = npath;
 					}
 
 					conf.source = dstpath.string();

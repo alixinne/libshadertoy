@@ -6,6 +6,7 @@
 #include <algorithm>
 
 #include <SOIL/SOIL.h>
+#include <jpeglib.h>
 #include <GL/glew.h>
 
 #include <oglplus/all.hpp>
@@ -21,3 +22,4 @@
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/array.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/algorithm/string.hpp>

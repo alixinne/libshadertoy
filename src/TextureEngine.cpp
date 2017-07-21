@@ -8,6 +8,8 @@ using namespace std::placeholders;
 using namespace oglplus;
 using namespace shadertoy;
 
+namespace fs = boost::filesystem;
+
 // Error message from SOIL
 extern "C" {
 extern char *result_string_pointer;
@@ -18,24 +20,110 @@ shared_ptr<Texture> TextureEngine::SOILTextureHandler(const InputConfig &inputCo
 													  bool &skipCache,
 													  bool &framebufferSized)
 {
-	auto texture = make_shared<Texture>();
-	GLuint texid = SOIL_load_OGL_texture(inputConfig.source.c_str(),
-										 SOIL_LOAD_AUTO,
-										 GetName(*texture),
-										 SOIL_FLAG_INVERT_Y);
+	fs::path texPath(inputConfig.source);
 
-	if (texid == 0)
+	if (!fs::exists(texPath))
 	{
-		BOOST_LOG_TRIVIAL(warning) << "failed to load '"
-								   << inputConfig.source << "' for input " << inputConfig.id
-								   << ": " << result_string_pointer;
+		BOOST_LOG_TRIVIAL(error) << texPath << " not found for input "
+								 << inputConfig.id;
 		return shared_ptr<Texture>();
 	}
 
-	ApplyTextureOptions(inputConfig, texture);
+	shared_ptr<Texture> texture;
+	string ext(texPath.extension().string());
+	boost::algorithm::to_lower(ext);
+	if (ext.compare(".jpg") == 0 || ext.compare(".jpeg") == 0)
+	{
+		// use libjpeg
+		FILE *infile;
+		string sp(texPath.string());
+		if ((infile = fopen(sp.c_str(), "rb")) == NULL)
+		{
+			BOOST_LOG_TRIVIAL(error) << "could not open " << texPath
+									 << " for reading for input "
+									 << inputConfig.id;
+		}
+		else
+		{
+			struct jpeg_decompress_struct cinfo;
+			struct jpeg_error_mgr jerr;
+			cinfo.err = jpeg_std_error(&jerr);
 
-	BOOST_LOG_TRIVIAL(info) << "loaded '" << inputConfig.source
-							<< "' for input " << inputConfig.id;
+			jpeg_create_decompress(&cinfo);
+			jpeg_stdio_src(&cinfo, infile);
+
+			jpeg_read_header(&cinfo, TRUE);
+			jpeg_start_decompress(&cinfo);
+
+			bool decode = true;
+			PixelDataFormat fmt = PixelDataFormat::RGB;
+			if (cinfo.output_components == 1)
+				fmt = PixelDataFormat::Red;
+			else if (cinfo.output_components == 4)
+				fmt = PixelDataFormat::RGBA;
+			else if (cinfo.output_components != 3)
+			{
+				BOOST_LOG_TRIVIAL(error) << "unsupported component count for JPEG "
+										 << texPath << " for input " << inputConfig.id;
+				// Don't decode unknown format
+				decode = false;
+			}
+
+			if (decode)
+			{
+				int stride = cinfo.output_width * cinfo.output_components;
+				JSAMPARRAY buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr) &cinfo,
+															   JPOOL_IMAGE,
+															   stride,
+															   1);
+				char *imgbuf = new char[cinfo.output_height * stride];
+
+				while (cinfo.output_scanline < cinfo.output_height)
+				{
+					JDIMENSION read_now = jpeg_read_scanlines(&cinfo, buffer, 1);
+					size_t off = cinfo.output_scanline - read_now;
+					if (inputConfig.vflip)
+						off = cinfo.output_height - off - read_now;
+					memcpy(&imgbuf[off * stride], buffer[0], stride);
+				}
+
+				texture = make_shared<Texture>();
+				gl.DirectEXT(TextureTarget::_2D, *texture)
+					.Image2D(0, PixelDataInternalFormat::RGBA32F,
+							 cinfo.output_width, cinfo.output_height, 0, PixelDataFormat::RGB,
+							 PixelDataType::UnsignedByte, imgbuf);
+
+				delete[] imgbuf;
+			}
+
+			jpeg_finish_decompress(&cinfo);
+			jpeg_destroy_decompress(&cinfo);
+			fclose(infile);
+		}
+	}
+	else
+	{
+		// other, use SOIL
+		texture = make_shared<Texture>();
+		GLuint texid = SOIL_load_OGL_texture(inputConfig.source.c_str(),
+											 SOIL_LOAD_AUTO,
+											 GetName(*texture),
+											 inputConfig.vflip ? SOIL_FLAG_INVERT_Y : 0);
+		if (texid == 0)
+		{
+			BOOST_LOG_TRIVIAL(warning) << "failed to load '"
+									   << inputConfig.source << "' for input " << inputConfig.id
+									   << ": " << result_string_pointer;
+			texture = shared_ptr<Texture>();
+		}
+	}
+
+	if (texture)
+	{
+		ApplyTextureOptions(inputConfig, texture);
+		BOOST_LOG_TRIVIAL(info) << "loaded '" << inputConfig.source
+								<< "' for input " << inputConfig.id;
+	}
 
 	return texture;
 }

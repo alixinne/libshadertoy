@@ -20,6 +20,9 @@ struct shadertoy_EXPORT InputConfig
 	/// Source for this input (texture path, or procedural parameters)
 	std::string source;
 
+	/// true to flip vertically when loading texture
+	bool vflip;
+
 	/// Texture wrap mode
 	oglplus::TextureWrap wrap;
 
