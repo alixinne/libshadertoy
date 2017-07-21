@@ -59,6 +59,23 @@ make -j9
 Other examples may require more dependencies, see the associated README for more
 details.
 
+## Beta version repository
+
+```bash
+# Get repository GPG key
+sudo apt-key adv --recv-keys --keyserver eu.pool.sks-keyservers.net B85B636048C11C387D0D3D45C6F6640ECCD72ED8
+
+# Add repository to apt config
+#  Debian Stretch
+sudo sh -c 'echo "deb http://vendion.inrialpes.fr/debian stretch main" >/etc/apt/sources.list.d/vendion.list'
+#  Ubuntu Xenial (16.04)
+sudo sh -c 'echo "deb http://vendion.inrialpes.fr/ubuntu xenial main" >/etc/apt/sources.list.d/vendion.list'
+
+# Update and install
+sudo apt update
+sudo apt install libshadertoy-dev
+```
+
 ## Building the packages
 
 To build the library on the development machine (needed for running tests) the
