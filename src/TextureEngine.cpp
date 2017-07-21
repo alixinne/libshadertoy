@@ -90,7 +90,7 @@ shared_ptr<Texture> TextureEngine::SOILTextureHandler(const InputConfig &inputCo
 				texture = make_shared<Texture>();
 				gl.DirectEXT(TextureTarget::_2D, *texture)
 					.Image2D(0, PixelDataInternalFormat::RGBA32F,
-							 cinfo.output_width, cinfo.output_height, 0, PixelDataFormat::RGB,
+							 cinfo.output_width, cinfo.output_height, 0, fmt,
 							 PixelDataType::UnsignedByte, imgbuf);
 
 				delete[] imgbuf;
