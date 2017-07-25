@@ -67,9 +67,9 @@ sudo apt-key adv --recv-keys --keyserver eu.pool.sks-keyservers.net B85B636048C1
 
 # Add repository to apt config
 #  Debian Stretch
-sudo sh -c 'echo "deb http://vendion.inrialpes.fr/debian stretch main" >/etc/apt/sources.list.d/vendion.list'
+sudo sh -c 'echo "deb https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master/debian stretch main" >/etc/apt/sources.list.d/vendion.list'
 #  Ubuntu Xenial (16.04)
-sudo sh -c 'echo "deb http://vendion.inrialpes.fr/ubuntu xenial main" >/etc/apt/sources.list.d/vendion.list'
+sudo sh -c 'echo "deb https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master/ubuntu xenial main" >/etc/apt/sources.list.d/vendion.list'
 
 # Update and install
 sudo apt update
