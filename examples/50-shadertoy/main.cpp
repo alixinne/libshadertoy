@@ -94,12 +94,13 @@ Json::Value json_get(CURL *curl, const string &url)
 	return result;
 }
 
-int parseOptions(string &shaderId, string &shaderApiKey, int argc, char *argv[])
+int parseOptions(string &shaderId, string &shaderApiKey, bool dump, int argc, char *argv[])
 {
 	// Read and parse options
 	po::options_description desc("libshadertoy 50-shadertoy example");
 	desc.add_options()
-		("h,help", "show a help message")
+		("h,help", po::bool_switch(&dump)->default_value(false), "show a help message")
+		("dump,d", "Dump binary formats of the loaded programs")
 		("id,i", po::value<string>(&shaderId)->required(), "ID of the ShaderToy to render")
 		("api,a", po::value<string>(&shaderApiKey)->required(), "API key for ShaderToy query");
 
@@ -115,7 +116,7 @@ int parseOptions(string &shaderId, string &shaderApiKey, int argc, char *argv[])
 		BOOST_LOG_TRIVIAL(error) << ex.what();
 		return 2;
 	}
-	
+
 	if (vm.find("help") != vm.end())
 	{
 		cout << desc << endl;
@@ -460,9 +461,10 @@ int main(int argc, char *argv[])
 
 	// Options
 	string shaderId, shaderApiKey;
+	bool dumpShaders = false;
 
 	// Parse options from ARGV
-	code = parseOptions(shaderId, shaderApiKey, argc, argv);
+	code = parseOptions(shaderId, shaderApiKey, dumpShaders, argc, argv);
 	if (code > 0)
 		return code;
 
@@ -471,6 +473,7 @@ int main(int argc, char *argv[])
 	contextConfig.width = 640;
 	contextConfig.height = 480;
 	contextConfig.targetFramerate = 60.0;
+	contextConfig.dumpShaders = dumpShaders;
 
 	// Fetch shader code
 	code = loadRemote(shaderId, shaderApiKey, contextConfig);

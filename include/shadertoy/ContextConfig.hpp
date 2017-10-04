@@ -25,6 +25,9 @@ struct shadertoy_EXPORT ContextConfig
 
 	/// List of configured buffers for this context
 	std::map<std::string, BufferConfig> bufferConfigs;
+
+	/// True if binary versions of the compiled shaders should be dumped
+	bool dumpShaders;
 };
 }
 
