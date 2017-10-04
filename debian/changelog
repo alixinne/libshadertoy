@@ -1,3 +1,9 @@
+libshadertoy (0.0.4) unstable; urgency=medium
+
+  * Fix example 50-shadertoy
+
+ -- Vincent Tavernier <vince.tavernier@gmail.com>  Wed, 04 Oct 2017 17:43:00 +0200
+
 libshadertoy (0.0.3) unstable; urgency=medium
 
   * Add dump program binary context options
