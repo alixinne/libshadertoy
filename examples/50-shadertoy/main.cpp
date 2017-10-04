@@ -94,13 +94,14 @@ Json::Value json_get(CURL *curl, const string &url)
 	return result;
 }
 
-int parseOptions(string &shaderId, string &shaderApiKey, bool dump, int argc, char *argv[])
+int parseOptions(string &shaderId, string &shaderApiKey, bool &dump, int argc, char *argv[])
 {
 	// Read and parse options
+	bool help;
 	po::options_description desc("libshadertoy 50-shadertoy example");
 	desc.add_options()
-		("h,help", po::bool_switch(&dump)->default_value(false), "show a help message")
-		("dump,d", "Dump binary formats of the loaded programs")
+		("help,h", po::bool_switch(&help)->default_value(false), "show a help message")
+		("dump,d", po::bool_switch(&dump)->default_value(false), "Dump binary formats of the loaded programs")
 		("id,i", po::value<string>(&shaderId)->required(), "ID of the ShaderToy to render")
 		("api,a", po::value<string>(&shaderApiKey)->required(), "API key for ShaderToy query");
 
@@ -117,7 +118,7 @@ int parseOptions(string &shaderId, string &shaderApiKey, bool dump, int argc, ch
 		return 2;
 	}
 
-	if (vm.find("help") != vm.end())
+	if (help)
 	{
 		cout << desc << endl;
 		return 1;
@@ -461,7 +462,7 @@ int main(int argc, char *argv[])
 
 	// Options
 	string shaderId, shaderApiKey;
-	bool dumpShaders = false;
+	bool dumpShaders;
 
 	// Parse options from ARGV
 	code = parseOptions(shaderId, shaderApiKey, dumpShaders, argc, argv);
