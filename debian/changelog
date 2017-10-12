@@ -1,3 +1,9 @@
+libshadertoy (0.0.5) unstable; urgency=medium
+
+  * Fix support for iGlobalTime as well as iTime
+
+ -- Vincent Tavernier <vince.tavernier@gmail.com>  Thu, 12 Oct 2017 15:00:00 +0200
+
 libshadertoy (0.0.4) unstable; urgency=medium
 
   * Fix example 50-shadertoy
