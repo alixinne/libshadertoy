@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <regex>
 
 #include <curl/curl.h>
 #include <json/json.h>
@@ -161,8 +160,6 @@ int loadRemote(const string &shaderId, const string &shaderApiKey,
 		dump.close();
 
 		// Create buffer configs for each render pass
-		regex rxiGlobalTime("\\biGlobalTime\\b");
-
 		for (int i = 0; i < shaderSpec["Shader"]["renderpass"].size(); ++i)
 		{
 			auto &pass(shaderSpec["Shader"]["renderpass"][i]);
@@ -188,9 +185,7 @@ int loadRemote(const string &shaderId, const string &shaderApiKey,
 			if (!fs::exists(p))
 			{
 				ofstream ofs(p.string());
-				ofs << regex_replace(pass["code"].asString(),
-									 rxiGlobalTime,
-									 "iTime");
+				ofs << pass["code"].asString();
 				ofs.close();
 			}
 
