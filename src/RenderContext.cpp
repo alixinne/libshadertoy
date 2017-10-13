@@ -96,6 +96,7 @@ RenderContext::RenderContext(ContextConfig &config)
 void RenderContext::Initialize()
 {
 	// Initialize constant uniforms
+	state.V<iResolution>() = Vec3f(config.width, config.height, 1.0f);
 	state.V<iTimeDelta>() = 1.0f / (float) config.targetFramerate;
 	state.V<iFrameRate>() = (float) config.targetFramerate;
 

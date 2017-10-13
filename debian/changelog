@@ -1,3 +1,9 @@
+libshadertoy (0.0.7) unstable; urgency=medium
+
+  * Fix iResolution not being set on Initialize
+
+ -- Vincent Tavernier <vince.tavernier@gmail.com>  Fri, 13 Oct 2017 15:52:00 +0200
+
 libshadertoy (0.0.6) unstable; urgency=medium
 
   * Fix iResolution not being updated on resolution change through Allocate
