@@ -1,3 +1,9 @@
+libshadertoy (0.0.6) unstable; urgency=medium
+
+  * Fix iResolution not being updated on resolution change through Allocate
+
+ -- Vincent Tavernier <vince.tavernier@gmail.com>  Fri, 13 Oct 2017 14:05:00 +0200
+
 libshadertoy (0.0.5) unstable; urgency=medium
 
   * Fix support for iGlobalTime as well as iTime
