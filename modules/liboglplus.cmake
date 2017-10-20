@@ -4,6 +4,15 @@
 find_package(oglplus QUIET)
 
 if (NOT oglplus_FOUND)
+	# oglplus not found as a package, try to find its include directory
+	find_path(oglplus_INCLUDE_DIRS oglplus/all.hpp)
+
+	if (NOT oglplus_INCLUDE_DIRS EQUAL "oglplus_INCLUDE_DIRS-NOTFOUND")
+		set(oglplus_FOUND TRUE)
+	endif()
+endif()
+
+if (NOT oglplus_FOUND)
 	# oglplus was not found, get it from the source repositories
 	set(oglplus_GIT "https://github.com/matus-chochlik/oglplus.git")
 	set(oglplus_TAG "0.69.0")
@@ -36,13 +45,15 @@ if (NOT oglplus_FOUND)
 				--no-docs
 				--quiet
 				--build
+				--generator ${CMAKE_GENERATOR}
+				--prefix ${CMAKE_INSTALL_PREFIX}
 				${oglplus_CONFIGURE_EXTR_ARGS})
 		execute_process(COMMAND python
-                                ${oglplus_TARGET}/configure.py
+								${oglplus_TARGET}/configure.py
 								${oglplus_CONFIGURE_ARGS}
 						RESULT_VARIABLE oglplus_CONFIGURE_RESULT)
 		if (NOT oglplus_CONFIGURE_RESULT EQUAL 0)
-            message(FATAL_ERROR "Failed to configure oglplus: error ${oglplus_CONFIGURE_RESULT}.")
+			message(FATAL_ERROR "Failed to configure oglplus: error ${oglplus_CONFIGURE_RESULT}.")
 		endif()
 	else()
 		message("-- oglplus is already configured. Remove ${CMAKE_CURRENT_SOURCE_DIR}/_build to reconfigure.")
@@ -50,3 +61,5 @@ if (NOT oglplus_FOUND)
 
 	set(oglplus_FOUND TRUE)
 endif()
+
+mark_as_advanced(oglplus_INCLUDE_DIRS)
