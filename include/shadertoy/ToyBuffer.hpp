@@ -18,8 +18,8 @@ private:
 	/// Render context
 	RenderContext &context;
 
-	/// Buffer configuration
-	BufferConfig config;
+	/// Buffer identifier
+	const std::string id;
 
 	/// Target framebuffer
 	oglplus::Framebuffer targetFbo;
@@ -47,9 +47,9 @@ public:
 	 * @brief      Initializes a new ShaderToy buffer
 	 *
 	 * @param      context  Rendering context
-	 * @param[in]  config   Source configuration for this buffer
+	 * @param[in]  id       Identifier for this buffer
 	 */
-	ToyBuffer(RenderContext &context, const BufferConfig &config);
+	ToyBuffer(RenderContext &context, const std::string &id);
 
 	/**
 	 * @brief      Prepare the current buffer for rendering

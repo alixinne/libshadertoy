@@ -10,7 +10,8 @@ using namespace shadertoy;
 
 bool InputConfig::enabled() const
 {
-	return !id.empty() && (!source.empty() || (type == "noise" || type == "checker"));
+	return !id.empty() && !type.empty() &&
+			(type != "texture" || !source.empty());
 }
 
 InputConfig::InputConfig()

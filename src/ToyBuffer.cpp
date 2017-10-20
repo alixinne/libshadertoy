@@ -15,20 +15,22 @@ namespace fs = boost::filesystem;
 using namespace shadertoy;
 
 ToyBuffer::ToyBuffer(RenderContext &context,
-					 const BufferConfig &config)
+					 const std::string &id)
 	: context(context),
-	  config(config),
+	  id(id),
 	  boundInputs()
 {
 }
 
 void ToyBuffer::Initialize(int width, int height)
 {
+	auto &config(context.GetConfig().bufferConfigs[id]);
+
 	// Attach the vertex shader for the screen quad
 	program.AttachShader(context.GetScreenQuadVertexShader());
 
 	// Load the fragment shader for this buffer
-	context.BuildBufferShader(config, fs);
+	context.BuildBufferShader(id, fs);
 
 	// Attach shader
 	program.AttachShader(fs);
@@ -111,6 +113,8 @@ void ToyBuffer::AllocateTextures(int width, int height)
 
 void ToyBuffer::Render()
 {
+	auto &config(context.GetConfig().bufferConfigs[id]);
+
 	// Update renderbuffer to use the correct target texture
 	targetTex->Bind(TextureTarget::_2D);
 	targetRbo.Bind(Renderbuffer::Target::Renderbuffer);

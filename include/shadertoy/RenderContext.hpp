@@ -189,10 +189,10 @@ public:
 	/**
 	 * @brief      Compiles a fragment shader for use in a ToyBuffer.
 	 *
-	 * @param[in]  bufferConfig  The buffer configuration.
-	 * @param      fs            Fragment shader object to compile to.
+	 * @param[in]  id  Buffer configuration identifier.
+	 * @param      fs  Fragment shader object to compile to.
 	 */
-	void BuildBufferShader(const BufferConfig &bufferConfig,
+	void BuildBufferShader(const std::string &id,
 						   oglplus::FragmentShader &fs);
 
 	/**

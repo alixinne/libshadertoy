@@ -176,7 +176,7 @@ void RenderContext::InitializeBuffers()
 	auto bufferConfigs = config.bufferConfigs;
 	for (auto it = bufferConfigs.begin(); it != bufferConfigs.end(); ++it)
 	{
-		auto buf = make_shared<ToyBuffer>(*this, it->second);
+		auto buf = make_shared<ToyBuffer>(*this, it->first);
 		buf->Initialize(config.width, config.height);
 		buffers.insert(make_pair(it->first, buf));
 	}
@@ -302,9 +302,11 @@ void RenderContext::DoReadCurrentFrame(GLint &texIn)
 	}
 }
 
-void RenderContext::BuildBufferShader(const BufferConfig &bufferConfig,
+void RenderContext::BuildBufferShader(const string &id,
 									  FragmentShader &fs)
 {
+	auto &bufferConfig(config.bufferConfigs[id]);
+
 	// Load all source parts
 	ShaderCompiler compiler;
 	auto &sources(compiler.Sources());
