@@ -3,4 +3,5 @@
 #include "shadertoy/ContextConfig.hpp"
 #include "shadertoy/UniformState.hpp"
 #include "shadertoy/ToyBuffer.hpp"
+#include "shadertoy/TextureEngine.hpp"
 #include "shadertoy/RenderContext.hpp"
