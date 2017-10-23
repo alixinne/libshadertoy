@@ -127,7 +127,6 @@ shared_ptr<Texture> TextureEngine::SOILTextureHandler(const InputConfig &inputCo
 
 	if (texture)
 	{
-		ApplyTextureOptions(inputConfig, texture);
 		BOOST_LOG_TRIVIAL(info) << "loaded '" << inputConfig.source
 								<< "' for input " << inputConfig.id;
 	}
@@ -146,7 +145,6 @@ shared_ptr<Texture> TextureEngine::NoiseTextureHandler(const InputConfig &inputC
 		.SwizzleB(TextureSwizzle::Red)
 		.SwizzleG(TextureSwizzle::Red)
 		.Image2D(images::RandomRedUByte(config.width, config.height));
-	ApplyTextureOptions(inputConfig, noiseTexture);
 
 	BOOST_LOG_TRIVIAL(warning) << "generated noise texture for input "
 							   << inputConfig.id;
@@ -173,7 +171,6 @@ shared_ptr<Texture> TextureEngine::CheckerTextureHandler(const InputConfig &inpu
 		.SwizzleG(TextureSwizzle::Red)
 		.Image2D(images::CheckerRedBlack(config.width, config.height,
 										 config.width / size, config.height / size));
-	ApplyTextureOptions(inputConfig, checkerTexture);
 
 	BOOST_LOG_TRIVIAL(warning) << "generated " << size << "x" << size
 							   <<" checker texture for input "
