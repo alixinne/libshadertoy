@@ -43,7 +43,7 @@ void ShaderCompiler::Compile(oglplus::Shader &shader)
 		while (!is.eof())
 		{
 			char c, d;
-			int pid, pline;
+			size_t pid, pline;
 
 			// Read one message
 			getline(is, msg);
@@ -64,7 +64,7 @@ void ShaderCompiler::Compile(oglplus::Shader &shader)
 			{
 				// Parsing succeeded, find the source part which contains the
 				// actual error
-				int lc, lcn, li = 0;
+				size_t lc, lcn, li = 0;
 				for (lc = 0, lcn = 0;
 					 li < lineCounts.size();
 					 li++)
