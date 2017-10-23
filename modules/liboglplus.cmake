@@ -4,10 +4,13 @@
 find_package(oglplus QUIET)
 
 if (NOT oglplus_FOUND)
+	message("-- No installed oglplus package found, looking for include directory")
+
 	# oglplus not found as a package, try to find its include directory
 	find_path(oglplus_INCLUDE_DIRS oglplus/all.hpp)
 
-	if (NOT oglplus_INCLUDE_DIRS EQUAL "oglplus_INCLUDE_DIRS-NOTFOUND")
+	if (oglplus_INCLUDE_DIRS)
+		message("-- Found oglplus at ${oglplus_INCLUDE_DIRS}")
 		set(oglplus_FOUND TRUE)
 	endif()
 endif()
@@ -19,7 +22,7 @@ if (NOT oglplus_FOUND)
 	set(oglplus_TARGET "${CMAKE_CURRENT_BINARY_DIR}/oglplus")
 
 	message("-- oglplus not found, using local copy from ${oglplus_GIT}")
-	
+
 	set(oglplus_INCLUDE_DIRS
 		${oglplus_TARGET}/include
 		${oglplus_TARGET}/implement
