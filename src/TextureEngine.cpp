@@ -20,6 +20,13 @@ shared_ptr<Texture> TextureEngine::SOILTextureHandler(const InputConfig &inputCo
 													  bool &skipCache,
 													  bool &framebufferSized)
 {
+	if (inputConfig.source.empty())
+	{
+		BOOST_LOG_TRIVIAL(error) << "Missing source path for input "
+								 << inputConfig.id;
+		return shared_ptr<Texture>();
+	}
+
 	fs::path texPath(inputConfig.source);
 
 	if (!fs::exists(texPath))
