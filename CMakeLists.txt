@@ -66,12 +66,12 @@ generate_export_header(shadertoy
 
 # Include directories
 target_include_directories(shadertoy PRIVATE
+	${shadertoy_INCLUDE_DIRS}
 	${Boost_INCLUDE_DIR}
 	${OPENGL_INCLUDE_DIRS}
 	${oglplus_INCLUDE_DIRS}
 	${SOIL_INCLUDE_DIRS}
-	${JPEG_INCLUDE_DIRS}
-	${shadertoy_INCLUDE_DIRS})
+	${JPEG_INCLUDE_DIRS})
 
 # Link dependencies
 target_link_libraries(shadertoy
