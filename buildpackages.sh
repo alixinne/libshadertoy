@@ -8,6 +8,8 @@ echo "[==== BUILDING v$LIBVERSION ====]" >&2
 # We need to be in the parent directory
 cd "$(dirname "$BASH_SOURCE")/.."
 
+FAILED_TESTS=""
+
 for DISTRIBUTION in stretch xenial; do
 	rm -rf libshadertoy-$LIBVERSION-$DISTRIBUTION
 	mkdir -p libshadertoy-$LIBVERSION-$DISTRIBUTION
@@ -29,10 +31,20 @@ for DISTRIBUTION in stretch xenial; do
 				-- schroot $DISTRIBUTION-$ARCH-sbuild)
 		if [ "$?" -ne "0" ]; then
 			echo "[==== TESTS FAILED FOR $DISTRIBUTION-$ARCH ====]" >&2
-			exit $?
+			FAILED_TESTS="${FAILED_TESTS} ${DISTRIBUTION}-${ARCH}"
+			#exit $?
 		fi
 	done
 done
 
 echo "[==== DONE ====]" >&2
 
+if [ -n "$FAILED_TESTS" ]; then
+	echo "[==== TESTS HAVE FAILED FOR ====]" >&2
+	for DA in $FAILED_TESTS; do
+		echo "==> $DA" >&2
+	done
+	exit 1
+fi
+
+exit 0
