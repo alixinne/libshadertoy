@@ -1,3 +1,11 @@
+libshadertoy (0.0.8) unstable; urgency=medium
+
+  * Fix ToyBuffers copying configuration instead of referencing
+  * Fix global header not including the TextureEngine header
+  * Fix buildpackage script
+
+ -- Vincent Tavernier <vince.tavernier@gmail.com>  Fri, 23 Oct 2017 10:55:00 +0200
+
 libshadertoy (0.0.7) unstable; urgency=medium
 
   * Fix iResolution not being set on Initialize
