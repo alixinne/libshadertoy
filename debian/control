@@ -12,7 +12,7 @@ Vcs-Git: https://gitlab.inria.fr/vtaverni/libshadertoy.git
 Vcs-Browser: https://gitlab.inria.fr/vtaverni/libshadertoy/tree/master
 
 Package: libshadertoy-dev
-Version: 0.0.8
+Version: 0.0.9
 Section: libdevel
 Architecture: all
 Depends: libshadertoy0 (= ${binary:Version}), ${misc:Depends},
@@ -21,7 +21,7 @@ Description: Development files for libshadertoy
  Development headers and documentation for libshadertoy
 
 Package: libshadertoy0
-Version: 0.0.8
+Version: 0.0.9
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Library for rendering ShaderToy programs using OpenGL
