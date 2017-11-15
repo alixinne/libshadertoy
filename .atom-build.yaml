@@ -1,0 +1,3 @@
+cmd: make
+name: Build
+cwd: /disc/libshadertoy/libshadertoy-0.0.11/build
