@@ -22,8 +22,7 @@ set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Required packages
-find_package(Boost 1.58 REQUIRED COMPONENTS filesystem log serialization
-	date_time)
+find_package(Boost 1.58 REQUIRED COMPONENTS filesystem log date_time)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(SOIL REQUIRED)
@@ -55,7 +54,6 @@ set(shadertoy_LIBRARIES
 add_library(shadertoy SHARED
 	src/BufferConfig.cpp
 	src/ContextConfig.cpp
-	src/Misc.cpp
 	src/RenderContext.cpp
 	src/ShaderCompiler.cpp
 	src/TextureEngine.cpp

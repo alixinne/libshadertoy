@@ -2,13 +2,8 @@
 #define _SHADERTOY_UNIFORM_STATE_HPP_
 
 #include <boost/variant.hpp>
-#include <boost/archive/xml_oarchive.hpp>
-#include <boost/archive/xml_iarchive.hpp>
-#include <boost/serialization/nvp.hpp>
-#include <boost/serialization/array.hpp>
 
 #include "shadertoy/pre.hpp"
-#include "shadertoy/Misc.hpp"
 
 namespace shadertoy
 {
@@ -36,24 +31,6 @@ struct shadertoy_EXPORT ShaderInput
 	ShaderInput()
 		: Values()
 	{
-	}
-
-private:
-	friend class boost::serialization::access;
-
-	template<class Archive>
-	void serialize(Archive &ar, const unsigned int version)
-	{
-		using boost::serialization::make_nvp;
-
-		if (N == 1)
-		{
-			ar & make_nvp("value", std::get<0>(Values));
-		}
-		else
-		{
-			ar & make_nvp("value", Values);
-		}
 	}
 };
 
@@ -97,28 +74,6 @@ private:
 
 	/// Tuple of initialized inputs
 	std::tuple<std::shared_ptr<Inputs>...> AllInputs;
-
-	friend class boost::serialization::access;
-
-	template<class Archive, size_t Index, class Input>
-	void serialize_member(Archive &ar, const unsigned version)
-	{
-		using boost::serialization::make_nvp;
-		ar & make_nvp(Input::Name, *std::get<Index>(AllInputs));
-	}
-
-	template<class Archive, size_t... Indices>
-	void serialize_members(Archive &ar, const unsigned version, std::index_sequence<Indices...>)
-	{
-		int _[] = {(serialize_member<Archive, Indices, Inputs>(ar, version), 0)...};
-		(void) _;
-	}
-
-	template<class Archive>
-	void serialize(Archive &ar, const unsigned version)
-	{
-		serialize_members(ar, version, Indices());
-	}
 
 	template<class Input>
 	static void AppendDefinition(std::ostream &os)
