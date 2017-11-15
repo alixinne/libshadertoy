@@ -18,6 +18,9 @@ mark_as_advanced(VERSION_MAJOR VERSION_MINOR VERSION_PATCH)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
+# Export compile commands for autocomplete
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Required packages
 find_package(Boost 1.58 REQUIRED COMPONENTS filesystem log serialization
 	date_time)
