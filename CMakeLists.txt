@@ -30,6 +30,8 @@ find_package(JPEG REQUIRED)
 
 set(oglplus_CONFIGURE_EXTRA_ARGS --use-glew)
 include(liboglplus)
+find_package(PkgConfig REQUIRED)
+pkg_search_module(GLM REQUIRED glm)
 
 # Copy shaders to source
 file(GLOB RESOURCES_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*)
@@ -73,6 +75,7 @@ target_include_directories(shadertoy PRIVATE
 	${Boost_INCLUDE_DIR}
 	${OPENGL_INCLUDE_DIRS}
 	${oglplus_INCLUDE_DIRS}
+	${GLM_INCLUDE_DIRS}
 	${SOIL_INCLUDE_DIRS}
 	${JPEG_INCLUDE_DIRS})
 
@@ -81,6 +84,7 @@ target_link_libraries(shadertoy
 	${Boost_LIBRARIES}
 	${OPENGL_LIBRARY}
 	${GLEW_LIBRARIES}
+	${GLM_LIBRARIES}
 	${JPEG_LIBRARIES}
 	${SOIL_LIBRARIES})
 

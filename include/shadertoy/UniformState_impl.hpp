@@ -4,7 +4,7 @@ namespace shadertoy
 {
 
 // The viewport resolution (z is pixel aspect ratio, usually 1.0)
-DECLARE_UNIFORM(oglplus::Vec3f, iResolution, "vec3");
+DECLARE_UNIFORM(glm::vec3, iResolution, "vec3");
 
 // Current time in seconds
 DECLARE_UNIFORM(GLfloat, iTime, "float");
@@ -23,10 +23,10 @@ DECLARE_UNIFORM(GLfloat, iFrameRate, "float");
 DECLARE_UNIFORM_N(GLfloat, iChannelTime, 4, "float");
 
 // Input texture resolution for each channel
-DECLARE_UNIFORM_N(oglplus::Vec3f, iChannelResolution, 4, "vec3");
+DECLARE_UNIFORM_N(glm::vec3, iChannelResolution, 4, "vec3");
 
 // xy = current pixel coords (if LMB is down). zw = click pixel
-DECLARE_UNIFORM(oglplus::Vec4f, iMouse, "vec4");
+DECLARE_UNIFORM(glm::vec4, iMouse, "vec4");
 
 // Sampler for input texture 0
 DECLARE_UNIFORM(GLint, iChannel0, "sampler2D");
@@ -41,7 +41,7 @@ DECLARE_UNIFORM(GLint, iChannel2, "sampler2D");
 DECLARE_UNIFORM(GLint, iChannel3, "sampler2D");
 
 // Year, month, day, time in seconds in .xyzw
-DECLARE_UNIFORM(oglplus::Vec4f, iDate, "vec4");
+DECLARE_UNIFORM(glm::vec4, iDate, "vec4");
 
 // The sound sample rate
 // Currently not used because sound is not supported

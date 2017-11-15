@@ -13,7 +13,7 @@ namespace shadertoy
  *
  * @tparam UniformName Name of the uniform in the shader program
  * @tparam UniformType Type of the associated GLSL uniform
- * @tparam TUniform    Type of the uniform (GLfloat, GLint, oglplus::Vec3f, etc)
+ * @tparam TUniform    Type of the uniform (GLfloat, GLint, glm::vec3, etc)
  * @tparam Count       Number of instances of the type. Must be strictly positive
  */
 template<const char *UniformName, const char *UniformType, typename TUniform,
@@ -102,10 +102,10 @@ public:
 		template<typename Input>
 		struct Uniform
 		{
-			oglplus::UniformLoc Location;
-			oglplus::Uniform<typename Input::ValueType> Var;
+			GLint Location;
+			typename Input::ValueType Var;
 
-			Uniform(oglplus::Program &program)
+			Uniform(GLint &program)
 				: Location(program, Input::Name, false),
 				  Var(Location)
 			{
@@ -161,7 +161,7 @@ public:
 		 * @param program Program to bind to
 		 */
 		template<size_t... Indices>
-		BoundInputs(StateType &state, oglplus::Program &program, std::index_sequence<Indices...>)
+		BoundInputs(StateType &state, GLint program, std::index_sequence<Indices...>)
 			: State(state),
 			  Uniforms(Uniform<Inputs>(program)...)
 		{
@@ -230,7 +230,7 @@ public:
 	 * @param program Program to bind to.
 	 * @return
 	 */
-	std::shared_ptr<BoundInputs> GetBoundInputs(oglplus::Program &program)
+	std::shared_ptr<BoundInputs> GetBoundInputs(GLint program)
 	{
 		return std::make_shared<BoundInputs>(*this, program, Indices());
 	}

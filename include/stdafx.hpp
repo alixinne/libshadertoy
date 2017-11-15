@@ -14,6 +14,7 @@
 #include <oglplus/images/random.hpp>
 #include <oglplus/images/checker.hpp>
 #include <oglplus/dsa/ext/texture.hpp>
+#include <glm/glm.hpp>
 
 #include <boost/filesystem.hpp>
 #include <boost/log/trivial.hpp>
