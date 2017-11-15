@@ -1,9 +1,10 @@
 #include "stdafx.hpp"
+#include "shadertoy/ShadertoyError.hpp"
+#include "shadertoy/OpenGL/OpenGL.hpp"
 
 #include "shadertoy/ShaderCompiler.hpp"
 
 using namespace std;
-using namespace oglplus;
 using namespace shadertoy;
 
 ShaderCompiler::ShaderCompiler()

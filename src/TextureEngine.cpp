@@ -1,4 +1,6 @@
 #include "stdafx.hpp"
+#include "shadertoy/ShadertoyError.hpp"
+#include "shadertoy/OpenGL/OpenGL.hpp"
 
 #include "shadertoy/BufferConfig.hpp"
 #include "shadertoy/ContextConfig.hpp"
@@ -6,7 +8,6 @@
 
 using namespace std;
 using namespace std::placeholders;
-using namespace oglplus;
 using namespace shadertoy;
 
 namespace fs = boost::filesystem;

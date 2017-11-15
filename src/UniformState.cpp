@@ -1,4 +1,6 @@
 #include "stdafx.hpp"
+#include "shadertoy/ShadertoyError.hpp"
+#include "shadertoy/OpenGL/OpenGL.hpp"
 
 #include "shadertoy/UniformState.hpp"
 

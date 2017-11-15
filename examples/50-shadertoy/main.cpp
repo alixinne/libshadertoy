@@ -7,7 +7,6 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <oglplus/all.hpp>
 
 #include <boost/log/trivial.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>

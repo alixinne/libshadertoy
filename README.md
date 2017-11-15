@@ -15,9 +15,6 @@ The following tools and libraries are required:
 * [SOIL](https://launchpad.net/ubuntu/xenial/+package/libsoil-dev)
 * [libjpeg](https://launchpad.net/ubuntu/xenial/+package/libjpeg-dev)
 * [GLEW](https://launchpad.net/ubuntu/xenial/+source/glew)
-* [oglplus](https://oglplus.org/). Automatically downloaded from GitHub if
-needed, but an installed version will be used if available. Requires GLEW and
-GLFW3 to be installed.
 
 ## Usage
 

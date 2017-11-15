@@ -1,18 +1,26 @@
 #ifndef _SHADERTOY_PRE_HPP_
 #define _SHADERTOY_PRE_HPP_
 
-#include <oglplus/all.hpp>
 #include <boost/filesystem.hpp>
 #include "shadertoy/shadertoy_export.h"
 
 namespace shadertoy
 {
-	struct InputConfig;
+	namespace OpenGL
+	{
+		class Framebuffer;
+		class Program;
+		class Renderbuffer;
+		class Texture;
+	}
+
 	struct BufferConfig;
+	struct InputConfig;
 	struct ContextConfig;
-	class ShaderCompiler;
-	class TextureEngine;
 	class RenderContext;
+	class ShaderCompiler;
+	class ShadertoyError;
+	class TextureEngine;
 	class ToyBuffer;
 }
 

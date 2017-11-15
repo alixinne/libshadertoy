@@ -1,7 +1,7 @@
 Tests: 00-build
 Restrictions: allow-stderr
-Depends: @, libglfw3-dev, cmake, git, g++, ca-certificates, pkg-config
+Depends: @, libglfw3-dev, cmake, g++, pkg-config
 
 Tests: 10-gradient
 Restrictions: allow-stderr
-Depends: @, libglfw3-dev, cmake, git, g++, ca-certificates, pkg-config
+Depends: @, libglfw3-dev, cmake, g++, pkg-config

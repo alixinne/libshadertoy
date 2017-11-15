@@ -12,9 +12,6 @@ namespace shadertoy
 class shadertoy_EXPORT ToyBuffer
 {
 private:
-	/// Stateless OpenGl context
-	oglplus::Context gl;
-
 	/// Render context
 	RenderContext &context;
 
@@ -22,22 +19,19 @@ private:
 	const std::string id;
 
 	/// Target framebuffer
-	oglplus::Framebuffer targetFbo;
+	OpenGL::Framebuffer targetFbo;
 
 	/// Target renderbuffer
-	oglplus::Renderbuffer targetRbo;
+	OpenGL::Renderbuffer targetRbo;
 
 	/// Source texture
-	std::shared_ptr<oglplus::Texture> sourceTex;
+	OpenGL::Texture sourceTex;
 
 	/// Target texture
-	std::shared_ptr<oglplus::Texture> targetTex;
+	OpenGL::Texture targetTex;
 
 	/// Buffer program
-	oglplus::Program program;
-
-	/// Fragment shader
-	oglplus::FragmentShader fs;
+	OpenGL::Program program;
 
 	/// Bound uniform state
 	std::vector<std::shared_ptr<shadertoy::BoundInputsBase>> boundInputs;
@@ -78,7 +72,7 @@ public:
 	 *
 	 * @return     Source texture for this buffer.
 	 */
-	inline std::shared_ptr<oglplus::Texture> GetSourceTexture()
+	inline const shadertoy::OpenGL::Texture &GetSourceTexture() const
 	{ return sourceTex; }
 
 	/**
@@ -86,12 +80,11 @@ public:
 	 *
 	 * @return     Target (current) texture for this buffer.
 	 */
-	inline std::shared_ptr<oglplus::Texture> GetTargetTexture()
+	inline const shadertoy::OpenGL::Texture &GetTargetTexture() const
 	{ return targetTex; }
 
 private:
-	void InitializeRenderTexture(std::shared_ptr<oglplus::Texture> &texptr,
-								 int width, int height);
+	void InitializeRenderTexture(OpenGL::Texture &tex, int width, int height);
 };
 
 }

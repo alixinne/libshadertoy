@@ -12,33 +12,30 @@ namespace shadertoy
 class shadertoy_EXPORT RenderContext
 {
 protected:
-	/// Stateless OpenGL context
-	oglplus::Context gl;
-
 	/// Last rendered-to texture
-	std::weak_ptr<oglplus::Texture> lastTexture;
+	OpenGL::Texture *lastTexture;
 
 	/// Program for screen quad
-	oglplus::Program screenProg;
+	OpenGL::Program screenProg;
 
 private:
 	/// Config reference
 	ContextConfig &config;
 
 	/// Vertex shader for screen quad
-	oglplus::VertexShader screenVs;
+	OpenGL::Shader screenVs;
 
 	/// Fragment shader for screen quad
-	oglplus::FragmentShader screenFs;
+	OpenGL::Shader screenFs;
 
 	/// Vertex buffer for screen quad
-	oglplus::Buffer screenQuadCorners;
+	OpenGL::Buffer screenQuadCorners;
 	/// Index buffer for screen quad
-	oglplus::Buffer screenQuadIndices;
+	OpenGL::Buffer screenQuadIndices;
 
 	/// Screen quad source texture
 	/// Note that this texture will only be allocated if needed
-	std::shared_ptr<oglplus::Texture> screenQuadTexture;
+	OpenGL::Texture screenQuadTexture;
 
 	/// Input texture engine
 	std::shared_ptr<TextureEngine> textureEngine;
@@ -122,7 +119,7 @@ private:
 	 * @param      program  Target shader program.
 	 */
 	virtual void BindInputs(std::vector<std::shared_ptr<BoundInputsBase>> &inputs,
-							oglplus::Program &program);
+							OpenGL::Program &program);
 
 public:
 	/**
@@ -193,7 +190,7 @@ public:
 	 * @param      fs  Fragment shader object to compile to.
 	 */
 	void BuildBufferShader(const std::string &id,
-						   oglplus::FragmentShader &fs);
+						   OpenGL::Shader &fs);
 
 	/**
 	 * @brief      Loads a shader source by its path.
@@ -229,7 +226,7 @@ public:
 	 * @param program Program to bind to
 	 * @return
 	 */
-	std::vector<std::shared_ptr<BoundInputsBase>> GetBoundInputs(oglplus::Program &program);
+	std::vector<std::shared_ptr<BoundInputsBase>> GetBoundInputs(OpenGL::Program &program);
 
 	/**
 	 * @brief      Resets the current context target using the default viewport size
@@ -254,7 +251,7 @@ public:
 	/**
 	 * @brief      Get the default screen quad vertex shader
 	 */
-	oglplus::VertexShader &GetScreenQuadVertexShader();
+	OpenGL::Shader &GetScreenQuadVertexShader();
 };
 
 }

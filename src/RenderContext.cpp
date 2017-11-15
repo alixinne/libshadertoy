@@ -1,4 +1,6 @@
 #include "stdafx.hpp"
+#include "shadertoy/ShadertoyError.hpp"
+#include "shadertoy/OpenGL/OpenGL.hpp"
 
 #include "Resources.h"
 #include "shadertoy/ContextConfig.hpp"
@@ -11,7 +13,6 @@
 
 namespace fs = boost::filesystem;
 using namespace std;
-using namespace oglplus;
 using namespace shadertoy;
 
 shared_ptr<TextureEngine> RenderContext::BuildTextureEngine()

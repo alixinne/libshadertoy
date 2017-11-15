@@ -12,10 +12,6 @@ find_package(CURL REQUIRED)
 pkg_search_module(glfw3 REQUIRED glfw3)
 pkg_search_module(jsoncpp REQUIRED jsoncpp)
 
-# oglplus config
-set(oglplus_CONFIGURE_EXTRA_ARGS --use-glew --use-glfw3)
-set(shadertoy_LOAD_OGLPLUS ON)
-
 # libshadertoy
 find_package(shadertoy REQUIRED)
 
@@ -23,7 +19,6 @@ include_directories(
 	${OPENGL_INCLUDE_DIRS}
 	${GLEW_INCLUDE_DIRS}
 	${glfw3_INCLUDE_DIRS}
-	${oglplus_INCLUDE_DIRS}
 	${Boost_INCLUDE_DIRS}
 	${CURL_INCLUDE_DIRS}
 	${jsoncpp_INCLUDE_DIRS}

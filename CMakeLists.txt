@@ -28,8 +28,6 @@ find_package(GLEW REQUIRED)
 find_package(SOIL REQUIRED)
 find_package(JPEG REQUIRED)
 
-set(oglplus_CONFIGURE_EXTRA_ARGS --use-glew)
-include(liboglplus)
 find_package(PkgConfig REQUIRED)
 pkg_search_module(GLM REQUIRED glm)
 
@@ -59,9 +57,17 @@ add_library(shadertoy SHARED
 	src/ContextConfig.cpp
 	src/RenderContext.cpp
 	src/ShaderCompiler.cpp
+	src/ShadertoyError.cpp
 	src/TextureEngine.cpp
 	src/ToyBuffer.cpp
 	src/UniformState.cpp
+	src/OpenGL/Buffer.cpp
+	src/OpenGL/Caller.cpp
+	src/OpenGL/Framebuffer.cpp
+	src/OpenGL/Program.cpp
+	src/OpenGL/Renderbuffer.cpp
+	src/OpenGL/Shader.cpp
+	src/OpenGL/Texture.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/Resources.c)
 
 generate_export_header(shadertoy
@@ -74,7 +80,6 @@ target_include_directories(shadertoy PRIVATE
 	${shadertoy_INCLUDE_DIRS}
 	${Boost_INCLUDE_DIR}
 	${OPENGL_INCLUDE_DIRS}
-	${oglplus_INCLUDE_DIRS}
 	${GLM_INCLUDE_DIRS}
 	${SOIL_INCLUDE_DIRS}
 	${JPEG_INCLUDE_DIRS})
@@ -121,11 +126,6 @@ install(EXPORT shadertoy
 install(FILES shadertoy-config.cmake
 		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
-install(FILES modules/liboglplus.cmake
-		COMPONENT shadertoy-dev
-		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy
-		COMPONENT shadertoy-dev
-		RENAME shadertoy-liboglplus.cmake)
 install(DIRECTORY examples
 		COMPONENT shadertoy-examples
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)

@@ -1,6 +1,5 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <oglplus/all.hpp>
 #include <boost/filesystem.hpp>
 
 #include <shadertoy/Shadertoy.hpp>

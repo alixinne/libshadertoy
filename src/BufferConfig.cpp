@@ -2,7 +2,6 @@
 #include "shadertoy/BufferConfig.hpp"
 
 using namespace std;
-using namespace oglplus;
 
 namespace fs = boost::filesystem;
 
@@ -17,8 +16,8 @@ InputConfig::InputConfig()
 	: id(),
 	  type(),
 	  source(),
-	  wrap(TextureWrap::Repeat),
-	  minFilter(TextureMinFilter::Linear),
-	  magFilter(TextureMagFilter::Linear)
+	  wrap(GL_REPEAT),
+	  minFilter(GL_LINEAR),
+	  magFilter(GL_LINEAR)
 {
 }
