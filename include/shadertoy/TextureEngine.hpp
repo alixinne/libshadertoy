@@ -9,7 +9,7 @@ namespace shadertoy
 /**
  * Handler callback definition for the texture engine. Instances of this method
  * are called when a texture is required for an input in a rendering context.
- * 
+ *
  * `inputConfig` is the configuration object for the given input.
  * `skipTextureOptions` should be set to true if no wrapping or filtering
  * options should be automatically applied. `skipCache` should be set to true if

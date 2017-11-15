@@ -1,4 +1,5 @@
 #include "stdafx.hpp"
+
 #include "Resources.h"
 #include "shadertoy/ContextConfig.hpp"
 #include "shadertoy/UniformState.hpp"

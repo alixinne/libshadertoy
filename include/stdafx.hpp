@@ -7,6 +7,7 @@
 
 #include <SOIL/SOIL.h>
 #include <jpeglib.h>
+
 #include <GL/glew.h>
 
 #include <oglplus/all.hpp>

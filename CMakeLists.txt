@@ -47,6 +47,7 @@ add_custom_command(
 set(shadertoy_INCLUDE_DIRS
 	${CMAKE_CURRENT_BINARY_DIR} # for Resources.h
 	${INCLUDE_DIR})
+
 set(shadertoy_LIBRARIES
 	shadertoy)
 
@@ -60,6 +61,7 @@ add_library(shadertoy SHARED
 	src/ToyBuffer.cpp
 	src/UniformState.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/Resources.c)
+
 generate_export_header(shadertoy
 	BASE_NAME shadertoy
 	EXPORT_MACRO_NAME shadertoy_EXPORT

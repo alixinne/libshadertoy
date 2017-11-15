@@ -24,7 +24,7 @@ public:
 
 	/**
 	 * @brief      Obtain a reference to the named sources for this compiler.
-	 * 
+	 *
 	 *             Each pair of this list is a tuple (name, source) where name
 	 *             is the name of the shader source part, and source the actual
 	 *             GLSL code. The parts will be compiled in the same order as

@@ -1,4 +1,5 @@
 #include "stdafx.hpp"
+
 #include "shadertoy/ShaderCompiler.hpp"
 
 using namespace std;

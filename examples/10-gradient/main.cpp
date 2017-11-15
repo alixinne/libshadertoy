@@ -10,7 +10,7 @@ namespace fs = boost::filesystem;
 void SetFramebufferSize(GLFWwindow *window, int width, int height)
 {
 	// Get the context from the window user pointer
-	shadertoy::RenderContext &context = 
+	shadertoy::RenderContext &context =
 		*static_cast<shadertoy::RenderContext*>(glfwGetWindowUserPointer(window));
 
 	// Reallocate textures

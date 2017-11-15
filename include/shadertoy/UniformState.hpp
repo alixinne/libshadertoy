@@ -79,7 +79,7 @@ private:
 	static void AppendDefinition(std::ostream &os)
 	{
 		os << "uniform " << Input::GLSLTypeName << " " << Input::Name;
-		
+
 		if (Input::N > 1)
 		{
 			os << "[" << Input::N << "]";
