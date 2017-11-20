@@ -2,6 +2,7 @@
 #define _SHADERTOY_OPENGL_RESOURCE_HPP_
 
 #include "shadertoy/pre.hpp"
+#include "shadertoy/OpenGL/Caller.hpp"
 
 namespace shadertoy
 {
@@ -15,7 +16,7 @@ namespace OpenGL
 	{
 	public:
 		void operator()(GLuint resource)
-		{ (*DeleteFunction)(resource); }
+		{ glCall(*DeleteFunction, resource); }
 	};
 
 	template<MultiResourceDeleter *DeleteFunction>
@@ -23,7 +24,7 @@ namespace OpenGL
 	{
 	public:
 		void operator()(GLuint resource)
-		{ (*DeleteFunction)(1, &resource); }
+		{ glCall(*DeleteFunction, 1, &resource); }
 	};
 
 	template<MultiResourceDeleter DeleteFunction>
@@ -31,7 +32,7 @@ namespace OpenGL
 	{
 	public:
 		void operator()(GLuint resource)
-		{ DeleteFunction(1, &resource); }
+		{ glCall(DeleteFunction, 1, &resource); }
 	};
 
 	template<typename TFinal, typename TDeleter, typename TError>
