@@ -102,12 +102,10 @@ public:
 		template<typename Input>
 		struct Uniform
 		{
-			GLint Location;
-			typename Input::ValueType Var;
+			OpenGL::UniformLocation Location;
 
-			Uniform(GLint &program)
-				: Location(program, Input::Name, false),
-				  Var(Location)
+			Uniform(OpenGL::Program &program)
+				: Location(program.GetUniformLocation(Input::Name))
 			{
 			}
 		};
@@ -128,16 +126,10 @@ public:
 			auto valptr = std::get<Index>(State.AllInputs);
 			auto &uniform(std::get<Index>(Uniforms));
 
-			if (uniform.Location.IsActive())
-			{
-				// Set uniform using state value
-				uniform.Var.Set(static_cast<size_t>(valptr->Values.size()),
-								static_cast<const typename Type::ValueType *>(valptr->Values.data()));
-
-				return true;
-			}
-
-			return false;
+			// Set uniform using state value
+			return uniform.Location.SetValue(
+				static_cast<size_t>(valptr->Values.size()),
+				static_cast<const typename Type::ValueType *>(valptr->Values.data()));
 		}
 
 		/**
@@ -161,7 +153,7 @@ public:
 		 * @param program Program to bind to
 		 */
 		template<size_t... Indices>
-		BoundInputs(StateType &state, GLint program, std::index_sequence<Indices...>)
+		BoundInputs(StateType &state, OpenGL::Program &program, std::index_sequence<Indices...>)
 			: State(state),
 			  Uniforms(Uniform<Inputs>(program)...)
 		{
@@ -230,7 +222,7 @@ public:
 	 * @param program Program to bind to.
 	 * @return
 	 */
-	std::shared_ptr<BoundInputs> GetBoundInputs(GLint program)
+	std::shared_ptr<BoundInputs> GetBoundInputs(OpenGL::Program &program)
 	{
 		return std::make_shared<BoundInputs>(*this, program, Indices());
 	}

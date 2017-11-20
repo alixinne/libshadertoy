@@ -15,6 +15,9 @@ namespace OpenGL
 
 	class Texture : public Resource<Texture, MultiStaticDeleter<glDeleteTextures>, NullTextureError>
 	{
+	public:
+		// glBindTexture
+		void Bind(GLenum target);
 	};
 }
 }

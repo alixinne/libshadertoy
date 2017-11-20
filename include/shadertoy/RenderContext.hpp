@@ -13,7 +13,7 @@ class shadertoy_EXPORT RenderContext
 {
 protected:
 	/// Last rendered-to texture
-	OpenGL::Texture *lastTexture;
+	std::weak_ptr<OpenGL::Texture> lastTexture;
 
 	/// Program for screen quad
 	OpenGL::Program screenProg;
@@ -35,7 +35,7 @@ private:
 
 	/// Screen quad source texture
 	/// Note that this texture will only be allocated if needed
-	OpenGL::Texture screenQuadTexture;
+	std::shared_ptr<OpenGL::Texture> screenQuadTexture;
 
 	/// Input texture engine
 	std::shared_ptr<TextureEngine> textureEngine;
@@ -166,14 +166,14 @@ public:
 	 * @param[in]  texIn   Input texture id for outside operation
 	 * @param[in]  texOut  Output texture id for outside operation
 	 */
-	void DoReadWriteCurrentFrame(GLint &texIn, GLint &texOut);
+	void DoReadWriteCurrentFrame(GLuint &texIn, GLuint &texOut);
 
 	/**
 	 * @brief      Read the currently rendered result.
 	 *
 	 * @param      texIn  Input texture
 	 */
-	void DoReadCurrentFrame(GLint &texIn);
+	void DoReadCurrentFrame(GLuint &texIn);
 
 	/**
 	 * @brief      Get a reference to the texture engine of this render context.

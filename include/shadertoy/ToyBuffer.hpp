@@ -25,10 +25,10 @@ private:
 	OpenGL::Renderbuffer targetRbo;
 
 	/// Source texture
-	OpenGL::Texture sourceTex;
+	std::shared_ptr<OpenGL::Texture> sourceTex;
 
 	/// Target texture
-	OpenGL::Texture targetTex;
+	std::shared_ptr<OpenGL::Texture> targetTex;
 
 	/// Buffer program
 	OpenGL::Program program;
@@ -72,7 +72,7 @@ public:
 	 *
 	 * @return     Source texture for this buffer.
 	 */
-	inline const shadertoy::OpenGL::Texture &GetSourceTexture() const
+	inline std::shared_ptr<OpenGL::Texture> GetSourceTexture() const
 	{ return sourceTex; }
 
 	/**
@@ -80,7 +80,7 @@ public:
 	 *
 	 * @return     Target (current) texture for this buffer.
 	 */
-	inline const shadertoy::OpenGL::Texture &GetTargetTexture() const
+	inline std::shared_ptr<OpenGL::Texture> GetTargetTexture() const
 	{ return targetTex; }
 
 private:

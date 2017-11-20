@@ -128,27 +128,6 @@ namespace OpenGL
 		bool hasRes;
 		GLuint resId;
 	};
-
-	template<typename TResource>
-	class WeakRef
-	{
-		static constexpr const TResource NullResource = TResource();
-	public:
-
-		WeakRef()
-		: ref(TResource::NullValue) { }
-		WeakRef(const TResource &resource)
-		: ref(resource) { }
-
-		operator bool() const
-		{ return &ref != &TResource::NullValue && ref; }
-
-		GLuint operator*() const throw(typename TResource::ErrorType)
-		{ return *ref; }
-
-	private:
-		const TResource &ref;
-	};
 }
 }
 

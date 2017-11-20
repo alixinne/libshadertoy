@@ -17,7 +17,7 @@ namespace shadertoy
  * `framebufferSized` should be set to true if any change in framebuffer
  * resolution should require generating a new instance of this texture.
  */
-typedef std::function<OpenGL::Texture(
+typedef std::function<std::shared_ptr<OpenGL::Texture>(
 	const InputConfig &inputConfig,
 	bool &skipTextureOptions,
 	bool &skipCache,
@@ -42,15 +42,15 @@ class shadertoy_EXPORT TextureEngine
 	std::map<std::string, InputHandler> handlers;
 
 	// Default texture handlers
-	OpenGL::Texture SOILTextureHandler(const InputConfig &inputConfig,
+	std::shared_ptr<OpenGL::Texture> SOILTextureHandler(const InputConfig &inputConfig,
 		bool &skipTextureOptions,
 		bool &skipCache,
 		bool &framebufferSized);
-	OpenGL::Texture NoiseTextureHandler(const InputConfig &inputConfig,
+	std::shared_ptr<OpenGL::Texture> NoiseTextureHandler(const InputConfig &inputConfig,
 		bool &skipTextureOptions,
 		bool &skipCache,
 		bool &framebufferSized);
-	OpenGL::Texture CheckerTextureHandler(const InputConfig &inputConfig,
+	std::shared_ptr<OpenGL::Texture> CheckerTextureHandler(const InputConfig &inputConfig,
 		bool &skipTextureOptions,
 		bool &skipCache,
 		bool &framebufferSized);

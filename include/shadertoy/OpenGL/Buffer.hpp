@@ -15,6 +15,12 @@ namespace OpenGL
 
 	class Buffer : public Resource<Buffer, MultiDeleter<&glDeleteBuffers>, NullBufferError>
 	{
+	public:
+		// glBindBuffer
+		void Bind(GLenum target);
+
+		// glNamedBufferData
+		void Data(GLsizei size, const void *data, GLenum usage);
 	};
 }
 }

@@ -12,13 +12,13 @@ ShaderCompiler::ShaderCompiler()
 {
 }
 
-void ShaderCompiler::Compile(oglplus::Shader &shader)
+void ShaderCompiler::Compile(OpenGL::Shader &shader)
 {
 	// Transform pairs into list of C strings
-	vector<const GLchar*> sources(namedSources.size());
+	vector<std::string> sources(namedSources.size());
 	transform(namedSources.begin(), namedSources.end(), sources.begin(),
 		[] (const pair<string, string> &namedSource) {
-			return namedSource.second.c_str();
+			return namedSource.second;
 		});
 
 	// Also, build a line count
@@ -33,13 +33,13 @@ void ShaderCompiler::Compile(oglplus::Shader &shader)
 	// Load sources in fragment shader and compile
 	try
 	{
-		shader.Source(GLSLStrings(sources));
+		shader.Source(sources);
 		shader.Compile();
 	}
-	catch (oglplus::CompileError &ex)
+	catch (OpenGL::ShaderCompilationError &ex)
 	{
 		// Reparse log and replace sources with their actual names
-		std::stringstream is(ex.Log()), os;
+		std::stringstream is(ex.log()), os;
 		std::string msg;
 
 		while (!is.eof())
@@ -95,7 +95,6 @@ void ShaderCompiler::Compile(oglplus::Shader &shader)
 		}
 
 		// Update exception and rethrow
-		ex.Log(os.str());
-		throw ex;
+		throw OpenGL::ShaderCompilationError(GLuint(shader), os.str());
 	}
 }

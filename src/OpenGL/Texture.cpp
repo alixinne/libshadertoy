@@ -8,3 +8,8 @@ NullTextureError::NullTextureError()
 	: ShadertoyError("An attempt was made to dereference a null texture")
 {
 }
+
+void Texture::Bind(GLenum target)
+{
+	glCall(glBindTexture, target, GLuint(*this));
+}
