@@ -1,9 +1,6 @@
 #ifndef _SHADERTOY_UNIFORM_STATE_HPP_
 #define _SHADERTOY_UNIFORM_STATE_HPP_
 
-#include <boost/variant.hpp>
-#include <sstream>
-
 #include "shadertoy/pre.hpp"
 
 namespace shadertoy

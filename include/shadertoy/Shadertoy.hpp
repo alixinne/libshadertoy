@@ -1,3 +1,7 @@
+#include <boost/variant.hpp>
+#include <map>
+#include <sstream>
+
 #include "shadertoy/pre.hpp"
 
 #include "shadertoy/ShadertoyError.hpp"
