@@ -7,15 +7,13 @@ namespace shadertoy
 {
 namespace OpenGL
 {
-	class NullProgramError : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT NullProgramError : public shadertoy::ShadertoyError
 	{
 	public:
 		explicit NullProgramError();
 	};
 
-	class Shader;
-
-	class UniformLocation
+	class shadertoy_EXPORT UniformLocation
 	{
 	public:
 		UniformLocation(const Program &program, GLint location);
@@ -41,7 +39,7 @@ namespace OpenGL
 		const GLint _location;
 	};
 
-	class Program : public Resource<
+	class shadertoy_EXPORT Program : public Resource<
 		Program,
 		SingleAllocator<&glCreateProgram, &glDeleteProgram>,
 		NullProgramError>

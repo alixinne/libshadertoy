@@ -15,7 +15,7 @@ namespace OpenGL
 	typedef void (*MultiResourceDeleter)(GLsizei, const GLuint*);
 
 	template<SingleResourceCreator *CreateFunction, SingleResourceDeleter *DeleteFunction>
-	class SingleAllocator
+	class shadertoy_EXPORT SingleAllocator
 	{
 	public:
 		GLuint Create()
@@ -26,7 +26,7 @@ namespace OpenGL
 	};
 
 	template<MultiResourceCreator *CreateFunction, MultiResourceDeleter *DeleteFunction>
-	class MultiAllocator
+	class shadertoy_EXPORT MultiAllocator
 	{
 	public:
 		GLuint Create()
@@ -41,7 +41,7 @@ namespace OpenGL
 	};
 
 	template<typename TFinal, typename TAllocator, typename TError>
-	class Resource
+	class shadertoy_EXPORT Resource
 	{
 	public:
 		typedef TAllocator Allocator;
@@ -118,7 +118,10 @@ namespace OpenGL
 		 *
 		 * @param  texId Resource id to reference
 		 */
-		explicit Resource(GLuint resId);
+		explicit Resource(GLuint resId)
+			: hasRes(true),
+			resId(resId)
+		{}
 
 	private:
 		/**

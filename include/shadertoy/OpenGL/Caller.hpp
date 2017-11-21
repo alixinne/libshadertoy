@@ -7,7 +7,7 @@ namespace shadertoy
 {
 namespace OpenGL
 {
-	class OpenGLError : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT OpenGLError : public shadertoy::ShadertoyError
 	{
 	public:
 		explicit OpenGLError(GLenum error);
@@ -16,10 +16,10 @@ namespace OpenGL
 	/**
 	 * Throws an OpenGLError if glGetError returns non-zero
 	 */
-	void CheckErrors();
+	void shadertoy_EXPORT CheckErrors();
 
 	template<typename glFunction>
-	auto glCall(glFunction function)->typename
+	auto shadertoy_EXPORT glCall(glFunction function)->typename
 					std::enable_if<std::is_same<void, decltype(function())>::value,
 					decltype(function())>::type
 	{
@@ -28,7 +28,7 @@ namespace OpenGL
 	}
 
 	template<typename glFunction>
-	auto glCall(glFunction function)->typename
+	auto shadertoy_EXPORT glCall(glFunction function)->typename
 					std::enable_if<!std::is_same<void, decltype(function())>::value,
 					decltype(function())>::type
 	{
@@ -38,7 +38,7 @@ namespace OpenGL
 	}
 
 	template<typename glFunction, typename... Params>
-	auto glCall(glFunction function, Params... params)->typename
+	auto shadertoy_EXPORT glCall(glFunction function, Params... params)->typename
 					std::enable_if<std::is_same<void, decltype(function(params...))>::value,
 					decltype(function(params...))>::type
 	{
@@ -47,7 +47,7 @@ namespace OpenGL
 	}
 
 	template<typename glFunction, typename... Params>
-	auto glCall(glFunction function, Params... params)->typename
+	auto shadertoy_EXPORT glCall(glFunction function, Params... params)->typename
 					std::enable_if<!std::is_same<void, decltype(function(params...))>::value,
 					decltype(function(params...))>::type
 	{

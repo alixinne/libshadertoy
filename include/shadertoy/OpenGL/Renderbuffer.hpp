@@ -7,13 +7,13 @@ namespace shadertoy
 {
 namespace OpenGL
 {
-	class NullRenderbufferError : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT NullRenderbufferError : public shadertoy::ShadertoyError
 	{
 	public:
 		explicit NullRenderbufferError();
 	};
 
-	class Renderbuffer : public Resource<
+	class shadertoy_EXPORT Renderbuffer : public Resource<
 		Renderbuffer,
 		MultiAllocator<&glCreateRenderbuffers, &glDeleteRenderbuffers>,
 		NullRenderbufferError>

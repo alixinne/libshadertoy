@@ -7,13 +7,13 @@ namespace shadertoy
 {
 namespace OpenGL
 {
-	class NullShaderError : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT NullShaderError : public shadertoy::ShadertoyError
 	{
 	public:
 		explicit NullShaderError();
 	};
 
-	class ShaderCompilationError : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT ShaderCompilationError : public shadertoy::ShadertoyError
 	{
 	public:
 		explicit ShaderCompilationError(GLuint shaderId, const std::string &log);
@@ -34,14 +34,14 @@ namespace OpenGL
 	 * Takes a shader type as a supplementary parameter compared to the standard
 	 * resource allocators.
 	 */
-	class ShaderAllocator
+	class shadertoy_EXPORT ShaderAllocator
 	{
 	public:
 		GLuint Create(GLenum shaderType);
 		void Delete(GLuint resource);
 	};
 
-	class Shader : public Resource<Shader, ShaderAllocator, NullShaderError>
+	class shadertoy_EXPORT Shader : public Resource<Shader, ShaderAllocator, NullShaderError>
 	{
 	public:
 		/**

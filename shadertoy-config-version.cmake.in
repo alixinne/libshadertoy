@@ -1,0 +1,15 @@
+# libshadertoy versioning package script
+
+set(PACKAGE_VERSION @VERSION@)
+
+if("${PACKAGE_FIND_VERSION_MAJOR}" EQUAL "@VERSION_MAJOR@")
+    if ("${PACKAGE_FIND_VERSION_MINOR}" EQUAL "@VERSION_MINOR@")
+        set(PACKAGE_VERSION_EXACT TRUE)
+    elseif("${PACKAGE_FIND_VERSION_MINOR}" LESS "@VERSION_MINOR@")
+        set(PACKAGE_VERSION_COMPATIBLE TRUE)
+    else()
+        set(PACKAGE_VERSION_UNSUITABLE TRUE)
+    endif()
+else()
+    set(PACKAGE_VERSION_UNSUITABLE TRUE)
+endif()

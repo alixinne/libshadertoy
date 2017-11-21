@@ -7,7 +7,7 @@ namespace shadertoy
 {
 namespace OpenGL
 {
-	class NullTextureError : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT NullTextureError : public shadertoy::ShadertoyError
 	{
 	public:
 		explicit NullTextureError();
@@ -19,14 +19,14 @@ namespace OpenGL
 	 * resource allocators. Also links statically to glCreateTexture and
 	 * glDeleteTexture according to the OpenGL spec.
 	 */
-	class TextureAllocator
+	class shadertoy_EXPORT TextureAllocator
 	{
 	public:
 		GLuint Create(GLenum target);
 		void Delete(GLuint resource);
 	};
 
-	class Texture : public Resource<Texture, TextureAllocator, NullTextureError>
+	class shadertoy_EXPORT Texture : public Resource<Texture, TextureAllocator, NullTextureError>
 	{
 	public:
 		/**

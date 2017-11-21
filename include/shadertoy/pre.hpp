@@ -8,9 +8,28 @@ namespace shadertoy
 {
 	namespace OpenGL
 	{
+		class NullBufferError;
+		class Buffer;
+
+		class OpenGLError;
+
+		class NullFramebufferError;
 		class Framebuffer;
+
+		class NullProgramError;
+		class UniformLocation;
 		class Program;
+
+		class NullRenderbufferError;
 		class Renderbuffer;
+
+		class NullShaderError;
+		class ShaderCompilationError;
+		class ShaderAllocator;
+		class Shader;
+
+		class NullTextureError;
+		class TextureAllocator;
 		class Texture;
 	}
 

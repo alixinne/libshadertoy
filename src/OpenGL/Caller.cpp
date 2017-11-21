@@ -38,11 +38,17 @@ OpenGLError::OpenGLError(GLenum error)
 {
 }
 
-void CheckErrors()
+namespace shadertoy
 {
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR)
+namespace OpenGL
+{
+	void CheckErrors()
 	{
-		throw OpenGLError(error);
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR)
+		{
+			throw OpenGLError(error);
+		}
 	}
+}
 }

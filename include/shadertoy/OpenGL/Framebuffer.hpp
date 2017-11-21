@@ -7,15 +7,13 @@ namespace shadertoy
 {
 namespace OpenGL
 {
-	class NullFramebufferError : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT NullFramebufferError : public shadertoy::ShadertoyError
 	{
 	public:
 		explicit NullFramebufferError();
 	};
 
-	class Texture;
-
-	class Framebuffer : public Resource<
+	class shadertoy_EXPORT Framebuffer : public Resource<
 		Framebuffer,
 		MultiAllocator<&glCreateFramebuffers, &glDeleteFramebuffers>,
 		NullFramebufferError>

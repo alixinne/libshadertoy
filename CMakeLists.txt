@@ -12,7 +12,8 @@ include(GenerateExportHeader)
 set(VERSION_MAJOR   0   CACHE STRING "Project major version number.")
 set(VERSION_MINOR   1   CACHE STRING "Project minor version number.")
 set(VERSION_PATCH   0   CACHE STRING "Project patch version number.")
-mark_as_advanced(VERSION_MAJOR VERSION_MINOR VERSION_PATCH)
+set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+mark_as_advanced(VERSION_MAJOR VERSION_MINOR VERSION_PATCH VERSION)
 
 # Project directories
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -123,9 +124,16 @@ install(TARGETS shadertoy
 install(EXPORT shadertoy
 		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
-install(FILES shadertoy-config.cmake
+
+# Configure the -config.cmake file
+configure_file(shadertoy-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake @ONLY)
+configure_file(shadertoy-config-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config-version.cmake @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake
+			  ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config-version.cmake
 		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
+
+# Install th examples
 install(DIRECTORY examples
 		COMPONENT shadertoy-examples
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
@@ -136,6 +144,11 @@ set(SHADERTOY_HEADERS ${SHADERTOY_HEADERS}
 install(FILES ${SHADERTOY_HEADERS}
 		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
+
+file(GLOB SHADERTOY_GL_HEADERS ${INCLUDE_DIR}/shadertoy/OpenGL/*.hpp)
+install(FILES ${SHADERTOY_GL_HEADERS}
+		COMPONENT shadertoy-dev
+		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy/OpenGL)
 
 # Enable warnings
 if(MSVC)
