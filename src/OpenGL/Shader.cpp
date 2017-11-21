@@ -79,6 +79,9 @@ std::string Shader::Log()
 	GLint infoLogLength = 0;
 	glCall(glGetShaderiv, GLuint(*this), GL_INFO_LOG_LENGTH, &infoLogLength);
 
+	if (infoLogLength == 0)
+		return std::string();
+
 	// Get log
 	std::vector<GLchar> logStr(infoLogLength);
 	glCall(glGetShaderInfoLog, GLuint(*this), infoLogLength, nullptr, logStr.data());
