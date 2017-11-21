@@ -190,19 +190,19 @@ void RenderContext::InitializeBuffers()
 	screenQuadIndices.Bind(GL_ELEMENT_ARRAY_BUFFER);
 
 	vector<OpenGL::Program *> programs{&screenProg};
-	vector<const char *> names{"default screen shader"};
 
+	GLint location;
 	for (auto it = programs.begin(); it != programs.end(); ++it)
 	{
 		// Bind input "position" to vertex locations (3 floats)
-		glCall(glEnableVertexAttribArray, 0);
-		glCall(glBindAttribLocation, GLuint(**it), 0, "position");
-		glCall(glVertexAttribPointer, 0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)0);
+		location = glCall(glGetAttribLocation, GLuint(**it), "position");
+		glCall(glVertexAttribPointer, location, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)0);
+		glCall(glEnableVertexAttribArray, location);
 
 		// Bind input "texCoord" to vertex texture coordinates (2 floats)
-		glCall(glEnableVertexAttribArray, 1);
-		glCall(glBindAttribLocation, GLuint(**it), 1, "texCoord");
-		glCall(glVertexAttribPointer, 1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+		location = glCall(glGetAttribLocation, GLuint(**it), "texCoord");
+		glCall(glVertexAttribPointer, location, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+		glCall(glEnableVertexAttribArray, location);
 	}
 
 	lastTexture = weak_ptr<OpenGL::Texture>();
