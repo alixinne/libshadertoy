@@ -1,10 +1,12 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <boost/filesystem.hpp>
+#include <iostream>
 
 #include <shadertoy/Shadertoy.hpp>
 
 namespace fs = boost::filesystem;
+using shadertoy::OpenGL::glCall;
 
 void SetFramebufferSize(GLFWwindow *window, int width, int height)
 {
@@ -74,37 +76,21 @@ int main(int argc, char *argv[])
 				context.Initialize();
 				std::cout << "Initialized rendering context" << std::endl;
 			}
-			catch (oglplus::ProgramBuildError &pbe)
+			catch (shadertoy::OpenGL::ShaderCompilationError &sce)
 			{
-				std::cerr << "Program build error: "
-						  << pbe.what()
-						  << " ["
-						  << pbe.SourceFile()
-						  << ":"
-						  << pbe.SourceLine()
-						  << "] "
-						  << std::endl
-						  << pbe.Log();
+				std::cerr << "Failed to compile shader: " << sce.log();
 				code = 2;
 			}
-			catch (oglplus::Error &err)
+			catch (shadertoy::ShadertoyError &err)
 			{
 				std::cerr << "Error: "
-						  << err.what()
-						  << " ["
-						  << err.SourceFile()
-						  << ":"
-						  << err.SourceLine()
-						  << "] ";
+						  << err.what();
 				code = 2;
 			}
 
 			// Now render for 5s
 			int frameCount = 0;
 			double t = 0.;
-
-			oglplus::Context gl;
-			oglplus::DefaultFramebuffer dfb;
 
 			// Set the resize callback
 			glfwSetWindowUserPointer(window, &context);
@@ -124,8 +110,8 @@ int main(int argc, char *argv[])
 
 				// Render to screen
 				//  Setup framebuffer
-				dfb.Bind(oglplus::Framebuffer::Target::Draw);
-				gl.Viewport(0, 0, contextConfig.width, contextConfig.height);
+				glCall(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
+				glCall(glViewport, 0, 0, contextConfig.width, contextConfig.height);
 
 				//  Load texture and program
 				context.BindResult();
