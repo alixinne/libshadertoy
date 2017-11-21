@@ -41,7 +41,10 @@ namespace OpenGL
 		const GLint _location;
 	};
 
-	class Program : public Resource<Program, SingleDeleter<&glDeleteProgram>, NullProgramError>
+	class Program : public Resource<
+		Program,
+		SingleAllocator<&glCreateProgram, &glDeleteProgram>,
+		NullProgramError>
 	{
 	public:
 		// glLinkProgram

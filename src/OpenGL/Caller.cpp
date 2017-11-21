@@ -1,5 +1,6 @@
 #include "stdafx.hpp"
-#include "shadertoy/OpenGL/OpenGL.hpp"
+#include "shadertoy/ShadertoyError.hpp"
+#include "shadertoy/OpenGL/Caller.hpp"
 
 #define ERROR_PREFIX "OpenGL error: "
 

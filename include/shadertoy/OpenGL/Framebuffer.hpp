@@ -13,8 +13,19 @@ namespace OpenGL
 		explicit NullFramebufferError();
 	};
 
-	class Framebuffer : public Resource<Framebuffer, MultiDeleter<&glDeleteFramebuffers>, NullFramebufferError>
+	class Texture;
+
+	class Framebuffer : public Resource<
+		Framebuffer,
+		MultiAllocator<&glCreateFramebuffers, &glDeleteFramebuffers>,
+		NullFramebufferError>
 	{
+	public:
+		// glBindFramebuffer
+		void Bind(GLenum target);
+
+		// glNamedFramebufferTexture
+		void Texture(GLenum attachment, Texture &texture, GLint level);
 	};
 }
 }

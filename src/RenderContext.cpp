@@ -54,11 +54,10 @@ shared_ptr<TextureEngine> RenderContext::BuildTextureEngine()
 			int minFilter = max((int)inputConfig.minFilter, GL_LINEAR),
 				magFilter = (int)inputConfig.magFilter;
 
-			GLuint texId(**texture);
-			glCall(glTextureParameteri, texId, GL_TEXTURE_MIN_FILTER, minFilter);
-			glCall(glTextureParameteri, texId, GL_TEXTURE_MAG_FILTER, magFilter);
-			glCall(glTextureParameteri, texId, GL_TEXTURE_WRAP_S, inputConfig.wrap);
-			glCall(glTextureParameteri, texId, GL_TEXTURE_WRAP_T, inputConfig.wrap);
+			texture->Parameter(GL_TEXTURE_MAG_FILTER, magFilter);
+			texture->Parameter(GL_TEXTURE_MIN_FILTER, minFilter);
+			texture->Parameter(GL_TEXTURE_WRAP_S, inputConfig.wrap);
+			texture->Parameter(GL_TEXTURE_WRAP_T, inputConfig.wrap);
 
 			return texture;
 		}
@@ -91,6 +90,8 @@ void RenderContext::BindInputs(vector<shared_ptr<BoundInputsBase>> &inputs,
 
 RenderContext::RenderContext(ContextConfig &config)
 	: config(config),
+	screenVs(GL_VERTEX_SHADER),
+	screenFs(GL_FRAGMENT_SHADER),
 	frameCount(0)
 {
 	textureEngine = BuildTextureEngine();
@@ -258,15 +259,14 @@ void RenderContext::DoReadWriteCurrentFrame(GLuint &texIn, GLuint &texOut)
 		if (!screenQuadTexture)
 		{
 			// Create texture object
-			screenQuadTexture = make_shared<OpenGL::Texture>();
+			screenQuadTexture = make_shared<OpenGL::Texture>(GL_TEXTURE_2D);
 
 			// Setup screenQuadTexture
-			GLuint texId(**screenQuadTexture);
-			glCall(glTextureParameteri, texId, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glCall(glTextureParameteri, texId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glCall(glTextureParameteri, texId, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glCall(glTextureParameteri, texId, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			glCall(glTextureImage2DEXT, texId, GL_TEXTURE_2D, 0, GL_RGBA32F,
+			screenQuadTexture->Parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			screenQuadTexture->Parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			screenQuadTexture->Parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
+			screenQuadTexture->Parameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
+			screenQuadTexture->Image2D(GL_TEXTURE_2D, 0, GL_RGBA32F,
 				config.width, config.height, 0, GL_BGRA, GL_FLOAT, nullptr);
 		}
 

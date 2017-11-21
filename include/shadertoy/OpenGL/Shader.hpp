@@ -29,9 +29,28 @@ namespace OpenGL
 		const std::string _log;
 	};
 
-	class Shader : public Resource<Shader, SingleDeleter<&glDeleteShader>, NullShaderError>
+	/**
+	 * Implementation of the allocator pattern for shaders.
+	 * Takes a shader type as a supplementary parameter compared to the standard
+	 * resource allocators.
+	 */
+	class ShaderAllocator
 	{
 	public:
+		GLuint Create(GLenum shaderType);
+		void Delete(GLuint resource);
+	};
+
+	class Shader : public Resource<Shader, ShaderAllocator, NullShaderError>
+	{
+	public:
+		/**
+		 * Creates a new shader of the given type.
+		 *
+		 * @param shaderType Type of the new shader
+		 */
+		Shader(GLenum shaderType);
+
 		// glShaderSource
 		void Source(const std::string &string);
 		void Source(const std::vector<std::string> &string);

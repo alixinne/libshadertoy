@@ -15,11 +15,13 @@ using namespace std;
 namespace fs = boost::filesystem;
 
 using namespace shadertoy;
+using shadertoy::OpenGL::glCall;
 
 ToyBuffer::ToyBuffer(RenderContext &context,
 					 const std::string &id)
 	: context(context),
 	  id(id),
+	  fs(GL_FRAGMENT_SHADER),
 	  boundInputs()
 {
 }
@@ -48,16 +50,10 @@ void ToyBuffer::Initialize(int width, int height)
 	{
 		GLenum err;
 		// Get GL program id
-		GLuint progId = GetName(program);
+		GLuint progId = GLuint(program);
 		// Allocate buffer
 		GLint len, actLen;
-		glGetProgramiv(progId, GL_PROGRAM_BINARY_LENGTH, &len);
-		if ((err = glGetError()) != GL_NO_ERROR)
-		{
-			std::stringstream ss;
-			ss << "could not get program binary length: " << err;
-			throw std::runtime_error(ss.str());
-		}
+		glCall(glGetProgramiv, progId, GL_PROGRAM_BINARY_LENGTH, &len);
 
 		char *progBinary = new char[len];
 		// Get binary
@@ -107,10 +103,9 @@ void ToyBuffer::AllocateTextures(int width, int height)
 	InitializeRenderTexture(targetTex, width, height);
 
 	// Setup render buffers
-	targetTex->Bind(TextureTarget::_2D);
-	targetRbo.Bind(Renderbuffer::Target::Renderbuffer);
-	targetRbo.Storage(Renderbuffer::Target::Renderbuffer,
-					  PixelDataInternalFormat::DepthComponent, width, height);
+	targetTex->Bind(GL_TEXTURE_2D);
+	targetRbo.Bind(GL_RENDERBUFFER);
+	targetRbo.Storage(GL_DEPTH_COMPONENT, width, height);
 }
 
 void ToyBuffer::Render()
@@ -118,12 +113,11 @@ void ToyBuffer::Render()
 	auto &config(context.GetConfig().bufferConfigs[id]);
 
 	// Update renderbuffer to use the correct target texture
-	targetTex->Bind(TextureTarget::_2D);
-	targetRbo.Bind(Renderbuffer::Target::Renderbuffer);
-	targetFbo.Bind(Framebuffer::Target::Draw);
+	targetTex->Bind(GL_TEXTURE_2D);
+	targetRbo.Bind(GL_RENDERBUFFER);
+	targetFbo.Bind(GL_DRAW_FRAMEBUFFER);
 
-	targetFbo.AttachTexture(Framebuffer::Target::Draw,
-							FramebufferAttachment::Color, *targetTex, 0);
+	targetFbo.Texture(GL_COLOR_ATTACHMENT0, *targetTex, 0);
 
 	// Prepare the render target
 	context.Clear(0.f);
@@ -138,15 +132,15 @@ void ToyBuffer::Render()
 	// Setup the texture targets
 	for (int i = 0; i < 4; ++i)
 	{
-		Texture::Active(i + 1);
+		glCall(glActiveTexture, i + 1);
 		// Following have side effects, ensure it runs after we selected the new
 		// texture unit
 		auto &texture = context.GetTextureEngine()
 							   .GetInputTexture(config.inputConfig[i]);
-		texture.Bind(TextureTarget::_2D);
+		texture.Bind(GL_TEXTURE_2D);
 
-		resolutions[i][0] = Texture::Width(TextureTarget::_2D);
-		resolutions[i][1] = Texture::Height(TextureTarget::_2D);
+		glCall(glGetTexLevelParameterfv, GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &resolutions[i][0]);
+		glCall(glGetTexLevelParameterfv, GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &resolutions[i][1]);
 		resolutions[i][2] = 1.0f;
 	}
 
@@ -161,25 +155,23 @@ void ToyBuffer::Render()
 	swap(sourceTex, targetTex);
 }
 
-void ToyBuffer::InitializeRenderTexture(shared_ptr<Texture> &texptr, int width, int height)
+void ToyBuffer::InitializeRenderTexture(shared_ptr<OpenGL::Texture> &texptr, int width, int height)
 {
 	// Only create a texture object if it is necessary
 	if (!texptr)
-		texptr = make_shared<Texture>();
+		texptr = make_shared<OpenGL::Texture>(GL_TEXTURE_2D);
 
 	// Allocate texture storage according to width/height
-	gl.DirectEXT(TextureTarget::_2D, *texptr)
-		.MinFilter(TextureMinFilter::Nearest)
-		.MagFilter(TextureMagFilter::Nearest)
-		.WrapS(TextureWrap::ClampToEdge)
-		.WrapT(TextureWrap::ClampToEdge)
-		.Image2D(0, PixelDataInternalFormat::RGBA32F,
-				 width, height, 0, PixelDataFormat::BGRA,
-				 PixelDataType::UnsignedByte, nullptr);
+	texptr->Parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	texptr->Parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	texptr->Parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	texptr->Parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	texptr->Image2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_BGRA,
+		GL_UNSIGNED_BYTE, nullptr);
 
 	// Clear the frame accumulator so it doesn't contain garbage
 	float black[4] = {0.f};
-	glClearTexImage(GetName(*texptr),
+	glCall(glClearTexImage, GLuint(*texptr),
 		0,
 		GL_BGRA,
 		GL_FLOAT,

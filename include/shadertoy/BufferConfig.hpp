@@ -24,13 +24,13 @@ struct shadertoy_EXPORT InputConfig
 	bool vflip;
 
 	/// Texture wrap mode
-	GLenum wrap;
+	GLint wrap;
 
 	/// Texture minification filtering mode
-	GLenum minFilter;
+	GLint minFilter;
 
 	/// Texture magnification filtering mode
-	GLenum magFilter;
+	GLint magFilter;
 
 	/**
 	 * @brief      Returns a value indicating if this input is enabled

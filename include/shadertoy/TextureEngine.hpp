@@ -33,10 +33,10 @@ class shadertoy_EXPORT TextureEngine
 	ContextConfig &config;
 
 	/// Input texture state
-	std::map<std::string, std::tuple<OpenGL::Texture, bool> > inputTextures;
+	std::map<std::string, std::tuple<std::shared_ptr<OpenGL::Texture>, bool> > inputTextures;
 
 	/// The empty texture
-	OpenGL::Texture emptyTexture;
+	std::shared_ptr<OpenGL::Texture> emptyTexture;
 
 	/// Registered texture handlers
 	std::map<std::string, InputHandler> handlers;

@@ -13,7 +13,10 @@ namespace OpenGL
 		explicit NullBufferError();
 	};
 
-	class Buffer : public Resource<Buffer, MultiDeleter<&glDeleteBuffers>, NullBufferError>
+	class Buffer : public Resource<
+		Buffer,
+		MultiAllocator<&glCreateBuffers, &glDeleteBuffers>,
+		NullBufferError>
 	{
 	public:
 		// glBindBuffer

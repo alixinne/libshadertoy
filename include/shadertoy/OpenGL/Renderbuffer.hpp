@@ -13,8 +13,17 @@ namespace OpenGL
 		explicit NullRenderbufferError();
 	};
 
-	class Renderbuffer : public Resource<Renderbuffer, MultiDeleter<&glDeleteRenderbuffers>, NullRenderbufferError>
+	class Renderbuffer : public Resource<
+		Renderbuffer,
+		MultiAllocator<&glCreateRenderbuffers, &glDeleteRenderbuffers>,
+		NullRenderbufferError>
 	{
+	public:
+		// glBindRenderbuffer
+		void Bind(GLenum target);
+
+		// glNamedRenderbufferStorage
+		void Storage(GLenum internalFormat, GLsizei width, GLsizei height);
 	};
 }
 }

@@ -1,5 +1,6 @@
 #include "stdafx.hpp"
 #include "shadertoy/ShadertoyError.hpp"
+#include "shadertoy/OpenGL/Caller.hpp"
 #include "shadertoy/OpenGL/Shader.hpp"
 
 using namespace shadertoy::OpenGL;
@@ -13,6 +14,21 @@ ShaderCompilationError::ShaderCompilationError(GLuint shaderId, const std::strin
 	: ShadertoyError("OpenGL shader compilation error"),
 	_shaderId(shaderId),
 	_log(log)
+{
+}
+
+GLuint ShaderAllocator::Create(GLenum shaderType)
+{
+	return glCall(glCreateShader, shaderType);
+}
+
+void ShaderAllocator::Delete(GLuint resource)
+{
+	glCall(glDeleteShader, resource);
+}
+
+Shader::Shader(GLenum shaderType)
+	: Resource(Allocator().Create(shaderType))
 {
 }
 
@@ -64,8 +80,9 @@ std::string Shader::Log()
 	glCall(glGetShaderiv, GLuint(*this), GL_INFO_LOG_LENGTH, &infoLogLength);
 
 	// Get log
-	std::string logStr(infoLogLength, '\0');
-	glCall(glGetShaderInfoLog(GLuint(*this), infoLogLength, NULL, logStr.data()));
+	std::vector<GLchar> logStr(infoLogLength);
+	glCall(glGetShaderInfoLog, GLuint(*this), infoLogLength, nullptr, logStr.data());
 
-	return logStr;
+	// exclude the null character from the range passed to string constructor
+	return std::string(logStr.begin(), logStr.end() - 1);
 }

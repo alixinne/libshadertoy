@@ -18,6 +18,25 @@ namespace OpenGL
 	 */
 	void CheckErrors();
 
+	template<typename glFunction>
+	auto glCall(glFunction function)->typename
+					std::enable_if<std::is_same<void, decltype(function())>::value,
+					decltype(function())>::type
+	{
+		function();
+		CheckErrors();
+	}
+
+	template<typename glFunction>
+	auto glCall(glFunction function)->typename
+					std::enable_if<!std::is_same<void, decltype(function())>::value,
+					decltype(function())>::type
+	{
+		auto ret = function();
+		CheckErrors();
+		return ret;
+	}
+
 	template<typename glFunction, typename... Params>
 	auto glCall(glFunction function, Params... params)->typename
 					std::enable_if<std::is_same<void, decltype(function(params...))>::value,

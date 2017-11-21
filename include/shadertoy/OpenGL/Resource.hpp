@@ -8,44 +8,51 @@ namespace shadertoy
 {
 namespace OpenGL
 {
+	typedef GLuint (*SingleResourceCreator)();
+	typedef void (*MultiResourceCreator)(GLsizei, GLuint*);
+
 	typedef void (*SingleResourceDeleter)(GLuint);
 	typedef void (*MultiResourceDeleter)(GLsizei, const GLuint*);
 
-	template<SingleResourceDeleter *DeleteFunction>
-	class SingleDeleter
+	template<SingleResourceCreator *CreateFunction, SingleResourceDeleter *DeleteFunction>
+	class SingleAllocator
 	{
 	public:
-		void operator()(GLuint resource)
+		GLuint Create()
+		{ return glCall(*CreateFunction); }
+
+		void Delete(GLuint resource)
 		{ glCall(*DeleteFunction, resource); }
 	};
 
-	template<MultiResourceDeleter *DeleteFunction>
-	class MultiDeleter
+	template<MultiResourceCreator *CreateFunction, MultiResourceDeleter *DeleteFunction>
+	class MultiAllocator
 	{
 	public:
-		void operator()(GLuint resource)
+		GLuint Create()
+		{
+			GLuint res;
+			glCall(*CreateFunction, 1, &res);
+			return res;
+		}
+
+		void Delete(GLuint resource)
 		{ glCall(*DeleteFunction, 1, &resource); }
 	};
 
-	template<MultiResourceDeleter DeleteFunction>
-	class MultiStaticDeleter
-	{
-	public:
-		void operator()(GLuint resource)
-		{ glCall(DeleteFunction, 1, &resource); }
-	};
-
-	template<typename TFinal, typename TDeleter, typename TError>
+	template<typename TFinal, typename TAllocator, typename TError>
 	class Resource
 	{
 	public:
+		typedef TAllocator Allocator;
 		typedef TError ErrorType;
 
 		/**
-		 * Creates an empty resource.
+		 * Creates a resource using the given allocator.
 		 */
 		Resource()
-			: hasRes(false)
+			: hasRes(true),
+			resId(TAllocator().Create())
 		{
 		}
 
@@ -105,7 +112,7 @@ namespace OpenGL
 			return (*this);
 		}
 
-	private:
+	protected:
 		/**
 		 * Creates a new resource object from an existing resourceID.
 		 *
@@ -113,6 +120,7 @@ namespace OpenGL
 		 */
 		explicit Resource(GLuint resId);
 
+	private:
 		/**
 		 * Destroys the object referenced by this resource.
 		 */
@@ -120,7 +128,7 @@ namespace OpenGL
 		{
 			if (hasRes)
 			{
-				TDeleter()(resId);
+				TAllocator().Delete(resId);
 				hasRes = false;
 			}
 		}

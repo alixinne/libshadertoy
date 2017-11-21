@@ -33,6 +33,9 @@ private:
 	/// Buffer program
 	OpenGL::Program program;
 
+	/// Fragment shader
+	OpenGL::Shader fs;
+
 	/// Bound uniform state
 	std::vector<std::shared_ptr<shadertoy::BoundInputsBase>> boundInputs;
 
@@ -84,7 +87,7 @@ public:
 	{ return targetTex; }
 
 private:
-	void InitializeRenderTexture(OpenGL::Texture &tex, int width, int height);
+	void InitializeRenderTexture(std::shared_ptr<OpenGL::Texture> &tex, int width, int height);
 };
 
 }
