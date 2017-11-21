@@ -132,14 +132,47 @@ bool UniformLocation::SetValue(size_t count, const glm::vec4 *v)
 	return false;
 }
 
+ProgramLinkError::ProgramLinkError(GLuint programId, const std::string &log)
+	: ShadertoyError("OpenGL program linking error"),
+	_programId(programId),
+	_log(log)
+{
+}
+
+ProgramValidateError::ProgramValidateError(GLuint programId, const std::string &log)
+	: ShadertoyError("OpenGL program validation error"),
+	_programId(programId),
+	_log(log)
+{
+}
+
 void Program::Link()
 {
 	glCall(glLinkProgram, GLuint(*this));
+
+	GLint linkStatus;
+	glCall(glGetProgramiv, GLuint(*this), GL_LINK_STATUS, &linkStatus);
+	if (linkStatus != GL_TRUE)
+	{
+		throw ProgramLinkError(GLuint(*this), this->Log());
+	}
 }
 
 void Program::Use()
 {
 	glCall(glUseProgram, GLuint(*this));
+}
+
+void Program::Validate()
+{
+	glCall(glValidateProgram, GLuint(*this));
+
+	GLint validateStatus;
+	glCall(glGetProgramiv, GLuint(*this), GL_LINK_STATUS, &validateStatus);
+	if (validateStatus != GL_TRUE)
+	{
+		throw ProgramValidateError(GLuint(*this), this->Log());
+	}
 }
 
 UniformLocation Program::GetUniformLocation(const GLchar *name)
@@ -151,4 +184,21 @@ UniformLocation Program::GetUniformLocation(const GLchar *name)
 void Program::AttachShader(const Shader &shader)
 {
 	glCall(glAttachShader, GLuint(*this), GLuint(shader));
+}
+
+std::string Program::Log()
+{
+	// Get log length
+	GLint infoLogLength = 0;
+	glCall(glGetProgramiv, GLuint(*this), GL_INFO_LOG_LENGTH, &infoLogLength);
+
+	if (infoLogLength == 0)
+		return std::string();
+
+	// Get log
+	std::vector<GLchar> logStr(infoLogLength);
+	glCall(glGetProgramInfoLog, GLuint(*this), infoLogLength, nullptr, logStr.data());
+
+	// exclude the null character from the range passed to string constructor
+	return std::string(logStr.begin(), logStr.end() - 1);
 }

@@ -18,6 +18,8 @@ namespace shadertoy
 
 		class NullProgramError;
 		class UniformLocation;
+		class ProgramLinkError;
+		class ProgramValidateError;
 		class Program;
 
 		class NullRenderbufferError;

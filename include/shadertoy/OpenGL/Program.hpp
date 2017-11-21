@@ -39,6 +39,38 @@ namespace OpenGL
 		const GLint _location;
 	};
 
+	class shadertoy_EXPORT ProgramLinkError : public shadertoy::ShadertoyError
+	{
+	public:
+		explicit ProgramLinkError(GLuint programId, const std::string &log);
+
+		GLuint programId() const
+		{ return _programId; }
+
+		const std::string &log() const
+		{ return _log; }
+
+	private:
+		const GLuint _programId;
+		const std::string _log;
+	};
+
+	class shadertoy_EXPORT ProgramValidateError : public shadertoy::ShadertoyError
+	{
+	public:
+		explicit ProgramValidateError(GLuint programId, const std::string &log);
+
+		GLuint programId() const
+		{ return _programId; }
+
+		const std::string &log() const
+		{ return _log; }
+
+	private:
+		const GLuint _programId;
+		const std::string _log;
+	};
+
 	class shadertoy_EXPORT Program : public Resource<
 		Program,
 		SingleAllocator<&glCreateProgram, &glDeleteProgram>,
@@ -51,11 +83,17 @@ namespace OpenGL
 		// glUseProgram
 		void Use();
 
+		// glValidateProgram
+		void Validate();
+
 		// glGetUniformLocation
 		UniformLocation GetUniformLocation(const GLchar *name);
 
 		// glAttachShader
 		void AttachShader(const Shader &shader);
+
+		// glGetProgramInfoLog
+		std::string Log();
 	};
 }
 }
