@@ -7,12 +7,21 @@ include(CMakeDependentOption)
 include(GNUInstallDirs)
 include(GenerateExportHeader)
 
-# The project version number.
-set(VERSION_MAJOR   0   CACHE STRING "Project major version number.")
-set(VERSION_MINOR   1   CACHE STRING "Project minor version number.")
-set(VERSION_PATCH   0   CACHE STRING "Project patch version number.")
+# Load lib version from debian/substvars
+file(READ ${CMAKE_CURRENT_SOURCE_DIR}/debian/substvars DEBIAN_SUBSTVARS)
+string(REGEX MATCH "version=[0-9]+\\.[0-9]+\\.[0-9]+" DEBIAN_SUBSTVARS_VERSION_FIELD ${DEBIAN_SUBSTVARS})
+string(REGEX REPLACE "^version=(.*)$" "\\1" ST_VERSION ${DEBIAN_SUBSTVARS_VERSION_FIELD})
+
+# Parse the version string into major, minor and patch
+string(REPLACE "." ";" ST_VERSION_LIST ${ST_VERSION})
+list(GET ST_VERSION_LIST 0 VERSION_MAJOR)
+list(GET ST_VERSION_LIST 1 VERSION_MINOR)
+list(GET ST_VERSION_LIST 0 VERSION_PATCH)
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 mark_as_advanced(VERSION_MAJOR VERSION_MINOR VERSION_PATCH VERSION)
+
+# Print a message with the version number
+message("-- shadertoy v${VERSION}")
 
 # Project directories
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -130,7 +139,7 @@ set_property(TARGET shadertoy APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
 			 $<INSTALL_INTERFACE:include>
 			 $<INSTALL_INTERFACE:${Boost_INCLUDE_DIR}>)
 
-# Change library properties
+# Set library file version
 set_target_properties(shadertoy PROPERTIES
 	OUTPUT_NAME shadertoy${VERSION_MAJOR}
 	VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
@@ -146,17 +155,21 @@ install(EXPORT shadertoy
 
 # Configure the -config.cmake file
 configure_file(shadertoy-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake @ONLY)
+# Configure -version.cmake file
 configure_file(shadertoy-config-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config-version.cmake @ONLY)
+
+# Install cmake config files
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake
 			  ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config-version.cmake
 		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
 
-# Install th examples
+# Install the examples
 install(DIRECTORY examples
 		COMPONENT shadertoy-examples
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
 
+# Install headers
 file(GLOB SHADERTOY_HEADERS ${INCLUDE_DIR}/shadertoy/*.hpp)
 set(SHADERTOY_HEADERS ${SHADERTOY_HEADERS}
 					  ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/shadertoy_export.h)

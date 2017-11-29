@@ -4,8 +4,7 @@ files
 libshadertoy-dev.debhelper.log
 libshadertoy-dev.substvars
 libshadertoy-dev/
-libshadertoy0.debhelper.log
-libshadertoy0.substvars
-libshadertoy0/
+libshadertoy?.debhelper.log
+libshadertoy?.substvars
+libshadertoy?/
 tmp/
-

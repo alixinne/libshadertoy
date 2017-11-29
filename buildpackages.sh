@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# Grab the current version number from the directory
-LIBVERSION=$(basename "$(pwd)" | sed 's/libshadertoy-//')
+# Get the build directory
+LIBDIRECTORY="$(pwd)"
+
+# Grab the current version number from the rules file
+LIBVERSION=$(awk -F= 'BEGIN {ORS=""} /version/ {print $2}' "$LIBDIRECTORY/debian/substvars")
 
 echo "[==== BUILDING v$LIBVERSION ====]" >&2
 
@@ -16,7 +19,7 @@ for DISTRIBUTION in stretch xenial; do
 
 	for ARCH in amd64 i386; do
 		echo "[==== BUILDING $DISTRIBUTION-$ARCH ====]" >&2
-		(cd libshadertoy-$LIBVERSION && sbuild -d $DISTRIBUTION --arch $ARCH)
+		(cd $LIBDIRECTORY && sbuild -d $DISTRIBUTION --arch $ARCH)
 		if [ "$?" -ne "0" ]; then
 			echo "[==== BUILD FAILED FOR $DISTRIBUTION-$ARCH ====]" >&2
 			exit $?
@@ -25,7 +28,7 @@ for DISTRIBUTION in stretch xenial; do
 		find . -maxdepth 1 -type f -exec mv {} libshadertoy-$LIBVERSION-$DISTRIBUTION/ \;
 		find . -maxdepth 1 -type l -exec mv {} libshadertoy-$LIBVERSION-$DISTRIBUTION/ \;
 		echo "[==== TESTING ARTIFACTS $DISTRIBUTION-$ARCH ====]" >&2
-		(cd libshadertoy-$LIBVERSION &&
+		(cd $LIBDIRECTORY &&
 			autopkgtest ../libshadertoy-$LIBVERSION-$DISTRIBUTION/libshadertoy*_$ARCH.deb \
 				../libshadertoy-$LIBVERSION-$DISTRIBUTION/libshadertoy-dev_${LIBVERSION}_all.deb \
 				-- schroot $DISTRIBUTION-$ARCH-sbuild)
