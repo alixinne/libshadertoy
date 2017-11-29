@@ -16,6 +16,7 @@
 #include <shadertoy/Shadertoy.hpp>
 
 using namespace std;
+using shadertoy::OpenGL::glCall;
 
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
@@ -201,27 +202,27 @@ int loadRemote(const string &shaderId, const string &shaderApiKey,
 
 				if (sampler["filter"].compare("mipmap") == 0)
 				{
-					conf.minFilter = oglplus::TextureMinFilter::LinearMipmapLinear;
-					conf.magFilter = oglplus::TextureMagFilter::Linear;
+					conf.minFilter = GL_LINEAR_MIPMAP_LINEAR;
+					conf.magFilter = GL_LINEAR;
 				}
 				else if (sampler["filter"].compare("linear") == 0)
 				{
-					conf.minFilter = oglplus::TextureMinFilter::Linear;
-					conf.magFilter = oglplus::TextureMagFilter::Linear;
+					conf.minFilter = GL_LINEAR;
+					conf.magFilter = GL_LINEAR;
 				}
 				else if (sampler["filter"].compare("nearest") == 0)
 				{
-					conf.minFilter = oglplus::TextureMinFilter::Nearest;
-					conf.magFilter = oglplus::TextureMagFilter::Nearest;
+					conf.minFilter = GL_NEAREST;
+					conf.magFilter = GL_NEAREST;
 				}
 
 				if (sampler["wrap"].compare("repeat") == 0)
 				{
-					conf.wrap = oglplus::TextureWrap::Repeat;
+					conf.wrap = GL_REPEAT;
 				}
 				else if (sampler["wrap"].compare("clamp") == 0)
 				{
-					conf.wrap = oglplus::TextureWrap::ClampToEdge;
+					conf.wrap = GL_CLAMP_TO_EDGE;
 				}
 
 				conf.vflip = sampler["vflip"].compare("true") == 0;
@@ -347,29 +348,15 @@ int performRender(shadertoy::ContextConfig &contextConfig)
 		context.Initialize();
 		BOOST_LOG_TRIVIAL(info) << "Initialized rendering context";
 	}
-	catch (oglplus::ProgramBuildError &pbe)
+	catch (shadertoy::OpenGL::ShaderCompilationError &sce)
 	{
-		BOOST_LOG_TRIVIAL(error)
-				  << "Program build error: "
-				  << pbe.what()
-				  << " ["
-				  << pbe.SourceFile()
-				  << ":"
-				  << pbe.SourceLine()
-				  << "] "
-				  << pbe.Log();
+		std::cerr << "Failed to compile shader: " << sce.log();
 		code = 2;
 	}
-	catch (oglplus::Error &err)
+	catch (shadertoy::ShadertoyError &err)
 	{
-		BOOST_LOG_TRIVIAL(error)
-				  << "Error: "
-				  << err.what()
-				  << " ["
-				  << err.SourceFile()
-				  << ":"
-				  << err.SourceLine()
-				  << "]";
+		std::cerr << "Error: "
+				  << err.what();
 		code = 2;
 	}
 
@@ -377,9 +364,6 @@ int performRender(shadertoy::ContextConfig &contextConfig)
 	{
 		// Now render for 5s
 		int frameCount = 0;
-
-		oglplus::Context gl;
-		oglplus::DefaultFramebuffer dfb;
 
 		// Set the resize callback
 		glfwSetWindowUserPointer(window, &ctx);
@@ -399,7 +383,7 @@ int performRender(shadertoy::ContextConfig &contextConfig)
 
 			//  iDate
 			boost::posix_time::ptime dt = boost::posix_time::microsec_clock::local_time();
-			state.V<shadertoy::iDate>() = oglplus::Vec4f(dt.date().year() - 1,
+			state.V<shadertoy::iDate>() = glm::vec4(dt.date().year() - 1,
 											dt.date().month(),
 											dt.date().day(),
 											dt.time_of_day().total_nanoseconds() / 1e9f);
@@ -428,8 +412,8 @@ int performRender(shadertoy::ContextConfig &contextConfig)
 
 			// Render to screen
 			//  Setup framebuffer
-			dfb.Bind(oglplus::Framebuffer::Target::Draw);
-			gl.Viewport(0, 0, contextConfig.width, contextConfig.height);
+			glCall(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
+			glCall(glViewport, 0, 0, contextConfig.width, contextConfig.height);
 
 			//  Load texture and program
 			context.BindResult();
