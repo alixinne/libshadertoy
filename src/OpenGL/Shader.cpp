@@ -35,26 +35,20 @@ Shader::Shader(GLenum shaderType)
 void Shader::Source(const std::string &string)
 {
 	const GLchar *cstr = string.c_str();
-	const GLint length = string.size();
 
-	glCall(glShaderSource, GLuint(*this), 1, &cstr, &length);
+	glCall(glShaderSource, GLuint(*this), 1, &cstr, nullptr);
 }
 
 void Shader::Source(const std::vector<std::string> &string)
 {
 	std::vector<const char *> cstr(string.size());
-	std::vector<GLint>        length(string.size());
 
 	std::transform(string.begin(), string.end(), cstr.begin(),
 		[] (const std::string &src) {
 			return src.c_str();
 		});
-	std::transform(string.begin(), string.end(), length.begin(),
-		[] (const std::string &src) {
-			return static_cast<GLint>(src.size());
-		});
 
-	glCall(glShaderSource, GLuint(*this), string.size(), cstr.data(), length.data());
+	glCall(glShaderSource, GLuint(*this), string.size(), cstr.data(), nullptr);
 }
 
 void Shader::Compile()
