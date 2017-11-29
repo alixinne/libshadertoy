@@ -132,7 +132,7 @@ void ToyBuffer::Render()
 	// Setup the texture targets
 	for (int i = 0; i < 4; ++i)
 	{
-		glCall(glActiveTexture, i + 1);
+		glCall(glActiveTexture, GL_TEXTURE0 + i + 1);
 		// Following have side effects, ensure it runs after we selected the new
 		// texture unit
 		auto &texture = context.GetTextureEngine()

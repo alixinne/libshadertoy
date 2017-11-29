@@ -386,7 +386,7 @@ void RenderContext::BindResult()
 	// Prepare prog and texture
 	screenProg.Use();
 
-	glCall(glActiveTexture, 0);
+	glCall(glActiveTexture, GL_TEXTURE0);
 	lastTexture.lock()->Bind(GL_TEXTURE_2D);
 }
 
