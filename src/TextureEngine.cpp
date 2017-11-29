@@ -215,7 +215,7 @@ void TextureEngine::Initialize()
 	vector<unsigned char> chk(width * height);
 	for (int i = 0; i < width; ++i)
 		for (int j = 1; j < height; ++j)
-			chk[j * height + i] = (i / size) % 2 == 0 ^ (j / size) % 2 == 0 ? 255 : 0;
+			chk[j * height + i] = ((i / size) % 2 == 0) ^ ((j / size) % 2 == 0) ? 255 : 0;
 
 	// Load it and set parameters
 	emptyTexture->Parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
