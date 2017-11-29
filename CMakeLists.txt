@@ -38,7 +38,24 @@ find_package(SOIL REQUIRED)
 find_package(JPEG REQUIRED)
 
 find_package(PkgConfig REQUIRED)
-pkg_search_module(GLM REQUIRED glm)
+
+# Find GLM using CMake
+find_package(glm QUIET)
+if (NOT GLM_FOUND)
+	# Find GLM using pkg-config
+	pkg_search_module(GLM glm)
+
+	if (NOT GLM_FOUND)
+		# Find GLM using find_path
+		find_path(GLM_INCLUDE_DIRS glm/glm.hpp)
+
+		if (NOT GLM_INCLUDE_DIRS)
+			message(FATAL "Could not find GLM using any of CMake, pkg-config or find_path. Please ensure libglm-dev is installed.")
+		endif()
+	endif()
+endif()
+
+# Find libunwind for printing backtraces on GL errors
 pkg_search_module(UNWIND libunwind)
 
 # Copy shaders to source
@@ -122,7 +139,6 @@ target_link_libraries(shadertoy
 	${Boost_LIBRARIES}
 	${OPENGL_LIBRARY}
 	${GLEW_LIBRARIES}
-	${GLM_LIBRARIES}
 	${JPEG_LIBRARIES}
 	${SOIL_LIBRARIES})
 
