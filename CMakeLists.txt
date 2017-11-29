@@ -86,10 +86,22 @@ target_include_directories(shadertoy PRIVATE
 	${SOIL_INCLUDE_DIRS}
 	${JPEG_INCLUDE_DIRS})
 
+if (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "amd64")
+    set(UNWIND_ARCH "x86_64")
+elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "^i.86$")
+    set(UNWIND_ARCH "x86")
+else()
+	if (UNWIND_FOUND)
+		message("-- Unsupported architecture for libunwind")
+		set(UNWIND_ARCH OFF)
+	endif()
+endif()
+
 # Add UNWIND if found
-if (UNWIND_FOUND)
+if (UNWIND_FOUND AND UNWIND_ARCH)
 	message("-- Using unwind for tracing OpenGL calls")
-	target_link_libraries(shadertoy ${UNWIND_LIBRARIES} unwind-x86_64)
+
+	target_link_libraries(shadertoy ${UNWIND_LIBRARIES} unwind-${UNWIND_ARCH})
 	target_include_directories(shadertoy PRIVATE ${UNWIND_INCLUDE_DIRS})
 	target_compile_definitions(shadertoy PRIVATE HAS_UNWIND=1 UNW_LOCAL_ONLY=1)
 else()
