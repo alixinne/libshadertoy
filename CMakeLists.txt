@@ -4,7 +4,6 @@ project(shadertoy)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules")
 
 include(CMakeDependentOption)
-include(cotire)
 include(GNUInstallDirs)
 include(GenerateExportHeader)
 
@@ -130,10 +129,6 @@ set_property(TARGET shadertoy APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
 			 $<BUILD_INTERFACE:${INCLUDE_DIR}>
 			 $<INSTALL_INTERFACE:include>
 			 $<INSTALL_INTERFACE:${Boost_INCLUDE_DIR}>)
-
-# Precompiled header optimization
-set_target_properties(shadertoy PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT ${INCLUDE_DIR}/stdafx.hpp)
-cotire(shadertoy)
 
 # Change library properties
 set_target_properties(shadertoy PROPERTIES
