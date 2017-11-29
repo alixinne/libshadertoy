@@ -88,6 +88,9 @@ int main(int argc, char *argv[])
 				code = 2;
 			}
 
+			if (code)
+				exit(code);
+
 			// Now render for 5s
 			int frameCount = 0;
 			double t = 0.;
