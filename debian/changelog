@@ -4,7 +4,7 @@ libshadertoy (0.1.0) unstable; urgency=medium
   * Remove dependency on oglplus and dependent packages, use raw OpenGL instead
   * Remove serialization code and associated Boost dependency
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Wed, 16 Nov 2017 16:00:00 +0200
+ -- Vincent Tavernier <vince.tavernier@gmail.com>  Wed, 29 Nov 2017 17:05:00 +0200
 
 libshadertoy (0.0.10) unstable; urgency=medium
 
