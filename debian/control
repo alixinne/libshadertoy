@@ -12,7 +12,7 @@ Vcs-Browser: https://gitlab.inria.fr/vtaverni/libshadertoy/tree/master
 
 Package: libshadertoy-dev
 Section: libdevel
-Architecture: all
+Architecture: any
 Depends: libshadertoy0 (= ${binary:Version}), ${misc:Depends},
  libboost-all-dev, libsoil-dev, libjpeg-dev, libglew-dev, libgl-dev,
  libglm-dev, libunwind-dev

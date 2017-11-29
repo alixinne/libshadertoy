@@ -30,7 +30,7 @@ for DISTRIBUTION in stretch xenial; do
 		echo "[==== TESTING ARTIFACTS $DISTRIBUTION-$ARCH ====]" >&2
 		(cd $LIBDIRECTORY &&
 			autopkgtest ../libshadertoy-$LIBVERSION-$DISTRIBUTION/libshadertoy*_$ARCH.deb \
-				../libshadertoy-$LIBVERSION-$DISTRIBUTION/libshadertoy-dev_${LIBVERSION}_all.deb \
+				../libshadertoy-$LIBVERSION-$DISTRIBUTION/libshadertoy-dev_${LIBVERSION}_$ARCH.deb \
 				-- schroot $DISTRIBUTION-$ARCH-sbuild)
 		if [ "$?" -ne "0" ]; then
 			echo "[==== TESTS FAILED FOR $DISTRIBUTION-$ARCH ====]" >&2

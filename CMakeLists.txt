@@ -164,6 +164,8 @@ set_target_properties(shadertoy PROPERTIES
 install(TARGETS shadertoy
 		DESTINATION ${CMAKE_INSTALL_LIBDIR}
 		EXPORT shadertoy)
+install(EXPORT shadertoy
+		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/shadertoy)
 
 install(EXPORT shadertoy
 		COMPONENT shadertoy-dev
@@ -178,7 +180,7 @@ configure_file(shadertoy-config-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/sha
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake
 			  ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config-version.cmake
 		COMPONENT shadertoy-dev
-		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
+		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/shadertoy)
 
 # Install the examples
 install(DIRECTORY examples

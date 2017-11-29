@@ -1,3 +1,4 @@
 usr/include/*
+usr/lib/*/cmake/shadertoy/*
 usr/share/shadertoy/*
 usr/share/doc/*
