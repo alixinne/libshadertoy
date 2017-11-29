@@ -31,6 +31,7 @@ find_package(JPEG REQUIRED)
 
 find_package(PkgConfig REQUIRED)
 pkg_search_module(GLM REQUIRED glm)
+pkg_search_module(UNWIND libunwind)
 
 # Copy shaders to source
 file(GLOB RESOURCES_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*)
@@ -84,6 +85,17 @@ target_include_directories(shadertoy PRIVATE
 	${GLM_INCLUDE_DIRS}
 	${SOIL_INCLUDE_DIRS}
 	${JPEG_INCLUDE_DIRS})
+
+# Add UNWIND if found
+if (UNWIND_FOUND)
+	message("-- Using unwind for tracing OpenGL calls")
+	target_link_libraries(shadertoy ${UNWIND_LIBRARIES} unwind-x86_64)
+	target_include_directories(shadertoy PRIVATE ${UNWIND_INCLUDE_DIRS})
+	target_compile_definitions(shadertoy PRIVATE HAS_UNWIND=1 UNW_LOCAL_ONLY=1)
+else()
+	message("-- Not using unwind for tracing")
+	target_compile_definitions(shadertoy PRIVATE HAS_UNWIND=0)
+endif()
 
 # Link dependencies
 target_link_libraries(shadertoy

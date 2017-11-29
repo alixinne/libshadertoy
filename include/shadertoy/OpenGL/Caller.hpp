@@ -10,7 +10,7 @@ namespace OpenGL
 	class shadertoy_EXPORT OpenGLError : public shadertoy::ShadertoyError
 	{
 	public:
-		explicit OpenGLError(GLenum error);
+		explicit OpenGLError(GLenum error, const std::string &extraMsg);
 	};
 
 	/**
