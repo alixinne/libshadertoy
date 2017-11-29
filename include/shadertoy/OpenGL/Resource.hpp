@@ -77,7 +77,7 @@ namespace OpenGL
 		 * Returns the underlying texture identifier referenced by this texture
 		 * object. Throws an exception if this object does not hold a reference.
 		 */
-		GLuint operator*() const throw(TError)
+		operator GLuint() const throw(TError)
 		{
 			if (!hasRes)
 			{

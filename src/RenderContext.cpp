@@ -270,8 +270,8 @@ void RenderContext::DoReadWriteCurrentFrame(GLuint &texIn, GLuint &texOut)
 				config.width, config.height, 0, GL_BGRA, GL_FLOAT, nullptr);
 		}
 
-		texIn = **currentTex;
-		texOut = **screenQuadTexture;
+		texIn = *currentTex;
+		texOut = *screenQuadTexture;
 
 		lastTexture = screenQuadTexture;
 	}
@@ -285,7 +285,7 @@ void RenderContext::DoReadCurrentFrame(GLuint &texIn)
 {
 	if (auto currentTex = lastTexture.lock())
 	{
-		texIn = **currentTex;
+		texIn = *currentTex;
 	}
 	else
 	{
