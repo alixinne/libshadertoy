@@ -14,7 +14,7 @@ for DISTRIBUTION in stretch xenial; do
 	rm -rf libshadertoy-$LIBVERSION-$DISTRIBUTION
 	mkdir -p libshadertoy-$LIBVERSION-$DISTRIBUTION
 
-	for ARCH in i386 amd64; do
+	for ARCH in amd64 i386; do
 		echo "[==== BUILDING $DISTRIBUTION-$ARCH ====]" >&2
 		(cd libshadertoy-$LIBVERSION && sbuild -d $DISTRIBUTION --arch $ARCH)
 		if [ "$?" -ne "0" ]; then
