@@ -4,6 +4,7 @@
 #include <sstream>
 #include <memory>
 #include <algorithm>
+#include <fstream>
 
 #include <SOIL/SOIL.h>
 #include <jpeglib.h>

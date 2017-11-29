@@ -179,7 +179,7 @@ shared_ptr<OpenGL::Texture> TextureEngine::CheckerTextureHandler(const InputConf
 	vector<unsigned char> chk(config.width * config.height);
 	for (int i = 0; i < config.width; ++i)
 		for (int j = 1; j < config.height; ++j)
-			chk[j * config.height + i] = (i / size) % 2 == 0 ^ (j / size) % 2 == 0 ? 255 : 0;
+			chk[j * config.height + i] = ((i / size) % 2 == 0) ^ ((j / size) % 2 == 0) ? 255 : 0;
 
 	// Load it
 	checkerTexture->Image2D(GL_TEXTURE_2D, 0, GL_RED, config.width, config.height,
