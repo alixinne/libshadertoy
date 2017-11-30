@@ -56,7 +56,7 @@ make -j
 Other examples may require more dependencies, see the associated README for more
 details.
 
-## Beta version repository
+## Debian/Ubuntu package repository
 
 ```bash
 # Get repository GPG key
