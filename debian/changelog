@@ -1,3 +1,9 @@
+libshadertoy (0.1.2) unstable; urgency=medium
+
+  * Fix package build including the wrong version of libshadertoy.so
+
+ -- Vincent Tavernier <vince.tavernier@gmail.com>  Thu, 30 Nov 2017 18:00:00 +0200
+
 libshadertoy (0.1.1) unstable; urgency=medium
 
   * Fix compatibility issues
