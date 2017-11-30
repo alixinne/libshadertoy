@@ -8,5 +8,3 @@ precision highp sampler2D;
 in vec2 vtexCoord;
 // Output fragment color
 out vec4 fragColor;
-// Compatibility with legacy iGlobalTime
-#define iGlobalTime iTime
