@@ -60,7 +60,7 @@ details.
 
 ```bash
 # Get repository GPG key
-sudo apt-key adv --recv-keys --keyserver eu.pool.sks-keyservers.net B85B636048C11C387D0D3D45C6F6640ECCD72ED8
+wget -qO- https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master/pubkey.asc | sudo apt-key add -
 
 # Add repository to apt config
 #  Debian Stretch
