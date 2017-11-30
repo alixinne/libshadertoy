@@ -7,25 +7,52 @@ namespace shadertoy
 {
 namespace OpenGL
 {
+	/**
+	 * Error thrown when an attempt is made to dereference a null shader object.
+	 */
 	class shadertoy_EXPORT NullShaderError : public shadertoy::ShadertoyError
 	{
 	public:
+		/**
+		 * Initializes a new instance of the NullShaderError class.
+		 */
 		explicit NullShaderError();
 	};
 
+	/**
+	 * Error thrown when the compilation of a shader fails.
+	 */
 	class shadertoy_EXPORT ShaderCompilationError : public shadertoy::ShadertoyError
 	{
 	public:
+		/**
+		 * Initializes a new instance of the ShaderCompilationError class.
+		 *
+		 * @param  shaderId Id of the shader that triggered the error
+		 * @param  log      Contents of the shader compilation log
+		 */
 		explicit ShaderCompilationError(GLuint shaderId, const std::string &log);
 
+		/**
+		 * Gets the id of the shader that triggered the error.
+		 *
+		 * @return Id of the shader that triggered the error
+		 */
 		GLuint shaderId() const
 		{ return _shaderId; }
 
+		/**
+		 * Gets the compilation log for this error.
+		 *
+		 * @return Compilation log as a string.
+		 */
 		const std::string &log() const
 		{ return _log; }
 
 	private:
+		/// Shader id
 		const GLuint _shaderId;
+		/// Compilation log
 		const std::string _log;
 	};
 
@@ -37,10 +64,26 @@ namespace OpenGL
 	class shadertoy_EXPORT ShaderAllocator
 	{
 	public:
+		/**
+		 * Create a shader object of the given type.
+		 * @param  shaderType Type of the shader to create
+		 * @return            Created shader id
+		 *
+		 * @throws OpenGLError
+		 */
 		GLuint Create(GLenum shaderType);
+		/**
+		 * Deletes the given shader.
+		 * @param resource Id of the shader to delete.
+		 *
+		 * @throws OpenGLError
+		 */
 		void Delete(GLuint resource);
 	};
 
+	/**
+	 * Represents an OpenGL shader.
+	 */
 	class shadertoy_EXPORT Shader : public Resource<Shader, ShaderAllocator, NullShaderError>
 	{
 	public:
@@ -48,17 +91,47 @@ namespace OpenGL
 		 * Creates a new shader of the given type.
 		 *
 		 * @param shaderType Type of the new shader
+		 *
+		 * @throws OpenGLError
 		 */
 		Shader(GLenum shaderType);
 
-		// glShaderSource
+		/**
+		 * glShaderSource
+		 *
+		 * @param string Single source as a string
+		 *
+		 * @throws OpenGLError
+		 * @throws NullShaderError
+		 */
 		void Source(const std::string &string);
+		/**
+		 * glShaderSource
+		 *
+		 * @param string List of sources to add to the shader
+		 *
+		 * @throws OpenGLError
+		 * @throws NullShaderError
+		 */
 		void Source(const std::vector<std::string> &string);
 
-		// glCompileShader
+		/**
+		 * glCompileShader
+		 *
+		 * @throws OpenGLError
+		 * @throws ShaderCompilationError
+		 * @throws NullShaderError
+		 */
 		void Compile();
 
-		// glGetShaderInfoLog
+		/**
+		 * glGetShaderInfoLog
+		 *
+		 * @return Shader info log as a string
+		 *
+		 * @throws OpenGLError
+		 * @throws NullShaderError
+		 */
 		std::string Log();
 	};
 }

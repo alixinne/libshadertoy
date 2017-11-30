@@ -7,17 +7,35 @@ namespace shadertoy
 {
 namespace OpenGL
 {
+	/**
+	 * Error thrown when an OpenGL operation fails.
+	 */
 	class shadertoy_EXPORT OpenGLError : public shadertoy::ShadertoyError
 	{
 	public:
+		/**
+		 * Initializes a new instance of the OpenGLError class.
+		 *
+		 * @param  error    OpenGL error code
+		 * @param  extraMsg Extra information to include in what()
+		 */
 		explicit OpenGLError(GLenum error, const std::string &extraMsg);
 	};
 
 	/**
 	 * Throws an OpenGLError if glGetError returns non-zero
+	 *
+	 * @throws OpenGLError
 	 */
 	void shadertoy_EXPORT CheckErrors();
 
+	/**
+	 * Invokes the given OpenGL function
+	 *
+	 * @param  function OpenGL function to invoke
+	 *
+	 * @throws OpenGLError
+	 */
 	template<typename glFunction>
 	auto shadertoy_EXPORT glCall(glFunction function)->typename
 					std::enable_if<std::is_same<void, decltype(function())>::value,
@@ -27,6 +45,14 @@ namespace OpenGL
 		CheckErrors();
 	}
 
+	/**
+	 * Invokes the given OpenGL function
+	 *
+	 * @param  function OpenGL function to invoke
+	 * @return          Return value of the OpenGL function
+	 *
+	 * @throws OpenGLError
+	 */
 	template<typename glFunction>
 	auto shadertoy_EXPORT glCall(glFunction function)->typename
 					std::enable_if<!std::is_same<void, decltype(function())>::value,
@@ -37,6 +63,14 @@ namespace OpenGL
 		return ret;
 	}
 
+	/**
+	 * Invokes the given OpenGL function
+	 *
+	 * @param  function OpenGL function to invoke
+	 * @param  params   Parameters to forward to the OpenGL function
+	 *
+	 * @throws OpenGLError
+	 */
 	template<typename glFunction, typename... Params>
 	auto shadertoy_EXPORT glCall(glFunction function, Params... params)->typename
 					std::enable_if<std::is_same<void, decltype(function(params...))>::value,
@@ -46,6 +80,15 @@ namespace OpenGL
 		CheckErrors();
 	}
 
+	/**
+	 * Invokes the given OpenGL function
+	 *
+	 * @param  function OpenGL function to invoke
+	 * @param  params   Parameters to forward to the OpenGL function
+	 * @return          Return value of the OpenGL function
+	 *
+	 * @throws OpenGLError
+	 */
 	template<typename glFunction, typename... Params>
 	auto shadertoy_EXPORT glCall(glFunction function, Params... params)->typename
 					std::enable_if<!std::is_same<void, decltype(function(params...))>::value,
