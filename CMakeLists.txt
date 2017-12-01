@@ -6,6 +6,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules")
 include(CMakeDependentOption)
 include(GNUInstallDirs)
 include(GenerateExportHeader)
+include(CMakePackageConfigHelpers)
 
 # Load lib version from debian/substvars
 file(READ ${CMAKE_CURRENT_SOURCE_DIR}/debian/substvars DEBIAN_SUBSTVARS)
@@ -174,7 +175,9 @@ install(EXPORT shadertoy
 # Configure the -config.cmake file
 configure_file(shadertoy-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake @ONLY)
 # Configure -version.cmake file
-configure_file(shadertoy-config-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config-version.cmake @ONLY)
+write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config-version.cmake
+	VERSION ${VERSION}
+	COMPATIBILITY SameMajorVersion)
 
 # Install cmake config files
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake
