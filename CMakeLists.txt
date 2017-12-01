@@ -157,7 +157,7 @@ set_property(TARGET shadertoy APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
 
 # Set library file version
 set_target_properties(shadertoy PROPERTIES
-	OUTPUT_NAME shadertoy${VERSION_MAJOR}
+	SOVERSION ${VERSION_MAJOR}
 	VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
 # Install target
