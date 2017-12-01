@@ -151,10 +151,7 @@ target_compile_definitions(shadertoy PUBLIC
 set_property(TARGET shadertoy PROPERTY CXX_STANDARD 14)
 
 # Include directories for install
-set_property(TARGET shadertoy APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
-			 $<BUILD_INTERFACE:${INCLUDE_DIR}>
-			 $<INSTALL_INTERFACE:include>
-			 $<INSTALL_INTERFACE:${Boost_INCLUDE_DIR}>)
+target_include_directories(shadertoy INTERFACE $<INSTALL_INTERFACE:include>)
 
 # Set library file version
 set_target_properties(shadertoy PROPERTIES

@@ -14,8 +14,7 @@ find_package(shadertoy REQUIRED)
 include_directories(
 	${OPENGL_INCLUDE_DIRS}
 	${GLEW_INCLUDE_DIRS}
-	${glfw3_INCLUDE_DIRS}
-	${shadertoy_INCLUDE_DIRS})
+	${glfw3_INCLUDE_DIRS})
 
 add_executable(example00-build
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
@@ -24,7 +23,7 @@ target_link_libraries(example00-build
 	${OPENGL_LIBRARY}
 	${GLEW_LIBRARIES}
 	${glfw3_LIBRARIES}
-	${shadertoy_LIBRARIES})
+	shadertoy)
 
 # C++14
 set_property(TARGET example00-build PROPERTY CXX_STANDARD 14)
