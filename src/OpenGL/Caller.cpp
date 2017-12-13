@@ -120,7 +120,7 @@ namespace OpenGL
 unwind_end:
 			throw OpenGLError(error, ss.str());
 #else
-			throw OpenGLError(error, string());
+			throw OpenGLError(error, std::string());
 #endif
 		}
 	}
