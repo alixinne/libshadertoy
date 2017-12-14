@@ -143,7 +143,10 @@ namespace OpenGL
 		 */
 		Resource(Resource &&other)
 		{
-			(*this) = std::move(other);
+			this->hasRes = other.hasRes;
+			this->resId = other.resId;
+
+			other.hasRes = false;
 		}
 
 		/**
