@@ -5,19 +5,19 @@ include(FindPkgConfig)
 
 # GL libraries
 find_package(OpenGL REQUIRED)
-find_package(GLEW REQUIRED)
 find_package(Boost 1.58 REQUIRED COMPONENTS filesystem log serialization
 	date_time program_options)
 find_package(CURL REQUIRED)
 pkg_search_module(glfw3 REQUIRED glfw3)
 pkg_search_module(jsoncpp REQUIRED jsoncpp)
+pkg_search_module(EPOXY REQUIRED epoxy)
 
 # libshadertoy
 find_package(shadertoy REQUIRED)
 
 include_directories(
 	${OPENGL_INCLUDE_DIRS}
-	${GLEW_INCLUDE_DIRS}
+	${EPOXY_INCLUDE_DIRS}
 	${glfw3_INCLUDE_DIRS}
 	${Boost_INCLUDE_DIRS}
 	${CURL_INCLUDE_DIRS}
@@ -28,7 +28,7 @@ add_executable(example50-shadertoy
 
 target_link_libraries(example50-shadertoy
 	${OPENGL_LIBRARY}
-	${GLEW_LIBRARIES}
+	${EPOXY_LIBRARIES}
 	${glfw3_LIBRARIES}
 	${Boost_LIBRARIES}
 	${CURL_LIBRARIES}

@@ -34,7 +34,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Required packages
 find_package(Boost 1.58 REQUIRED COMPONENTS filesystem log date_time)
 find_package(OpenGL REQUIRED)
-find_package(GLEW REQUIRED)
 find_package(SOIL REQUIRED)
 find_package(JPEG REQUIRED)
 
@@ -58,6 +57,9 @@ endif()
 
 # Find libunwind for printing backtraces on GL errors
 pkg_search_module(UNWIND libunwind)
+
+# libepoxy extension loader
+pkg_search_module(EPOXY REQUIRED epoxy)
 
 # Copy shaders to source
 file(GLOB RESOURCES_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*)
@@ -108,6 +110,7 @@ target_include_directories(shadertoy PRIVATE
 	${shadertoy_INCLUDE_DIRS}
 	${Boost_INCLUDE_DIR}
 	${OPENGL_INCLUDE_DIRS}
+	${EPOXY_INCLUDE_DIRS}
 	${GLM_INCLUDE_DIRS}
 	${SOIL_INCLUDE_DIRS}
 	${JPEG_INCLUDE_DIRS})
@@ -139,7 +142,7 @@ endif()
 target_link_libraries(shadertoy
 	${Boost_LIBRARIES}
 	${OPENGL_LIBRARY}
-	${GLEW_LIBRARIES}
+	${EPOXY_LIBRARIES}
 	${JPEG_LIBRARIES}
 	${SOIL_LIBRARIES})
 

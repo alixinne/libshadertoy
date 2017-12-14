@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+#include <epoxy/gl.h>
 #include <GLFW/glfw3.h>
 #include <boost/filesystem.hpp>
 #include <iostream>
@@ -59,79 +59,70 @@ int main(int argc, char *argv[])
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(1);
 
-		// Initialize GLEW
-		if (glewInit() != GLEW_OK)
+		shadertoy::RenderContext context(contextConfig);
+		std::cout << "Created context based on config" << std::endl;
+
+		try
 		{
-			std::cerr << "Failed to initialize glew" << std::endl;
-			code = 1;
+			// Initialize context
+			context.Initialize();
+			std::cout << "Initialized rendering context" << std::endl;
 		}
-		else
+		catch (shadertoy::OpenGL::ShaderCompilationError &sce)
 		{
-			shadertoy::RenderContext context(contextConfig);
-			std::cout << "Created context based on config" << std::endl;
+			std::cerr << "Failed to compile shader: " << sce.log();
+			code = 2;
+		}
+		catch (shadertoy::ShadertoyError &err)
+		{
+			std::cerr << "Error: "
+					  << err.what();
+			code = 2;
+		}
 
-			try
-			{
-				// Initialize context
-				context.Initialize();
-				std::cout << "Initialized rendering context" << std::endl;
-			}
-			catch (shadertoy::OpenGL::ShaderCompilationError &sce)
-			{
-				std::cerr << "Failed to compile shader: " << sce.log();
-				code = 2;
-			}
-			catch (shadertoy::ShadertoyError &err)
-			{
-				std::cerr << "Error: "
-						  << err.what();
-				code = 2;
-			}
+		if (code)
+			exit(code);
 
-			if (code)
-				exit(code);
+		// Now render for 5s
+		int frameCount = 0;
+		double t = 0.;
 
-			// Now render for 5s
-			int frameCount = 0;
-			double t = 0.;
+		// Set the resize callback
+		glfwSetWindowUserPointer(window, &context);
+		glfwSetFramebufferSizeCallback(window, SetFramebufferSize);
 
-			// Set the resize callback
-			glfwSetWindowUserPointer(window, &context);
-			glfwSetFramebufferSizeCallback(window, SetFramebufferSize);
+		while (!glfwWindowShouldClose(window))
+		{
+			// Poll events
+			glfwPollEvents();
 
-			while (!glfwWindowShouldClose(window))
-			{
-				// Poll events
-				glfwPollEvents();
+			// Update uniforms
+			context.GetState().V<shadertoy::iTime>() = t;
+			context.GetState().V<shadertoy::iFrame>() = frameCount;
 
-				// Update uniforms
-				context.GetState().V<shadertoy::iTime>() = t;
-				context.GetState().V<shadertoy::iFrame>() = frameCount;
+			// Render to texture
+			context.Render();
 
-				// Render to texture
-				context.Render();
+			// Render to screen
+			//  Setup framebuffer
+			glCall(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
+			glCall(glViewport, 0, 0, contextConfig.width, contextConfig.height);
 
-				// Render to screen
-				//  Setup framebuffer
-				glCall(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
-				glCall(glViewport, 0, 0, contextConfig.width, contextConfig.height);
+			//  Load texture and program
+			context.BindResult();
 
-				//  Load texture and program
-				context.BindResult();
+			//  Render result
+			context.RenderScreenQuad();
 
-				//  Render result
-				context.RenderScreenQuad();
+			// Buffer swapping
+			glfwSwapBuffers(window);
 
-				// Buffer swapping
-				glfwSwapBuffers(window);
+			// Update time and framecount
+			t = glfwGetTime();
+			frameCount++;
 
-				// Update time and framecount
-				t = glfwGetTime();
-				frameCount++;
-
-				if (t > 5.)
-					glfwSetWindowShouldClose(window, true);
-			}
+			if (t > 5.)
+				glfwSetWindowShouldClose(window, true);
 		}
 
 		glfwDestroyWindow(window);

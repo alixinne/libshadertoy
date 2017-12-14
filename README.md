@@ -14,15 +14,14 @@ The following tools and libraries are required:
 * [Boost 1.58+](https://launchpad.net/ubuntu/xenial/+package/libboost-all-dev)
 * [SOIL](https://launchpad.net/ubuntu/xenial/+package/libsoil-dev)
 * [libjpeg](https://launchpad.net/ubuntu/xenial/+package/libjpeg-dev)
-* [GLEW](https://launchpad.net/ubuntu/xenial/+source/glew)
+* [libepoxy](https://launchpad.net/ubuntu/xenial/+source/libepoxy)
 
 ## Usage
 
 This library only uses an existing OpenGL context that must be created and made
 current before trying to render frames from a ShaderToy program. This can be
 achieved using GLFW3 (recommended), GLUT or any other context creation library.
-Extension loading is done using GLEW, so it should be used in the parent project
-too.
+Extension loading is done using libepoxy.
 
 See the `examples/` folder on how to use this library.
 
@@ -111,7 +110,7 @@ apt-get update
 apt-get install -y nvidia-driver
 
 # You can also install the build dependencies beforehand
-apt-get install -y build-essential libboost-all-dev libsoil-dev libglew-dev \
+apt-get install -y build-essential libboost-all-dev libsoil-dev libepoxy-dev \
 	libglfw3-dev libunwind-dev libglm-dev cmake git ca-certificates
 
 # Leave the chroot

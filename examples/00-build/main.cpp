@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <GL/glew.h>
+#include <epoxy/gl.h>
 #include <GLFW/glfw3.h>
 
 #include <shadertoy/Shadertoy.hpp>
@@ -36,17 +36,8 @@ int main(int argc, char *argv[])
 	{
 		glfwMakeContextCurrent(window);
 
-		// Initialize GLEW
-		if (glewInit() != GLEW_OK)
-		{
-			std::cerr << "Failed to initialize glew" << std::endl;
-			code = 1;
-		}
-		else
-		{
-			shadertoy::RenderContext context(contextConfig);
-			std::cout << "Created context based on config" << std::endl;
-		}
+		shadertoy::RenderContext context(contextConfig);
+		std::cout << "Created context based on config" << std::endl;
 
 		glfwDestroyWindow(window);
 	}

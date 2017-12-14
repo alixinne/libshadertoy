@@ -5,7 +5,7 @@
 #include <curl/curl.h>
 #include <json/json.h>
 
-#include <GL/glew.h>
+#include <epoxy/gl.h>
 #include <GLFW/glfw3.h>
 
 #include <boost/log/trivial.hpp>
@@ -328,15 +328,6 @@ int performRender(shadertoy::ContextConfig &contextConfig)
 
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
-
-	// Initialize GLEW
-	if (glewInit() != GLEW_OK)
-	{
-		BOOST_LOG_TRIVIAL(error) << "Failed to initialize GLEW";
-		glfwDestroyWindow(window);
-		glfwTerminate();
-		return 1;
-	}
 
 	shadertoy::RenderContext context(contextConfig);
 	auto &state(context.GetState());

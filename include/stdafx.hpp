@@ -9,8 +9,7 @@
 #include <SOIL/SOIL.h>
 #include <jpeglib.h>
 
-#include <GL/glew.h>
-#include <GL/gl.h>
+#include <epoxy/gl.h>
 
 #include <glm/glm.hpp>
 
