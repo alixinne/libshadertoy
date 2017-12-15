@@ -37,7 +37,7 @@ namespace OpenGL
 	 * @throws OpenGLError
 	 */
 	template<typename glFunction>
-	auto shadertoy_EXPORT glCall(glFunction function)->typename
+	auto glCall(glFunction function)->typename
 					std::enable_if<std::is_same<void, decltype(function())>::value,
 					decltype(function())>::type
 	{
@@ -54,7 +54,7 @@ namespace OpenGL
 	 * @throws OpenGLError
 	 */
 	template<typename glFunction>
-	auto shadertoy_EXPORT glCall(glFunction function)->typename
+	auto glCall(glFunction function)->typename
 					std::enable_if<!std::is_same<void, decltype(function())>::value,
 					decltype(function())>::type
 	{
@@ -72,7 +72,7 @@ namespace OpenGL
 	 * @throws OpenGLError
 	 */
 	template<typename glFunction, typename... Params>
-	auto shadertoy_EXPORT glCall(glFunction function, Params... params)->typename
+	auto glCall(glFunction function, Params... params)->typename
 					std::enable_if<std::is_same<void, decltype(function(params...))>::value,
 					decltype(function(params...))>::type
 	{
@@ -90,7 +90,7 @@ namespace OpenGL
 	 * @throws OpenGLError
 	 */
 	template<typename glFunction, typename... Params>
-	auto shadertoy_EXPORT glCall(glFunction function, Params... params)->typename
+	auto glCall(glFunction function, Params... params)->typename
 					std::enable_if<!std::is_same<void, decltype(function(params...))>::value,
 					decltype(function(params...))>::type
 	{
