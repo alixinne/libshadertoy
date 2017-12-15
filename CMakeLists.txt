@@ -57,9 +57,13 @@ endif()
 
 # Find libunwind for printing backtraces on GL errors
 pkg_search_module(UNWIND libunwind)
+if (UNWIND_FOUND)
+	link_directories(${UNWIND_LIBDIR})
+endif()
 
 # libepoxy extension loader
 pkg_search_module(EPOXY REQUIRED epoxy)
+link_directories(${EPOXY_LIBDIR})
 
 # Copy shaders to source
 file(GLOB RESOURCES_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*)
