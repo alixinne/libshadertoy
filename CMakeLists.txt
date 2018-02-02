@@ -32,7 +32,7 @@ set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Required packages
-find_package(Boost 1.58 REQUIRED COMPONENTS filesystem log date_time)
+find_package(Boost 1.54 REQUIRED COMPONENTS filesystem log date_time)
 find_package(OpenGL REQUIRED)
 find_package(SOIL REQUIRED)
 find_package(JPEG REQUIRED)
