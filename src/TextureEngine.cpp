@@ -141,8 +141,8 @@ shared_ptr<OpenGL::Texture> TextureEngine::NoiseTextureHandler(const InputConfig
 {
 	// A noise texture
 	auto noiseTexture = make_shared<OpenGL::Texture>(GL_TEXTURE_2D);
-	noiseTexture->Parameter(GL_TEXTURE_SWIZZLE_B, GL_RED);
-	noiseTexture->Parameter(GL_TEXTURE_SWIZZLE_G, GL_RED);
+	noiseTexture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_RED);
+	noiseTexture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_RED);
 
 	// Create the actual noise
 	vector<unsigned char> rnd(config.width * config.height);
@@ -172,8 +172,8 @@ shared_ptr<OpenGL::Texture> TextureEngine::CheckerTextureHandler(const InputConf
 
 	// A checkerboard texture
 	auto checkerTexture = make_shared<OpenGL::Texture>(GL_TEXTURE_2D);
-	checkerTexture->Parameter(GL_TEXTURE_SWIZZLE_B, GL_RED);
-	checkerTexture->Parameter(GL_TEXTURE_SWIZZLE_G, GL_RED);
+	checkerTexture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_RED);
+	checkerTexture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_RED);
 
 	// Generate the checkerboard
 	vector<unsigned char> chk(config.width * config.height);
@@ -218,11 +218,11 @@ void TextureEngine::Initialize()
 			chk[j * height + i] = ((i / size) % 2 == 0) ^ ((j / size) % 2 == 0) ? 255 : 0;
 
 	// Load it and set parameters
-	emptyTexture->Parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	emptyTexture->Parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	emptyTexture->Parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
-	emptyTexture->Parameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
-	emptyTexture->Parameter(GL_TEXTURE_SWIZZLE_B, GL_RED);
+	emptyTexture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	emptyTexture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	emptyTexture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	emptyTexture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	emptyTexture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_RED);
 	emptyTexture->Image2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED,
 		GL_UNSIGNED_BYTE, chk.data());
 }
@@ -314,10 +314,10 @@ void TextureEngine::ApplyTextureOptions(const InputConfig &inputConfig, OpenGL::
 {
 	GLint minFilter = inputConfig.minFilter;
 
-	texture.Parameter(GL_TEXTURE_MIN_FILTER, minFilter);
-	texture.Parameter(GL_TEXTURE_MAG_FILTER, inputConfig.magFilter);
-	texture.Parameter(GL_TEXTURE_WRAP_S, inputConfig.wrap);
-	texture.Parameter(GL_TEXTURE_WRAP_T, inputConfig.wrap);
+	texture.Parameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+	texture.Parameter(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, inputConfig.magFilter);
+	texture.Parameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, inputConfig.wrap);
+	texture.Parameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, inputConfig.wrap);
 
 	if (minFilter > GL_LINEAR)
 	{

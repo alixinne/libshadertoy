@@ -17,5 +17,5 @@ void Framebuffer::Bind(GLenum target)
 
 void Framebuffer::Texture(GLenum attachment, shadertoy::OpenGL::Texture &texture, GLint level)
 {
-	glCall(glNamedFramebufferTexture, GLuint(*this), attachment, GLuint(texture), level);
+	glCall(glNamedFramebufferTextureEXT, GLuint(*this), attachment, GLuint(texture), level);
 }

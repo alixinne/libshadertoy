@@ -54,10 +54,10 @@ shared_ptr<TextureEngine> RenderContext::BuildTextureEngine()
 			int minFilter = max((int)inputConfig.minFilter, GL_LINEAR),
 				magFilter = (int)inputConfig.magFilter;
 
-			texture->Parameter(GL_TEXTURE_MAG_FILTER, magFilter);
-			texture->Parameter(GL_TEXTURE_MIN_FILTER, minFilter);
-			texture->Parameter(GL_TEXTURE_WRAP_S, inputConfig.wrap);
-			texture->Parameter(GL_TEXTURE_WRAP_T, inputConfig.wrap);
+			texture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
+			texture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+			texture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, inputConfig.wrap);
+			texture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, inputConfig.wrap);
 
 			return texture;
 		}
@@ -262,10 +262,10 @@ void RenderContext::DoReadWriteCurrentFrame(GLuint &texIn, GLuint &texOut)
 			screenQuadTexture = make_shared<OpenGL::Texture>(GL_TEXTURE_2D);
 
 			// Setup screenQuadTexture
-			screenQuadTexture->Parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			screenQuadTexture->Parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			screenQuadTexture->Parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
-			screenQuadTexture->Parameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
+			screenQuadTexture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			screenQuadTexture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			screenQuadTexture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			screenQuadTexture->Parameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 			screenQuadTexture->Image2D(GL_TEXTURE_2D, 0, GL_RGBA32F,
 				config.width, config.height, 0, GL_BGRA, GL_FLOAT, nullptr);
 		}

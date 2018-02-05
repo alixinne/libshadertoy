@@ -16,5 +16,5 @@ void Buffer::Bind(GLenum target)
 
 void Buffer::Data(GLsizei size, const void *data, GLenum usage)
 {
-	glCall(glNamedBufferData, GLuint(*this), size, data, usage);
+	glCall(glNamedBufferDataEXT, GLuint(*this), size, data, usage);
 }

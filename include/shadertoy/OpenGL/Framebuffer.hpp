@@ -24,7 +24,7 @@ namespace OpenGL
 	 */
 	class shadertoy_EXPORT Framebuffer : public Resource<
 		Framebuffer,
-		MultiAllocator<&glCreateFramebuffers, &glDeleteFramebuffers>,
+		MultiAllocator<&glGenFramebuffers, &glDeleteFramebuffers>,
 		NullFramebufferError>
 	{
 	public:

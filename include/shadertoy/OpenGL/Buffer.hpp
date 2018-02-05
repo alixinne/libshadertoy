@@ -24,7 +24,7 @@ namespace OpenGL
 	 */
 	class shadertoy_EXPORT Buffer : public Resource<
 		Buffer,
-		MultiAllocator<&glCreateBuffers, &glDeleteBuffers>,
+		MultiAllocator<&glGenBuffers, &glDeleteBuffers>,
 		NullBufferError>
 	{
 	public:
