@@ -13,7 +13,13 @@ cd "$(dirname "$BASH_SOURCE")/.."
 
 FAILED_TESTS=""
 
-for DISTRIBUTION in stretch xenial; do
+DISTRIBUTIONS=( stretch xenial trusty )
+
+if [ -n "$1" ]; then
+	DISTRIBUTIONS=( "$@" )
+fi
+
+for DISTRIBUTION in "${DISTRIBUTIONS[@]}"; do
 	rm -rf libshadertoy-$LIBVERSION-$DISTRIBUTION
 	mkdir -p libshadertoy-$LIBVERSION-$DISTRIBUTION
 
