@@ -25,7 +25,7 @@ for DISTRIBUTION in "${DISTRIBUTIONS[@]}"; do
 
 	for ARCH in amd64 i386; do
 		echo "[==== BUILDING $DISTRIBUTION-$ARCH ====]" >&2
-		(cd $LIBDIRECTORY && sbuild -d $DISTRIBUTION --arch $ARCH)
+		(cd $LIBDIRECTORY && sbuild --no-apt-update --no-apt-upgrade --resolve-alternatives -d $DISTRIBUTION --arch $ARCH)
 		if [ "$?" -ne "0" ]; then
 			echo "[==== BUILD FAILED FOR $DISTRIBUTION-$ARCH ====]" >&2
 			exit $?
