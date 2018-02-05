@@ -155,6 +155,7 @@ target_compile_definitions(shadertoy PUBLIC
 	BOOST_LOG_DYN_LINK=1)
 
 # C++14
+set(CXX_STANDARD_REQUIRED ON)
 set_property(TARGET shadertoy PROPERTY CXX_STANDARD 14)
 
 # Include directories for install
