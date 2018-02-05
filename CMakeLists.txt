@@ -1,4 +1,8 @@
-cmake_minimum_required(VERSION 3.1)
+if(WIN32)
+	cmake_minimum_required(VERSION 3.1)
+else()
+	cmake_minimum_required(VERSION 2.8)
+endif()
 
 project(shadertoy)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules")
