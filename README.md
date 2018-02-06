@@ -52,6 +52,9 @@ make -j
 ./example00-build
 ```
 
+***Note to Ubuntu Trusty (14.04) users: GLFW3 is not part of the official repositories.
+You will have to use an other context creation library, such as GLFW2 or GLUT.***
+
 Other examples may require more dependencies, see the associated README for more
 details.
 
@@ -66,6 +69,8 @@ wget -qO- https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master/pubkey.as
 sudo sh -c 'echo "deb https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master/debian stretch main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
 #  Ubuntu Xenial (16.04)
 sudo sh -c 'echo "deb https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master/ubuntu xenial main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
+#  Ubuntu Trusty (14.04)
+sudo sh -c 'echo "deb https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master/ubuntu trusty main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
 
 # Update and install
 sudo apt update
@@ -89,6 +94,8 @@ sudo sbuild-createchroot --include=eatmydata,ccache,gnupg stretch /disc/schroot/
 
 # Ubuntu Xenial amd64
 sudo sbuild-createchroot --include=eatmydata,ccache,gnupg xenial /disc/schroot/xenial-amd64-sbuild http://archive.ubuntu.com/ubuntu/
+# Ubuntu Trusty amd64
+sudo sbuild-createchroot --include=eatmydata,ccache,gnupg trusty /disc/schroot/xenial-amd64-sbuild http://archive.ubuntu.com/ubuntu/
 # The Ubuntu schroot must be edited to add universe and multiverse repositories
 sudo schroot -c xenial-amd64-sbuild # then edit /etc/apt/sources.list accordingly
 ```
