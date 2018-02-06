@@ -19,13 +19,30 @@ if [ -n "$1" ]; then
 	DISTRIBUTIONS=( "$@" )
 fi
 
+version_suffix () {
+	if [ "$1" = "stretch" ]; then
+		echo -n "debian9"
+	elif [ "$1" = "xenial" ]; then
+		echo -n "ubuntu16"
+	elif [ "$1" = "trusty" ]; then
+		echo -n "ubuntu14"
+	else
+		exit 1
+	fi
+}
+
 for DISTRIBUTION in "${DISTRIBUTIONS[@]}"; do
 	rm -rf libshadertoy-$LIBVERSION-$DISTRIBUTION
 	mkdir -p libshadertoy-$LIBVERSION-$DISTRIBUTION
 
 	for ARCH in amd64 i386; do
 		echo "[==== BUILDING $DISTRIBUTION-$ARCH ====]" >&2
-		(cd $LIBDIRECTORY && sbuild --no-apt-update --no-apt-upgrade --resolve-alternatives -d $DISTRIBUTION --arch $ARCH)
+		(cd $LIBDIRECTORY && sbuild --no-apt-update --no-apt-upgrade \
+									--no-apt-clean --resolve-alternatives \
+									-d $DISTRIBUTION \
+									--arch $ARCH \
+									--append-to-version $(version_suffix $DISTRIBUTION)
+		)
 		if [ "$?" -ne "0" ]; then
 			echo "[==== BUILD FAILED FOR $DISTRIBUTION-$ARCH ====]" >&2
 			exit $?
