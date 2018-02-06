@@ -41,7 +41,7 @@ for DISTRIBUTION in "${DISTRIBUTIONS[@]}"; do
 									--no-apt-clean --resolve-alternatives \
 									-d $DISTRIBUTION \
 									--arch $ARCH \
-									--append-to-version $(version_suffix $DISTRIBUTION)
+									--append-to-version "-$(version_suffix $DISTRIBUTION)"
 		)
 		if [ "$?" -ne "0" ]; then
 			echo "[==== BUILD FAILED FOR $DISTRIBUTION-$ARCH ====]" >&2
@@ -52,8 +52,8 @@ for DISTRIBUTION in "${DISTRIBUTIONS[@]}"; do
 		find . -maxdepth 1 -type l -exec mv {} libshadertoy-$LIBVERSION-$DISTRIBUTION/ \;
 		echo "[==== TESTING ARTIFACTS $DISTRIBUTION-$ARCH ====]" >&2
 		(cd $LIBDIRECTORY &&
-			autopkgtest ../libshadertoy-$LIBVERSION-$DISTRIBUTION/libshadertoy*_$ARCH.deb \
-				../libshadertoy-$LIBVERSION-$DISTRIBUTION/libshadertoy-dev_${LIBVERSION}_$ARCH.deb \
+			autopkgtest ../libshadertoy-$LIBVERSION-$DISTRIBUTION/libshadertoy*-$(version_suffix $DISTRIBUTION)_$ARCH.deb \
+			../libshadertoy-$LIBVERSION-$DISTRIBUTION/libshadertoy-dev_${LIBVERSION}-$(version_suffix $DISTRIBUTION)_$ARCH.deb \
 				-- schroot $DISTRIBUTION-$ARCH-sbuild)
 		if [ "$?" -ne "0" ]; then
 			echo "[==== TESTS FAILED FOR $DISTRIBUTION-$ARCH ====]" >&2
