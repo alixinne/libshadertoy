@@ -2,8 +2,9 @@ Source: libshadertoy
 Priority: optional
 Maintainer: Vincent Tavernier <vince.tavernier@gmail.com>
 Build-Depends: debhelper (>= 9),
- libboost-all-dev, libc6-dev, libstdc++6, libsoil-dev, libjpeg-dev,
- libepoxy-dev, libglm-dev, libunwind-dev, doxygen, graphviz, pkg-config, cmake
+ libboost-filesystem-dev (>= 1.54), libboost-log-dev (>= 1.54), libboost-date-time-dev (>= 1.54),
+ libc6-dev, libstdc++6 (>= 5) | libc++-dev, libsoil-dev, libjpeg-dev, libepoxy-dev (>= 1.1), libgl1-mesa-dev, libglm-dev,
+ libunwind-dev | libunwind8-dev, doxygen, doxygen-latex, graphviz, pkg-config, cmake (>= 2.8), gcc-5 | gcc-6 | clang-3.9
 Standards-Version: 3.9.8
 Section: libs
 Homepage: https://gitlab.inria.fr/vtaverni/libshadertoy
@@ -14,8 +15,9 @@ Package: libshadertoy-dev
 Section: libdevel
 Architecture: any
 Depends: libshadertoy0 (= ${binary:Version}), ${misc:Depends},
- libboost-all-dev, libsoil-dev, libjpeg-dev, libepoxy-dev, libgl-dev,
- libglm-dev, libunwind-dev
+ libboost-filesystem-dev (>= 1.54), libboost-log-dev (>= 1.54), libboost-date-time-dev (>= 1.54),
+ libsoil-dev, libjpeg-dev, libepoxy-dev (>= 1.1), libgl1-mesa-dev, libglm-dev, libunwind-dev | libunwind8-dev,
+ gcc-5 | gcc-6 | clang-3.9, libstdc++6 (>= 5) | libc++-dev
 Description: Development files for libshadertoy
  Development headers and documentation for libshadertoy
 
