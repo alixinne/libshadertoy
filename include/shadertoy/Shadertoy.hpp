@@ -1,6 +1,7 @@
 #include <boost/variant.hpp>
 #include <map>
 #include <sstream>
+#include <array>
 
 #include "shadertoy/pre.hpp"
 
