@@ -21,7 +21,7 @@ namespace OpenGL
 	 */
 	class shadertoy_EXPORT Renderbuffer : public Resource<
 		Renderbuffer,
-		MultiAllocator<&glGenRenderbuffers, &glDeleteRenderbuffers>,
+		MultiAllocator<&glCreateRenderbuffers, &glDeleteRenderbuffers>,
 		NullRenderbufferError>
 	{
 	public:

@@ -12,7 +12,7 @@ NullTextureError::NullTextureError()
 GLuint TextureAllocator::Create(GLenum target)
 {
 	GLuint res;
-	glCall(glGenTextures, 1, &res);
+	glCall(glCreateTextures, target, 1, &res);
 	return res;
 }
 
@@ -31,14 +31,14 @@ void Texture::Bind(GLenum target)
 	glCall(glBindTexture, target, GLuint(*this));
 }
 
-void Texture::Parameter(GLenum target, GLenum pname, GLint param)
+void Texture::Parameter(GLenum pname, GLint param)
 {
-	glCall(glTextureParameteriEXT, GLuint(*this), target, pname, param);
+	glCall(glTextureParameteri, GLuint(*this), pname, param);
 }
 
-void Texture::Parameter(GLenum target, GLenum pname, GLfloat param)
+void Texture::Parameter(GLenum pname, GLfloat param)
 {
-	glCall(glTextureParameterfEXT, GLuint(*this), target, pname, param);
+	glCall(glTextureParameterf, GLuint(*this), pname, param);
 }
 
 void Texture::Image2D(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *data)

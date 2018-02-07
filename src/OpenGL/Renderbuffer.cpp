@@ -16,5 +16,5 @@ void Renderbuffer::Bind(GLenum target)
 
 void Renderbuffer::Storage(GLenum internalFormat, GLsizei width, GLsizei height)
 {
-	glCall(glNamedRenderbufferStorageEXT, GLuint(*this), internalFormat, width, height);
+	glCall(glNamedRenderbufferStorage, GLuint(*this), internalFormat, width, height);
 }

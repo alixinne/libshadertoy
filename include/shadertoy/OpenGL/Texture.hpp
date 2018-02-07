@@ -75,26 +75,24 @@ namespace OpenGL
 		/**
 		 * glTextureParameteri
 		 *
-		 * @param target Texture target
 		 * @param pname Parameter name to set
 		 * @param param Value of the parameter
 		 *
 		 * @throws OpenGLError
 		 * @throws NullTextureError
 		 */
-		void Parameter(GLenum target, GLenum pname, GLint param);
+		void Parameter(GLenum pname, GLint param);
 
 		/**
 		 * glTextureParameterf
 		 *
-		 * @param target Texture target
 		 * @param pname Parameter name to set
 		 * @param param Value of the parameter
 		 *
 		 * @throws OpenGLError
 		 * @throws NullTextureError
 		 */
-		void Parameter(GLenum target, GLenum pname, GLfloat param);
+		void Parameter(GLenum pname, GLfloat param);
 
 		/**
 		 * glTextureImage2DEXT

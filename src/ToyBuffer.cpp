@@ -162,10 +162,10 @@ void ToyBuffer::InitializeRenderTexture(shared_ptr<OpenGL::Texture> &texptr, int
 		texptr = make_shared<OpenGL::Texture>(GL_TEXTURE_2D);
 
 	// Allocate texture storage according to width/height
-	texptr->Parameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	texptr->Parameter(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	texptr->Parameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	texptr->Parameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	texptr->Parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	texptr->Parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	texptr->Parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	texptr->Parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	texptr->Image2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_BGRA,
 		GL_UNSIGNED_BYTE, nullptr);
 
