@@ -13,13 +13,6 @@
 # package maintainers to append LDFLAGS
 #export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
-export TRUSTY_BUILD=$(shell test $$(gcc -dumpversion | cut -d. -f1) -lt 5 && echo -n 1)
-
-export CC=$(shell test -n "$(TRUSTY_BUILD)" && echo -n "/usr/bin/clang-3.9" || echo -n "$$CC")
-export CXX=$(shell test -n "$(TRUSTY_BUILD)" && echo -n "/usr/bin/clang++-3.9" || echo -n "$$CXX")
-
-export DEB_CXXFLAGS_MAINT_APPEND = $(shell test -n "$(TRUSTY_BUILD)" && echo -n '-std=c++14 -stdlib=libc++')
-
 %:
 	dh $@ --buildsystem=cmake --parallel
 
