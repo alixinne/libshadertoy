@@ -10,11 +10,11 @@ The following tools and libraries are required:
 
 * OpenGL 4.x
 * C++14-enabled compiler (GCC 5.x or clang3.8+)
-* [CMake](https://launchpad.net/ubuntu/xenial/+source/cmake)
-* [Boost 1.58+](https://launchpad.net/ubuntu/xenial/+package/libboost-all-dev)
+* [CMake 3.1+](https://launchpad.net/ubuntu/xenial/+source/cmake)
+* [Boost 1.54+](https://launchpad.net/ubuntu/xenial/+package/libboost-all-dev)
 * [SOIL](https://launchpad.net/ubuntu/xenial/+package/libsoil-dev)
 * [libjpeg](https://launchpad.net/ubuntu/xenial/+package/libjpeg-dev)
-* [libepoxy](https://launchpad.net/ubuntu/xenial/+source/libepoxy)
+* [libepoxy 1.3+](https://launchpad.net/ubuntu/xenial/+source/libepoxy)
 
 ## Usage
 
@@ -70,6 +70,7 @@ sudo sh -c 'echo "deb https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/mast
 #  Ubuntu Xenial (16.04)
 sudo sh -c 'echo "deb https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master/ubuntu xenial main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
 #  Ubuntu Trusty (14.04)
+#  Note: only 0.1.4 is available in that repository for testing
 sudo sh -c 'echo "deb https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master/ubuntu trusty main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
 
 # Update and install
@@ -94,10 +95,8 @@ sudo sbuild-createchroot --include=eatmydata,ccache,gnupg stretch /disc/schroot/
 
 # Ubuntu Xenial amd64
 sudo sbuild-createchroot --include=eatmydata,ccache,gnupg xenial /disc/schroot/xenial-amd64-sbuild http://archive.ubuntu.com/ubuntu/
-# Ubuntu Trusty amd64
-sudo sbuild-createchroot --include=eatmydata,ccache,gnupg trusty /disc/schroot/xenial-amd64-sbuild http://archive.ubuntu.com/ubuntu/
-# The Ubuntu schroot must be edited to add universe and multiverse repositories
-sudo schroot -c xenial-amd64-sbuild # then edit /etc/apt/sources.list accordingly
+# Ubuntu Trusty : you have to use dpkg-buildpackage manually on a machine where GCC 5 (installed via a PPA)
+# is the default compiler, and a libepoxy 1.3 package is available (which would be backported from Xenial)
 ```
 
 In order to test the build packages, you can use the `autopkgtest` package. Note
