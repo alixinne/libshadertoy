@@ -13,7 +13,7 @@ cd "$(dirname "$BASH_SOURCE")/.."
 
 FAILED_TESTS=""
 
-DISTRIBUTIONS=( stretch xenial trusty )
+DISTRIBUTIONS=( stretch xenial )
 
 if [ -n "$1" ]; then
 	DISTRIBUTIONS=( "$@" )
