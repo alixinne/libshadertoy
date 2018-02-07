@@ -13,9 +13,10 @@ include(GenerateExportHeader)
 include(CMakePackageConfigHelpers)
 
 # Load lib version from debian/substvars
-file(READ ${CMAKE_CURRENT_SOURCE_DIR}/debian/substvars DEBIAN_SUBSTVARS)
-string(REGEX MATCH "version=[0-9]+\\.[0-9]+\\.[0-9]+" DEBIAN_SUBSTVARS_VERSION_FIELD ${DEBIAN_SUBSTVARS})
-string(REGEX REPLACE "^version=(.*)$" "\\1" ST_VERSION ${DEBIAN_SUBSTVARS_VERSION_FIELD})
+file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/debian/changelog DEBIAN_CHANGELOG
+	REGEX "^libshadertoy \\(.*\\) ")
+list(GET DEBIAN_CHANGELOG 0 DEBIAN_CHANGELOG_HEAD)
+string(REGEX REPLACE "^.*\\(([0-9]+\\.[0-9]+\\.[0-9]+)-.*\\).*$" "\\1" ST_VERSION ${DEBIAN_CHANGELOG_HEAD})
 
 # Parse the version string into major, minor and patch
 string(REPLACE "." ";" ST_VERSION_LIST ${ST_VERSION})

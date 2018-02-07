@@ -4,7 +4,7 @@
 LIBDIRECTORY="$(pwd)"
 
 # Grab the current version number from the rules file
-LIBVERSION=$(awk -F= 'BEGIN {ORS=""} /version/ {print $2}' "$LIBDIRECTORY/debian/substvars")
+LIBVERSION=$(head -n 1 debian/changelog | awk '{gsub("[()]","",$2); print $2}')
 
 echo "[==== BUILDING v$LIBVERSION ====]" >&2
 
