@@ -1,3 +1,9 @@
+libshadertoy (0.1.5) unstable; urgency=medium
+
+  * Update dependencies for Xenial and Stretch
+
+ -- Vincent Tavernier <vince.tavernier@gmail.com>  Wed, 07 Feb 2018 15:00:00 +0200
+
 libshadertoy (0.1.4) unstable; urgency=medium
 
   * Add support for Ubuntu Trusty (14.04 LTS)
