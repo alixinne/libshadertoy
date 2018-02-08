@@ -19,12 +19,43 @@ namespace OpenGL
 		explicit NullQueryError();
 	};
 
-	class shadertoy_EXPORT Query : public Resource<
-		Query,
-		MultiAllocator<&glGenQueries, &glDeleteQueries>,
-		NullQueryError>
+	class shadertoy_EXPORT QueryAllocator
 	{
 	public:
+		/**
+		 * Creates a new query of the given type.
+		 *
+		 * @param  target Target of the query to create
+		 * @return        Id of the created query
+		 *
+		 * @throws OpenGLError
+		 */
+		GLuint Create(GLenum target);
+		/**
+		 * Deletes the given query
+		 *
+		 * @param resource Id of the query to delete
+		 *
+		 * @throws OpenGLError
+		 */
+		void Delete(GLuint resource);
+	};
+
+	/**
+	 * Represents an OpenGL query.
+	 */
+	class shadertoy_EXPORT Query : public Resource<Query, QueryAllocator, NullQueryError>
+	{
+	public:
+		/**
+		 * Creates a new query for the given target.
+		 *
+		 * @param target Target of the new query.
+		 *
+		 * @throws OpenGLError
+		 */
+		Query(GLenum target);
+
 		/**
 		 * glBeginQuery
 		 *

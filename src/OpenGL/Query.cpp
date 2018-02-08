@@ -9,6 +9,23 @@ NullQueryError::NullQueryError()
 {
 }
 
+GLuint QueryAllocator::Create(GLenum target)
+{
+	GLuint id;
+	glCall(glCreateQueries, target, 1, &id);
+	return id;
+}
+
+void QueryAllocator::Delete(GLuint resource)
+{
+	glCall(glDeleteQueries, 1, &resource);
+}
+
+Query::Query(GLenum target)
+	: Resource(Allocator().Create(target))
+{
+}
+
 void Query::Begin(GLenum target)
 {
 	glCall(glBeginQuery, target, GLuint(*this));

@@ -22,7 +22,8 @@ ToyBuffer::ToyBuffer(RenderContext &context,
 	: context(context),
 	  id(id),
 	  fs(GL_FRAGMENT_SHADER),
-	  boundInputs()
+	  boundInputs(),
+	  timeDeltaQuery(GL_TIME_ELAPSED)
 {
 }
 
