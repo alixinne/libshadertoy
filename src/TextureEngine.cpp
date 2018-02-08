@@ -321,6 +321,7 @@ void TextureEngine::ApplyTextureOptions(const InputConfig &inputConfig, OpenGL::
 
 	if (minFilter > GL_LINEAR)
 	{
+		BOOST_LOG_TRIVIAL(debug) << "generating mipmaps for " << inputConfig.id;
 		texture.GenerateMipmap();
 	}
 }

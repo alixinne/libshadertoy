@@ -48,5 +48,5 @@ void Texture::Image2D(GLenum target, GLint level, GLint internalFormat, GLsizei 
 
 void Texture::GenerateMipmap()
 {
-	glCall(glGenerateMipmap, GLuint(*this));
+	glCall(glGenerateTextureMipmap, GLuint(*this));
 }
