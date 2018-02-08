@@ -36,8 +36,10 @@ int main(int argc, char *argv[])
 	{
 		glfwMakeContextCurrent(window);
 
-		shadertoy::RenderContext context(contextConfig);
-		std::cout << "Created context based on config" << std::endl;
+		{
+			shadertoy::RenderContext context(contextConfig);
+			std::cout << "Created context based on config" << std::endl;
+		}
 
 		glfwDestroyWindow(window);
 	}
