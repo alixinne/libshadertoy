@@ -22,6 +22,9 @@ namespace shadertoy
 		class ProgramValidateError;
 		class Program;
 
+		class NullQueryError;
+		class Query;
+
 		class NullRenderbufferError;
 		class Renderbuffer;
 

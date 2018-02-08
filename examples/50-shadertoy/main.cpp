@@ -127,7 +127,7 @@ int parseOptions(string &shaderId, string &shaderApiKey, bool &dump, int argc, c
 }
 
 int loadRemote(const string &shaderId, const string &shaderApiKey,
-				shadertoy::ContextConfig &contextConfig)
+				shadertoy::ContextConfig &contextConfig, string &imageBufferName)
 {
 	// Init CURL
 	curl_global_init(CURL_GLOBAL_DEFAULT);
@@ -288,6 +288,9 @@ int loadRemote(const string &shaderId, const string &shaderApiKey,
 		pair<string, shadertoy::BufferConfig> imagebuf(*contextConfig.bufferConfigs.begin());
 		contextConfig.bufferConfigs.erase(contextConfig.bufferConfigs.begin());
 		contextConfig.bufferConfigs.insert(imagebuf);
+
+		// Fetch image buffer name
+		imageBufferName = imagebuf.first;
 	}
 	catch (exception &ex)
 	{
@@ -302,32 +305,11 @@ int loadRemote(const string &shaderId, const string &shaderApiKey,
 	return code;
 }
 
-int performRender(shadertoy::ContextConfig &contextConfig)
+int render(GLFWwindow* window,
+	shadertoy::ContextConfig &contextConfig,
+	const string &imageBufferName)
 {
 	int code = 0;
-
-	if (!glfwInit())
-	{
-		BOOST_LOG_TRIVIAL(error) << "Failed to initialize glfw";
-		return 1;
-	}
-
-	// Initialize window
-	GLFWwindow *window = glfwCreateWindow(contextConfig.width,
-										  contextConfig.height,
-										  "libshadertoy example 50-shadertoy",
-										  nullptr,
-										  nullptr);
-
-	if (!window)
-	{
-		BOOST_LOG_TRIVIAL(error) << "Failed to create glfw window";
-		glfwTerminate();
-		return 1;
-	}
-
-	glfwMakeContextCurrent(window);
-	glfwSwapInterval(1);
 
 	shadertoy::RenderContext context(contextConfig);
 	auto &state(context.GetState());
@@ -412,6 +394,20 @@ int performRender(shadertoy::ContextConfig &contextConfig)
 			//  Render result
 			context.RenderScreenQuad();
 
+			// Print execution time
+			auto buffer = context.GetBufferByName(imageBufferName);
+
+			if (buffer)
+			{
+				auto renderTime = buffer->GetElapsedTime();
+				std:cerr << imageBufferName << " time: " << renderTime
+						 << "ns fps: " << (1e9 / renderTime)
+						 << " mpx/s: " << (contextConfig.width * contextConfig.height / (renderTime / 1e3))
+						 << std::endl;
+
+				state.V<shadertoy::iTimeDelta>() = renderTime / 1e9;
+			}
+
 			// Buffer swapping
 			glfwSwapBuffers(window);
 
@@ -419,6 +415,38 @@ int performRender(shadertoy::ContextConfig &contextConfig)
 			frameCount++;
 		}
 	}
+
+	return code;
+}
+
+int performRender(shadertoy::ContextConfig &contextConfig, const string &imageBufferName)
+{
+	int code = 0;
+
+	if (!glfwInit())
+	{
+		BOOST_LOG_TRIVIAL(error) << "Failed to initialize glfw";
+		return 1;
+	}
+
+	// Initialize window
+	GLFWwindow *window = glfwCreateWindow(contextConfig.width,
+										  contextConfig.height,
+										  "libshadertoy example 50-shadertoy",
+										  nullptr,
+										  nullptr);
+
+	if (!window)
+	{
+		BOOST_LOG_TRIVIAL(error) << "Failed to create glfw window";
+		glfwTerminate();
+		return 1;
+	}
+
+	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1);
+
+	code = render(window, contextConfig, imageBufferName);
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
@@ -446,12 +474,13 @@ int main(int argc, char *argv[])
 	contextConfig.dumpShaders = dumpShaders;
 
 	// Fetch shader code
-	code = loadRemote(shaderId, shaderApiKey, contextConfig);
+	string imageBufferName;
+	code = loadRemote(shaderId, shaderApiKey, contextConfig, imageBufferName);
 	if (code > 0)
 		return code;
 
 	// Render
-	code = performRender(contextConfig);
+	code = performRender(contextConfig, imageBufferName);
 
 	return code;
 }

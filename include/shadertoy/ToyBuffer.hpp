@@ -39,6 +39,9 @@ private:
 	/// Bound uniform state
 	std::vector<std::shared_ptr<shadertoy::BoundInputsBase>> boundInputs;
 
+	/// Query for iTimeDelta execution time
+	OpenGL::Query timeDeltaQuery;
+
 public:
 	/**
 	 * @brief      Initializes a new ShaderToy buffer
@@ -85,6 +88,16 @@ public:
 	 */
 	inline std::shared_ptr<OpenGL::Texture> GetTargetTexture() const
 	{ return targetTex; }
+
+	/**
+	 * @brief      Obtain the duration of the last rendering of this buffer, in
+	 *             nanoseconds. This method may block while waiting for the
+	 *             query object to be available.
+	 *
+	 * @return     Number of nanoseconds elapsed during the rendering of this
+	 *             buffer.
+	 */
+	unsigned long long GetElapsedTime();
 
 private:
 	void InitializeRenderTexture(std::shared_ptr<OpenGL::Texture> &tex, int width, int height);

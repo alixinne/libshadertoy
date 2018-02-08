@@ -100,6 +100,7 @@ add_library(shadertoy SHARED
 	src/OpenGL/Caller.cpp
 	src/OpenGL/Framebuffer.cpp
 	src/OpenGL/Program.cpp
+	src/OpenGL/Query.cpp
 	src/OpenGL/Renderbuffer.cpp
 	src/OpenGL/Shader.cpp
 	src/OpenGL/Texture.cpp

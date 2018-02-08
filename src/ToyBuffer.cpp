@@ -148,11 +148,34 @@ void ToyBuffer::Render()
 	for (auto &inputs : boundInputs)
 		inputs->Apply();
 
+	// Start query measurement
+	timeDeltaQuery.Begin(GL_TIME_ELAPSED);
+
 	// Render the program
 	context.RenderScreenQuad();
 
+	// End query measurement
+	timeDeltaQuery.End(GL_TIME_ELAPSED);
+
 	// Swap texture object pointers
 	swap(sourceTex, targetTex);
+}
+
+unsigned long long ToyBuffer::GetElapsedTime()
+{
+	GLint available = 0;
+
+	// Wait for result to be available
+	while (!available)
+	{
+		timeDeltaQuery.GetObjectiv(GL_QUERY_RESULT_AVAILABLE, &available);
+	}
+
+	// Fetch result
+	GLuint64 result;
+	timeDeltaQuery.GetObjectui64v(GL_QUERY_RESULT, &result);
+
+	return result;
 }
 
 void ToyBuffer::InitializeRenderTexture(shared_ptr<OpenGL::Texture> &texptr, int width, int height)
