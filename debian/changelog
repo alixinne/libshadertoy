@@ -3,7 +3,7 @@ libshadertoy (0.1.6) unstable; urgency=medium
   * Add fragment shader execution time query support (iTimeDelta)
   * Fix unsupported inputs in examples
   * Fix mipmap generation
-  * Fix version parsing for source build
+  * Fix various bugs when building from source
   * Fix examples deleting GL context before Shadertoy context
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Thu, 08 Feb 2018 12:30:00 +0200
