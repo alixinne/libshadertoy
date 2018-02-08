@@ -267,14 +267,7 @@ int loadRemote(const string &shaderId, const string &shaderApiKey,
 					ss << "Unsupported input " << input["ctype"].asString()
 					   << " for pass " << i << ", input " << input["channel"].asInt();
 
-					if (!(input["ctype"].compare("keyboard") == 0))
-					{
-						throw runtime_error(ss.str().c_str());
-					}
-					else
-					{
-						BOOST_LOG_TRIVIAL(warning) << ss.str();
-					}
+					BOOST_LOG_TRIVIAL(warning) << ss.str();
 				}
 			}
 
