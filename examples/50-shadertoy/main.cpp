@@ -127,7 +127,7 @@ int parseOptions(string &shaderId, string &shaderApiKey, bool &dump, int argc, c
 }
 
 int loadRemote(const string &shaderId, const string &shaderApiKey,
-				shadertoy::ContextConfig &contextConfig, string &imageBufferName)
+				shadertoy::ContextConfig &contextConfig)
 {
 	// Init CURL
 	curl_global_init(CURL_GLOBAL_DEFAULT);
@@ -281,9 +281,6 @@ int loadRemote(const string &shaderId, const string &shaderApiKey,
 		pair<string, shadertoy::BufferConfig> imagebuf(*contextConfig.bufferConfigs.begin());
 		contextConfig.bufferConfigs.erase(contextConfig.bufferConfigs.begin());
 		contextConfig.bufferConfigs.insert(imagebuf);
-
-		// Fetch image buffer name
-		imageBufferName = imagebuf.first;
 	}
 	catch (exception &ex)
 	{
@@ -298,9 +295,7 @@ int loadRemote(const string &shaderId, const string &shaderApiKey,
 	return code;
 }
 
-int render(GLFWwindow* window,
-	shadertoy::ContextConfig &contextConfig,
-	const string &imageBufferName)
+int render(GLFWwindow* window, shadertoy::ContextConfig &contextConfig)
 {
 	int code = 0;
 
@@ -388,15 +383,15 @@ int render(GLFWwindow* window,
 			context.RenderScreenQuad();
 
 			// Print execution time
-			auto buffer = context.GetBufferByName(imageBufferName);
+			auto buffer = context.GetBufferByName();
 
 			if (buffer)
 			{
 				auto renderTime = buffer->GetElapsedTime();
-				std:cerr << imageBufferName << " time: " << renderTime
-						 << "ns fps: " << (1e9 / renderTime)
-						 << " mpx/s: " << (contextConfig.width * contextConfig.height / (renderTime / 1e3))
-						 << std::endl;
+				std::cerr << "frame time: " << renderTime
+						  << "ns fps: " << (1e9 / renderTime)
+						  << " mpx/s: " << (contextConfig.width * contextConfig.height / (renderTime / 1e3))
+						  << std::endl;
 			}
 
 			// Buffer swapping
@@ -410,7 +405,7 @@ int render(GLFWwindow* window,
 	return code;
 }
 
-int performRender(shadertoy::ContextConfig &contextConfig, const string &imageBufferName)
+int performRender(shadertoy::ContextConfig &contextConfig)
 {
 	int code = 0;
 
@@ -437,7 +432,7 @@ int performRender(shadertoy::ContextConfig &contextConfig, const string &imageBu
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
 
-	code = render(window, contextConfig, imageBufferName);
+	code = render(window, contextConfig);
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
@@ -465,13 +460,12 @@ int main(int argc, char *argv[])
 	contextConfig.dumpShaders = dumpShaders;
 
 	// Fetch shader code
-	string imageBufferName;
-	code = loadRemote(shaderId, shaderApiKey, contextConfig, imageBufferName);
+	code = loadRemote(shaderId, shaderApiKey, contextConfig);
 	if (code > 0)
 		return code;
 
 	// Render
-	code = performRender(contextConfig, imageBufferName);
+	code = performRender(contextConfig);
 
 	return code;
 }

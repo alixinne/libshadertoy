@@ -256,11 +256,12 @@ public:
 	/**
 	 * Obtains the buffer object for the given name.
 	 *
-	 * @param  name Name of the buffer object to obtain
+	 * @param  name [optional] Name of the buffer object to obtain. If empty,
+	 *              returns the image buffer.
 	 * @return      Pointer to the buffer object, or a null pointer if no such
 	 *              buffer exists.
 	 */
-	std::shared_ptr<ToyBuffer> GetBufferByName(const std::string &name);
+	std::shared_ptr<ToyBuffer> GetBufferByName(const std::string &name = std::string());
 };
 
 }

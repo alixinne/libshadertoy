@@ -398,11 +398,23 @@ OpenGL::Shader &RenderContext::GetScreenQuadVertexShader()
 
 shared_ptr<ToyBuffer> RenderContext::GetBufferByName(const string &name)
 {
-	auto it = buffers.find(name);
-	if (it == buffers.end())
+	if (name.empty())
 	{
-		return shared_ptr<ToyBuffer>();
-	}
+		if (buffers.empty())
+		{
+			return shared_ptr<ToyBuffer>();
+		}
 
-	return it->second;
+		return buffers.rbegin()->second;
+	}
+	else
+	{
+		auto it = buffers.find(name);
+		if (it == buffers.end())
+		{
+			return shared_ptr<ToyBuffer>();
+		}
+
+		return it->second;
+	}
 }
