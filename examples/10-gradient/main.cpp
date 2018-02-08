@@ -59,70 +59,72 @@ int main(int argc, char *argv[])
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(1);
 
-		shadertoy::RenderContext context(contextConfig);
-		std::cout << "Created context based on config" << std::endl;
-
-		try
 		{
-			// Initialize context
-			context.Initialize();
-			std::cout << "Initialized rendering context" << std::endl;
-		}
-		catch (shadertoy::OpenGL::ShaderCompilationError &sce)
-		{
-			std::cerr << "Failed to compile shader: " << sce.log();
-			code = 2;
-		}
-		catch (shadertoy::ShadertoyError &err)
-		{
-			std::cerr << "Error: "
-					  << err.what();
-			code = 2;
-		}
+			shadertoy::RenderContext context(contextConfig);
+			std::cout << "Created context based on config" << std::endl;
 
-		if (code)
-			exit(code);
+			try
+			{
+				// Initialize context
+				context.Initialize();
+				std::cout << "Initialized rendering context" << std::endl;
+			}
+			catch (shadertoy::OpenGL::ShaderCompilationError &sce)
+			{
+				std::cerr << "Failed to compile shader: " << sce.log();
+				code = 2;
+			}
+			catch (shadertoy::ShadertoyError &err)
+			{
+				std::cerr << "Error: "
+						  << err.what();
+				code = 2;
+			}
 
-		// Now render for 5s
-		int frameCount = 0;
-		double t = 0.;
+			if (code)
+				exit(code);
 
-		// Set the resize callback
-		glfwSetWindowUserPointer(window, &context);
-		glfwSetFramebufferSizeCallback(window, SetFramebufferSize);
+			// Now render for 5s
+			int frameCount = 0;
+			double t = 0.;
 
-		while (!glfwWindowShouldClose(window))
-		{
-			// Poll events
-			glfwPollEvents();
+			// Set the resize callback
+			glfwSetWindowUserPointer(window, &context);
+			glfwSetFramebufferSizeCallback(window, SetFramebufferSize);
 
-			// Update uniforms
-			context.GetState().V<shadertoy::iTime>() = t;
-			context.GetState().V<shadertoy::iFrame>() = frameCount;
+			while (!glfwWindowShouldClose(window))
+			{
+				// Poll events
+				glfwPollEvents();
 
-			// Render to texture
-			context.Render();
+				// Update uniforms
+				context.GetState().V<shadertoy::iTime>() = t;
+				context.GetState().V<shadertoy::iFrame>() = frameCount;
 
-			// Render to screen
-			//  Setup framebuffer
-			glCall(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
-			glCall(glViewport, 0, 0, contextConfig.width, contextConfig.height);
+				// Render to texture
+				context.Render();
 
-			//  Load texture and program
-			context.BindResult();
+				// Render to screen
+				//  Setup framebuffer
+				glCall(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
+				glCall(glViewport, 0, 0, contextConfig.width, contextConfig.height);
 
-			//  Render result
-			context.RenderScreenQuad();
+				//  Load texture and program
+				context.BindResult();
 
-			// Buffer swapping
-			glfwSwapBuffers(window);
+				//  Render result
+				context.RenderScreenQuad();
 
-			// Update time and framecount
-			t = glfwGetTime();
-			frameCount++;
+				// Buffer swapping
+				glfwSwapBuffers(window);
 
-			if (t > 5.)
-				glfwSetWindowShouldClose(window, true);
+				// Update time and framecount
+				t = glfwGetTime();
+				frameCount++;
+
+				if (t > 5.)
+					glfwSetWindowShouldClose(window, true);
+			}
 		}
 
 		glfwDestroyWindow(window);
