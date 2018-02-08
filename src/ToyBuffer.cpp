@@ -144,6 +144,18 @@ void ToyBuffer::Render()
 		resolutions[i][2] = 1.0f;
 	}
 
+	// Try to set iTimeDelta
+	GLint available = 0;
+	timeDeltaQuery.GetObjectiv(GL_QUERY_RESULT_AVAILABLE, &available);
+	if (available)
+	{
+		// Result available, set uniform value
+		GLuint64 timeDelta;
+		timeDeltaQuery.GetObjectui64v(GL_QUERY_RESULT, &timeDelta);
+		static_pointer_cast<ShaderInputsType::BoundInputs>(boundInputs[0])
+			->State.V<iTimeDelta>() = timeDelta / 1e9;
+	}
+
 	// Set all uniforms
 	for (auto &inputs : boundInputs)
 		inputs->Apply();

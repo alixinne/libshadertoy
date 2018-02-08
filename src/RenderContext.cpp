@@ -101,6 +101,7 @@ void RenderContext::Initialize()
 {
 	// Initialize constant uniforms
 	state.V<iResolution>() = glm::vec3(config.width, config.height, 1.0f);
+	// Note that this will be overriden once query measurements are available
 	state.V<iTimeDelta>() = 1.0f / (float) config.targetFramerate;
 	state.V<iFrameRate>() = (float) config.targetFramerate;
 

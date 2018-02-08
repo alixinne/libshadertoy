@@ -397,8 +397,6 @@ int render(GLFWwindow* window,
 						 << "ns fps: " << (1e9 / renderTime)
 						 << " mpx/s: " << (contextConfig.width * contextConfig.height / (renderTime / 1e3))
 						 << std::endl;
-
-				state.V<shadertoy::iTimeDelta>() = renderTime / 1e9;
 			}
 
 			// Buffer swapping
