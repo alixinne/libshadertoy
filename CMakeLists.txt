@@ -191,7 +191,9 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake
 # Install the examples
 install(DIRECTORY examples
 		COMPONENT shadertoy-examples
-		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
+		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy
+		PATTERN "build" EXCLUDE
+		PATTERN "*.dump" EXCLUDE)
 
 # Install headers
 file(GLOB SHADERTOY_HEADERS ${INCLUDE_DIR}/shadertoy/*.hpp)
