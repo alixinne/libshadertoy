@@ -161,14 +161,8 @@ void ToyBuffer::Render()
 	for (auto &inputs : boundInputs)
 		inputs->Apply();
 
-	// Start query measurement
-	timeDeltaQuery.Begin(GL_TIME_ELAPSED);
-
 	// Render the program
-	context.RenderScreenQuad();
-
-	// End query measurement
-	timeDeltaQuery.End(GL_TIME_ELAPSED);
+	context.RenderScreenQuad(timeDeltaQuery);
 
 	// Swap texture object pointers
 	swap(sourceTex, targetTex);

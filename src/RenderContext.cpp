@@ -382,6 +382,17 @@ void RenderContext::RenderScreenQuad()
 	glCall(glDrawElements, GL_TRIANGLES, 3 * 2, GL_UNSIGNED_INT, nullptr);
 }
 
+void RenderContext::RenderScreenQuad(OpenGL::Query &timerQuery)
+{
+	screenQuadCorners.Bind(GL_ARRAY_BUFFER);
+
+	timerQuery.Begin(GL_TIME_ELAPSED);
+
+	glCall(glDrawElements, GL_TRIANGLES, 3 * 2, GL_UNSIGNED_INT, nullptr);
+
+	timerQuery.End(GL_TIME_ELAPSED);
+}
+
 void RenderContext::BindResult()
 {
 	// Prepare prog and texture

@@ -241,6 +241,14 @@ public:
 	void RenderScreenQuad();
 
 	/**
+	 * @brief      Render a screen quad using the current context
+	 *
+	 * @param timerQuery Query object to use for measuring the runtime of the
+	 *                   draw call.
+	 */
+	void RenderScreenQuad(OpenGL::Query &timerQuery);
+
+	/**
 	 * @brief      Binds the texture containing the shadertoy result as well as
 	 *             a program which renders this texture to the viewport. Useful
 	 *             for rendering to screen by calling
