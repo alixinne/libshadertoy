@@ -5,3 +5,7 @@ Depends: @, libglfw3-dev, cmake, g++, pkg-config
 Tests: 10-gradient
 Restrictions: allow-stderr
 Depends: @, libglfw3-dev, cmake, g++, pkg-config
+
+Tests: 15-uniforms
+Restrictions: allow-stderr
+Depends: @, libglfw3-dev, cmake, g++, pkg-config
