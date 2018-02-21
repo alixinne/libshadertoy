@@ -1,6 +1,7 @@
-libshadertoy (0.1.8) UNRELEASED; urgency=medium
+libshadertoy (0.1.8) unstable; urgency=medium
 
   * Add support for defining uniforms at run-time. See example15-uniforms
+  * Fix buffer timing measuring extra geometry binding
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Wed, 21 Feb 2018 16:15:05 +0100
 
