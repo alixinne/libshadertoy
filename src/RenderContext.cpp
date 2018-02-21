@@ -324,7 +324,7 @@ void RenderContext::BuildBufferShader(const string &id,
 	// Add source from uniform declarations
 	sources.insert(sources.begin() + 1, make_pair(
 		string("generated:shader-inputs"),
-		ShaderInputsType::GetDefinitions()));
+		state.GetDefinitions()));
 
 	// Add footer
 	sources.push_back(make_pair(
