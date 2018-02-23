@@ -8,19 +8,19 @@
 namespace shadertoy
 {
 /**
- * Base error class for libshadertoy errors.
+ * @brief Base error class for libshadertoy errors.
  */
 class ShadertoyError : public std::runtime_error
 {
 public:
 	/**
-	 * Initializes a new instance of the ShadertoyError class.
+	 * @brief Initializes a new instance of the ShadertoyError class.
 	 *
 	 * @param  what_arg Error message
 	 */
 	explicit ShadertoyError(const std::string &what_arg);
 	/**
-	 * Initializes a new instance of the ShadertoyError class.
+	 * @brief Initializes a new instance of the ShadertoyError class.
 	 *
 	 * @param  what_arg Error message
 	 */

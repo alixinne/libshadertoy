@@ -8,13 +8,13 @@ namespace shadertoy
 namespace OpenGL
 {
 	/**
-	 * Error thrown when an attempt is made to obtain the id of a null query
+	 * @brief Error thrown when an attempt is made to obtain the id of a null query
 	 */
 	class shadertoy_EXPORT NullQueryError : public shadertoy::ShadertoyError
 	{
 	public:
 		/**
-		 * Initializes a new instance of the NullQueryError class.
+		 * @brief Initializes a new instance of the NullQueryError class.
 		 */
 		explicit NullQueryError();
 	};
@@ -23,7 +23,7 @@ namespace OpenGL
 	{
 	public:
 		/**
-		 * Creates a new query of the given type.
+		 * @brief Creates a new query of the given type.
 		 *
 		 * @param  target Target of the query to create
 		 * @return        Id of the created query
@@ -32,7 +32,7 @@ namespace OpenGL
 		 */
 		GLuint Create(GLenum target);
 		/**
-		 * Deletes the given query
+		 * @brief Deletes the given query
 		 *
 		 * @param resource Id of the query to delete
 		 *
@@ -42,13 +42,13 @@ namespace OpenGL
 	};
 
 	/**
-	 * Represents an OpenGL query.
+	 * @brief Represents an OpenGL query.
 	 */
 	class shadertoy_EXPORT Query : public Resource<Query, QueryAllocator, NullQueryError>
 	{
 	public:
 		/**
-		 * Creates a new query for the given target.
+		 * @brief Creates a new query for the given target.
 		 *
 		 * @param target Target of the new query.
 		 *
@@ -57,21 +57,21 @@ namespace OpenGL
 		Query(GLenum target);
 
 		/**
-		 * glBeginQuery
+		 * @brief glBeginQuery
 		 *
 		 * @param target Query target
 		 */
 		void Begin(GLenum target);
 
 		/**
-		 * glEndQuery
+		 * @brief glEndQuery
 		 *
 		 * @param target Query target
 		 */
 		static void End(GLenum target);
 
 		/**
-		 * glGetQueryObjectiv
+		 * @brief glGetQueryObjectiv
 		 *
 		 * @param pname  Parameter name
 		 * @param params Address to result variable
@@ -79,7 +79,7 @@ namespace OpenGL
 		void GetObjectiv(GLenum pname, GLint *params);
 
 		/**
-		 * glGetQueryObjectui64v
+		 * @brief glGetQueryObjectui64v
 		 *
 		 * @param pname  Parameter name
 		 * @param params Address to result variable

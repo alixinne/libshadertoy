@@ -8,19 +8,19 @@ namespace shadertoy
 namespace OpenGL
 {
 	/**
-	 * Error thrown when an attempt is made to dereference a null framebuffer.
+	 * @brief Error thrown when an attempt is made to dereference a null framebuffer.
 	 */
 	class shadertoy_EXPORT NullFramebufferError : public shadertoy::ShadertoyError
 	{
 	public:
 		/**
-		 * Initializes a new instance of the NullFramebufferError class.
+		 * @brief Initializes a new instance of the NullFramebufferError class.
 		 */
 		explicit NullFramebufferError();
 	};
 
 	/**
-	 * Represents an OpenGL framebuffer object
+	 * @brief Represents an OpenGL framebuffer object
 	 */
 	class shadertoy_EXPORT Framebuffer : public Resource<
 		Framebuffer,
@@ -29,7 +29,7 @@ namespace OpenGL
 	{
 	public:
 		/**
-		 * glBindFramebuffer
+		 * @brief glBindFramebuffer
 		 *
 		 * @param target Target to bind this framebuffer to
 		 *
@@ -38,7 +38,7 @@ namespace OpenGL
 		void Bind(GLenum target);
 
 		/**
-		 * glNamedFramebufferTexture
+		 * @brief glNamedFramebufferTexture
 		 *
 		 * @param attachment Framebuffer attachment
 		 * @param texture    Texture object to attach

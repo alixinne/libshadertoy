@@ -8,25 +8,25 @@ namespace shadertoy
 namespace OpenGL
 {
 	/**
-	 * Error thrown when an attempt is made to dereference a null shader object.
+	 * @brief Error thrown when an attempt is made to dereference a null shader object.
 	 */
 	class shadertoy_EXPORT NullShaderError : public shadertoy::ShadertoyError
 	{
 	public:
 		/**
-		 * Initializes a new instance of the NullShaderError class.
+		 * @brief Initializes a new instance of the NullShaderError class.
 		 */
 		explicit NullShaderError();
 	};
 
 	/**
-	 * Error thrown when the compilation of a shader fails.
+	 * @brief Error thrown when the compilation of a shader fails.
 	 */
 	class shadertoy_EXPORT ShaderCompilationError : public shadertoy::ShadertoyError
 	{
 	public:
 		/**
-		 * Initializes a new instance of the ShaderCompilationError class.
+		 * @brief Initializes a new instance of the ShaderCompilationError class.
 		 *
 		 * @param  shaderId Id of the shader that triggered the error
 		 * @param  log      Contents of the shader compilation log
@@ -34,7 +34,7 @@ namespace OpenGL
 		explicit ShaderCompilationError(GLuint shaderId, const std::string &log);
 
 		/**
-		 * Gets the id of the shader that triggered the error.
+		 * @brief Gets the id of the shader that triggered the error.
 		 *
 		 * @return Id of the shader that triggered the error
 		 */
@@ -42,7 +42,7 @@ namespace OpenGL
 		{ return _shaderId; }
 
 		/**
-		 * Gets the compilation log for this error.
+		 * @brief Gets the compilation log for this error.
 		 *
 		 * @return Compilation log as a string.
 		 */
@@ -57,7 +57,7 @@ namespace OpenGL
 	};
 
 	/**
-	 * Implementation of the allocator pattern for shaders.
+	 * @brief Implementation of the allocator pattern for shaders.
 	 * Takes a shader type as a supplementary parameter compared to the standard
 	 * resource allocators.
 	 */
@@ -65,7 +65,7 @@ namespace OpenGL
 	{
 	public:
 		/**
-		 * Create a shader object of the given type.
+		 * @brief Create a shader object of the given type.
 		 * @param  shaderType Type of the shader to create
 		 * @return            Created shader id
 		 *
@@ -73,7 +73,7 @@ namespace OpenGL
 		 */
 		GLuint Create(GLenum shaderType);
 		/**
-		 * Deletes the given shader.
+		 * @brief Deletes the given shader.
 		 * @param resource Id of the shader to delete.
 		 *
 		 * @throws OpenGLError
@@ -82,13 +82,13 @@ namespace OpenGL
 	};
 
 	/**
-	 * Represents an OpenGL shader.
+	 * @brief Represents an OpenGL shader.
 	 */
 	class shadertoy_EXPORT Shader : public Resource<Shader, ShaderAllocator, NullShaderError>
 	{
 	public:
 		/**
-		 * Creates a new shader of the given type.
+		 * @brief Creates a new shader of the given type.
 		 *
 		 * @param shaderType Type of the new shader
 		 *
@@ -97,7 +97,7 @@ namespace OpenGL
 		Shader(GLenum shaderType);
 
 		/**
-		 * glShaderSource
+		 * @brief glShaderSource
 		 *
 		 * @param string Single source as a string
 		 *
@@ -106,7 +106,7 @@ namespace OpenGL
 		 */
 		void Source(const std::string &string);
 		/**
-		 * glShaderSource
+		 * @brief glShaderSource
 		 *
 		 * @param string List of sources to add to the shader
 		 *
@@ -116,7 +116,7 @@ namespace OpenGL
 		void Source(const std::vector<std::string> &string);
 
 		/**
-		 * glCompileShader
+		 * @brief glCompileShader
 		 *
 		 * @throws OpenGLError
 		 * @throws ShaderCompilationError
@@ -125,7 +125,7 @@ namespace OpenGL
 		void Compile();
 
 		/**
-		 * glGetShaderInfoLog
+		 * @brief glGetShaderInfoLog
 		 *
 		 * @return Shader info log as a string
 		 *

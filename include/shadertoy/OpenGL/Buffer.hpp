@@ -8,19 +8,19 @@ namespace shadertoy
 namespace OpenGL
 {
 	/**
-	 * Error thrown when an attempt is made to obtain the id of a null buffer.
+	 * @brief Error thrown when an attempt is made to obtain the id of a null buffer.
 	 */
 	class shadertoy_EXPORT NullBufferError : public shadertoy::ShadertoyError
 	{
 	public:
 		/**
-		 * Initializes a new instance of the NullBufferError class.
+		 * @brief Initializes a new instance of the NullBufferError class.
 		 */
 		explicit NullBufferError();
 	};
 
 	/**
-	 * Represents an OpenGL buffer
+	 * @brief Represents an OpenGL buffer
 	 */
 	class shadertoy_EXPORT Buffer : public Resource<
 		Buffer,
@@ -29,7 +29,7 @@ namespace OpenGL
 	{
 	public:
 		/**
-		 * glBindBuffer
+		 * @brief glBindBuffer
 		 *
 		 * @param target Target to bind this buffer to
 		 *
@@ -39,7 +39,7 @@ namespace OpenGL
 		void Bind(GLenum target);
 
 		/**
-		 * glNamedBufferData
+		 * @brief glNamedBufferData
 		 * @param size  size of the data to send to the buffer
 		 * @param data  pointer to the data to send to the buffer
 		 * @param usage GL usage for this buffer

@@ -8,13 +8,13 @@ namespace shadertoy
 namespace OpenGL
 {
 	/**
-	 * Error thrown when an OpenGL operation fails.
+	 * @brief Error thrown when an OpenGL operation fails.
 	 */
 	class shadertoy_EXPORT OpenGLError : public shadertoy::ShadertoyError
 	{
 	public:
 		/**
-		 * Initializes a new instance of the OpenGLError class.
+		 * @brief Initializes a new instance of the OpenGLError class.
 		 *
 		 * @param  error    OpenGL error code
 		 * @param  extraMsg Extra information to include in what()
@@ -23,14 +23,14 @@ namespace OpenGL
 	};
 
 	/**
-	 * Throws an OpenGLError if glGetError returns non-zero
+	 * @brief Throws an OpenGLError if glGetError returns non-zero
 	 *
 	 * @throws OpenGLError
 	 */
 	void shadertoy_EXPORT CheckErrors();
 
 	/**
-	 * Invokes the given OpenGL function
+	 * @brief Invokes the given OpenGL function
 	 *
 	 * @param  function OpenGL function to invoke
 	 *
@@ -46,7 +46,7 @@ namespace OpenGL
 	}
 
 	/**
-	 * Invokes the given OpenGL function
+	 * @brief Invokes the given OpenGL function
 	 *
 	 * @param  function OpenGL function to invoke
 	 * @return          Return value of the OpenGL function
@@ -64,7 +64,7 @@ namespace OpenGL
 	}
 
 	/**
-	 * Invokes the given OpenGL function
+	 * @brief Invokes the given OpenGL function
 	 *
 	 * @param  function OpenGL function to invoke
 	 * @param  params   Parameters to forward to the OpenGL function
@@ -81,7 +81,7 @@ namespace OpenGL
 	}
 
 	/**
-	 * Invokes the given OpenGL function
+	 * @brief Invokes the given OpenGL function
 	 *
 	 * @param  function OpenGL function to invoke
 	 * @param  params   Parameters to forward to the OpenGL function

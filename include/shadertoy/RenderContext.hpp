@@ -262,7 +262,7 @@ public:
 	OpenGL::Shader &GetScreenQuadVertexShader();
 
 	/**
-	 * Obtains the buffer object for the given name.
+	 * @brief Obtains the buffer object for the given name.
 	 *
 	 * @param  name [optional] Name of the buffer object to obtain. If empty,
 	 *              returns the image buffer.

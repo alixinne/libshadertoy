@@ -8,19 +8,19 @@ namespace shadertoy
 namespace OpenGL
 {
 	/**
-	 * Error thrown when an attempt is made to dereference a null texture.
+	 * @brief Error thrown when an attempt is made to dereference a null texture.
 	 */
 	class shadertoy_EXPORT NullTextureError : public shadertoy::ShadertoyError
 	{
 	public:
 		/**
-		 * Initializes a new instance of the NullTextureError class.
+		 * @brief Initializes a new instance of the NullTextureError class.
 		 */
 		explicit NullTextureError();
 	};
 
 	/**
-	 * Implementation of the allocator pattern for textures.
+	 * @brief Implementation of the allocator pattern for textures.
 	 * Takes a target as a supplementary parameter compared to the standard
 	 * resource allocators. Also links statically to glCreateTexture and
 	 * glDeleteTexture according to the OpenGL spec.
@@ -29,7 +29,7 @@ namespace OpenGL
 	{
 	public:
 		/**
-		 * Creates a new texture of the given type.
+		 * @brief Creates a new texture of the given type.
 		 *
 		 * @param  target Target of the texture to create
 		 * @return        Id of the created texture
@@ -38,7 +38,7 @@ namespace OpenGL
 		 */
 		GLuint Create(GLenum target);
 		/**
-		 * Deletes the given texture
+		 * @brief Deletes the given texture
 		 *
 		 * @param resource Id of the texture to delete
 		 *
@@ -48,13 +48,13 @@ namespace OpenGL
 	};
 
 	/**
-	 * Represents an OpenGL texture.
+	 * @brief Represents an OpenGL texture.
 	 */
 	class shadertoy_EXPORT Texture : public Resource<Texture, TextureAllocator, NullTextureError>
 	{
 	public:
 		/**
-		 * Creates a new texture for the given target.
+		 * @brief Creates a new texture for the given target.
 		 *
 		 * @param target Target of the new texture.
 		 *
@@ -63,7 +63,7 @@ namespace OpenGL
 		Texture(GLenum target);
 
 		/**
-		 * glBindTexture
+		 * @brief glBindTexture
 		 *
 		 * @param target Target to bind the texture to
 		 *
@@ -73,7 +73,7 @@ namespace OpenGL
 		void Bind(GLenum target);
 
 		/**
-		 * glTextureParameteri
+		 * @brief glTextureParameteri
 		 *
 		 * @param pname Parameter name to set
 		 * @param param Value of the parameter
@@ -84,7 +84,7 @@ namespace OpenGL
 		void Parameter(GLenum pname, GLint param);
 
 		/**
-		 * glTextureParameterf
+		 * @brief glTextureParameterf
 		 *
 		 * @param pname Parameter name to set
 		 * @param param Value of the parameter
@@ -95,7 +95,7 @@ namespace OpenGL
 		void Parameter(GLenum pname, GLfloat param);
 
 		/**
-		 * glTextureImage2DEXT
+		 * @brief glTextureImage2DEXT
 		 *
 		 * @param target         Target
 		 * @param level          Level
@@ -113,7 +113,7 @@ namespace OpenGL
 		void Image2D(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *data);
 
 		/**
-		 * glGenerateTextureMipmap
+		 * @brief glGenerateTextureMipmap
 		 *
 		 * @throws OpenGLError
 		 * @throws NullTextureError

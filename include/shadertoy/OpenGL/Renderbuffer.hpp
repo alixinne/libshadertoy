@@ -8,7 +8,7 @@ namespace shadertoy
 namespace OpenGL
 {
 	/**
-	 * Error thrown when an attempt is made to dereference a null renderbuffer.
+	 * @brief Error thrown when an attempt is made to dereference a null renderbuffer.
 	 */
 	class shadertoy_EXPORT NullRenderbufferError : public shadertoy::ShadertoyError
 	{
@@ -17,7 +17,7 @@ namespace OpenGL
 	};
 
 	/**
-	 * Represents an OpenGL Renderbuffer object.
+	 * @brief Represents an OpenGL Renderbuffer object.
 	 */
 	class shadertoy_EXPORT Renderbuffer : public Resource<
 		Renderbuffer,
@@ -26,7 +26,7 @@ namespace OpenGL
 	{
 	public:
 		/**
-		 * glBindRenderbuffer
+		 * @brief glBindRenderbuffer
 		 *
 		 * @param target Target to bind this renderbuffer to
 		 *
@@ -37,7 +37,7 @@ namespace OpenGL
 
 		// glNamedRenderbufferStorage
 		/**
-		 * glNamedRenderbufferStorage
+		 * @brief glNamedRenderbufferStorage
 		 *
 		 * @param internalFormat Internal format
 		 * @param width          Width

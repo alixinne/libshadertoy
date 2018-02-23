@@ -7,7 +7,7 @@ namespace shadertoy
 {
 
 /**
- * Handler callback definition for the texture engine. Instances of this method
+ * @brief Handler callback definition for the texture engine. Instances of this method
  * are called when a texture is required for an input in a rendering context.
  *
  * `inputConfig` is the configuration object for the given input.

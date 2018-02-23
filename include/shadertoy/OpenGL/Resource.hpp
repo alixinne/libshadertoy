@@ -19,14 +19,14 @@ namespace OpenGL
 	typedef void (*MultiResourceDeleter)(GLsizei, const GLuint*);
 
 	/**
-	 * Represents a resource that is allocated one by one.
+	 * @brief Represents a resource that is allocated one by one.
 	 */
 	template<SingleResourceCreator *CreateFunction, SingleResourceDeleter *DeleteFunction>
 	class shadertoy_EXPORT SingleAllocator
 	{
 	public:
 		/**
-		 * Creates the associated resource.
+		 * @brief Creates the associated resource.
 		 * @return The id of the created resource
 		 * @throws OpenGLError
 		 */
@@ -34,7 +34,7 @@ namespace OpenGL
 		{ return glCall(*CreateFunction); }
 
 		/**
-		 * Deletes the given resource.
+		 * @brief Deletes the given resource.
 		 * @param resource Resource to delete
 		 * @throws OpenGLError
 		 */
@@ -43,14 +43,14 @@ namespace OpenGL
 	};
 
 	/**
-	 * Represents a resource that is allocated in batches.
+	 * @brief Represents a resource that is allocated in batches.
 	 */
 	template<MultiResourceCreator *CreateFunction, MultiResourceDeleter *DeleteFunction>
 	class shadertoy_EXPORT MultiAllocator
 	{
 	public:
 		/**
-		 * Creates the associated resource.
+		 * @brief Creates the associated resource.
 		 * @return The id of the created resource
 		 * @throws OpenGLError
 		 */
@@ -62,7 +62,7 @@ namespace OpenGL
 		}
 
 		/**
-		 * Deletes the given resource.
+		 * @brief Deletes the given resource.
 		 * @param resource Resource to delete
 		 * @throws OpenGLError
 		 */
@@ -71,7 +71,7 @@ namespace OpenGL
 	};
 
 	/**
-	 * Represents an OpenGL resource and manages its lifecycle. Uses move
+	 * @brief Represents an OpenGL resource and manages its lifecycle. Uses move
 	 * semantics, so only one Resource object can be the owner of a
 	 * corresponding OpenGL resource, such as a texture, program, shader, etc.
 	 */
@@ -85,7 +85,7 @@ namespace OpenGL
 		typedef TError ErrorType;
 
 		/**
-		 * Creates a resource using the given allocator.
+		 * @brief Creates a resource using the given allocator.
 		 *
 		 * @throws OpenGLError
 		 */
@@ -96,7 +96,7 @@ namespace OpenGL
 		}
 
 		/**
-		 * Destroys the object referenced by this resource.
+		 * @brief Destroys the object referenced by this resource.
 		 *
 		 * @throws OpenGLError
 		 */
@@ -106,7 +106,7 @@ namespace OpenGL
 		}
 
 		/**
-		 * Returns true if this resource object holds a reference to a resource.
+		 * @brief Returns true if this resource object holds a reference to a resource.
 		 *
 		 * @return true if this resource object holds a reference to a resource,
 		 *         false otherwise.
@@ -115,7 +115,7 @@ namespace OpenGL
 		{ return hasRes; }
 
 		/**
-		 * Returns the underlying texture identifier referenced by this texture
+		 * @brief Returns the underlying texture identifier referenced by this texture
 		 * object. Throws an exception if this object does not hold a reference.
 		 *
 		 * @throws TError
@@ -136,7 +136,7 @@ namespace OpenGL
 		Resource &operator=(const Resource &) = delete;
 
 		/**
-		 * Move constructor
+		 * @brief Move constructor
 		 * @param other Instance to move
 		 *
 		 * @throws OpenGLError
@@ -150,7 +150,7 @@ namespace OpenGL
 		}
 
 		/**
-		 * Move operator
+		 * @brief Move operator
 		 * @param other Instance to move
 		 *
 		 * @throws OpenGLError
@@ -172,7 +172,7 @@ namespace OpenGL
 
 	protected:
 		/**
-		 * Creates a new resource object from an existing resourceID.
+		 * @brief Creates a new resource object from an existing resourceID.
 		 *
 		 * @param  texId Resource id to reference
 		 */
@@ -183,7 +183,7 @@ namespace OpenGL
 
 	private:
 		/**
-		 * Destroys the object referenced by this resource.
+		 * @brief Destroys the object referenced by this resource.
 		 *
 		 * @throws OpenGLError
 		 */
