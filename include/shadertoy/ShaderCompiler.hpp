@@ -41,7 +41,7 @@ public:
 	 *
 	 * @param      shader  The shader
 	 */
-	void Compile(OpenGL::Shader &shader);
+	void Compile(gl::shader &shader);
 };
 
 }

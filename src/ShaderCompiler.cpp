@@ -7,7 +7,7 @@
 #include <glm/glm.hpp>
 
 #include "shadertoy/ShadertoyError.hpp"
-#include "shadertoy/OpenGL.hpp"
+#include "shadertoy/gl.hpp"
 
 #include "shadertoy/ShaderCompiler.hpp"
 
@@ -19,7 +19,7 @@ ShaderCompiler::ShaderCompiler()
 {
 }
 
-void ShaderCompiler::Compile(OpenGL::Shader &shader)
+void ShaderCompiler::Compile(gl::shader &shader)
 {
 	// Transform pairs into list of C strings
 	vector<std::string> sources(namedSources.size());
@@ -40,10 +40,10 @@ void ShaderCompiler::Compile(OpenGL::Shader &shader)
 	// Load sources in fragment shader and compile
 	try
 	{
-		shader.Source(sources);
-		shader.Compile();
+		shader.source(sources);
+		shader.compile();
 	}
-	catch (OpenGL::ShaderCompilationError &ex)
+	catch (gl::shader_compilation_error &ex)
 	{
 		// Reparse log and replace sources with their actual names
 		std::stringstream is(ex.log()), os;
@@ -102,6 +102,6 @@ void ShaderCompiler::Compile(OpenGL::Shader &shader)
 		}
 
 		// Update exception and rethrow
-		throw OpenGL::ShaderCompilationError(GLuint(shader), os.str());
+		throw gl::shader_compilation_error(GLuint(shader), os.str());
 	}
 }

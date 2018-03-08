@@ -13,7 +13,7 @@
 #include <glm/glm.hpp>
 
 #include "shadertoy/ShadertoyError.hpp"
-#include "shadertoy/OpenGL.hpp"
+#include "shadertoy/gl.hpp"
 
 #include "Resources.h"
 #include "shadertoy/ContextConfig.hpp"
@@ -27,7 +27,7 @@
 namespace fs = boost::filesystem;
 using namespace std;
 using namespace shadertoy;
-using shadertoy::OpenGL::glCall;
+using shadertoy::gl::gl_call;
 
 shared_ptr<TextureEngine> RenderContext::BuildTextureEngine()
 {
@@ -52,7 +52,7 @@ shared_ptr<TextureEngine> RenderContext::BuildTextureEngine()
 		{
 			BOOST_LOG_TRIVIAL(warning) << "buffer '" << inputConfig.source
 									   << "' not found for input " << inputConfig.id;
-			return shared_ptr<OpenGL::Texture>();
+			return shared_ptr<gl::texture>();
 		}
 		else
 		{
@@ -67,10 +67,10 @@ shared_ptr<TextureEngine> RenderContext::BuildTextureEngine()
 			int minFilter = max((int)inputConfig.minFilter, GL_LINEAR),
 				magFilter = (int)inputConfig.magFilter;
 
-			texture->Parameter(GL_TEXTURE_MAG_FILTER, magFilter);
-			texture->Parameter(GL_TEXTURE_MIN_FILTER, minFilter);
-			texture->Parameter(GL_TEXTURE_WRAP_S, inputConfig.wrap);
-			texture->Parameter(GL_TEXTURE_WRAP_T, inputConfig.wrap);
+			texture->parameter(GL_TEXTURE_MAG_FILTER, magFilter);
+			texture->parameter(GL_TEXTURE_MIN_FILTER, minFilter);
+			texture->parameter(GL_TEXTURE_WRAP_S, inputConfig.wrap);
+			texture->parameter(GL_TEXTURE_WRAP_T, inputConfig.wrap);
 
 			return texture;
 		}
@@ -97,7 +97,7 @@ void RenderContext::PostBufferRender(const string &name,
 }
 
 void RenderContext::BindInputs(vector<shared_ptr<BoundInputsBase>> &inputs,
-							   OpenGL::Program &program)
+							   gl::program &program)
 {
 }
 
@@ -127,23 +127,23 @@ void RenderContext::Initialize()
 	state.V<iSampleRate>() = 48000.f;
 
 	// Compile screen quad vertex shader
-	screenVs.Source(string(screenQuad_vsh, screenQuad_vsh + screenQuad_vsh_size));
-	screenVs.Compile();
+	screenVs.source(string(screenQuad_vsh, screenQuad_vsh + screenQuad_vsh_size));
+	screenVs.compile();
 
 	// Compile screen quad fragment shader
-	screenFs.Source(string(screenQuad_fsh, screenQuad_fsh + screenQuad_fsh_size));
-	screenFs.Compile();
+	screenFs.source(string(screenQuad_fsh, screenQuad_fsh + screenQuad_fsh_size));
+	screenFs.compile();
 
 	// Prepare screen quad program
-	screenProg.AttachShader(screenVs);
-	screenProg.AttachShader(screenFs);
+	screenProg.attach_shader(screenVs);
+	screenProg.attach_shader(screenFs);
 
 	// Compile screen program
-	screenProg.Link();
+	screenProg.link();
 
 	// Setup screen textures
-	screenProg.Use();
-	screenProg.GetUniformLocation("screenTexture").SetValue(0);
+	screenProg.use();
+	screenProg.get_uniform_location("screenTexture").set_value(0);
 
 	// Initialize the texture engine
 	textureEngine->Initialize();
@@ -162,11 +162,11 @@ void RenderContext::Initialize()
 	};
 
 	// Setup coords
-	screenQuadCorners.Data(sizeof(coords),
+	screenQuadCorners.data(sizeof(coords),
 		static_cast<const GLvoid*>(&coords[0]), GL_STATIC_DRAW);
 
 	// Setup indices
-	screenQuadIndices.Data(sizeof(indices),
+	screenQuadIndices.data(sizeof(indices),
 		static_cast<const GLvoid*>(&indices[0]), GL_STATIC_DRAW);
 
 	// Initialize buffers
@@ -200,26 +200,26 @@ void RenderContext::InitializeBuffers()
 	}
 
 	// Setup position and texCoord attributes for shaders
-	screenQuadCorners.Bind(GL_ARRAY_BUFFER);
-	screenQuadIndices.Bind(GL_ELEMENT_ARRAY_BUFFER);
+	screenQuadCorners.bind(GL_ARRAY_BUFFER);
+	screenQuadIndices.bind(GL_ELEMENT_ARRAY_BUFFER);
 
-	vector<OpenGL::Program *> programs{&screenProg};
+	vector<gl::program *> programs{&screenProg};
 
 	GLint location;
 	for (auto it = programs.begin(); it != programs.end(); ++it)
 	{
-		// Bind input "position" to vertex locations (3 floats)
-		location = glCall(glGetAttribLocation, GLuint(**it), "position");
-		glCall(glVertexAttribPointer, location, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)0);
-		glCall(glEnableVertexAttribArray, location);
+		// bind input "position" to vertex locations (3 floats)
+		location = gl_call(glGetAttribLocation, GLuint(**it), "position");
+		gl_call(glVertexAttribPointer, location, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)0);
+		gl_call(glEnableVertexAttribArray, location);
 
-		// Bind input "texCoord" to vertex texture coordinates (2 floats)
-		location = glCall(glGetAttribLocation, GLuint(**it), "texCoord");
-		glCall(glVertexAttribPointer, location, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-		glCall(glEnableVertexAttribArray, location);
+		// bind input "texCoord" to vertex texture coordinates (2 floats)
+		location = gl_call(glGetAttribLocation, GLuint(**it), "texCoord");
+		gl_call(glVertexAttribPointer, location, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+		gl_call(glEnableVertexAttribArray, location);
 	}
 
-	lastTexture = weak_ptr<OpenGL::Texture>();
+	lastTexture = weak_ptr<gl::texture>();
 
 	// Invoke callback
 	PostInitializeBuffers();
@@ -228,7 +228,7 @@ void RenderContext::InitializeBuffers()
 void RenderContext::AllocateTextures()
 {
 	// Drop the reference to screenQuadTexture, it will be recreated if needed
-	screenQuadTexture = shared_ptr<OpenGL::Texture>();
+	screenQuadTexture = shared_ptr<gl::texture>();
 
 	// Reallocate buffer textures
 	for (auto &pair : buffers)
@@ -273,14 +273,14 @@ void RenderContext::DoReadWriteCurrentFrame(GLuint &texIn, GLuint &texOut)
 		if (!screenQuadTexture)
 		{
 			// Create texture object
-			screenQuadTexture = make_shared<OpenGL::Texture>(GL_TEXTURE_2D);
+			screenQuadTexture = make_shared<gl::texture>(GL_TEXTURE_2D);
 
 			// Setup screenQuadTexture
-			screenQuadTexture->Parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			screenQuadTexture->Parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			screenQuadTexture->Parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
-			screenQuadTexture->Parameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
-			screenQuadTexture->Image2D(GL_TEXTURE_2D, 0, GL_RGBA32F,
+			screenQuadTexture->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			screenQuadTexture->parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			screenQuadTexture->parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
+			screenQuadTexture->parameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
+			screenQuadTexture->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F,
 				config.width, config.height, 0, GL_BGRA, GL_FLOAT, nullptr);
 		}
 
@@ -308,7 +308,7 @@ void RenderContext::DoReadCurrentFrame(GLuint &texIn)
 }
 
 void RenderContext::BuildBufferShader(const string &id,
-									  OpenGL::Shader &fs)
+									  gl::shader &fs)
 {
 	auto &bufferConfig(config.bufferConfigs[id]);
 
@@ -369,7 +369,7 @@ const GLchar *RenderContext::GetDefineWrapper() const
 	return defineWrapper.c_str();
 }
 
-vector<shared_ptr<BoundInputsBase>> RenderContext::GetBoundInputs(OpenGL::Program &program)
+vector<shared_ptr<BoundInputsBase>> RenderContext::GetBoundInputs(gl::program &program)
 {
 	vector<shared_ptr<BoundInputsBase>> result;
 
@@ -384,38 +384,38 @@ vector<shared_ptr<BoundInputsBase>> RenderContext::GetBoundInputs(OpenGL::Progra
 
 void RenderContext::Clear(float level)
 {
-	glCall(glViewport, 0, 0, config.width, config.height);
-	glCall(glClearColor, level, level, level, level);
-	glCall(glClear, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	gl_call(glViewport, 0, 0, config.width, config.height);
+	gl_call(glClearColor, level, level, level, level);
+	gl_call(glClear, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void RenderContext::RenderScreenQuad()
 {
-	screenQuadCorners.Bind(GL_ARRAY_BUFFER);
-	glCall(glDrawElements, GL_TRIANGLES, 3 * 2, GL_UNSIGNED_INT, nullptr);
+	screenQuadCorners.bind(GL_ARRAY_BUFFER);
+	gl_call(glDrawElements, GL_TRIANGLES, 3 * 2, GL_UNSIGNED_INT, nullptr);
 }
 
-void RenderContext::RenderScreenQuad(OpenGL::Query &timerQuery)
+void RenderContext::RenderScreenQuad(gl::query &timerQuery)
 {
-	screenQuadCorners.Bind(GL_ARRAY_BUFFER);
+	screenQuadCorners.bind(GL_ARRAY_BUFFER);
 
-	timerQuery.Begin(GL_TIME_ELAPSED);
+	timerQuery.begin(GL_TIME_ELAPSED);
 
-	glCall(glDrawElements, GL_TRIANGLES, 3 * 2, GL_UNSIGNED_INT, nullptr);
+	gl_call(glDrawElements, GL_TRIANGLES, 3 * 2, GL_UNSIGNED_INT, nullptr);
 
-	timerQuery.End(GL_TIME_ELAPSED);
+	timerQuery.end(GL_TIME_ELAPSED);
 }
 
 void RenderContext::BindResult()
 {
 	// Prepare prog and texture
-	screenProg.Use();
+	screenProg.use();
 
-	glCall(glActiveTexture, GL_TEXTURE0);
-	lastTexture.lock()->Bind(GL_TEXTURE_2D);
+	gl_call(glActiveTexture, GL_TEXTURE0);
+	lastTexture.lock()->bind(GL_TEXTURE_2D);
 }
 
-OpenGL::Shader &RenderContext::GetScreenQuadVertexShader()
+gl::shader &RenderContext::GetScreenQuadVertexShader()
 {
 	return screenVs;
 }

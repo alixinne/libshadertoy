@@ -19,28 +19,28 @@ private:
 	const std::string id;
 
 	/// Target framebuffer
-	OpenGL::Framebuffer targetFbo;
+	gl::framebuffer targetFbo;
 
 	/// Target renderbuffer
-	OpenGL::Renderbuffer targetRbo;
+	gl::renderbuffer targetRbo;
 
 	/// Source texture
-	std::shared_ptr<OpenGL::Texture> sourceTex;
+	std::shared_ptr<gl::texture> sourceTex;
 
 	/// Target texture
-	std::shared_ptr<OpenGL::Texture> targetTex;
+	std::shared_ptr<gl::texture> targetTex;
 
 	/// Buffer program
-	OpenGL::Program program;
+	gl::program program;
 
 	/// Fragment shader
-	OpenGL::Shader fs;
+	gl::shader fs;
 
 	/// Bound uniform state
 	std::vector<std::shared_ptr<shadertoy::BoundInputsBase>> boundInputs;
 
 	/// Query for iTimeDelta execution time
-	OpenGL::Query timeDeltaQuery;
+	gl::query timeDeltaQuery;
 
 public:
 	/**
@@ -78,7 +78,7 @@ public:
 	 *
 	 * @return     Source texture for this buffer.
 	 */
-	inline std::shared_ptr<OpenGL::Texture> GetSourceTexture() const
+	inline std::shared_ptr<gl::texture> GetSourceTexture() const
 	{ return sourceTex; }
 
 	/**
@@ -86,7 +86,7 @@ public:
 	 *
 	 * @return     Target (current) texture for this buffer.
 	 */
-	inline std::shared_ptr<OpenGL::Texture> GetTargetTexture() const
+	inline std::shared_ptr<gl::texture> GetTargetTexture() const
 	{ return targetTex; }
 
 	/**
@@ -100,7 +100,7 @@ public:
 	unsigned long long GetElapsedTime();
 
 private:
-	void InitializeRenderTexture(std::shared_ptr<OpenGL::Texture> &tex, int width, int height);
+	void InitializeRenderTexture(std::shared_ptr<gl::texture> &tex, int width, int height);
 };
 
 }

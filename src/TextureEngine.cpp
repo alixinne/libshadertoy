@@ -14,7 +14,7 @@
 #include <glm/glm.hpp>
 
 #include "shadertoy/ShadertoyError.hpp"
-#include "shadertoy/OpenGL.hpp"
+#include "shadertoy/gl.hpp"
 
 #include "shadertoy/BufferConfig.hpp"
 #include "shadertoy/ContextConfig.hpp"
@@ -31,7 +31,7 @@ extern "C" {
 extern char *result_string_pointer;
 }
 
-shared_ptr<OpenGL::Texture> TextureEngine::SOILTextureHandler(const InputConfig &inputConfig,
+shared_ptr<gl::texture> TextureEngine::SOILTextureHandler(const InputConfig &inputConfig,
 													  bool &skipTextureOptions,
 													  bool &skipCache,
 													  bool &framebufferSized)
@@ -40,7 +40,7 @@ shared_ptr<OpenGL::Texture> TextureEngine::SOILTextureHandler(const InputConfig 
 	{
 		BOOST_LOG_TRIVIAL(error) << "Missing source path for input "
 								 << inputConfig.id;
-		return shared_ptr<OpenGL::Texture>();
+		return shared_ptr<gl::texture>();
 	}
 
 	fs::path texPath(inputConfig.source);
@@ -49,10 +49,10 @@ shared_ptr<OpenGL::Texture> TextureEngine::SOILTextureHandler(const InputConfig 
 	{
 		BOOST_LOG_TRIVIAL(error) << texPath << " not found for input "
 								 << inputConfig.id;
-		return shared_ptr<OpenGL::Texture>();
+		return shared_ptr<gl::texture>();
 	}
 
-	shared_ptr<OpenGL::Texture> texture;
+	shared_ptr<gl::texture> texture;
 	string ext(texPath.extension().string());
 	boost::algorithm::to_lower(ext);
 	if (ext.compare(".jpg") == 0 || ext.compare(".jpeg") == 0)
@@ -110,8 +110,8 @@ shared_ptr<OpenGL::Texture> TextureEngine::SOILTextureHandler(const InputConfig 
 					memcpy(&imgbuf[off * stride], buffer[0], stride);
 				}
 
-				texture = make_shared<OpenGL::Texture>(GL_TEXTURE_2D);
-				texture->Image2D(GL_TEXTURE_2D, 0, GL_RGBA32F, cinfo.output_width,
+				texture = make_shared<gl::texture>(GL_TEXTURE_2D);
+				texture->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F, cinfo.output_width,
 					cinfo.output_height, 0, fmt, GL_UNSIGNED_BYTE, imgbuf);
 
 				delete[] imgbuf;
@@ -125,7 +125,7 @@ shared_ptr<OpenGL::Texture> TextureEngine::SOILTextureHandler(const InputConfig 
 	else
 	{
 		// other, use SOIL
-		texture = make_shared<OpenGL::Texture>(GL_TEXTURE_2D);
+		texture = make_shared<gl::texture>(GL_TEXTURE_2D);
 		GLuint texid = SOIL_load_OGL_texture(inputConfig.source.c_str(),
 											 SOIL_LOAD_AUTO,
 											 GLuint(*texture),
@@ -135,7 +135,7 @@ shared_ptr<OpenGL::Texture> TextureEngine::SOILTextureHandler(const InputConfig 
 			BOOST_LOG_TRIVIAL(warning) << "failed to load '"
 									   << inputConfig.source << "' for input " << inputConfig.id
 									   << ": " << result_string_pointer;
-			texture = shared_ptr<OpenGL::Texture>();
+			texture = shared_ptr<gl::texture>();
 		}
 	}
 
@@ -148,22 +148,22 @@ shared_ptr<OpenGL::Texture> TextureEngine::SOILTextureHandler(const InputConfig 
 	return texture;
 }
 
-shared_ptr<OpenGL::Texture> TextureEngine::NoiseTextureHandler(const InputConfig &inputConfig,
+shared_ptr<gl::texture> TextureEngine::NoiseTextureHandler(const InputConfig &inputConfig,
 													   bool &skipTextureOptions,
 													   bool &skipCache,
 													   bool &framebufferSized)
 {
 	// A noise texture
-	auto noiseTexture = make_shared<OpenGL::Texture>(GL_TEXTURE_2D);
-	noiseTexture->Parameter(GL_TEXTURE_SWIZZLE_B, GL_RED);
-	noiseTexture->Parameter(GL_TEXTURE_SWIZZLE_G, GL_RED);
+	auto noiseTexture = make_shared<gl::texture>(GL_TEXTURE_2D);
+	noiseTexture->parameter(GL_TEXTURE_SWIZZLE_B, GL_RED);
+	noiseTexture->parameter(GL_TEXTURE_SWIZZLE_G, GL_RED);
 
 	// Create the actual noise
 	vector<unsigned char> rnd(config.width * config.height);
 	generate(rnd.begin(), rnd.end(), []() { return rand() % 256; });
 
 	// Load it
-	noiseTexture->Image2D(GL_TEXTURE_2D, 0, GL_RED, config.width, config.height,
+	noiseTexture->image_2d(GL_TEXTURE_2D, 0, GL_RED, config.width, config.height,
 		0, GL_RED, GL_UNSIGNED_BYTE, rnd.data());
 
 	BOOST_LOG_TRIVIAL(warning) << "generated noise texture for input "
@@ -174,7 +174,7 @@ shared_ptr<OpenGL::Texture> TextureEngine::NoiseTextureHandler(const InputConfig
 	return noiseTexture;
 }
 
-shared_ptr<OpenGL::Texture> TextureEngine::CheckerTextureHandler(const InputConfig &inputConfig,
+shared_ptr<gl::texture> TextureEngine::CheckerTextureHandler(const InputConfig &inputConfig,
 														 bool &skipTextureOptions,
 														 bool &skipCache,
 														 bool &framebufferSized)
@@ -185,9 +185,9 @@ shared_ptr<OpenGL::Texture> TextureEngine::CheckerTextureHandler(const InputConf
 	if (ss.fail()) size = 10;
 
 	// A checkerboard texture
-	auto checkerTexture = make_shared<OpenGL::Texture>(GL_TEXTURE_2D);
-	checkerTexture->Parameter(GL_TEXTURE_SWIZZLE_B, GL_RED);
-	checkerTexture->Parameter(GL_TEXTURE_SWIZZLE_G, GL_RED);
+	auto checkerTexture = make_shared<gl::texture>(GL_TEXTURE_2D);
+	checkerTexture->parameter(GL_TEXTURE_SWIZZLE_B, GL_RED);
+	checkerTexture->parameter(GL_TEXTURE_SWIZZLE_G, GL_RED);
 
 	// Generate the checkerboard
 	vector<unsigned char> chk(config.width * config.height);
@@ -196,7 +196,7 @@ shared_ptr<OpenGL::Texture> TextureEngine::CheckerTextureHandler(const InputConf
 			chk[j * config.height + i] = ((i / size) % 2 == 0) ^ ((j / size) % 2 == 0) ? 255 : 0;
 
 	// Load it
-	checkerTexture->Image2D(GL_TEXTURE_2D, 0, GL_RED, config.width, config.height,
+	checkerTexture->image_2d(GL_TEXTURE_2D, 0, GL_RED, config.width, config.height,
 		0, GL_RED, GL_UNSIGNED_BYTE, chk.data());
 
 	BOOST_LOG_TRIVIAL(warning) << "generated " << size << "x" << size
@@ -221,7 +221,7 @@ void TextureEngine::Initialize()
 	// Prepare the empty texture, a nice magenta checkerboard
 	if (emptyTexture) return;
 
-	emptyTexture = make_shared<OpenGL::Texture>(GL_TEXTURE_2D);
+	emptyTexture = make_shared<gl::texture>(GL_TEXTURE_2D);
 
 	// Generate the checkerboard
 	int width = 32, height = 32,
@@ -232,12 +232,12 @@ void TextureEngine::Initialize()
 			chk[j * height + i] = ((i / size) % 2 == 0) ^ ((j / size) % 2 == 0) ? 255 : 0;
 
 	// Load it and set parameters
-	emptyTexture->Parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	emptyTexture->Parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	emptyTexture->Parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
-	emptyTexture->Parameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
-	emptyTexture->Parameter(GL_TEXTURE_SWIZZLE_B, GL_RED);
-	emptyTexture->Image2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED,
+	emptyTexture->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	emptyTexture->parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	emptyTexture->parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
+	emptyTexture->parameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
+	emptyTexture->parameter(GL_TEXTURE_SWIZZLE_B, GL_RED);
+	emptyTexture->image_2d(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED,
 		GL_UNSIGNED_BYTE, chk.data());
 }
 
@@ -270,7 +270,7 @@ void TextureEngine::ClearState(bool framebufferSizeChange)
 	}
 }
 
-OpenGL::Texture &TextureEngine::GetInputTexture(const InputConfig &inputConfig)
+gl::texture &TextureEngine::GetInputTexture(const InputConfig &inputConfig)
 {
 	if (!inputConfig.enabled())
 	{
@@ -324,19 +324,19 @@ OpenGL::Texture &TextureEngine::GetInputTexture(const InputConfig &inputConfig)
 	return *get<0>(inputTextures.find(inputConfig.id)->second);
 }
 
-void TextureEngine::ApplyTextureOptions(const InputConfig &inputConfig, OpenGL::Texture &texture)
+void TextureEngine::ApplyTextureOptions(const InputConfig &inputConfig, gl::texture &texture)
 {
 	GLint minFilter = inputConfig.minFilter;
 
-	texture.Parameter(GL_TEXTURE_MIN_FILTER, minFilter);
-	texture.Parameter(GL_TEXTURE_MAG_FILTER, inputConfig.magFilter);
-	texture.Parameter(GL_TEXTURE_WRAP_S, inputConfig.wrap);
-	texture.Parameter(GL_TEXTURE_WRAP_T, inputConfig.wrap);
+	texture.parameter(GL_TEXTURE_MIN_FILTER, minFilter);
+	texture.parameter(GL_TEXTURE_MAG_FILTER, inputConfig.magFilter);
+	texture.parameter(GL_TEXTURE_WRAP_S, inputConfig.wrap);
+	texture.parameter(GL_TEXTURE_WRAP_T, inputConfig.wrap);
 
 	if (minFilter > GL_LINEAR)
 	{
 		BOOST_LOG_TRIVIAL(debug) << "generating mipmaps for " << inputConfig.id;
-		texture.GenerateMipmap();
+		texture.generate_mipmap();
 	}
 }
 

@@ -1,25 +1,25 @@
-#ifndef _SHADERTOY_OPENGL_QUERY_HPP_
-#define _SHADERTOY_OPENGL_QUERY_HPP_
+#ifndef _SHADERTOY_GL_QUERY_HPP_
+#define _SHADERTOY_GL_QUERY_HPP_
 
-#include "shadertoy/OpenGL/Resource.hpp"
+#include "shadertoy/gl/resource.hpp"
 
 namespace shadertoy
 {
-namespace OpenGL
+namespace gl
 {
 	/**
 	 * @brief Error thrown when an attempt is made to obtain the id of a null query
 	 */
-	class shadertoy_EXPORT NullQueryError : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT null_query_error : public shadertoy::ShadertoyError
 	{
 	public:
 		/**
 		 * @brief Initializes a new instance of the NullQueryError class.
 		 */
-		explicit NullQueryError();
+		explicit null_query_error();
 	};
 
-	class shadertoy_EXPORT QueryAllocator
+	class shadertoy_EXPORT query_allocator
 	{
 	public:
 		/**
@@ -30,7 +30,8 @@ namespace OpenGL
 		 *
 		 * @throws OpenGLError
 		 */
-		GLuint Create(GLenum target);
+		GLuint create(GLenum target);
+
 		/**
 		 * @brief Deletes the given query
 		 *
@@ -38,13 +39,13 @@ namespace OpenGL
 		 *
 		 * @throws OpenGLError
 		 */
-		void Delete(GLuint resource);
+		void destroy(GLuint resource);
 	};
 
 	/**
 	 * @brief Represents an OpenGL query.
 	 */
-	class shadertoy_EXPORT Query : public Resource<Query, QueryAllocator, NullQueryError>
+	class shadertoy_EXPORT query : public resource<query, query_allocator, null_query_error>
 	{
 	public:
 		/**
@@ -54,21 +55,21 @@ namespace OpenGL
 		 *
 		 * @throws OpenGLError
 		 */
-		Query(GLenum target);
+		query(GLenum target);
 
 		/**
 		 * @brief glBeginQuery
 		 *
 		 * @param target Query target
 		 */
-		void Begin(GLenum target);
+		void begin(GLenum target);
 
 		/**
 		 * @brief glEndQuery
 		 *
 		 * @param target Query target
 		 */
-		static void End(GLenum target);
+		static void end(GLenum target);
 
 		/**
 		 * @brief glGetQueryObjectiv
@@ -76,7 +77,7 @@ namespace OpenGL
 		 * @param pname  Parameter name
 		 * @param params Address to result variable
 		 */
-		void GetObjectiv(GLenum pname, GLint *params);
+		void get_object_iv(GLenum pname, GLint *params);
 
 		/**
 		 * @brief glGetQueryObjectui64v
@@ -84,9 +85,9 @@ namespace OpenGL
 		 * @param pname  Parameter name
 		 * @param params Address to result variable
 		 */
-		void GetObjectui64v(GLenum pname, GLuint64 *params);
+		void get_object_ui64v(GLenum pname, GLuint64 *params);
 	};
 }
 }
 
-#endif /* _SHADERTOY_OPENGL_QUERY_HPP_ */
+#endif /* _SHADERTOY_GL_QUERY_HPP_ */

@@ -5,36 +5,36 @@
 
 namespace shadertoy
 {
-	namespace OpenGL
+	namespace gl
 	{
-		class NullBufferError;
-		class Buffer;
+		class null_buffer_error;
+		class buffer;
 
-		class OpenGLError;
+		class opengl_error;
 
 		class NullFramebufferError;
-		class Framebuffer;
+		class framebuffer;
 
-		class NullProgramError;
-		class UniformLocation;
-		class ProgramLinkError;
-		class ProgramValidateError;
-		class Program;
+		class null_program_error;
+		class uniform_location;
+		class program_link_error;
+		class program_validate_error;
+		class program;
 
-		class NullQueryError;
-		class Query;
+		class null_query_error;
+		class query;
 
 		class NullRenderbufferError;
 		class Renderbuffer;
 
-		class NullShaderError;
-		class ShaderCompilationError;
-		class ShaderAllocator;
-		class Shader;
+		class null_shader_error;
+		class shader_compilation_error;
+		class shader_allocator;
+		class shader;
 
-		class NullTextureError;
-		class TextureAllocator;
-		class Texture;
+		class null_texture_error;
+		class texture_allocator;
+		class texture;
 	}
 
 	struct BufferConfig;

@@ -16,7 +16,7 @@
 #include <Shadertoy.hpp>
 
 using namespace std;
-using shadertoy::OpenGL::glCall;
+using shadertoy::gl::gl_call;
 
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
@@ -309,7 +309,7 @@ int render(GLFWwindow* window, shadertoy::ContextConfig &contextConfig)
 		context.Initialize();
 		BOOST_LOG_TRIVIAL(info) << "Initialized rendering context";
 	}
-	catch (shadertoy::OpenGL::ShaderCompilationError &sce)
+	catch (shadertoy::gl::ShaderCompilationError &sce)
 	{
 		std::cerr << "Failed to compile shader: " << sce.log();
 		code = 2;
@@ -373,8 +373,8 @@ int render(GLFWwindow* window, shadertoy::ContextConfig &contextConfig)
 
 			// Render to screen
 			//  Setup framebuffer
-			glCall(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
-			glCall(glViewport, 0, 0, contextConfig.width, contextConfig.height);
+			gl_call(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
+			gl_call(glViewport, 0, 0, contextConfig.width, contextConfig.height);
 
 			//  Load texture and program
 			context.BindResult();

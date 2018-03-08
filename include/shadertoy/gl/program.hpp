@@ -1,28 +1,28 @@
-#ifndef _SHADERTOY_OPENGL_PROGRAM_HPP_
-#define _SHADERTOY_OPENGL_PROGRAM_HPP_
+#ifndef _SHADERTOY_GL_PROGRAM_HPP_
+#define _SHADERTOY_GL_PROGRAM_HPP_
 
-#include "shadertoy/OpenGL/Resource.hpp"
+#include "shadertoy/gl/resource.hpp"
 
 namespace shadertoy
 {
-namespace OpenGL
+namespace gl
 {
 	/**
 	 * @brief Error thrown when an attempt is made to dereference a null program object.
 	 */
-	class shadertoy_EXPORT NullProgramError : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT null_program_error : public shadertoy::ShadertoyError
 	{
 	public:
 		/**
-		 * @brief Initializes a new instance of the NullProgramError class.
+		 * @brief Initializes a new instance of the null_program_error class.
 		 */
-		explicit NullProgramError();
+		explicit null_program_error();
 	};
 
 	/**
 	 * @brief Represents the location of an uniform in a program.
 	 */
-	class shadertoy_EXPORT UniformLocation
+	class shadertoy_EXPORT uniform_location
 	{
 	public:
 		/**
@@ -31,7 +31,7 @@ namespace OpenGL
 		 * @param program  Program this location is defined in
 		 * @param location Location of the uniform
 		 */
-		UniformLocation(const Program &program, GLint location);
+		uniform_location(const program &program, GLint location);
 
 		/**
 		 * @brief Returns a value indicating if this uniform location is active in its
@@ -39,7 +39,7 @@ namespace OpenGL
 		 *
 		 * @return true if the uniform is active, false otherwise.
 		 */
-		bool IsActive() const;
+		bool is_active() const;
 
 		/**
 		 * @brief glProgramUniform1i
@@ -47,35 +47,35 @@ namespace OpenGL
 		 * @param  v0 v0
 		 * @return    true if the value was set, false otherwise
 		 */
-		bool SetValue(const GLint &v0);
+		bool set_value(const GLint &v0);
 		/**
 		 * @brief glProgramUniform1f
 		 *
 		 * @param  v0 v0
 		 * @return    true if the value was set, false otherwise
 		 */
-		bool SetValue(const GLfloat &v0);
+		bool set_value(const GLfloat &v0);
 		/**
 		 * @brief glProgramUniform2f
 		 *
 		 * @param  v  v0 and v1 as a vec2
 		 * @return    true if the value was set, false otherwise
 		 */
-		bool SetValue(const glm::vec2 &v);
+		bool set_value(const glm::vec2 &v);
 		/**
 		 * @brief glProgramUniform3f
 		 *
 		 * @param  v  v0 to v2 as a vec3
 		 * @return    true if the value was set, false otherwise
 		 */
-		bool SetValue(const glm::vec3 &v);
+		bool set_value(const glm::vec3 &v);
 		/**
 		 * @brief glProgramUniform4f
 		 *
 		 * @param  v  v0 to v4 as a vec4
 		 * @return    true if the value was set, false otherwise
 		 */
-		bool SetValue(const glm::vec4 &v);
+		bool set_value(const glm::vec4 &v);
 
 		/**
 		 * @brief glProgramUniform1iv
@@ -84,7 +84,7 @@ namespace OpenGL
 		 * @param  v0    v0
 		 * @return       true if the value was set, false otherwise
 		 */
-		bool SetValue(size_t count, const GLint *v0);
+		bool set_value(size_t count, const GLint *v0);
 		/**
 		 * @brief glProgramUniform1fv
 		 *
@@ -92,7 +92,7 @@ namespace OpenGL
 		 * @param  v0    v0
 		 * @return       true if the value was set, false otherwise
 		 */
-		bool SetValue(size_t count, const GLfloat *v0);
+		bool set_value(size_t count, const GLfloat *v0);
 		/**
 		 * @brief glProgramUniform2fv
 		 *
@@ -100,7 +100,7 @@ namespace OpenGL
 		 * @param  v     v0, v1
 		 * @return       true if the value was set, false otherwise
 		 */
-		bool SetValue(size_t count, const glm::vec2 *v);
+		bool set_value(size_t count, const glm::vec2 *v);
 		/**
 		 * @brief glProgramUniform3fv
 		 *
@@ -108,7 +108,7 @@ namespace OpenGL
 		 * @param  v     v0, v1, v2
 		 * @return       true if the value was set, false otherwise
 		 */
-		bool SetValue(size_t count, const glm::vec3 *v);
+		bool set_value(size_t count, const glm::vec3 *v);
 		/**
 		 * @brief glProgramUniform4fv
 		 *
@@ -116,36 +116,36 @@ namespace OpenGL
 		 * @param  v     v0, v1, v2, v3
 		 * @return       true if the value was set, false otherwise
 		 */
-		bool SetValue(size_t count, const glm::vec4 *v);
+		bool set_value(size_t count, const glm::vec4 *v);
 
 	private:
 		/// Program id
-		const GLuint _program;
+		const GLuint program_;
 		/// Uniform location
-		const GLint _location;
+		const GLint location_;
 	};
 
 	/**
 	 * @brief Error thrown when the linking step of a program fails.
 	 */
-	class shadertoy_EXPORT ProgramLinkError : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT program_link_error : public shadertoy::ShadertoyError
 	{
 	public:
 		/**
-		 * @brief Initializes a new instance of the ProgramLinkError class.
+		 * @brief Initializes a new instance of the program_link_error class.
 		 *
 		 * @param  programId OpenGL resource id of the failed program
 		 * @param  log       Contents of the link step log
 		 */
-		explicit ProgramLinkError(GLuint programId, const std::string &log);
+		explicit program_link_error(GLuint programId, const std::string &log);
 
 		/**
 		 * @brief Get the program id of the failed linking step.
 		 *
 		 * @return Id of the program that failed the linking step.
 		 */
-		GLuint programId() const
-		{ return _programId; }
+		GLuint program_id() const
+		{ return program_id_; }
 
 		/**
 		 * @brief Get the log of the linking step.
@@ -153,19 +153,19 @@ namespace OpenGL
 		 * @return Contents of the program linking log.
 		 */
 		const std::string &log() const
-		{ return _log; }
+		{ return log_; }
 
 	private:
 		/// Program id
-		const GLuint _programId;
+		const GLuint program_id_;
 		/// Program link log
-		const std::string _log;
+		const std::string log_;
 	};
 
 	/**
 	 * @brief Error thrown when the validation step of a program fails.
 	 */
-	class shadertoy_EXPORT ProgramValidateError : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT program_validate_error : public shadertoy::ShadertoyError
 	{
 	public:
 		/**
@@ -174,15 +174,15 @@ namespace OpenGL
 		 * @param  programId OpenGL resource id of the failed program
 		 * @param  log       Contents of the validate step log
 		 */
-		explicit ProgramValidateError(GLuint programId, const std::string &log);
+		explicit program_validate_error(GLuint programId, const std::string &log);
 
 		/**
 		 * @brief Get the program id of the failed validation step.
 		 *
 		 * @return Id of the program that failed the validation step.
 		 */
-		GLuint programId() const
-		{ return _programId; }
+		GLuint program_id() const
+		{ return program_id_; }
 
 		/**
 		 * @brief Get the log of the validation step.
@@ -190,22 +190,22 @@ namespace OpenGL
 		 * @return Contents of the program validation log.
 		 */
 		const std::string &log() const
-		{ return _log; }
+		{ return log_; }
 
 	private:
 		/// Program id
-		const GLuint _programId;
+		const GLuint program_id_;
 		/// Program link log
-		const std::string _log;
+		const std::string log_;
 	};
 
 	/**
 	 * @brief Represents an OpenGL program.
 	 */
-	class shadertoy_EXPORT Program : public Resource<
-		Program,
-		SingleAllocator<&glCreateProgram, &glDeleteProgram>,
-		NullProgramError>
+	class shadertoy_EXPORT program : public resource<
+		program,
+		single_allocator<&glCreateProgram, &glDeleteProgram>,
+		null_program_error>
 	{
 	public:
 		/**
@@ -214,14 +214,14 @@ namespace OpenGL
 		 * @throws OpenGLError
 		 * @throws ProgramLinkError
 		 */
-		void Link();
+		void link();
 
 		/**
 		 * @brief glUseProgram
 		 *
 		 * @throws OpenGLError
 		 */
-		void Use();
+		void use();
 
 		/**
 		 * @brief glValidateProgram
@@ -229,7 +229,7 @@ namespace OpenGL
 		 * @throws OpenGLError
 		 * @throws ProgramValidateError
 		 */
-		void Validate();
+		void validate();
 
 		/**
 		 * @brief glGetUniformLocation
@@ -240,7 +240,7 @@ namespace OpenGL
 		 *
 		 * @throws OpenGLError
 		 */
-		UniformLocation GetUniformLocation(const GLchar *name);
+		uniform_location get_uniform_location(const GLchar *name);
 
 		/**
 		 * @brief glAttachShader
@@ -250,7 +250,7 @@ namespace OpenGL
 		 * @throws OpenGLError
 		 * @throws NullShaderError
 		 */
-		void AttachShader(const Shader &shader);
+		void attach_shader(const shader &shader);
 
 		/**
 		 * @brief glGetProgramInfoLog
@@ -259,9 +259,9 @@ namespace OpenGL
 		 *
 		 * @throws OpenGLError
 		 */
-		std::string Log();
+		std::string log();
 	};
 }
 }
 
-#endif /* _SHADERTOY_OPENGL_PROGRAM_HPP_ */
+#endif /* _SHADERTOY_GL_PROGRAM_HPP_ */

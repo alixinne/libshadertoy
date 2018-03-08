@@ -52,20 +52,20 @@ struct shadertoy_EXPORT DynamicShaderInputsGLSLTypeVisitor : public boost::stati
 class shadertoy_EXPORT DynamicShaderInputUniformSetter : public boost::static_visitor<bool>
 {
 	/// OpenGL GLSL uniform location to set
-	OpenGL::UniformLocation &location;
+	gl::uniform_location &location;
 
 public:
 	template<class T>
 	inline bool operator()(const T& value) const
 	{
-		location.SetValue(1, &value);
+		location.set_value(1, &value);
 		return true;
 	}
 
 	template<class T, std::size_t N>
 	inline bool operator()(const std::array<T, N> &value) const
 	{
-		location.SetValue(N, value.data());
+		location.set_value(N, value.data());
 		return true;
 	}
 
@@ -80,7 +80,7 @@ public:
 	 *
 	 * @param location GLSL program location to set
 	 */
-	DynamicShaderInputUniformSetter(OpenGL::UniformLocation &location)
+	DynamicShaderInputUniformSetter(gl::uniform_location &location)
 		: location(location)
 	{}
 };
@@ -221,13 +221,13 @@ public:
 	 *
 	 * @param program Program to bind uniforms to.
 	 */
-	std::map<std::string, OpenGL::UniformLocation> BindInputs(OpenGL::Program &program)
+	std::map<std::string, gl::uniform_location> BindInputs(gl::program &program)
 	{
-		std::map<std::string, OpenGL::UniformLocation> result;
+		std::map<std::string, gl::uniform_location> result;
 
 		for (auto &pair : InputMap)
 		{
-			result.insert(std::make_pair(pair.first, program.GetUniformLocation(pair.first.c_str())));
+			result.insert(std::make_pair(pair.first, program.get_uniform_location(pair.first.c_str())));
 		}
 
 		return result;
@@ -241,7 +241,7 @@ public:
 	 * @param  location GLSL uniform location to set
 	 * @return          true if the location was set, false otherwise
 	 */
-	bool SetValue(const std::string &name, OpenGL::UniformLocation &location)
+	bool set_value(const std::string &name, gl::uniform_location &location)
 	{
 		return boost::apply_visitor(DynamicShaderInputUniformSetter(location), InputMap[name]);
 	}
@@ -309,10 +309,10 @@ public:
 		template<typename Input>
 		struct Uniform<Input, typename std::enable_if<(Input::N > 0)>::type>
 		{
-			OpenGL::UniformLocation Location;
+			gl::uniform_location Location;
 
-			Uniform(std::shared_ptr<Input> &, OpenGL::Program &program)
-				: Location(program.GetUniformLocation(Input::Name))
+			Uniform(std::shared_ptr<Input> &, gl::program &program)
+				: Location(program.get_uniform_location(Input::Name))
 			{
 			}
 
@@ -323,9 +323,9 @@ public:
 			 * @return        true if the uniform location was set, false
 			 *                otherwise.
 			 */
-			bool SetValue(std::shared_ptr<Input> &valptr)
+			bool set_value(std::shared_ptr<Input> &valptr)
 			{
-				return Location.SetValue(
+				return Location.set_value(
 					valptr->Values().size(),
 					static_cast<const typename Input::ValueType *>(valptr->Values().data()));
 			}
@@ -337,9 +337,9 @@ public:
 		template<typename Input>
 		struct Uniform<Input, typename std::enable_if<(Input::N < 1)>::type>
 		{
-			std::map<std::string, OpenGL::UniformLocation> Locations;
+			std::map<std::string, gl::uniform_location> Locations;
 
-			Uniform(std::shared_ptr<Input> &input, OpenGL::Program &program)
+			Uniform(std::shared_ptr<Input> &input, gl::program &program)
 				: Locations(input->BindInputs(program))
 			{
 			}
@@ -352,12 +352,12 @@ public:
 			 * @return        true if the uniform locations were set, false
 			 *                otherwise
 			 */
-			bool SetValue(std::shared_ptr<Input> &valptr)
+			bool set_value(std::shared_ptr<Input> &valptr)
 			{
 				bool result = true;
 
 				for (auto &pair : Locations)
-					result = result && valptr->SetValue(pair.first, pair.second);
+					result = result && valptr->set_value(pair.first, pair.second);
 
 				return result;
 			}
@@ -374,13 +374,13 @@ public:
 		 * @return       true if the value has been set, false if the associated uniform was inactive
 		 */
 		template<size_t Index, class Type>
-		bool SetValue()
+		bool set_value()
 		{
 			auto valptr = std::get<Index>(State.AllInputs);
 			auto &uniform(std::get<Index>(Uniforms));
 
 			// Set uniform using state value
-			return uniform.SetValue(valptr);
+			return uniform.set_value(valptr);
 		}
 
 		/**
@@ -389,9 +389,9 @@ public:
 		 * @tparam Indices Index range of the uniforms in the parent state type declaration
 		 */
 		template<size_t... Indices>
-		void SetValues(std::index_sequence<Indices...>)
+		void set_values(std::index_sequence<Indices...>)
 		{
-			bool _[] = {SetValue<Indices, Inputs>()...};
+			bool _[] = {set_value<Indices, Inputs>()...};
 			(void) _;
 		}
 
@@ -404,7 +404,7 @@ public:
 		 * @param program Program to bind to
 		 */
 		template<size_t... Indices>
-		BoundInputs(StateType &state, OpenGL::Program &program, std::index_sequence<Indices...>)
+		BoundInputs(StateType &state, gl::program &program, std::index_sequence<Indices...>)
 			: State(state),
 			  Uniforms(Uniform<Inputs>(std::get<Indices>(state.AllInputs), program)...)
 		{
@@ -415,7 +415,7 @@ public:
 		 */
 		void Apply() override
 		{
-			SetValues(std::make_index_sequence<sizeof...(Inputs)>());
+			set_values(std::make_index_sequence<sizeof...(Inputs)>());
 		}
 	};
 
@@ -497,7 +497,7 @@ public:
 	 * @param program Program to bind to.
 	 * @return
 	 */
-	std::shared_ptr<BoundInputs> GetBoundInputs(OpenGL::Program &program)
+	std::shared_ptr<BoundInputs> GetBoundInputs(gl::program &program)
 	{
 		return std::make_shared<BoundInputs>(*this, program, Indices());
 	}

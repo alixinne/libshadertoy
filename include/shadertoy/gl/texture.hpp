@@ -1,22 +1,22 @@
-#ifndef _SHADERTOY_OPENGL_TEXTURE_HPP_
-#define _SHADERTOY_OPENGL_TEXTURE_HPP_
+#ifndef _SHADERTOY_GL_TEXTURE_HPP_
+#define _SHADERTOY_GL_TEXTURE_HPP_
 
-#include "shadertoy/OpenGL/Resource.hpp"
+#include "shadertoy/gl/resource.hpp"
 
 namespace shadertoy
 {
-namespace OpenGL
+namespace gl
 {
 	/**
 	 * @brief Error thrown when an attempt is made to dereference a null texture.
 	 */
-	class shadertoy_EXPORT NullTextureError : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT null_texture_error : public shadertoy::ShadertoyError
 	{
 	public:
 		/**
 		 * @brief Initializes a new instance of the NullTextureError class.
 		 */
-		explicit NullTextureError();
+		explicit null_texture_error();
 	};
 
 	/**
@@ -25,7 +25,7 @@ namespace OpenGL
 	 * resource allocators. Also links statically to glCreateTexture and
 	 * glDeleteTexture according to the OpenGL spec.
 	 */
-	class shadertoy_EXPORT TextureAllocator
+	class shadertoy_EXPORT texture_allocator
 	{
 	public:
 		/**
@@ -36,7 +36,8 @@ namespace OpenGL
 		 *
 		 * @throws OpenGLError
 		 */
-		GLuint Create(GLenum target);
+		GLuint create(GLenum target);
+
 		/**
 		 * @brief Deletes the given texture
 		 *
@@ -44,13 +45,13 @@ namespace OpenGL
 		 *
 		 * @throws OpenGLError
 		 */
-		void Delete(GLuint resource);
+		void destroy(GLuint resource);
 	};
 
 	/**
 	 * @brief Represents an OpenGL texture.
 	 */
-	class shadertoy_EXPORT Texture : public Resource<Texture, TextureAllocator, NullTextureError>
+	class shadertoy_EXPORT texture : public resource<texture, texture_allocator, null_texture_error>
 	{
 	public:
 		/**
@@ -60,7 +61,7 @@ namespace OpenGL
 		 *
 		 * @throws OpenGLError
 		 */
-		Texture(GLenum target);
+		texture(GLenum target);
 
 		/**
 		 * @brief glBindTexture
@@ -70,7 +71,7 @@ namespace OpenGL
 		 * @throws OpenGLError
 		 * @throws NullTextureError
 		 */
-		void Bind(GLenum target);
+		void bind(GLenum target);
 
 		/**
 		 * @brief glTextureParameteri
@@ -81,7 +82,7 @@ namespace OpenGL
 		 * @throws OpenGLError
 		 * @throws NullTextureError
 		 */
-		void Parameter(GLenum pname, GLint param);
+		void parameter(GLenum pname, GLint param);
 
 		/**
 		 * @brief glTextureParameterf
@@ -92,7 +93,7 @@ namespace OpenGL
 		 * @throws OpenGLError
 		 * @throws NullTextureError
 		 */
-		void Parameter(GLenum pname, GLfloat param);
+		void parameter(GLenum pname, GLfloat param);
 
 		/**
 		 * @brief glTextureImage2DEXT
@@ -110,7 +111,8 @@ namespace OpenGL
 		 * @throws OpenGLError
 		 * @throws NullTextureError
 		 */
-		void Image2D(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *data);
+		void image_2d(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border,
+					  GLenum format, GLenum type, const GLvoid *data);
 
 		/**
 		 * @brief glGenerateTextureMipmap
@@ -118,9 +120,9 @@ namespace OpenGL
 		 * @throws OpenGLError
 		 * @throws NullTextureError
 		 */
-		void GenerateMipmap();
+		void generate_mipmap();
 	};
 }
 }
 
-#endif /* _SHADERTOY_OPENGL_TEXTURE_HPP_ */
+#endif /* _SHADERTOY_GL_TEXTURE_HPP_ */

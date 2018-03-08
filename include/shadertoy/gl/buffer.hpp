@@ -1,31 +1,31 @@
-#ifndef _SHADERTOY_OPENGL_BUFFER_HPP_
-#define _SHADERTOY_OPENGL_BUFFER_HPP_
+#ifndef _SHADERTOY_GL_BUFFER_HPP_
+#define _SHADERTOY_GL_BUFFER_HPP_
 
-#include "shadertoy/OpenGL/Resource.hpp"
+#include "shadertoy/gl/resource.hpp"
 
 namespace shadertoy
 {
-namespace OpenGL
+namespace gl
 {
 	/**
 	 * @brief Error thrown when an attempt is made to obtain the id of a null buffer.
 	 */
-	class shadertoy_EXPORT NullBufferError : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT null_buffer_error : public shadertoy::ShadertoyError
 	{
 	public:
 		/**
 		 * @brief Initializes a new instance of the NullBufferError class.
 		 */
-		explicit NullBufferError();
+		explicit null_buffer_error();
 	};
 
 	/**
 	 * @brief Represents an OpenGL buffer
 	 */
-	class shadertoy_EXPORT Buffer : public Resource<
-		Buffer,
-		MultiAllocator<&glCreateBuffers, &glDeleteBuffers>,
-		NullBufferError>
+	class shadertoy_EXPORT buffer : public resource<
+		buffer,
+		multi_allocator<&glCreateBuffers, &glDeleteBuffers>,
+		null_buffer_error>
 	{
 	public:
 		/**
@@ -36,7 +36,7 @@ namespace OpenGL
 		 * @throws OpenGLError
 		 * @throws NullBufferError
 		 */
-		void Bind(GLenum target);
+		void bind(GLenum target);
 
 		/**
 		 * @brief glNamedBufferData
@@ -47,9 +47,9 @@ namespace OpenGL
 		 * @throws OpenGLError
 		 * @throws NullBufferError
 		 */
-		void Data(GLsizei size, const void *data, GLenum usage);
+		void data(GLsizei size, const void *data, GLenum usage);
 	};
 }
 }
 
-#endif /* _SHADERTOY_OPENGL_BUFFER_HPP_ */
+#endif /* _SHADERTOY_GL_BUFFER_HPP_ */

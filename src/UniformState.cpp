@@ -10,7 +10,7 @@
 #include <glm/glm.hpp>
 
 #include "shadertoy/ShadertoyError.hpp"
-#include "shadertoy/OpenGL.hpp"
+#include "shadertoy/gl.hpp"
 
 #include "shadertoy/UniformState.hpp"
 

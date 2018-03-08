@@ -13,29 +13,29 @@ class shadertoy_EXPORT RenderContext
 {
 protected:
 	/// Last rendered-to texture
-	std::weak_ptr<OpenGL::Texture> lastTexture;
+	std::weak_ptr<gl::texture> lastTexture;
 
 	/// Program for screen quad
-	OpenGL::Program screenProg;
+	gl::program screenProg;
 
 private:
 	/// Config reference
 	ContextConfig &config;
 
 	/// Vertex shader for screen quad
-	OpenGL::Shader screenVs;
+	gl::shader screenVs;
 
 	/// Fragment shader for screen quad
-	OpenGL::Shader screenFs;
+	gl::shader screenFs;
 
 	/// Vertex buffer for screen quad
-	OpenGL::Buffer screenQuadCorners;
+	gl::buffer screenQuadCorners;
 	/// Index buffer for screen quad
-	OpenGL::Buffer screenQuadIndices;
+	gl::buffer screenQuadIndices;
 
 	/// Screen quad source texture
 	/// Note that this texture will only be allocated if needed
-	std::shared_ptr<OpenGL::Texture> screenQuadTexture;
+	std::shared_ptr<gl::texture> screenQuadTexture;
 
 	/// Input texture engine
 	std::shared_ptr<TextureEngine> textureEngine;
@@ -119,7 +119,7 @@ private:
 	 * @param      program  Target shader program.
 	 */
 	virtual void BindInputs(std::vector<std::shared_ptr<BoundInputsBase>> &inputs,
-							OpenGL::Program &program);
+							gl::program &program);
 
 public:
 	/**
@@ -190,7 +190,7 @@ public:
 	 * @param      fs  Fragment shader object to compile to.
 	 */
 	void BuildBufferShader(const std::string &id,
-						   OpenGL::Shader &fs);
+						   gl::shader &fs);
 
 	/**
 	 * @brief      Loads a shader source by its path.
@@ -226,7 +226,7 @@ public:
 	 * @param program Program to bind to
 	 * @return
 	 */
-	std::vector<std::shared_ptr<BoundInputsBase>> GetBoundInputs(OpenGL::Program &program);
+	std::vector<std::shared_ptr<BoundInputsBase>> GetBoundInputs(gl::program &program);
 
 	/**
 	 * @brief      Resets the current context target using the default viewport size
@@ -246,7 +246,7 @@ public:
 	 * @param timerQuery Query object to use for measuring the runtime of the
 	 *                   draw call.
 	 */
-	void RenderScreenQuad(OpenGL::Query &timerQuery);
+	void RenderScreenQuad(gl::query &timerQuery);
 
 	/**
 	 * @brief      Binds the texture containing the shadertoy result as well as
@@ -259,7 +259,7 @@ public:
 	/**
 	 * @brief      Get the default screen quad vertex shader
 	 */
-	OpenGL::Shader &GetScreenQuadVertexShader();
+	gl::shader &GetScreenQuadVertexShader();
 
 	/**
 	 * @brief Obtains the buffer object for the given name.

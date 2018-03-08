@@ -1,16 +1,16 @@
-#ifndef _SHADERTOY_OPENGL_CALLER_HPP_
-#define _SHADERTOY_OPENGL_CALLER_HPP_
+#ifndef _SHADERTOY_GL_CALLER_HPP_
+#define _SHADERTOY_GL_CALLER_HPP_
 
 #include "shadertoy/pre.hpp"
 
 namespace shadertoy
 {
-namespace OpenGL
+namespace gl
 {
 	/**
 	 * @brief Error thrown when an OpenGL operation fails.
 	 */
-	class shadertoy_EXPORT OpenGLError : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT opengl_error : public shadertoy::ShadertoyError
 	{
 	public:
 		/**
@@ -19,7 +19,7 @@ namespace OpenGL
 		 * @param  error    OpenGL error code
 		 * @param  extraMsg Extra information to include in what()
 		 */
-		explicit OpenGLError(GLenum error, const std::string &extraMsg);
+		explicit opengl_error(GLenum error, const std::string &extraMsg);
 	};
 
 	/**
@@ -27,7 +27,7 @@ namespace OpenGL
 	 *
 	 * @throws OpenGLError
 	 */
-	void shadertoy_EXPORT CheckErrors();
+	void shadertoy_EXPORT check_errors();
 
 	/**
 	 * @brief Invokes the given OpenGL function
@@ -37,12 +37,12 @@ namespace OpenGL
 	 * @throws OpenGLError
 	 */
 	template<typename glFunction>
-	auto glCall(glFunction function)->typename
+	auto gl_call(glFunction function)->typename
 					std::enable_if<std::is_same<void, decltype(function())>::value,
 					decltype(function())>::type
 	{
 		function();
-		CheckErrors();
+		check_errors();
 	}
 
 	/**
@@ -54,12 +54,12 @@ namespace OpenGL
 	 * @throws OpenGLError
 	 */
 	template<typename glFunction>
-	auto glCall(glFunction function)->typename
+	auto gl_call(glFunction function)->typename
 					std::enable_if<!std::is_same<void, decltype(function())>::value,
 					decltype(function())>::type
 	{
 		auto ret = function();
-		CheckErrors();
+		check_errors();
 		return ret;
 	}
 
@@ -72,12 +72,12 @@ namespace OpenGL
 	 * @throws OpenGLError
 	 */
 	template<typename glFunction, typename... Params>
-	auto glCall(glFunction function, Params... params)->typename
+	auto gl_call(glFunction function, Params... params)->typename
 					std::enable_if<std::is_same<void, decltype(function(params...))>::value,
 					decltype(function(params...))>::type
 	{
 		function(std::forward<Params>(params)...);
-		CheckErrors();
+		check_errors();
 	}
 
 	/**
@@ -90,15 +90,15 @@ namespace OpenGL
 	 * @throws OpenGLError
 	 */
 	template<typename glFunction, typename... Params>
-	auto glCall(glFunction function, Params... params)->typename
+	auto gl_call(glFunction function, Params... params)->typename
 					std::enable_if<!std::is_same<void, decltype(function(params...))>::value,
 					decltype(function(params...))>::type
 	{
 		auto ret = function(std::forward<Params>(params)...);
-		CheckErrors();
+		check_errors();
 		return ret;
 	}
 }
 }
 
-#endif /* _SHADERTOY_OPENGL_CALLER_HPP_ */
+#endif /* _SHADERTOY_GL_CALLER_HPP_ */

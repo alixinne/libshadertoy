@@ -1,28 +1,28 @@
-#ifndef _SHADERTOY_OPENGL_RENDERBUFFER_HPP_
-#define _SHADERTOY_OPENGL_RENDERBUFFER_HPP_
+#ifndef _SHADERTOY_GL_RENDERBUFFER_HPP_
+#define _SHADERTOY_GL_RENDERBUFFER_HPP_
 
-#include "shadertoy/OpenGL/Resource.hpp"
+#include "shadertoy/gl/resource.hpp"
 
 namespace shadertoy
 {
-namespace OpenGL
+namespace gl
 {
 	/**
 	 * @brief Error thrown when an attempt is made to dereference a null renderbuffer.
 	 */
-	class shadertoy_EXPORT NullRenderbufferError : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT null_renderbuffer_error : public shadertoy::ShadertoyError
 	{
 	public:
-		explicit NullRenderbufferError();
+		explicit null_renderbuffer_error();
 	};
 
 	/**
 	 * @brief Represents an OpenGL Renderbuffer object.
 	 */
-	class shadertoy_EXPORT Renderbuffer : public Resource<
-		Renderbuffer,
-		MultiAllocator<&glCreateRenderbuffers, &glDeleteRenderbuffers>,
-		NullRenderbufferError>
+	class shadertoy_EXPORT renderbuffer : public resource<
+		renderbuffer,
+		multi_allocator<&glCreateRenderbuffers, &glDeleteRenderbuffers>,
+		null_renderbuffer_error>
 	{
 	public:
 		/**
@@ -33,7 +33,7 @@ namespace OpenGL
 		 * @throws OpenGLError
 		 * @throws NullRenderbufferError
 		 */
-		void Bind(GLenum target);
+		void bind(GLenum target);
 
 		// glNamedRenderbufferStorage
 		/**
@@ -46,9 +46,9 @@ namespace OpenGL
 		 * @throws OpenGLError
 		 * @throws NullRenderbufferError
 		 */
-		void Storage(GLenum internalFormat, GLsizei width, GLsizei height);
+		void storage(GLenum internalFormat, GLsizei width, GLsizei height);
 	};
 }
 }
 
-#endif /* _SHADERTOY_OPENGL_RENDERBUFFER_HPP_ */
+#endif /* _SHADERTOY_GL_RENDERBUFFER_HPP_ */

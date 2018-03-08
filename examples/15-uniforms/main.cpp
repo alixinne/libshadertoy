@@ -10,7 +10,7 @@
 #include "uniforms.hpp"
 
 namespace fs = boost::filesystem;
-using shadertoy::OpenGL::glCall;
+using shadertoy::gl::gl_call;
 
 // Create a ShaderInputs type, which references the custom
 // uniforms (either static, known at compile time, or dynamic, defined at
@@ -35,7 +35,7 @@ class ExampleRenderContext : public shadertoy::RenderContext {
 
 	// After compiling a program, bind the inputs from the extra state into the program
 	void BindInputs(std::vector<std::shared_ptr<shadertoy::BoundInputsBase>> &inputs,
-		shadertoy::OpenGL::Program &program) override
+		shadertoy::gl::Program &program) override
 	{
 		inputs.push_back(extraInputs.GetBoundInputs(program));
 	}
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
 				context.Initialize();
 				std::cout << "Initialized rendering context" << std::endl;
 			}
-			catch (shadertoy::OpenGL::ShaderCompilationError &sce)
+			catch (shadertoy::gl::ShaderCompilationError &sce)
 			{
 				std::cerr << "Failed to compile shader: " << sce.log();
 				code = 2;
@@ -154,8 +154,8 @@ int main(int argc, char *argv[])
 
 				// Render to screen
 				//  Setup framebuffer
-				glCall(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
-				glCall(glViewport, 0, 0, contextConfig.width, contextConfig.height);
+				gl_call(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
+				gl_call(glViewport, 0, 0, contextConfig.width, contextConfig.height);
 
 				//  Load texture and program
 				context.BindResult();

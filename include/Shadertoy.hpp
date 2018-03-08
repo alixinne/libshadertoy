@@ -21,7 +21,7 @@
 
 #include "shadertoy/ShadertoyError.hpp"
 
-#include "shadertoy/OpenGL.hpp"
+#include "shadertoy/gl.hpp"
 
 #include "shadertoy/BufferConfig.hpp"
 #include "shadertoy/ContextConfig.hpp"

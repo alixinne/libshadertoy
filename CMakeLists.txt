@@ -101,16 +101,16 @@ add_library(shadertoy SHARED
 	${INCLUDE_DIR}/shadertoy/UniformState.hpp
 	${INCLUDE_DIR}/shadertoy/UniformState_decl.hpp
 	${INCLUDE_DIR}/shadertoy/UniformState_impl.hpp
-	${INCLUDE_DIR}/shadertoy/OpenGL/Query.hpp
-	${INCLUDE_DIR}/shadertoy/OpenGL/Renderbuffer.hpp
-	${INCLUDE_DIR}/shadertoy/OpenGL/Caller.hpp
-	${INCLUDE_DIR}/shadertoy/OpenGL/Buffer.hpp
-	${INCLUDE_DIR}/shadertoy/OpenGL/Program.hpp
-	${INCLUDE_DIR}/shadertoy/OpenGL/Framebuffer.hpp
-	${INCLUDE_DIR}/shadertoy/OpenGL.hpp
-	${INCLUDE_DIR}/shadertoy/OpenGL/Resource.hpp
-	${INCLUDE_DIR}/shadertoy/OpenGL/Texture.hpp
-	${INCLUDE_DIR}/shadertoy/OpenGL/Shader.hpp
+	${INCLUDE_DIR}/shadertoy/gl.hpp
+	${INCLUDE_DIR}/shadertoy/gl/query.hpp
+	${INCLUDE_DIR}/shadertoy/gl/renderbuffer.hpp
+	${INCLUDE_DIR}/shadertoy/gl/caller.hpp
+	${INCLUDE_DIR}/shadertoy/gl/buffer.hpp
+	${INCLUDE_DIR}/shadertoy/gl/program.hpp
+	${INCLUDE_DIR}/shadertoy/gl/framebuffer.hpp
+	${INCLUDE_DIR}/shadertoy/gl/resource.hpp
+	${INCLUDE_DIR}/shadertoy/gl/texture.hpp
+	${INCLUDE_DIR}/shadertoy/gl/shader.hpp
 	${SRC_DIR}/BufferConfig.cpp
 	${SRC_DIR}/ContextConfig.cpp
 	${SRC_DIR}/RenderContext.cpp
@@ -119,14 +119,14 @@ add_library(shadertoy SHARED
 	${SRC_DIR}/TextureEngine.cpp
 	${SRC_DIR}/ToyBuffer.cpp
 	${SRC_DIR}/UniformState.cpp
-	${SRC_DIR}/OpenGL/Buffer.cpp
-	${SRC_DIR}/OpenGL/Caller.cpp
-	${SRC_DIR}/OpenGL/Framebuffer.cpp
-	${SRC_DIR}/OpenGL/Program.cpp
-	${SRC_DIR}/OpenGL/Query.cpp
-	${SRC_DIR}/OpenGL/Renderbuffer.cpp
-	${SRC_DIR}/OpenGL/Shader.cpp
-	${SRC_DIR}/OpenGL/Texture.cpp
+	${SRC_DIR}/gl/buffer.cpp
+	${SRC_DIR}/gl/caller.cpp
+	${SRC_DIR}/gl/framebuffer.cpp
+	${SRC_DIR}/gl/program.cpp
+	${SRC_DIR}/gl/query.cpp
+	${SRC_DIR}/gl/renderbuffer.cpp
+	${SRC_DIR}/gl/shader.cpp
+	${SRC_DIR}/gl/texture.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/Resources.c)
 
 generate_export_header(shadertoy
@@ -231,10 +231,10 @@ install(FILES ${SHADERTOY_HEADERS}
 		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
 
-file(GLOB SHADERTOY_GL_HEADERS ${INCLUDE_DIR}/shadertoy/OpenGL/*.hpp)
+file(GLOB SHADERTOY_GL_HEADERS ${INCLUDE_DIR}/shadertoy/gl/*.hpp)
 install(FILES ${SHADERTOY_GL_HEADERS}
 		COMPONENT shadertoy-dev
-		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy/OpenGL)
+		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy/gl)
 
 # Enable warnings
 if(MSVC)

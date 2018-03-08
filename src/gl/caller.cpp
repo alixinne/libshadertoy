@@ -4,7 +4,7 @@
 #include <epoxy/gl.h>
 
 #include "shadertoy/ShadertoyError.hpp"
-#include "shadertoy/OpenGL/Caller.hpp"
+#include "shadertoy/gl/caller.hpp"
 
 #if HAS_UNWIND
 #include <libunwind.h>
@@ -12,9 +12,9 @@
 
 #define ERROR_PREFIX "OpenGL error: "
 
-using namespace shadertoy::OpenGL;
+using namespace shadertoy::gl;
 
-std::string glErrorToString(GLenum error, const std::string &extraMsg)
+std::string gl_error_to_string(GLenum error, const std::string &extraMsg)
 {
 	std::stringstream ss;
 	ss << ERROR_PREFIX;
@@ -58,16 +58,16 @@ std::string glErrorToString(GLenum error, const std::string &extraMsg)
 	return ss.str();
 }
 
-OpenGLError::OpenGLError(GLenum error, const std::string &extraMsg)
-	: ShadertoyError(glErrorToString(error, extraMsg))
+opengl_error::opengl_error(GLenum error, const std::string &extraMsg)
+	: ShadertoyError(gl_error_to_string(error, extraMsg))
 {
 }
 
 namespace shadertoy
 {
-namespace OpenGL
+namespace gl
 {
-	void CheckErrors()
+	void check_errors()
 	{
 		GLenum error = glGetError();
 		if (error != GL_NO_ERROR)
@@ -122,9 +122,9 @@ namespace OpenGL
 					break;
 			}
 unwind_end:
-			throw OpenGLError(error, ss.str());
+			throw opengl_error(error, ss.str());
 #else
-			throw OpenGLError(error, std::string());
+			throw opengl_error(error, std::string());
 #endif
 		}
 	}

@@ -11,7 +11,7 @@
 #include <glm/glm.hpp>
 
 #include "shadertoy/ShadertoyError.hpp"
-#include "shadertoy/OpenGL.hpp"
+#include "shadertoy/gl.hpp"
 
 #include "shadertoy/BufferConfig.hpp"
 #include "shadertoy/ContextConfig.hpp"
@@ -24,7 +24,7 @@ using namespace std;
 namespace fs = boost::filesystem;
 
 using namespace shadertoy;
-using shadertoy::OpenGL::glCall;
+using shadertoy::gl::gl_call;
 
 ToyBuffer::ToyBuffer(RenderContext &context,
 					 const std::string &id)
@@ -41,19 +41,19 @@ void ToyBuffer::Initialize(int width, int height)
 	auto &config(context.GetConfig().bufferConfigs[id]);
 
 	// Attach the vertex shader for the screen quad
-	program.AttachShader(context.GetScreenQuadVertexShader());
+	program.attach_shader(context.GetScreenQuadVertexShader());
 
 	// Load the fragment shader for this buffer
 	context.BuildBufferShader(id, fs);
 
 	// Attach shader
-	program.AttachShader(fs);
+	program.attach_shader(fs);
 
 	// Link the program
-	program.Link();
+	program.link();
 
 	// Use the program
-	program.Use();
+	program.use();
 
 	// Dump the program if requested
 	if (context.GetConfig().dumpShaders)
@@ -63,7 +63,7 @@ void ToyBuffer::Initialize(int width, int height)
 		GLuint progId = GLuint(program);
 		// Allocate buffer
 		GLint len, actLen;
-		glCall(glGetProgramiv, progId, GL_PROGRAM_BINARY_LENGTH, &len);
+		gl_call(glGetProgramiv, progId, GL_PROGRAM_BINARY_LENGTH, &len);
 
 		char *progBinary = new char[len];
 		// Get binary
@@ -99,7 +99,7 @@ void ToyBuffer::Initialize(int width, int height)
 		delete[] progBinary;
 	}
 
-	// Bind uniform inputs
+	// bind uniform inputs
 	boundInputs = context.GetBoundInputs(program);
 
 	// Allocate render textures
@@ -113,9 +113,9 @@ void ToyBuffer::AllocateTextures(int width, int height)
 	InitializeRenderTexture(targetTex, width, height);
 
 	// Setup render buffers
-	targetTex->Bind(GL_TEXTURE_2D);
-	targetRbo.Bind(GL_RENDERBUFFER);
-	targetRbo.Storage(GL_DEPTH_COMPONENT, width, height);
+	targetTex->bind(GL_TEXTURE_2D);
+	targetRbo.bind(GL_RENDERBUFFER);
+	targetRbo.storage(GL_DEPTH_COMPONENT, width, height);
 }
 
 void ToyBuffer::Render()
@@ -123,17 +123,17 @@ void ToyBuffer::Render()
 	auto &config(context.GetConfig().bufferConfigs[id]);
 
 	// Update renderbuffer to use the correct target texture
-	targetTex->Bind(GL_TEXTURE_2D);
-	targetRbo.Bind(GL_RENDERBUFFER);
-	targetFbo.Bind(GL_DRAW_FRAMEBUFFER);
+	targetTex->bind(GL_TEXTURE_2D);
+	targetRbo.bind(GL_RENDERBUFFER);
+	targetFbo.bind(GL_DRAW_FRAMEBUFFER);
 
-	targetFbo.Texture(GL_COLOR_ATTACHMENT0, *targetTex, 0);
+	targetFbo.texture(GL_COLOR_ATTACHMENT0, *targetTex, 0);
 
 	// Prepare the render target
 	context.Clear(0.f);
 
 	// Setup program and its uniforms
-	program.Use();
+	program.use();
 
 	// Override values in bound inputs 0 (ShaderToy inputs)
 	auto &resolutions(static_pointer_cast<ShaderInputsType::BoundInputs>(boundInputs[0])
@@ -142,26 +142,26 @@ void ToyBuffer::Render()
 	// Setup the texture targets
 	for (int i = 0; i < 4; ++i)
 	{
-		glCall(glActiveTexture, GL_TEXTURE0 + i + 1);
+		gl_call(glActiveTexture, GL_TEXTURE0 + i + 1);
 		// Following have side effects, ensure it runs after we selected the new
 		// texture unit
 		auto &texture = context.GetTextureEngine()
 							   .GetInputTexture(config.inputConfig[i]);
-		texture.Bind(GL_TEXTURE_2D);
+		texture.bind(GL_TEXTURE_2D);
 
-		glCall(glGetTexLevelParameterfv, GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &resolutions[i][0]);
-		glCall(glGetTexLevelParameterfv, GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &resolutions[i][1]);
+		gl_call(glGetTexLevelParameterfv, GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &resolutions[i][0]);
+		gl_call(glGetTexLevelParameterfv, GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &resolutions[i][1]);
 		resolutions[i][2] = 1.0f;
 	}
 
 	// Try to set iTimeDelta
 	GLint available = 0;
-	timeDeltaQuery.GetObjectiv(GL_QUERY_RESULT_AVAILABLE, &available);
+	timeDeltaQuery.get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
 	if (available)
 	{
 		// Result available, set uniform value
 		GLuint64 timeDelta;
-		timeDeltaQuery.GetObjectui64v(GL_QUERY_RESULT, &timeDelta);
+		timeDeltaQuery.get_object_ui64v(GL_QUERY_RESULT, &timeDelta);
 		static_pointer_cast<ShaderInputsType::BoundInputs>(boundInputs[0])
 			->State.V<iTimeDelta>() = timeDelta / 1e9;
 	}
@@ -184,33 +184,33 @@ unsigned long long ToyBuffer::GetElapsedTime()
 	// Wait for result to be available
 	while (!available)
 	{
-		timeDeltaQuery.GetObjectiv(GL_QUERY_RESULT_AVAILABLE, &available);
+		timeDeltaQuery.get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
 	}
 
 	// Fetch result
 	GLuint64 result;
-	timeDeltaQuery.GetObjectui64v(GL_QUERY_RESULT, &result);
+	timeDeltaQuery.get_object_ui64v(GL_QUERY_RESULT, &result);
 
 	return result;
 }
 
-void ToyBuffer::InitializeRenderTexture(shared_ptr<OpenGL::Texture> &texptr, int width, int height)
+void ToyBuffer::InitializeRenderTexture(shared_ptr<gl::texture> &texptr, int width, int height)
 {
 	// Only create a texture object if it is necessary
 	if (!texptr)
-		texptr = make_shared<OpenGL::Texture>(GL_TEXTURE_2D);
+		texptr = make_shared<gl::texture>(GL_TEXTURE_2D);
 
 	// Allocate texture storage according to width/height
-	texptr->Parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	texptr->Parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	texptr->Parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	texptr->Parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	texptr->Image2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_BGRA,
+	texptr->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	texptr->parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	texptr->parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	texptr->parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	texptr->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_BGRA,
 		GL_UNSIGNED_BYTE, nullptr);
 
 	// Clear the frame accumulator so it doesn't contain garbage
 	float black[4] = {0.f};
-	glCall(glClearTexImage, GLuint(*texptr),
+	gl_call(glClearTexImage, GLuint(*texptr),
 		0,
 		GL_BGRA,
 		GL_FLOAT,

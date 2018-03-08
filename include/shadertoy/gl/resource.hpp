@@ -1,28 +1,28 @@
-#ifndef _SHADERTOY_OPENGL_RESOURCE_HPP_
-#define _SHADERTOY_OPENGL_RESOURCE_HPP_
+#ifndef _SHADERTOY_GL_RESOURCE_HPP_
+#define _SHADERTOY_GL_RESOURCE_HPP_
 
 #include "shadertoy/pre.hpp"
-#include "shadertoy/OpenGL/Caller.hpp"
+#include "shadertoy/gl/caller.hpp"
 
 namespace shadertoy
 {
-namespace OpenGL
+namespace gl
 {
 	/// Allocation function that creates single objects
-	typedef GLuint (*SingleResourceCreator)();
+	typedef GLuint (*single_resource_creator)();
 	/// Allocation function that creates multiple objects
-	typedef void (*MultiResourceCreator)(GLsizei, GLuint*);
+	typedef void (*multi_resource_creator)(GLsizei, GLuint*);
 
 	/// De-allocation function that frees a single object
-	typedef void (*SingleResourceDeleter)(GLuint);
+	typedef void (*single_resource_deleter)(GLuint);
 	//// De-allocation function that frees multiple objects
-	typedef void (*MultiResourceDeleter)(GLsizei, const GLuint*);
+	typedef void (*multi_resource_deleter)(GLsizei, const GLuint*);
 
 	/**
 	 * @brief Represents a resource that is allocated one by one.
 	 */
-	template<SingleResourceCreator *CreateFunction, SingleResourceDeleter *DeleteFunction>
-	class shadertoy_EXPORT SingleAllocator
+	template<single_resource_creator *CreateFunction, single_resource_deleter *DestroyFunction>
+	class shadertoy_EXPORT single_allocator
 	{
 	public:
 		/**
@@ -30,23 +30,23 @@ namespace OpenGL
 		 * @return The id of the created resource
 		 * @throws OpenGLError
 		 */
-		GLuint Create()
-		{ return glCall(*CreateFunction); }
+		GLuint create()
+		{ return gl_call(*CreateFunction); }
 
 		/**
 		 * @brief Deletes the given resource.
 		 * @param resource Resource to delete
 		 * @throws OpenGLError
 		 */
-		void Delete(GLuint resource)
-		{ glCall(*DeleteFunction, resource); }
+		void destroy(GLuint resource)
+		{ gl_call(*DestroyFunction, resource); }
 	};
 
 	/**
 	 * @brief Represents a resource that is allocated in batches.
 	 */
-	template<MultiResourceCreator *CreateFunction, MultiResourceDeleter *DeleteFunction>
-	class shadertoy_EXPORT MultiAllocator
+	template<multi_resource_creator *CreateFunction, multi_resource_deleter *DestroyFunction>
+	class shadertoy_EXPORT multi_allocator
 	{
 	public:
 		/**
@@ -54,10 +54,10 @@ namespace OpenGL
 		 * @return The id of the created resource
 		 * @throws OpenGLError
 		 */
-		GLuint Create()
+		GLuint create()
 		{
 			GLuint res;
-			glCall(*CreateFunction, 1, &res);
+			gl_call(*CreateFunction, 1, &res);
 			return res;
 		}
 
@@ -66,8 +66,8 @@ namespace OpenGL
 		 * @param resource Resource to delete
 		 * @throws OpenGLError
 		 */
-		void Delete(GLuint resource)
-		{ glCall(*DeleteFunction, 1, &resource); }
+		void destroy(GLuint resource)
+		{ gl_call(*DestroyFunction, 1, &resource); }
 	};
 
 	/**
@@ -75,34 +75,36 @@ namespace OpenGL
 	 * semantics, so only one Resource object can be the owner of a
 	 * corresponding OpenGL resource, such as a texture, program, shader, etc.
 	 */
-	template<typename TFinal, typename TAllocator, typename TError>
-	class shadertoy_EXPORT Resource
+	template<typename Final, typename Allocator, typename Error>
+	class shadertoy_EXPORT resource
 	{
 	public:
 		/// Type of the allocator object
-		typedef TAllocator Allocator;
+		typedef Allocator allocator_type;
 		/// Type of the null reference error
-		typedef TError ErrorType;
+		typedef Error error_type;
+		/// Type of the subclassed resource type
+		typedef Final resource_type;
 
 		/**
 		 * @brief Creates a resource using the given allocator.
 		 *
-		 * @throws OpenGLError
+		 * @throws opengl_error
 		 */
-		Resource()
-			: hasRes(true),
-			resId(TAllocator().Create())
+		resource()
+			: has_res_(true),
+			res_id_(allocator_type().create())
 		{
 		}
 
 		/**
 		 * @brief Destroys the object referenced by this resource.
 		 *
-		 * @throws OpenGLError
+		 * @throws opengl_error
 		 */
-		~Resource()
+		~resource()
 		{
-			Free();
+			free();
 		}
 
 		/**
@@ -112,28 +114,28 @@ namespace OpenGL
 		 *         false otherwise.
 		 */
 		operator bool() const
-		{ return hasRes; }
+		{ return has_res_; }
 
 		/**
 		 * @brief Returns the underlying texture identifier referenced by this texture
 		 * object. Throws an exception if this object does not hold a reference.
 		 *
-		 * @throws TError
+		 * @throws error_type
 		 */
-		operator GLuint() const throw(TError)
+		operator GLuint() const throw(error_type)
 		{
-			if (!hasRes)
+			if (!has_res_)
 			{
-				throw TError();
+				throw error_type();
 			}
 
-			return resId;
+			return res_id_;
 		}
 
 		/// Deleted copy constructor
-		Resource(const Resource &) = delete;
+		resource(const resource &) = delete;
 		/// Deleted copy operator
-		Resource &operator=(const Resource &) = delete;
+		resource &operator=(const resource &) = delete;
 
 		/**
 		 * @brief Move constructor
@@ -141,12 +143,12 @@ namespace OpenGL
 		 *
 		 * @throws OpenGLError
 		 */
-		Resource(Resource &&other)
+		resource(resource &&other)
 		{
-			this->hasRes = other.hasRes;
-			this->resId = other.resId;
+			this->has_res_ = other.has_res_;
+			this->res_id_ = other.res_id_;
 
-			other.hasRes = false;
+			other.has_res_ = false;
 		}
 
 		/**
@@ -155,14 +157,14 @@ namespace OpenGL
 		 *
 		 * @throws OpenGLError
 		 */
-		TFinal &operator=(TFinal &&other)
+		resource_type &operator=(resource_type &&other)
 		{
 			if (this != &other)
 			{
-				this->Free();
+				this->free();
 
-				this->hasRes = other.hasRes;
-				this->resId = other.resId;
+				this->has_res_ = other.hasRes;
+				this->res_id_ = other.resId;
 
 				other.hasRes = false;
 			}
@@ -176,9 +178,9 @@ namespace OpenGL
 		 *
 		 * @param  texId Resource id to reference
 		 */
-		explicit Resource(GLuint resId)
-			: hasRes(true),
-			resId(resId)
+		explicit resource(GLuint resId)
+			: has_res_(true),
+			res_id_(resId)
 		{}
 
 	private:
@@ -187,19 +189,19 @@ namespace OpenGL
 		 *
 		 * @throws OpenGLError
 		 */
-		void Free()
+		void free()
 		{
-			if (hasRes)
+			if (has_res_)
 			{
-				TAllocator().Delete(resId);
-				hasRes = false;
+				allocator_type().destroy(res_id_);
+				has_res_ = false;
 			}
 		}
 
-		bool hasRes;
-		GLuint resId;
+		bool has_res_;
+		GLuint res_id_;
 	};
 }
 }
 
-#endif /* _SHADERTOY_OPENGL_RESOURCE_HPP_ */
+#endif /* _SHADERTOY_GL_RESOURCE_HPP_ */
