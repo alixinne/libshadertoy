@@ -19,13 +19,13 @@
 
 #include "shadertoy/pre.hpp"
 
-#include "shadertoy/ShadertoyError.hpp"
+#include "shadertoy/shadertoy_error.hpp"
 
 #include "shadertoy/gl.hpp"
 
-#include "shadertoy/BufferConfig.hpp"
-#include "shadertoy/ContextConfig.hpp"
-#include "shadertoy/UniformState.hpp"
-#include "shadertoy/ToyBuffer.hpp"
-#include "shadertoy/TextureEngine.hpp"
-#include "shadertoy/RenderContext.hpp"
+#include "shadertoy/buffer_config.hpp"
+#include "shadertoy/context_config.hpp"
+#include "shadertoy/uniform_state.hpp"
+#include "shadertoy/toy_buffer.hpp"
+#include "shadertoy/texture_engine.hpp"
+#include "shadertoy/render_context.hpp"

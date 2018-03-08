@@ -4,14 +4,14 @@
 
 #include <glm/glm.hpp>
 
-#include "shadertoy/ShadertoyError.hpp"
+#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl/shader.hpp"
 #include "shadertoy/gl/program.hpp"
 
 using namespace shadertoy::gl;
 
 null_program_error::null_program_error()
-	: ShadertoyError("An attempt was made to dereference a null program")
+	: shadertoy_error("An attempt was made to dereference a null program")
 {
 }
 
@@ -138,14 +138,14 @@ bool uniform_location::set_value(size_t count, const glm::vec4 *v)
 }
 
 program_link_error::program_link_error(GLuint programId, const std::string &log)
-	: ShadertoyError("OpenGL program linking error"),
+	: shadertoy_error("OpenGL program linking error"),
 	program_id_(programId),
 	log_(log)
 {
 }
 
 program_validate_error::program_validate_error(GLuint programId, const std::string &log)
-	: ShadertoyError("OpenGL program validation error"),
+	: shadertoy_error("OpenGL program validation error"),
 	program_id_(programId),
 	log_(log)
 {

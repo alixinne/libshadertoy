@@ -10,7 +10,7 @@ namespace gl
 	/**
 	 * @brief Error thrown when an OpenGL operation fails.
 	 */
-	class shadertoy_EXPORT opengl_error : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT opengl_error : public shadertoy::shadertoy_error
 	{
 	public:
 		/**

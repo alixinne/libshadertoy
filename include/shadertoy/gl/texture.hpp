@@ -10,7 +10,7 @@ namespace gl
 	/**
 	 * @brief Error thrown when an attempt is made to dereference a null texture.
 	 */
-	class shadertoy_EXPORT null_texture_error : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT null_texture_error : public shadertoy::shadertoy_error
 	{
 	public:
 		/**

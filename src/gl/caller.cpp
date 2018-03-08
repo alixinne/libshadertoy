@@ -3,7 +3,7 @@
 
 #include <epoxy/gl.h>
 
-#include "shadertoy/ShadertoyError.hpp"
+#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl/caller.hpp"
 
 #if HAS_UNWIND
@@ -59,7 +59,7 @@ std::string gl_error_to_string(GLenum error, const std::string &extraMsg)
 }
 
 opengl_error::opengl_error(GLenum error, const std::string &extraMsg)
-	: ShadertoyError(gl_error_to_string(error, extraMsg))
+	: shadertoy_error(gl_error_to_string(error, extraMsg))
 {
 }
 

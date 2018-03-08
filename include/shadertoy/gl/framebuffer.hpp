@@ -10,7 +10,7 @@ namespace gl
 	/**
 	 * @brief Error thrown when an attempt is made to dereference a null framebuffer.
 	 */
-		class shadertoy_EXPORT null_framebuffer_error : public shadertoy::ShadertoyError
+		class shadertoy_EXPORT null_framebuffer_error : public shadertoy::shadertoy_error
 	{
 	public:
 		/**

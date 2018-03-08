@@ -1,13 +1,13 @@
 #include <epoxy/gl.h>
 
-#include "shadertoy/ShadertoyError.hpp"
+#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl/texture.hpp"
 #include "shadertoy/gl/framebuffer.hpp"
 
 using namespace shadertoy::gl;
 
 null_framebuffer_error::null_framebuffer_error()
-	: ShadertoyError("An attempt was made to dereference a null framebuffer")
+	: shadertoy_error("An attempt was made to dereference a null framebuffer")
 {
 }
 

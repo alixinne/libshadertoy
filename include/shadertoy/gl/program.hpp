@@ -10,7 +10,7 @@ namespace gl
 	/**
 	 * @brief Error thrown when an attempt is made to dereference a null program object.
 	 */
-	class shadertoy_EXPORT null_program_error : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT null_program_error : public shadertoy::shadertoy_error
 	{
 	public:
 		/**
@@ -128,7 +128,7 @@ namespace gl
 	/**
 	 * @brief Error thrown when the linking step of a program fails.
 	 */
-	class shadertoy_EXPORT program_link_error : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT program_link_error : public shadertoy::shadertoy_error
 	{
 	public:
 		/**
@@ -165,7 +165,7 @@ namespace gl
 	/**
 	 * @brief Error thrown when the validation step of a program fails.
 	 */
-	class shadertoy_EXPORT program_validate_error : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT program_validate_error : public shadertoy::shadertoy_error
 	{
 	public:
 		/**

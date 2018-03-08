@@ -1,12 +1,12 @@
 #include <epoxy/gl.h>
 
-#include "shadertoy/ShadertoyError.hpp"
+#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl/query.hpp"
 
 using namespace shadertoy::gl;
 
 null_query_error::null_query_error()
-	: ShadertoyError("An attempt was made to dereference a null query")
+	: shadertoy_error("An attempt was made to dereference a null query")
 {
 }
 

@@ -9,10 +9,10 @@
 
 #include <glm/glm.hpp>
 
-#include "shadertoy/ShadertoyError.hpp"
+#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl.hpp"
 
-#include "shadertoy/UniformState.hpp"
+#include "shadertoy/uniform_state.hpp"
 
 #define IMPLEMENT_UNIFORM_STATE
-#include "shadertoy/UniformState_impl.hpp"
+#include "shadertoy/uniform_state_impl.hpp"

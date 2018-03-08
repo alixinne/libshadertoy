@@ -10,7 +10,7 @@ namespace gl
 	/**
 	 * @brief Error thrown when an attempt is made to obtain the id of a null buffer.
 	 */
-	class shadertoy_EXPORT null_buffer_error : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT null_buffer_error : public shadertoy::shadertoy_error
 	{
 	public:
 		/**

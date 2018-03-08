@@ -18,44 +18,44 @@ namespace shadertoy
  * resolution should require generating a new instance of this texture.
  */
 typedef std::function<std::shared_ptr<gl::texture>(
-	const InputConfig &inputConfig,
-	bool &skipTextureOptions,
-	bool &skipCache,
-	bool &framebufferSized)> InputHandler;
+    const InputConfig &inputConfig, bool &skipTextureOptions, bool &skipCache,
+    bool &framebufferSized)>
+    InputHandler;
 
 /**
  * @brief      Represents the engine responsible for loading input textures for
  *             the current rendering context.
  */
-class shadertoy_EXPORT TextureEngine
+class shadertoy_EXPORT texture_engine
 {
 	/// Context configuration reference
-	ContextConfig &config;
+        context_config &config;
 
-	/// Input texture state
-	std::map<std::string, std::tuple<std::shared_ptr<gl::texture>, bool> > inputTextures;
+        /// Input texture state
+        std::map<std::string, std::tuple<std::shared_ptr<gl::texture>, bool>>
+            inputTextures;
 
-	/// The empty texture
-	std::shared_ptr<gl::texture> emptyTexture;
+        /// The empty texture
+        std::shared_ptr<gl::texture> emptyTexture;
 
-	/// Registered texture handlers
-	std::map<std::string, InputHandler> handlers;
+        /// Registered texture handlers
+        std::map<std::string, InputHandler> handlers;
 
-	// Default texture handlers
-	std::shared_ptr<gl::texture> SOILTextureHandler(const InputConfig &inputConfig,
-		bool &skipTextureOptions,
-		bool &skipCache,
-		bool &framebufferSized);
-	std::shared_ptr<gl::texture> NoiseTextureHandler(const InputConfig &inputConfig,
-		bool &skipTextureOptions,
-		bool &skipCache,
-		bool &framebufferSized);
-	std::shared_ptr<gl::texture> CheckerTextureHandler(const InputConfig &inputConfig,
-		bool &skipTextureOptions,
-		bool &skipCache,
-		bool &framebufferSized);
+        // Default texture handlers
+        std::shared_ptr<gl::texture>
+        SOILTextureHandler(const InputConfig &inputConfig,
+                           bool &skipTextureOptions, bool &skipCache,
+                           bool &framebufferSized);
+        std::shared_ptr<gl::texture>
+        NoiseTextureHandler(const InputConfig &inputConfig,
+                            bool &skipTextureOptions, bool &skipCache,
+                            bool &framebufferSized);
+        std::shared_ptr<gl::texture>
+        CheckerTextureHandler(const InputConfig &inputConfig,
+                              bool &skipTextureOptions, bool &skipCache,
+                              bool &framebufferSized);
 
-protected:
+      protected:
 	/**
 	 * @brief      Applies filtering and wrapping options of a given input onto
 	 *             an already allocated OpenGL texture object.
@@ -63,23 +63,23 @@ protected:
 	 * @param[in]  inputConfig  The input configuration for this texture
 	 * @param      texture      The texture to apply the options to
 	 */
-	void ApplyTextureOptions(const InputConfig &inputConfig,
-							 gl::texture &texture);
+        void ApplyTextureOptions(const InputConfig &inputConfig,
+                                 gl::texture &texture);
 
-public:
+      public:
 	/**
 	 * @brief      Initialize a new instance of the texture engine class.
 	 *
 	 * @param      config  Context configuration to use for this engine.
 	 */
-	TextureEngine(ContextConfig &config);
+	texture_engine(context_config &config);
 
 	/**
 	 * @brief      Initialize this texture engine
 	 */
-	void Initialize();
+        void Initialize();
 
-	/**
+        /**
 	 * @brief      Clears loaded textures.
 	 *
 	 * @param      framebufferSizeChange  true if this event is being triggered
@@ -90,9 +90,9 @@ public:
 	 *                                    should be reloaded, including
 	 *                                    framebuffer-independent textures.
 	 */
-	void ClearState(bool framebufferSizeChange = false);
+        void ClearState(bool framebufferSizeChange = false);
 
-	/**
+        /**
 	 * @brief      Get the texture for the given input
 	 *
 	 * @param[in]  inputConfig  The input configuration
@@ -100,15 +100,15 @@ public:
 	 * @return     A texture instance to be used for rendering. If the actual
 	 *             input configuration is invalid, an empty texture is returned.
 	 */
-	gl::texture &GetInputTexture(const InputConfig &inputConfig);
+        gl::texture &GetInputTexture(const InputConfig &inputConfig);
 
-	/**
+        /**
 	 * @brief      Registers a texture type handler with the given name.
 	 *
 	 * @param[in]  name     Name (type ID) of the texture handler
 	 * @param[in]  handler  Handler function. See InputHandler for more details.
 	 */
-	void RegisterHandler(const std::string &name, InputHandler handler);
+        void RegisterHandler(const std::string &name, InputHandler handler);
 };
 
 }

@@ -1,12 +1,12 @@
 #include <epoxy/gl.h>
 
-#include "shadertoy/ShadertoyError.hpp"
+#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl/buffer.hpp"
 
 using namespace shadertoy::gl;
 
 null_buffer_error::null_buffer_error()
-	: ShadertoyError("An attempt was made to dereference a null buffer")
+	: shadertoy_error("An attempt was made to dereference a null buffer")
 {
 }
 

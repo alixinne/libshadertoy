@@ -12,8 +12,8 @@ namespace shadertoy
 
 		class opengl_error;
 
-		class NullFramebufferError;
-		class framebuffer;
+                class NullFramebufferError;
+                class framebuffer;
 
 		class null_program_error;
 		class uniform_location;
@@ -24,10 +24,10 @@ namespace shadertoy
 		class null_query_error;
 		class query;
 
-		class NullRenderbufferError;
-		class Renderbuffer;
+                class NullRenderbufferError;
+                class Renderbuffer;
 
-		class null_shader_error;
+                class null_shader_error;
 		class shader_compilation_error;
 		class shader_allocator;
 		class shader;
@@ -37,14 +37,14 @@ namespace shadertoy
 		class texture;
 	}
 
-	struct BufferConfig;
-	struct InputConfig;
-	struct ContextConfig;
-	class RenderContext;
-	class ShaderCompiler;
-	class ShadertoyError;
-	class TextureEngine;
-	class ToyBuffer;
+	struct buffer_config;
+        struct InputConfig;
+        struct context_config;
+	class render_context;
+	class shader_compiler;
+	class shadertoy_error;
+	class texture_engine;
+	class toy_buffer;
 }
 
 #endif /* _SHADERTOY_PRE_HPP_ */

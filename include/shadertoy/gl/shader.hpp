@@ -10,7 +10,7 @@ namespace gl
 	/**
 	 * @brief Error thrown when an attempt is made to dereference a null shader object.
 	 */
-	class shadertoy_EXPORT null_shader_error : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT null_shader_error : public shadertoy::shadertoy_error
 	{
 	public:
 		/**
@@ -22,7 +22,7 @@ namespace gl
 	/**
 	 * @brief Error thrown when the compilation of a shader fails.
 	 */
-	class shadertoy_EXPORT shader_compilation_error : public shadertoy::ShadertoyError
+	class shadertoy_EXPORT shader_compilation_error : public shadertoy::shadertoy_error
 	{
 	public:
 		/**

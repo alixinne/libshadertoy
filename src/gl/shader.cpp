@@ -3,19 +3,19 @@
 
 #include <epoxy/gl.h>
 
-#include "shadertoy/ShadertoyError.hpp"
+#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl/caller.hpp"
 #include "shadertoy/gl/shader.hpp"
 
 using namespace shadertoy::gl;
 
 null_shader_error::null_shader_error()
-	: ShadertoyError("An attempt was made to dereference a null shader")
+	: shadertoy_error("An attempt was made to dereference a null shader")
 {
 }
 
 shader_compilation_error::shader_compilation_error(GLuint shaderId, const std::string &log)
-	: ShadertoyError("OpenGL shader compilation error"),
+	: shadertoy_error("OpenGL shader compilation error"),
 	shader_id_(shaderId),
 	log_(log)
 {

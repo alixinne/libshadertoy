@@ -9,38 +9,38 @@ namespace shadertoy
 /**
  * @brief      Represents a ShaderToy-like buffer with inputs, programs and output
  */
-class shadertoy_EXPORT ToyBuffer
+class shadertoy_EXPORT toy_buffer
 {
 private:
 	/// Render context
-	RenderContext &context;
+  render_context &context;
 
-	/// Buffer identifier
-	const std::string id;
+  /// Buffer identifier
+  const std::string id;
 
-	/// Target framebuffer
-	gl::framebuffer targetFbo;
+  /// Target framebuffer
+  gl::framebuffer targetFbo;
 
-	/// Target renderbuffer
-	gl::renderbuffer targetRbo;
+  /// Target renderbuffer
+  gl::renderbuffer targetRbo;
 
-	/// Source texture
-	std::shared_ptr<gl::texture> sourceTex;
+  /// Source texture
+  std::shared_ptr<gl::texture> sourceTex;
 
-	/// Target texture
-	std::shared_ptr<gl::texture> targetTex;
+  /// Target texture
+  std::shared_ptr<gl::texture> targetTex;
 
-	/// Buffer program
-	gl::program program;
+  /// Buffer program
+  gl::program program;
 
-	/// Fragment shader
-	gl::shader fs;
+  /// Fragment shader
+  gl::shader fs;
 
-	/// Bound uniform state
-	std::vector<std::shared_ptr<shadertoy::BoundInputsBase>> boundInputs;
+  /// Bound uniform state
+  std::vector<std::shared_ptr<shadertoy::BoundInputsBase>> boundInputs;
 
-	/// Query for iTimeDelta execution time
-	gl::query timeDeltaQuery;
+  /// Query for iTimeDelta execution time
+  gl::query timeDeltaQuery;
 
 public:
 	/**
@@ -49,7 +49,7 @@ public:
 	 * @param      context  Rendering context
 	 * @param[in]  id       Identifier for this buffer
 	 */
-	ToyBuffer(RenderContext &context, const std::string &id);
+	toy_buffer(render_context &context, const std::string &id);
 
 	/**
 	 * @brief      Prepare the current buffer for rendering
@@ -57,39 +57,41 @@ public:
 	 * @param[in]  width   Width of the rendering textures for this buffer.
 	 * @param[in]  height  Height of the rendering textures for this buffer.
 	 */
-	void Initialize(int width, int height);
+        void Initialize(int width, int height);
 
-	/**
+        /**
 	 * @brief      Allocates the textures for this buffer. Note that the current
 	 *             contents of previous textures are discarded.
 	 *
 	 * @param[in]  width   Width of the texture
 	 * @param[in]  height  Height of the texture
 	 */
-	void AllocateTextures(int width, int height);
+        void AllocateTextures(int width, int height);
 
-	/**
+        /**
 	 * @brief      Render the buffer using the current OpenGL context
 	 */
-	void Render();
+        void Render();
 
-	/**
+        /**
 	 * @brief      Get a reference to the source texture for this buffer
 	 *
 	 * @return     Source texture for this buffer.
 	 */
-	inline std::shared_ptr<gl::texture> GetSourceTexture() const
-	{ return sourceTex; }
+        inline std::shared_ptr<gl::texture> GetSourceTexture() const {
+          return sourceTex;
+        }
 
-	/**
+        /**
 	 * @brief      Get a reference to the current texture for this buffer
 	 *
 	 * @return     Target (current) texture for this buffer.
 	 */
-	inline std::shared_ptr<gl::texture> GetTargetTexture() const
-	{ return targetTex; }
+        inline std::shared_ptr<gl::texture> GetTargetTexture() const {
+          return targetTex;
+        }
 
-	/**
+        /**
 	 * @brief      Obtain the duration of the last rendering of this buffer, in
 	 *             nanoseconds. This method may block while waiting for the
 	 *             query object to be available.
@@ -97,10 +99,11 @@ public:
 	 * @return     Number of nanoseconds elapsed during the rendering of this
 	 *             buffer.
 	 */
-	unsigned long long GetElapsedTime();
+        unsigned long long GetElapsedTime();
 
-private:
-	void InitializeRenderTexture(std::shared_ptr<gl::texture> &tex, int width, int height);
+      private:
+        void InitializeRenderTexture(std::shared_ptr<gl::texture> &tex,
+                                     int width, int height);
 };
 
 }

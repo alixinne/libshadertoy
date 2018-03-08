@@ -10,7 +10,7 @@ namespace shadertoy
 /**
  * @brief Base error class for libshadertoy errors.
  */
-class ShadertoyError : public std::runtime_error
+class shadertoy_error : public std::runtime_error
 {
 public:
 	/**
@@ -18,13 +18,13 @@ public:
 	 *
 	 * @param  what_arg Error message
 	 */
-	explicit ShadertoyError(const std::string &what_arg);
+	explicit shadertoy_error(const std::string &what_arg);
 	/**
 	 * @brief Initializes a new instance of the ShadertoyError class.
 	 *
 	 * @param  what_arg Error message
 	 */
-	explicit ShadertoyError(const char *what_arg);
+	explicit shadertoy_error(const char *what_arg);
 };
 }
 

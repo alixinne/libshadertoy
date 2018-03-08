@@ -1,4 +1,4 @@
-#include "shadertoy/UniformState_decl.hpp"
+#include "shadertoy/uniform_state_decl.hpp"
 
 namespace shadertoy
 {

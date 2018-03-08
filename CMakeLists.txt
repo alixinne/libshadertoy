@@ -69,13 +69,13 @@ link_directories(${EPOXY_LIBDIR})
 # Copy shaders to source
 file(GLOB RESOURCES_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*)
 add_custom_command(
-	OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/Resources.c
-		   ${CMAKE_CURRENT_BINARY_DIR}/Resources.h
+	OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/resources.c
+		   ${CMAKE_CURRENT_BINARY_DIR}/resources.h
 	DEPENDS ${RESOURCES_SOURCES}
 	COMMAND ${CMAKE_COMMAND}
 		-DRESOURCES_INPUT=${CMAKE_CURRENT_SOURCE_DIR}/shaders
-		-DRESOURCES_OUTPUT=${CMAKE_CURRENT_BINARY_DIR}/Resources.c
-		-DRESOURCES_H_OUTPUT=${CMAKE_CURRENT_BINARY_DIR}/Resources.h
+		-DRESOURCES_OUTPUT=${CMAKE_CURRENT_BINARY_DIR}/resources.c
+		-DRESOURCES_H_OUTPUT=${CMAKE_CURRENT_BINARY_DIR}/resources.h
 		-DRESOURCES_H_ID=RESOURCES_H
 		-P ${CMAKE_MODULE_PATH}/resources.cmake)
 
@@ -89,18 +89,18 @@ set(shadertoy_LIBRARIES
 
 # Main libshadertoy
 add_library(shadertoy SHARED
-	${INCLUDE_DIR}/shadertoy/BufferConfig.hpp
-	${INCLUDE_DIR}/shadertoy/ContextConfig.hpp
+	${INCLUDE_DIR}/shadertoy.hpp
 	${INCLUDE_DIR}/shadertoy/pre.hpp
-	${INCLUDE_DIR}/shadertoy/RenderContext.hpp
-	${INCLUDE_DIR}/shadertoy/ShaderCompiler.hpp
-	${INCLUDE_DIR}/Shadertoy.hpp
-	${INCLUDE_DIR}/shadertoy/ShadertoyError.hpp
-	${INCLUDE_DIR}/shadertoy/TextureEngine.hpp
-	${INCLUDE_DIR}/shadertoy/ToyBuffer.hpp
-	${INCLUDE_DIR}/shadertoy/UniformState.hpp
-	${INCLUDE_DIR}/shadertoy/UniformState_decl.hpp
-	${INCLUDE_DIR}/shadertoy/UniformState_impl.hpp
+	${INCLUDE_DIR}/shadertoy/buffer_config.hpp
+	${INCLUDE_DIR}/shadertoy/context_config.hpp
+	${INCLUDE_DIR}/shadertoy/render_context.hpp
+	${INCLUDE_DIR}/shadertoy/shader_compiler.hpp
+	${INCLUDE_DIR}/shadertoy/shadertoy_error.hpp
+	${INCLUDE_DIR}/shadertoy/texture_engine.hpp
+	${INCLUDE_DIR}/shadertoy/toy_buffer.hpp
+	${INCLUDE_DIR}/shadertoy/uniform_state.hpp
+	${INCLUDE_DIR}/shadertoy/uniform_state_decl.hpp
+	${INCLUDE_DIR}/shadertoy/uniform_state_impl.hpp
 	${INCLUDE_DIR}/shadertoy/gl.hpp
 	${INCLUDE_DIR}/shadertoy/gl/query.hpp
 	${INCLUDE_DIR}/shadertoy/gl/renderbuffer.hpp
@@ -111,14 +111,14 @@ add_library(shadertoy SHARED
 	${INCLUDE_DIR}/shadertoy/gl/resource.hpp
 	${INCLUDE_DIR}/shadertoy/gl/texture.hpp
 	${INCLUDE_DIR}/shadertoy/gl/shader.hpp
-	${SRC_DIR}/BufferConfig.cpp
-	${SRC_DIR}/ContextConfig.cpp
-	${SRC_DIR}/RenderContext.cpp
-	${SRC_DIR}/ShaderCompiler.cpp
-	${SRC_DIR}/ShadertoyError.cpp
-	${SRC_DIR}/TextureEngine.cpp
-	${SRC_DIR}/ToyBuffer.cpp
-	${SRC_DIR}/UniformState.cpp
+	${SRC_DIR}/buffer_config.cpp
+	${SRC_DIR}/context_config.cpp
+	${SRC_DIR}/render_context.cpp
+	${SRC_DIR}/shader_compiler.cpp
+	${SRC_DIR}/shadertoy_error.cpp
+	${SRC_DIR}/texture_engine.cpp
+	${SRC_DIR}/toy_buffer.cpp
+	${SRC_DIR}/uniform_state.cpp
 	${SRC_DIR}/gl/buffer.cpp
 	${SRC_DIR}/gl/caller.cpp
 	${SRC_DIR}/gl/framebuffer.cpp
@@ -127,7 +127,7 @@ add_library(shadertoy SHARED
 	${SRC_DIR}/gl/renderbuffer.cpp
 	${SRC_DIR}/gl/shader.cpp
 	${SRC_DIR}/gl/texture.cpp
-	${CMAKE_CURRENT_BINARY_DIR}/Resources.c)
+	${CMAKE_CURRENT_BINARY_DIR}/resources.c)
 
 generate_export_header(shadertoy
 	BASE_NAME shadertoy
@@ -220,7 +220,7 @@ install(DIRECTORY examples
 		PATTERN "*.dump" EXCLUDE)
 
 # Install headers
-install(FILES ${INCLUDE_DIR}/Shadertoy.hpp
+install(FILES ${INCLUDE_DIR}/shadertoy.hpp
 		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
