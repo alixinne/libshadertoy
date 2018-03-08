@@ -37,15 +37,24 @@ for DISTRIBUTION in "${DISTRIBUTIONS[@]}"; do
 
 	for ARCH in amd64 i386; do
 		echo "[==== BUILDING $DISTRIBUTION-$ARCH ====]" >&2
+		if [ "$ARCH" = "amd64" ]; then
+			ARCHALL_ARG='--arch-all'
+		else
+			ARCHALL_ARG='--no-arch-all'
+		fi
+
 		(cd $LIBDIRECTORY && sbuild --no-apt-update --no-apt-upgrade \
 									--no-apt-clean --resolve-alternatives \
 									-d $DISTRIBUTION \
 									--arch $ARCH \
+									$ARCHALL_ARG \
 									--append-to-version "-$(version_suffix $DISTRIBUTION)"
 		)
-		if [ "$?" -ne "0" ]; then
+
+		RESULT="$?"
+		if [ "$RESULT" -ne "0" ]; then
 			echo "[==== BUILD FAILED FOR $DISTRIBUTION-$ARCH ====]" >&2
-			exit $?
+			exit "$RESULT"
 		fi
 		echo "[==== MOVING ARTIFACTS $DISTRIBUTION-$ARCH ====]" >&2
 		find . -maxdepth 1 -type f -exec mv {} libshadertoy-$LIBVERSION-$DISTRIBUTION/ \;
@@ -53,7 +62,7 @@ for DISTRIBUTION in "${DISTRIBUTIONS[@]}"; do
 		echo "[==== TESTING ARTIFACTS $DISTRIBUTION-$ARCH ====]" >&2
 		(cd $LIBDIRECTORY &&
 			autopkgtest ../libshadertoy-$LIBVERSION-$DISTRIBUTION/libshadertoy*-$(version_suffix $DISTRIBUTION)_$ARCH.deb \
-			../libshadertoy-$LIBVERSION-$DISTRIBUTION/libshadertoy-dev_${LIBVERSION}-$(version_suffix $DISTRIBUTION)_$ARCH.deb \
+				../libshadertoy-$LIBVERSION-$DISTRIBUTION/libshadertoy*-$(version_suffix $DISTRIBUTION)_all.deb \
 				-- schroot $DISTRIBUTION-$ARCH-sbuild)
 		if [ "$?" -ne "0" ]; then
 			echo "[==== TESTS FAILED FOR $DISTRIBUTION-$ARCH ====]" >&2

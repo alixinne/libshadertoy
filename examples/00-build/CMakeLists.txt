@@ -9,7 +9,7 @@ pkg_search_module(glfw3 REQUIRED glfw3)
 pkg_search_module(EPOXY REQUIRED epoxy)
 
 # libshadertoy
-find_package(shadertoy REQUIRED)
+find_package(shadertoy REQUIRED 1.0.0)
 
 include_directories(
 	${OPENGL_INCLUDE_DIRS}

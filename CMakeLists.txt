@@ -155,7 +155,7 @@ string(REGEX REPLACE "i.86" "x86" UNWIND_ARCH ${COMPILER_ARCH_NAME})
 if (UNWIND_FOUND AND UNWIND_ARCH)
 	message("-- Using unwind for tracing OpenGL calls")
 
-	target_link_libraries(shadertoy ${UNWIND_LIBRARIES} unwind-${UNWIND_ARCH})
+	target_link_libraries(shadertoy PRIVATE ${UNWIND_LIBRARIES} unwind-${UNWIND_ARCH})
 	target_include_directories(shadertoy PRIVATE ${UNWIND_INCLUDE_DIRS})
 	target_compile_definitions(shadertoy PRIVATE HAS_UNWIND=1 UNW_LOCAL_ONLY=1)
 else()
@@ -164,8 +164,9 @@ else()
 endif()
 
 # Link dependencies
-target_link_libraries(shadertoy
+target_link_libraries(shadertoy PUBLIC
 	${Boost_LIBRARIES}
+	PRIVATE
 	${OPENGL_LIBRARY}
 	${EPOXY_LIBRARIES}
 	${JPEG_LIBRARIES}

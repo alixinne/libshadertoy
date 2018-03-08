@@ -1,3 +1,10 @@
+libshadertoy (1.0.0) unstable; urgency=medium
+
+  * Refactor library interface, use STL/Boost conventions
+  * Move documentation into its own package, libshadertoy-doc
+
+ -- Vincent Tavernier <vince.tavernier@gmail.com>  Thu, 08 Mar 2018 15:00:00 +0100
+
 libshadertoy (0.1.8) unstable; urgency=medium
 
   * Add support for defining uniforms at run-time. See example15-uniforms
