@@ -1,6 +1,13 @@
-#include "stdafx.hpp"
+#include <algorithm>
+#include <sstream>
+#include <vector>
+
+#include <epoxy/gl.h>
+
+#include <glm/glm.hpp>
+
 #include "shadertoy/ShadertoyError.hpp"
-#include "shadertoy/OpenGL/OpenGL.hpp"
+#include "shadertoy/OpenGL.hpp"
 
 #include "shadertoy/ShaderCompiler.hpp"
 

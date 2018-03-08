@@ -1,6 +1,17 @@
-#include "stdafx.hpp"
+#include <fstream>
+#include <map>
+#include <sstream>
+
+#include <boost/filesystem.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/variant.hpp>
+
+#include <epoxy/gl.h>
+
+#include <glm/glm.hpp>
+
 #include "shadertoy/ShadertoyError.hpp"
-#include "shadertoy/OpenGL/OpenGL.hpp"
+#include "shadertoy/OpenGL.hpp"
 
 #include "shadertoy/BufferConfig.hpp"
 #include "shadertoy/ContextConfig.hpp"
@@ -8,8 +19,6 @@
 #include "shadertoy/ToyBuffer.hpp"
 #include "shadertoy/TextureEngine.hpp"
 #include "shadertoy/RenderContext.hpp"
-
-#include "Resources.h"
 
 using namespace std;
 namespace fs = boost::filesystem;

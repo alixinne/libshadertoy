@@ -1,6 +1,20 @@
-#include "stdafx.hpp"
+#include <map>
+#include <sstream>
+#include <vector>
+
+#include <boost/filesystem.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/algorithm/string.hpp>
+
+#include <SOIL/SOIL.h>
+#include <jpeglib.h>
+
+#include <epoxy/gl.h>
+
+#include <glm/glm.hpp>
+
 #include "shadertoy/ShadertoyError.hpp"
-#include "shadertoy/OpenGL/OpenGL.hpp"
+#include "shadertoy/OpenGL.hpp"
 
 #include "shadertoy/BufferConfig.hpp"
 #include "shadertoy/ContextConfig.hpp"

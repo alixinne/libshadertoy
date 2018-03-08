@@ -1,4 +1,5 @@
-#include "stdafx.hpp"
+#include <epoxy/gl.h>
+
 #include "shadertoy/ShadertoyError.hpp"
 #include "shadertoy/OpenGL/Texture.hpp"
 #include "shadertoy/OpenGL/Framebuffer.hpp"

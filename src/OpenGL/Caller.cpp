@@ -1,4 +1,8 @@
-#include "stdafx.hpp"
+#include <cstring>
+#include <sstream>
+
+#include <epoxy/gl.h>
+
 #include "shadertoy/ShadertoyError.hpp"
 #include "shadertoy/OpenGL/Caller.hpp"
 

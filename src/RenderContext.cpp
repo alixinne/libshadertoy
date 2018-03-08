@@ -1,6 +1,19 @@
-#include "stdafx.hpp"
+#include <fstream>
+#include <map>
+#include <memory>
+#include <sstream>
+
+#include <boost/log/trivial.hpp>
+#include <boost/filesystem.hpp>
+
+#include <boost/variant.hpp>
+
+#include <epoxy/gl.h>
+
+#include <glm/glm.hpp>
+
 #include "shadertoy/ShadertoyError.hpp"
-#include "shadertoy/OpenGL/OpenGL.hpp"
+#include "shadertoy/OpenGL.hpp"
 
 #include "Resources.h"
 #include "shadertoy/ContextConfig.hpp"

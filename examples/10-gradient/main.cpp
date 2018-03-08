@@ -3,7 +3,7 @@
 #include <boost/filesystem.hpp>
 #include <iostream>
 
-#include <shadertoy/Shadertoy.hpp>
+#include <Shadertoy.hpp>
 
 namespace fs = boost::filesystem;
 using shadertoy::OpenGL::glCall;

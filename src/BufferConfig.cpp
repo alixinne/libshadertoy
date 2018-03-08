@@ -1,4 +1,9 @@
-#include "stdafx.hpp"
+#include <map>
+
+#include <boost/filesystem.hpp>
+
+#include <epoxy/gl.h>
+
 #include "shadertoy/BufferConfig.hpp"
 
 using namespace std;

@@ -1,6 +1,16 @@
-#include "stdafx.hpp"
+#include <map>
+#include <memory>
+#include <sstream>
+#include <vector>
+
+#include <boost/variant.hpp>
+
+#include <epoxy/gl.h>
+
+#include <glm/glm.hpp>
+
 #include "shadertoy/ShadertoyError.hpp"
-#include "shadertoy/OpenGL/OpenGL.hpp"
+#include "shadertoy/OpenGL.hpp"
 
 #include "shadertoy/UniformState.hpp"
 

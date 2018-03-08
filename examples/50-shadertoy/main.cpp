@@ -13,7 +13,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 
-#include <shadertoy/Shadertoy.hpp>
+#include <Shadertoy.hpp>
 
 using namespace std;
 using shadertoy::OpenGL::glCall;

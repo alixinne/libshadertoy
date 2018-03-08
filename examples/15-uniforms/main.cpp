@@ -5,7 +5,7 @@
 #include <boost/filesystem.hpp>
 #include <iostream>
 
-#include <shadertoy/Shadertoy.hpp>
+#include <Shadertoy.hpp>
 
 #include "uniforms.hpp"
 

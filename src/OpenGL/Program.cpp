@@ -1,4 +1,9 @@
-#include "stdafx.hpp"
+#include <vector>
+
+#include <epoxy/gl.h>
+
+#include <glm/glm.hpp>
+
 #include "shadertoy/ShadertoyError.hpp"
 #include "shadertoy/OpenGL/Shader.hpp"
 #include "shadertoy/OpenGL/Program.hpp"

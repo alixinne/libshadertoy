@@ -1,7 +1,6 @@
 #ifndef _SHADERTOY_PRE_HPP_
 #define _SHADERTOY_PRE_HPP_
 
-#include <boost/filesystem.hpp>
 #include "shadertoy/shadertoy_export.h"
 
 namespace shadertoy

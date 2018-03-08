@@ -81,29 +81,52 @@ add_custom_command(
 
 set(shadertoy_INCLUDE_DIRS
 	${CMAKE_CURRENT_BINARY_DIR} # for Resources.h
-	${INCLUDE_DIR})
+	$<BUILD_INTERFACE:${INCLUDE_DIR}>
+	$<INSTALL_INTERFACE:include>)
 
 set(shadertoy_LIBRARIES
 	shadertoy)
 
 # Main libshadertoy
 add_library(shadertoy SHARED
-	src/BufferConfig.cpp
-	src/ContextConfig.cpp
-	src/RenderContext.cpp
-	src/ShaderCompiler.cpp
-	src/ShadertoyError.cpp
-	src/TextureEngine.cpp
-	src/ToyBuffer.cpp
-	src/UniformState.cpp
-	src/OpenGL/Buffer.cpp
-	src/OpenGL/Caller.cpp
-	src/OpenGL/Framebuffer.cpp
-	src/OpenGL/Program.cpp
-	src/OpenGL/Query.cpp
-	src/OpenGL/Renderbuffer.cpp
-	src/OpenGL/Shader.cpp
-	src/OpenGL/Texture.cpp
+	${INCLUDE_DIR}/shadertoy/BufferConfig.hpp
+	${INCLUDE_DIR}/shadertoy/ContextConfig.hpp
+	${INCLUDE_DIR}/shadertoy/pre.hpp
+	${INCLUDE_DIR}/shadertoy/RenderContext.hpp
+	${INCLUDE_DIR}/shadertoy/ShaderCompiler.hpp
+	${INCLUDE_DIR}/Shadertoy.hpp
+	${INCLUDE_DIR}/shadertoy/ShadertoyError.hpp
+	${INCLUDE_DIR}/shadertoy/TextureEngine.hpp
+	${INCLUDE_DIR}/shadertoy/ToyBuffer.hpp
+	${INCLUDE_DIR}/shadertoy/UniformState.hpp
+	${INCLUDE_DIR}/shadertoy/UniformState_decl.hpp
+	${INCLUDE_DIR}/shadertoy/UniformState_impl.hpp
+	${INCLUDE_DIR}/shadertoy/OpenGL/Query.hpp
+	${INCLUDE_DIR}/shadertoy/OpenGL/Renderbuffer.hpp
+	${INCLUDE_DIR}/shadertoy/OpenGL/Caller.hpp
+	${INCLUDE_DIR}/shadertoy/OpenGL/Buffer.hpp
+	${INCLUDE_DIR}/shadertoy/OpenGL/Program.hpp
+	${INCLUDE_DIR}/shadertoy/OpenGL/Framebuffer.hpp
+	${INCLUDE_DIR}/shadertoy/OpenGL.hpp
+	${INCLUDE_DIR}/shadertoy/OpenGL/Resource.hpp
+	${INCLUDE_DIR}/shadertoy/OpenGL/Texture.hpp
+	${INCLUDE_DIR}/shadertoy/OpenGL/Shader.hpp
+	${SRC_DIR}/BufferConfig.cpp
+	${SRC_DIR}/ContextConfig.cpp
+	${SRC_DIR}/RenderContext.cpp
+	${SRC_DIR}/ShaderCompiler.cpp
+	${SRC_DIR}/ShadertoyError.cpp
+	${SRC_DIR}/TextureEngine.cpp
+	${SRC_DIR}/ToyBuffer.cpp
+	${SRC_DIR}/UniformState.cpp
+	${SRC_DIR}/OpenGL/Buffer.cpp
+	${SRC_DIR}/OpenGL/Caller.cpp
+	${SRC_DIR}/OpenGL/Framebuffer.cpp
+	${SRC_DIR}/OpenGL/Program.cpp
+	${SRC_DIR}/OpenGL/Query.cpp
+	${SRC_DIR}/OpenGL/Renderbuffer.cpp
+	${SRC_DIR}/OpenGL/Shader.cpp
+	${SRC_DIR}/OpenGL/Texture.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/Resources.c)
 
 generate_export_header(shadertoy
@@ -196,9 +219,13 @@ install(DIRECTORY examples
 		PATTERN "*.dump" EXCLUDE)
 
 # Install headers
+install(FILES ${INCLUDE_DIR}/Shadertoy.hpp
+		COMPONENT shadertoy-dev
+		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
 file(GLOB SHADERTOY_HEADERS ${INCLUDE_DIR}/shadertoy/*.hpp)
-set(SHADERTOY_HEADERS ${SHADERTOY_HEADERS}
-					  ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/shadertoy_export.h)
+list(APPEND SHADERTOY_HEADERS
+		${CMAKE_CURRENT_BINARY_DIR}/shadertoy/shadertoy_export.h)
 install(FILES ${SHADERTOY_HEADERS}
 		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)

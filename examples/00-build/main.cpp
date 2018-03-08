@@ -3,7 +3,7 @@
 #include <epoxy/gl.h>
 #include <GLFW/glfw3.h>
 
-#include <shadertoy/Shadertoy.hpp>
+#include <Shadertoy.hpp>
 
 int main(int argc, char *argv[])
 {

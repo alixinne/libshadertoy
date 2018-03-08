@@ -2,7 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
-#include <shadertoy/Shadertoy.hpp>
+#include <Shadertoy.hpp>
 
 #include "uniforms.hpp"
 
