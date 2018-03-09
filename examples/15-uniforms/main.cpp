@@ -12,71 +12,76 @@
 namespace fs = boost::filesystem;
 using shadertoy::gl::gl_call;
 
-// Create a ShaderInputs type, which references the custom
+// Create a shader_inputs type, which references the custom
 // uniforms (either static, known at compile time, or dynamic, defined at
 // runtime)
-typedef shadertoy::ShaderInputs<iDynamicFloats> ExampleInputsType;
+typedef shadertoy::shader_inputs<
+	iDynamicFloats
+> example_inputs_t;
 
 // Create a custom render context that uses the extra input state
-class ExampleRenderContext : public shadertoy::RenderContext {
-  // Declare the variable holding the extra uniform state
-  ExampleInputsType extraInputs;
+class example_render_context : public shadertoy::render_context {
+	// Declare the variable holding the extra uniform state
+	example_inputs_t extra_inputs_;
 
-  // Add auto-generated wrapper to the sources of all compiled programs
-  void LoadBufferSources(
-      std::vector<std::pair<std::string, std::string>> &sources) override {
-    sources.push_back(std::make_pair(std::string("internal:example-uniforms"),
-                                     extraInputs.GetDefinitions()));
-  }
+	// Add auto-generated wrapper to the sources of all compiled programs
+	void load_buffer_sources(std::vector<std::pair<std::string, std::string>> &sources) override
+	{
+		sources.push_back(std::make_pair(
+			std::string("internal:example-uniforms"),
+			extra_inputs_.definitions_string()
+		));
+	}
 
-  // After compiling a program, bind the inputs from the extra state into the
-  // program
-  void
-  BindInputs(std::vector<std::shared_ptr<shadertoy::BoundInputsBase>> &inputs,
-             shadertoy::gl::Program &program) override {
-    inputs.push_back(extraInputs.GetBoundInputs(program));
-  }
+	// After compiling a program, bind the inputs from the extra state into the program
+	void bind_inputs(std::vector<std::shared_ptr<shadertoy::bound_inputs_base>> &inputs,
+		shadertoy::gl::program &program) override
+	{
+		inputs.push_back(extra_inputs_.bind_inputs(program));
+	}
 
 public:
 	// Extra state accessor
-  ExampleInputsType &ExtraInputs() { return extraInputs; }
+	example_inputs_t &extra_inputs() { return extra_inputs_; }
 
-  ExampleRenderContext(shadertoy::ContextConfig &config)
-      : shadertoy::RenderContext(config), extraInputs() {
-    // Add a custom runtime input
-    extraInputs.V<iDynamicFloats>().Add<float>("iCustomTime", 0.0f);
-        }
+	example_render_context(shadertoy::context_config &config)
+		: shadertoy::render_context(config),
+		extra_inputs_()
+	{
+		// Add a custom runtime input
+		extra_inputs_.get<iDynamicFloats>().insert<float>("iCustomTime", 0.0f);
+	}
 };
 
-void SetFramebufferSize(GLFWwindow *window, int width, int height) {
-  // Get the context from the window user pointer
-  shadertoy::RenderContext &context = *static_cast<shadertoy::RenderContext *>(
-      glfwGetWindowUserPointer(window));
+void set_framebuffer_size(GLFWwindow *window, int width, int height)
+{
+	// Get the context from the window user pointer
+	shadertoy::render_context &context =
+		*static_cast<shadertoy::render_context*>(glfwGetWindowUserPointer(window));
 
-  // Reallocate textures
-  context.GetConfig().width = width;
-  context.GetConfig().height = height;
-  context.AllocateTextures();
+	// Reallocate textures
+	context.config().width = width;
+	context.config().height = height;
+	context.allocate_textures();
 }
 
 int main(int argc, char *argv[])
 {
 	int code = 0;
 
-        shadertoy::ContextConfig contextConfig;
-        contextConfig.width = 640;
+	shadertoy::context_config contextConfig;
+	contextConfig.width = 640;
 	contextConfig.height = 480;
-        contextConfig.targetFramerate = 60.0;
+	contextConfig.target_framerate = 60.0;
 
-        shadertoy::BufferConfig imageBuffer;
-        imageBuffer.name = "image";
-        imageBuffer.shaderFiles.push_back(fs::path("..") /
-                                          fs::path("shader.glsl"));
+	shadertoy::buffer_config imageBuffer;
+	imageBuffer.name = "image";
+	imageBuffer.shader_files.push_back(fs::path("..") / fs::path("shader.glsl"));
 
-        contextConfig.bufferConfigs.insert(
-            make_pair(imageBuffer.name, imageBuffer));
+	contextConfig.buffer_configs.insert(make_pair(imageBuffer.name,
+												 imageBuffer));
 
-        if (!glfwInit())
+	if (!glfwInit())
 	{
 		std::cerr << "Failed to initialize glfw" << std::endl;
 		return 1;
@@ -100,19 +105,25 @@ int main(int argc, char *argv[])
 		glfwSwapInterval(1);
 
 		{
-                  ExampleRenderContext context(contextConfig);
-                  std::cout << "Created context based on config" << std::endl;
+			example_render_context context(contextConfig);
+			std::cout << "Created context based on config" << std::endl;
 
-                  try {
-                    // Initialize context
-                    context.Initialize();
-                    std::cout << "Initialized rendering context" << std::endl;
-                  } catch (shadertoy::gl::ShaderCompilationError &sce) {
-                    std::cerr << "Failed to compile shader: " << sce.log();
-                    code = 2;
-                  } catch (shadertoy::ShadertoyError &err) {
-                    std::cerr << "Error: " << err.what();
-                    code = 2;
+			try
+			{
+				// Initialize context
+				context.init();
+				std::cout << "Initialized rendering context" << std::endl;
+			}
+			catch (shadertoy::gl::shader_compilation_error &sce)
+			{
+				std::cerr << "Failed to compile shader: " << sce.log();
+				code = 2;
+			}
+			catch (shadertoy::shadertoy_error &err)
+			{
+				std::cerr << "Error: "
+						  << err.what();
+				code = 2;
 			}
 
 			if (code)
@@ -124,40 +135,35 @@ int main(int argc, char *argv[])
 
 			// Set the resize callback
 			glfwSetWindowUserPointer(window, &context);
-                        glfwSetFramebufferSizeCallback(window,
-                                                       SetFramebufferSize);
+			glfwSetFramebufferSizeCallback(window, set_framebuffer_size);
 
-                        while (!glfwWindowShouldClose(window))
+			while (!glfwWindowShouldClose(window))
 			{
 				// Poll events
 				glfwPollEvents();
 
 				// Update uniforms
-                                context.GetState().V<shadertoy::iTime>() = t;
-                                context.GetState().V<shadertoy::iFrame>() =
-                                    frameCount;
+				context.state().get<shadertoy::iTime>() = t;
+				context.state().get<shadertoy::iFrame>() = frameCount;
 
-                                // Update custom uniform
-                                context.ExtraInputs()
-                                    .V<iDynamicFloats>()
-                                    .Get<float>("iCustomTime") =
-                                    (int(t) % 2) == 0 ? 1.0f : 0.0f;
+				// Update custom uniform
+				context.extra_inputs().get<iDynamicFloats>().get<float>("iCustomTime") = (int(t) % 2) == 0 ? 1.0f : 0.0f;
 
-                                // Render to texture
-                                context.Render();
+				// Render to texture
+				context.render();
 
-                                // Render to screen
+				// Render to screen
 				//  Setup framebuffer
 				gl_call(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
 				gl_call(glViewport, 0, 0, contextConfig.width, contextConfig.height);
 
 				//  Load texture and program
-                                context.BindResult();
+				context.bind_result();
 
-                                //  Render result
-                                context.RenderScreenQuad();
+				//  Render result
+				context.render_screen_quad();
 
-                                // Buffer swapping
+				// Buffer swapping
 				glfwSwapBuffers(window);
 
 				// Update time and framecount

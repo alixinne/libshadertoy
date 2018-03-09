@@ -9,12 +9,12 @@ int main(int argc, char *argv[])
 {
 	int code = 0;
 
-        shadertoy::ContextConfig contextConfig;
-        contextConfig.width = 640;
+	shadertoy::context_config contextConfig;
+	contextConfig.width = 640;
 	contextConfig.height = 480;
-        contextConfig.targetFramerate = 60.0;
+	contextConfig.target_framerate = 60.0;
 
-        if (!glfwInit())
+	if (!glfwInit())
 	{
 		std::cerr << "Failed to initialize glfw" << std::endl;
 		return 1;
@@ -37,8 +37,8 @@ int main(int argc, char *argv[])
 		glfwMakeContextCurrent(window);
 
 		{
-                  shadertoy::RenderContext context(contextConfig);
-                  std::cout << "Created context based on config" << std::endl;
+			shadertoy::render_context context(contextConfig);
+			std::cout << "Created context based on config" << std::endl;
 		}
 
 		glfwDestroyWindow(window);
