@@ -216,6 +216,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake
 install(DIRECTORY examples
 		COMPONENT shadertoy-examples
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy
+		PATTERN ".idea" EXCLUDE
 		PATTERN "build" EXCLUDE
 		PATTERN "*.dump" EXCLUDE)
 
