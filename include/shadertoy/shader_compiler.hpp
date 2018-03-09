@@ -14,9 +14,9 @@ namespace shadertoy
 class shader_compiler
 {
 	/// List of named sources
-        std::vector<std::pair<std::string, std::string>> namedSources;
+	std::vector<std::pair<std::string, std::string>> named_sources_;
 
-      public:
+public:
 	/**
 	 * @brief      Initialize a new instance of the ShaderCompiler class
 	 */
@@ -30,11 +30,10 @@ class shader_compiler
 	 *             GLSL code. The parts will be compiled in the same order as
 	 *             they are added to this vector.
 	 */
-        inline std::vector<std::pair<std::string, std::string>> &Sources() {
-          return namedSources;
-        }
+	inline std::vector<std::pair<std::string, std::string>> &sources()
+	{ return named_sources_; }
 
-        /**
+	/**
 	 * @brief      Loads the sources in the provided shader object, and compiles
 	 *             the program. Any program building errors will be rewritten so
 	 *             known named sources will have their name in the output
@@ -42,7 +41,7 @@ class shader_compiler
 	 *
 	 * @param      shader  The shader
 	 */
-        void Compile(gl::shader &shader);
+	void compile(gl::shader &shader);
 };
 
 }

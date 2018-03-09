@@ -18,16 +18,16 @@ struct shadertoy_EXPORT context_config
 	int height;
 
 	/// Target framerate for the rendering (in frames per second)
-        double targetFramerate;
+	double target_framerate;
 
-        /// List of pre-processor definitions to be compiled with the programs
-        std::vector<std::pair<std::string, std::string>> preprocessorDefines;
+	/// List of pre-processor definitions to be compiled with the programs
+	std::vector<std::pair<std::string, std::string>> preprocessor_defines;
 
-        /// List of configured buffers for this context
-        std::map<std::string, buffer_config> bufferConfigs;
+	/// List of configured buffers for this context
+	std::map<std::string, buffer_config> buffer_configs;
 
-        /// True if binary versions of the compiled shaders should be dumped
-        bool dumpShaders;
+	/// True if binary versions of the compiled shaders should be dumped
+	bool dump_shaders;
 };
 }
 

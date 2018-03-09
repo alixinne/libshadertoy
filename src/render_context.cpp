@@ -29,365 +29,416 @@ using namespace std;
 using namespace shadertoy;
 using shadertoy::gl::gl_call;
 
-shared_ptr<texture_engine> render_context::BuildTextureEngine() {
-  auto engine = make_shared<texture_engine>(config);
+shared_ptr<texture_engine> render_context::build_texture_engine()
+{
+	auto engine = make_shared<texture_engine>(config_);
 
-  engine->RegisterHandler(
-      "buffer", InputHandler([this](const InputConfig &inputConfig,
-                                    bool &skipTextureOptions, bool &skipCache,
-                                    bool &framebufferSized) {
-        skipTextureOptions = true;
-        skipCache = true;
-        // No need to reallocate buffer textures, this is handled by the buffer
-        // itself
-        framebufferSized = false;
+	engine->register_handler("buffer", input_handler([this]
+		(const input_config &inputConfig,
+		 bool &skipTextureOptions,
+		 bool &skipCache,
+		 bool &framebufferSized)
+	{
+		skipTextureOptions = true;
+		skipCache = true;
+		// No need to reallocate buffer textures, this is handled by the buffer
+		// itself
+		framebufferSized = false;
 
-        auto &bufferConfigs = config.bufferConfigs;
-        auto bufferIt = bufferConfigs.find(inputConfig.source);
+		auto &bufferConfigs = config_.buffer_configs;
+		auto bufferIt = bufferConfigs.find(inputConfig.source);
 
-        if (bufferIt == bufferConfigs.end()) {
-          BOOST_LOG_TRIVIAL(warning) << "buffer '" << inputConfig.source
-                                     << "' not found for input "
-                                     << inputConfig.id;
-          return shared_ptr<gl::texture>();
-        } else {
-          if (frameCount == 0) {
-            BOOST_LOG_TRIVIAL(info) << "binding '" << inputConfig.source
-                                    << "' to input " << inputConfig.id;
-          }
+		if (bufferIt == bufferConfigs.end())
+		{
+			BOOST_LOG_TRIVIAL(warning) << "buffer '" << inputConfig.source
+									   << "' not found for input " << inputConfig.id;
+			return shared_ptr<gl::texture>();
+		}
+		else
+		{
+			if (frame_count_ == 0)
+			{
+				BOOST_LOG_TRIVIAL(info) << "binding '" << inputConfig.source
+										<< "' to input " << inputConfig.id;
+			}
 
-          auto texture = buffers[inputConfig.source]->GetSourceTexture();
+			auto texture = buffers_[inputConfig.source]->source_texture();
 
-          int minFilter = max((int)inputConfig.minFilter, GL_LINEAR),
-              magFilter = (int)inputConfig.magFilter;
+			int minFilter = max((int)inputConfig.min_filter, GL_LINEAR),
+				magFilter = (int)inputConfig.mag_filter;
 
-          texture->parameter(GL_TEXTURE_MAG_FILTER, magFilter);
-          texture->parameter(GL_TEXTURE_MIN_FILTER, minFilter);
-          texture->parameter(GL_TEXTURE_WRAP_S, inputConfig.wrap);
-          texture->parameter(GL_TEXTURE_WRAP_T, inputConfig.wrap);
+			texture->parameter(GL_TEXTURE_MAG_FILTER, magFilter);
+			texture->parameter(GL_TEXTURE_MIN_FILTER, minFilter);
+			texture->parameter(GL_TEXTURE_WRAP_S, inputConfig.wrap);
+			texture->parameter(GL_TEXTURE_WRAP_T, inputConfig.wrap);
 
-          return texture;
-        }
-      }));
+			return texture;
+		}
+	}));
 
-  return engine;
+	return engine;
 }
 
-void render_context::PreInitializeBuffers() {}
+void render_context::pre_init_buffers()
+{
+}
 
-void render_context::PostInitializeBuffers() {}
+void render_context::post_init_buffers()
+{
+}
 
-void render_context::LoadBufferSources(vector<pair<string, string>> &sources) {}
+void render_context::load_buffer_sources(vector<pair<string, string>> &sources)
+{
+}
 
-void render_context::PostBufferRender(const string &name,
-                                      shared_ptr<toy_buffer> &buffer) {}
+void render_context::post_render_buffer(const string &name,
+                                        shared_ptr<toy_buffer> &buffer)
+{
+}
 
-void render_context::BindInputs(vector<shared_ptr<BoundInputsBase>> &inputs,
-                                gl::program &program) {}
+void render_context::bind_inputs(vector<shared_ptr<bound_inputs_base>> &inputs,
+                                 gl::program &program)
+{
+}
 
 render_context::render_context(context_config &config)
-    : config(config), screenVs(GL_VERTEX_SHADER), screenFs(GL_FRAGMENT_SHADER),
-      frameCount(0) {
-  textureEngine = BuildTextureEngine();
+	: config_(config),
+	screen_vs_(GL_VERTEX_SHADER),
+	screen_fs_(GL_FRAGMENT_SHADER),
+	frame_count_(0)
+{
+	tex_engine_ = build_texture_engine();
 }
 
-void render_context::Initialize() {
-  // Initialize constant uniforms
-  state.V<iResolution>() = glm::vec3(config.width, config.height, 1.0f);
-  // Note that this will be overriden once query measurements are available
-  state.V<iTimeDelta>() = 1.0f / (float)config.targetFramerate;
-  state.V<iFrameRate>() = (float)config.targetFramerate;
+void render_context::init()
+{
+	// Initialize constant uniforms
+	state_.get<iResolution>() = glm::vec3(config_.width, config_.height, 1.0f);
+	// Note that this will be overriden once query measurements are available
+	state_.get<iTimeDelta>() = 1.0f / (float) config_.target_framerate;
+	state_.get<iFrameRate>() = (float) config_.target_framerate;
 
-  state.V<iChannel0>() = 1;
-  state.V<iChannel1>() = 2;
-  state.V<iChannel2>() = 3;
-  state.V<iChannel3>() = 4;
+	state_.get<iChannel0>() = 1;
+	state_.get<iChannel1>() = 2;
+	state_.get<iChannel2>() = 3;
+	state_.get<iChannel3>() = 4;
 
-  state.V<iChannelTime>() = {0.f, 0.f, 0.f, 0.f};
-  state.V<iSampleRate>() = 48000.f;
+	state_.get<iChannelTime>() = { 0.f, 0.f, 0.f, 0.f };
+	state_.get<iSampleRate>() = 48000.f;
 
-  // Compile screen quad vertex shader
-  screenVs.source(string(screenQuad_vsh, screenQuad_vsh + screenQuad_vsh_size));
-  screenVs.compile();
+	// Compile screen quad vertex shader
+	screen_vs_.source(string(screenQuad_vsh, screenQuad_vsh + screenQuad_vsh_size));
+	screen_vs_.compile();
 
-  // Compile screen quad fragment shader
-  screenFs.source(string(screenQuad_fsh, screenQuad_fsh + screenQuad_fsh_size));
-  screenFs.compile();
+	// Compile screen quad fragment shader
+	screen_fs_.source(string(screenQuad_fsh, screenQuad_fsh + screenQuad_fsh_size));
+	screen_fs_.compile();
 
-  // Prepare screen quad program
-  screenProg.attach_shader(screenVs);
-  screenProg.attach_shader(screenFs);
+	// Prepare screen quad program
+	screen_prog_.attach_shader(screen_vs_);
+	screen_prog_.attach_shader(screen_fs_);
 
-  // Compile screen program
-  screenProg.link();
+	// Compile screen program
+	screen_prog_.link();
 
-  // Setup screen textures
-  screenProg.use();
-  screenProg.get_uniform_location("screenTexture").set_value(0);
+	// Setup screen textures
+	screen_prog_.use();
+	screen_prog_.get_uniform_location("screenTexture").set_value(0);
 
-  // Initialize the texture engine
-  textureEngine->Initialize();
+	// Initialize the texture engine
+    tex_engine_->init();
 
-  // Prepare screen quad geometry
-  GLfloat coords[] = {-1.0f, -1.0f, 0.0f,  0.0f, 0.0f, -1.0f, 1.0f,
-                      0.0f,  0.0f,  1.0f,  1.0f, 1.0f, 0.0f,  1.0f,
-                      1.0f,  1.0f,  -1.0f, 0.0f, 1.0f, 0.0f};
+	// Prepare screen quad geometry
+	GLfloat coords[] = {
+		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		1.0f, -1.0f, 0.0f, 1.0f, 0.0f
+	};
 
-  GLuint indices[] = {0, 1, 2, 0, 2, 3};
+	GLuint indices[] = {
+		0, 1, 2,
+		0, 2, 3
+	};
 
-  // Setup coords
-  screenQuadCorners.data(
-      sizeof(coords), static_cast<const GLvoid *>(&coords[0]), GL_STATIC_DRAW);
+	// Setup coords
+	screen_quad_corners_.data(sizeof(coords),
+		static_cast<const GLvoid*>(&coords[0]), GL_STATIC_DRAW);
 
-  // Setup indices
-  screenQuadIndices.data(sizeof(indices),
-                         static_cast<const GLvoid *>(&indices[0]),
-                         GL_STATIC_DRAW);
+	// Setup indices
+	scren_quad_indices_.data(sizeof(indices),
+		static_cast<const GLvoid*>(&indices[0]), GL_STATIC_DRAW);
 
-  // Initialize buffers
-  InitializeBuffers();
+	// Initialize buffers
+    init_buffers();
 }
 
-void render_context::InitializeBuffers() {
-  // Invoke callback
-  PreInitializeBuffers();
+void render_context::init_buffers()
+{
+	// Invoke callback
+    pre_init_buffers();
 
-  // Prepare the define wrapper
-  ostringstream oss;
-  for (auto define : config.preprocessorDefines) {
-    oss << "#define " << define.first;
-    if (!define.second.empty()) {
-      oss << " " << define.second;
-    }
-    oss << endl;
-  }
-  defineWrapper = oss.str();
+	// Prepare the define wrapper
+	ostringstream oss;
+	for (auto define : config_.preprocessor_defines)
+	{
+		oss << "#define " << define.first;
+		if (!define.second.empty()) {
+			oss << " " << define.second;
+		}
+		oss << endl;
+	}
+	define_wrapper_ = oss.str();
 
-  // Initialize program buffer
-  auto bufferConfigs = config.bufferConfigs;
-  for (auto it = bufferConfigs.begin(); it != bufferConfigs.end(); ++it) {
-    auto buf = make_shared<toy_buffer>(*this, it->first);
-    buf->Initialize(config.width, config.height);
-    buffers.insert(make_pair(it->first, buf));
-  }
+	// Initialize program buffer
+	auto bufferConfigs = config_.buffer_configs;
+	for (auto it = bufferConfigs.begin(); it != bufferConfigs.end(); ++it)
+	{
+		auto buf = make_shared<toy_buffer>(*this, it->first);
+        buf->init(config_.width, config_.height);
+		buffers_.insert(make_pair(it->first, buf));
+	}
 
-  // Setup position and texCoord attributes for shaders
-  screenQuadCorners.bind(GL_ARRAY_BUFFER);
-  screenQuadIndices.bind(GL_ELEMENT_ARRAY_BUFFER);
+	// Setup position and texCoord attributes for shaders
+	screen_quad_corners_.bind(GL_ARRAY_BUFFER);
+	scren_quad_indices_.bind(GL_ELEMENT_ARRAY_BUFFER);
 
-  vector<gl::program *> programs{&screenProg};
+	vector<gl::program *> programs{&screen_prog_};
 
-  GLint location;
-  for (auto it = programs.begin(); it != programs.end(); ++it) {
-    // bind input "position" to vertex locations (3 floats)
-    location = gl_call(glGetAttribLocation, GLuint(**it), "position");
-    gl_call(glVertexAttribPointer, location, 3, GL_FLOAT, GL_FALSE,
-            5 * sizeof(GLfloat), (void *)0);
-    gl_call(glEnableVertexAttribArray, location);
+	GLint location;
+	for (auto it = programs.begin(); it != programs.end(); ++it)
+	{
+		// bind input "position" to vertex locations (3 floats)
+		location = gl_call(glGetAttribLocation, GLuint(**it), "position");
+		gl_call(glVertexAttribPointer, location, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)0);
+		gl_call(glEnableVertexAttribArray, location);
 
-    // bind input "texCoord" to vertex texture coordinates (2 floats)
-    location = gl_call(glGetAttribLocation, GLuint(**it), "texCoord");
-    gl_call(glVertexAttribPointer, location, 2, GL_FLOAT, GL_FALSE,
-            5 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat)));
-    gl_call(glEnableVertexAttribArray, location);
-  }
+		// bind input "texCoord" to vertex texture coordinates (2 floats)
+		location = gl_call(glGetAttribLocation, GLuint(**it), "texCoord");
+		gl_call(glVertexAttribPointer, location, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+		gl_call(glEnableVertexAttribArray, location);
+	}
 
-  lastTexture = weak_ptr<gl::texture>();
+	last_texture_ = weak_ptr<gl::texture>();
 
-  // Invoke callback
-  PostInitializeBuffers();
+	// Invoke callback
+    post_init_buffers();
 }
 
-void render_context::AllocateTextures() {
-  // Drop the reference to screenQuadTexture, it will be recreated if needed
-  screenQuadTexture = shared_ptr<gl::texture>();
+void render_context::allocate_textures()
+{
+	// Drop the reference to screen_quad_texture_, it will be recreated if needed
+	screen_quad_texture_ = shared_ptr<gl::texture>();
 
-  // Reallocate buffer textures
-  for (auto &pair : buffers)
-    pair.second->AllocateTextures(config.width, config.height);
+	// Reallocate buffer textures
+	for (auto &pair : buffers_)
+        pair.second->allocate_textures(config_.width, config_.height);
 
-  // Reallocate inputs
-  textureEngine->ClearState(true);
+	// Reallocate inputs
+    tex_engine_->clear(true);
 
-  // Update the iResolution uniform, as this method can be called after a
-  // framebuffer size change
-  state.V<iResolution>() = glm::vec3(config.width, config.height, 1.0f);
+	// Update the iResolution uniform, as this method can be called after a
+	// framebuffer size change
+	state_.get<iResolution>() = glm::vec3(config_.width, config_.height, 1.0f);
 }
 
-void render_context::ClearState() {
-  // Clear previous input textures
-  textureEngine->ClearState();
-  // Clear previous buffers
-  buffers.clear();
-  // Clear the source cache
-  sourceCache.clear();
+void render_context::clear_state()
+{
+	// Clear previous input textures
+    tex_engine_->clear();
+	// Clear previous buffers
+	buffers_.clear();
+	// Clear the source cache
+	source_cache_.clear();
 }
 
-void render_context::Render() {
-  for (auto pair : buffers) {
-    pair.second->Render();
-    lastTexture = pair.second->GetSourceTexture();
+void render_context::render()
+{
+	for (auto pair : buffers_)
+	{
+        pair.second->render();
+		last_texture_ = pair.second->source_texture();
 
-    PostBufferRender(pair.first, pair.second);
-  }
+        post_render_buffer(pair.first, pair.second);
+	}
 
-  frameCount++;
+	frame_count_++;
 }
 
-void render_context::DoReadWriteCurrentFrame(GLuint &texIn, GLuint &texOut) {
-  if (auto currentTex = lastTexture.lock()) {
-    // Allocate the target screen quad texture as it is requested
-    if (!screenQuadTexture) {
-      // Create texture object
-      screenQuadTexture = make_shared<gl::texture>(GL_TEXTURE_2D);
+void render_context::read_write_current_frame(GLuint &texIn, GLuint &texOut)
+{
+	if (auto currentTex = last_texture_.lock())
+	{
+		// Allocate the target screen quad texture as it is requested
+		if (!screen_quad_texture_)
+		{
+			// Create texture object
+			screen_quad_texture_ = make_shared<gl::texture>(GL_TEXTURE_2D);
 
-      // Setup screenQuadTexture
-      screenQuadTexture->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-      screenQuadTexture->parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-      screenQuadTexture->parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
-      screenQuadTexture->parameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
-      screenQuadTexture->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F, config.width,
-                                  config.height, 0, GL_BGRA, GL_FLOAT, nullptr);
-    }
+			// Setup screen_quad_texture_
+			screen_quad_texture_->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			screen_quad_texture_->parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			screen_quad_texture_->parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
+			screen_quad_texture_->parameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
+			screen_quad_texture_->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F,
+				config_.width, config_.height, 0, GL_BGRA, GL_FLOAT, nullptr);
+		}
 
-    texIn = *currentTex;
-    texOut = *screenQuadTexture;
+		texIn = *currentTex;
+		texOut = *screen_quad_texture_;
 
-    lastTexture = screenQuadTexture;
-  } else {
-    throw runtime_error(
-        "DoReadWriteCurrentFrame: lastTexture pointer has expired!");
-  }
+		last_texture_ = screen_quad_texture_;
+	}
+	else
+	{
+		throw runtime_error("DoReadWriteCurrentFrame: last_texture_ pointer has expired!");
+	}
 }
 
-void render_context::DoReadCurrentFrame(GLuint &texIn) {
-  if (auto currentTex = lastTexture.lock()) {
-    texIn = *currentTex;
-  } else {
-    throw runtime_error("DoReadCurrentFrame: lastTexture pointer has expired!");
-  }
+void render_context::read_current_frame(GLuint &texIn)
+{
+	if (auto currentTex = last_texture_.lock())
+	{
+		texIn = *currentTex;
+	}
+	else
+	{
+		throw runtime_error("DoReadCurrentFrame: last_texture_ pointer has expired!");
+	}
 }
 
-void render_context::BuildBufferShader(const string &id, gl::shader &fs) {
-  auto &bufferConfig(config.bufferConfigs[id]);
+void render_context::build_buffer_shader(const string &id,
+                                         gl::shader &fs)
+{
+	auto &bufferConfig(config_.buffer_configs[id]);
 
-  // Load all source parts
-  shader_compiler compiler;
-  auto &sources(compiler.Sources());
+	// Load all source parts
+	shader_compiler compiler;
+	auto &sources(compiler.sources());
 
-  // Load callback sources
-  LoadBufferSources(sources);
+	// Load callback sources
+    load_buffer_sources(sources);
 
-  // Add define wrapper
-  sources.insert(sources.begin(),
-                 make_pair(string("generated:define-wrapper"), defineWrapper));
+	// Add define wrapper
+	sources.insert(sources.begin(),
+		make_pair(string("generated:define-wrapper"), define_wrapper_));
 
-  // Add sources
-  for (auto &shaderFile : bufferConfig.shaderFiles) {
-    sources.push_back(
-        make_pair(shaderFile.string(), LoadShaderSource(shaderFile)));
-  }
+	// Add sources
+	for (auto &shaderFile : bufferConfig.shader_files)
+	{
+		sources.push_back(make_pair(shaderFile.string(), load_shader_source(shaderFile)));
+	}
 
-  // Add default wrapper around code
-  sources.insert(
-      sources.begin(),
-      make_pair(string("internal:wrapper-header"),
-                string(wrapper_header_fsh,
-                       wrapper_header_fsh + wrapper_header_fsh_size)));
+	// Add default wrapper around code
+	sources.insert(sources.begin(), make_pair(
+		string("internal:wrapper-header"),
+		string(wrapper_header_fsh, wrapper_header_fsh + wrapper_header_fsh_size)));
 
-  // Add source from uniform declarations
-  sources.insert(
-      sources.begin() + 1,
-      make_pair(string("generated:shader-inputs"), state.GetDefinitions()));
+	// Add source from uniform declarations
+	sources.insert(sources.begin() + 1, make_pair(
+		string("generated:shader-inputs"),
+		state_.definitions_string()));
 
-  // Add footer
-  sources.push_back(
-      make_pair(string("internal:wrapper-footer"),
-                string(wrapper_footer_fsh,
-                       wrapper_footer_fsh + wrapper_footer_fsh_size)));
+	// Add footer
+	sources.push_back(make_pair(
+		string("internal:wrapper-footer"),
+		string(wrapper_footer_fsh, wrapper_footer_fsh + wrapper_footer_fsh_size)));
 
-  // Load sources into fragment shader and compile
-  compiler.Compile(fs);
+	// Load sources into fragment shader and compile
+    compiler.compile(fs);
 }
 
-const GLchar *
-render_context::LoadShaderSource(const fs::path &path) throw(runtime_error) {
-  fs::path shaderPath(fs::canonical(path));
-  ifstream src(shaderPath.string().c_str());
-  string loadedSource;
-  loadedSource.assign(istreambuf_iterator<char>(src),
-                      istreambuf_iterator<char>());
-  if (loadedSource.back() != '\n') {
-    loadedSource += "\n";
-  }
-  sourceCache.insert(make_pair(shaderPath.string(), loadedSource));
+const GLchar *render_context::load_shader_source(const fs::path &path) throw(runtime_error)
+{
+	fs::path shaderPath(fs::canonical(path));
+	ifstream src(shaderPath.string().c_str());
+	string loadedSource;
+	loadedSource.assign(istreambuf_iterator<char>(src), istreambuf_iterator<char>());
+	if (loadedSource.back() != '\n') {
+		loadedSource += "\n";
+	}
+	source_cache_.insert(make_pair(shaderPath.string(), loadedSource));
 
-  BOOST_LOG_TRIVIAL(info) << "loaded " << shaderPath;
+	BOOST_LOG_TRIVIAL(info) << "loaded " << shaderPath;
 
-  return sourceCache.find(shaderPath.string())->second.c_str();
+	return source_cache_.find(shaderPath.string())->second.c_str();
 }
 
-const GLchar *render_context::GetDefineWrapper() const {
-  return defineWrapper.c_str();
+const GLchar *render_context::define_wrapper() const
+{
+	return define_wrapper_.c_str();
 }
 
-vector<shared_ptr<BoundInputsBase>>
-render_context::GetBoundInputs(gl::program &program) {
-  vector<shared_ptr<BoundInputsBase>> result;
+vector<shared_ptr<bound_inputs_base>> render_context::bound_inputs(gl::program &program)
+{
+	vector<shared_ptr<bound_inputs_base>> result;
 
-  // External inputs
-  BindInputs(result, program);
+	// External inputs
+    bind_inputs(result, program);
 
-  // Default inputs
-  result.insert(result.begin(), state.GetBoundInputs(program));
+	// Default inputs
+	result.insert(result.begin(), state_.bind_inputs(program));
 
-  return result;
+	return result;
 }
 
-void render_context::Clear(float level) {
-  gl_call(glViewport, 0, 0, config.width, config.height);
-  gl_call(glClearColor, level, level, level, level);
-  gl_call(glClear, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+void render_context::clear(float level)
+{
+	gl_call(glViewport, 0, 0, config_.width, config_.height);
+	gl_call(glClearColor, level, level, level, level);
+	gl_call(glClear, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void render_context::RenderScreenQuad() {
-  screenQuadCorners.bind(GL_ARRAY_BUFFER);
-  gl_call(glDrawElements, GL_TRIANGLES, 3 * 2, GL_UNSIGNED_INT, nullptr);
+void render_context::render_screen_quad()
+{
+	screen_quad_corners_.bind(GL_ARRAY_BUFFER);
+	gl_call(glDrawElements, GL_TRIANGLES, 3 * 2, GL_UNSIGNED_INT, nullptr);
 }
 
-void render_context::RenderScreenQuad(gl::query &timerQuery) {
-  screenQuadCorners.bind(GL_ARRAY_BUFFER);
+void render_context::render_screen_quad(gl::query &timerQuery)
+{
+	screen_quad_corners_.bind(GL_ARRAY_BUFFER);
 
-  timerQuery.begin(GL_TIME_ELAPSED);
+	timerQuery.begin(GL_TIME_ELAPSED);
 
-  gl_call(glDrawElements, GL_TRIANGLES, 3 * 2, GL_UNSIGNED_INT, nullptr);
+	gl_call(glDrawElements, GL_TRIANGLES, 3 * 2, GL_UNSIGNED_INT, nullptr);
 
-  timerQuery.end(GL_TIME_ELAPSED);
+	timerQuery.end(GL_TIME_ELAPSED);
 }
 
-void render_context::BindResult() {
-  // Prepare prog and texture
-  screenProg.use();
+void render_context::bind_result()
+{
+	// Prepare prog and texture
+	screen_prog_.use();
 
-  gl_call(glActiveTexture, GL_TEXTURE0);
-  lastTexture.lock()->bind(GL_TEXTURE_2D);
+	gl_call(glActiveTexture, GL_TEXTURE0);
+	last_texture_.lock()->bind(GL_TEXTURE_2D);
 }
 
-gl::shader &render_context::GetScreenQuadVertexShader() { return screenVs; }
+gl::shader &render_context::screen_quad_vertex_shader()
+{
+	return screen_vs_;
+}
 
-shared_ptr<toy_buffer> render_context::GetBufferByName(const string &name) {
-  if (name.empty()) {
-    if (buffers.empty()) {
-      return shared_ptr<toy_buffer>();
-    }
+shared_ptr<toy_buffer> render_context::buffer(const string &name)
+{
+	if (name.empty())
+	{
+		if (buffers_.empty())
+		{
+			return shared_ptr<toy_buffer>();
+		}
 
-    return buffers.rbegin()->second;
-  } else {
-    auto it = buffers.find(name);
-    if (it == buffers.end()) {
-      return shared_ptr<toy_buffer>();
-    }
+		return buffers_.rbegin()->second;
+	}
+	else
+	{
+		auto it = buffers_.find(name);
+		if (it == buffers_.end())
+		{
+			return shared_ptr<toy_buffer>();
+		}
 
-    return it->second;
-  }
+		return it->second;
+	}
 }
