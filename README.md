@@ -66,12 +66,9 @@ wget -qO- https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master/pubkey.as
 
 # Add repository to apt config
 #  Debian Stretch
-sudo sh -c 'echo "deb https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master/debian stretch main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
+sudo sh -c 'echo "deb https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master stretch/ main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
 #  Ubuntu Xenial (16.04)
-sudo sh -c 'echo "deb https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master/ubuntu xenial main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
-#  Ubuntu Trusty (14.04)
-#  Note: only 0.1.4 is available in that repository for testing
-sudo sh -c 'echo "deb https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master/ubuntu trusty main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
+sudo sh -c 'echo "deb https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master xenial/ main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
 
 # Update and install
 sudo apt update
