@@ -84,11 +84,7 @@ set(shadertoy_INCLUDE_DIRS
 	$<BUILD_INTERFACE:${INCLUDE_DIR}>
 	$<INSTALL_INTERFACE:include>)
 
-set(shadertoy_LIBRARIES
-	shadertoy)
-
-# Main libshadertoy
-add_library(shadertoy SHARED
+add_library(shadertoy-objects OBJECT
 	${INCLUDE_DIR}/shadertoy.hpp
 	${INCLUDE_DIR}/shadertoy/pre.hpp
 	${INCLUDE_DIR}/shadertoy/buffer_config.hpp
@@ -129,13 +125,8 @@ add_library(shadertoy SHARED
 	${SRC_DIR}/gl/texture.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/resources.c)
 
-generate_export_header(shadertoy
-	BASE_NAME shadertoy
-	EXPORT_MACRO_NAME shadertoy_EXPORT
-	EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/shadertoy_export.h)
-
 # Include directories
-target_include_directories(shadertoy PRIVATE
+target_include_directories(shadertoy-objects PRIVATE
 	${shadertoy_INCLUDE_DIRS}
 	${Boost_INCLUDE_DIR}
 	${OPENGL_INCLUDE_DIRS}
@@ -144,6 +135,18 @@ target_include_directories(shadertoy PRIVATE
 	${SOIL_INCLUDE_DIRS}
 	${JPEG_INCLUDE_DIRS})
 
+# Fix Boost
+target_compile_definitions(shadertoy-objects PUBLIC
+	BOOST_LOG_DYN_LINK=1)
+
+# C++14
+set(CXX_STANDARD_REQUIRED ON)
+set_property(TARGET shadertoy-objects PROPERTY CXX_STANDARD 14)
+
+# -fPIC
+set_property(TARGET shadertoy-objects PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+# Add UNWIND if found
 execute_process(COMMAND ${CMAKE_C_COMPILER} ${CMAKE_C_FLAGS} -dumpmachine
 				OUTPUT_VARIABLE COMPILER_ARCH
 				OUTPUT_STRIP_TRAILING_WHITESPACE)
@@ -151,53 +154,72 @@ string(REPLACE "-" ";" COMPILER_ARCH_LIST ${COMPILER_ARCH})
 list(GET COMPILER_ARCH_LIST 0 COMPILER_ARCH_NAME)
 string(REGEX REPLACE "i.86" "x86" UNWIND_ARCH ${COMPILER_ARCH_NAME})
 
-# Add UNWIND if found
 if (UNWIND_FOUND AND UNWIND_ARCH)
 	message("-- Using unwind for tracing OpenGL calls")
 
-	target_link_libraries(shadertoy PRIVATE ${UNWIND_LIBRARIES} unwind-${UNWIND_ARCH})
-	target_include_directories(shadertoy PRIVATE ${UNWIND_INCLUDE_DIRS})
-	target_compile_definitions(shadertoy PRIVATE HAS_UNWIND=1 UNW_LOCAL_ONLY=1)
+	target_include_directories(shadertoy-objects PRIVATE ${UNWIND_INCLUDE_DIRS})
+	target_compile_definitions(shadertoy-objects PRIVATE HAS_UNWIND=1 UNW_LOCAL_ONLY=1)
 else()
 	message("-- Not using unwind for tracing")
-	target_compile_definitions(shadertoy PRIVATE HAS_UNWIND=0)
+	target_compile_definitions(shadertoy-objects PRIVATE HAS_UNWIND=0)
 endif()
 
-# Link dependencies
-target_link_libraries(shadertoy PUBLIC
-	${Boost_LIBRARIES}
-	PRIVATE
-	${OPENGL_LIBRARY}
-	${EPOXY_LIBRARIES}
-	${JPEG_LIBRARIES}
-	${SOIL_LIBRARIES})
+# Build static and shared libraries
+set(LIBRARY_TYPES "SHARED;STATIC")
+foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
+	set(TARGET_NAME "shadertoy-${LIBRARY_TYPE}")
+	string(TOLOWER ${TARGET_NAME} TARGET_NAME)
+	message(STATUS "Creating target ${TARGET_NAME}")
 
-# Fix Boost
-target_compile_definitions(shadertoy PUBLIC
-	BOOST_LOG_DYN_LINK=1)
+	# Main libshadertoy
+	add_library(${TARGET_NAME} ${LIBRARY_TYPE}
+		$<TARGET_OBJECTS:shadertoy-objects>)
 
-# C++14
-set(CXX_STANDARD_REQUIRED ON)
-set_property(TARGET shadertoy PROPERTY CXX_STANDARD 14)
+	# Add UNWIND if found
+	if (UNWIND_FOUND AND UNWIND_ARCH)
+		message("-- Using unwind for tracing OpenGL calls")
 
-# Include directories for install
-target_include_directories(shadertoy INTERFACE $<INSTALL_INTERFACE:include>)
+		target_link_libraries(${TARGET_NAME} PRIVATE ${UNWIND_LIBRARIES} unwind-${UNWIND_ARCH})
+	endif()
 
-# Set library file version
-set_target_properties(shadertoy PROPERTIES
-	SOVERSION ${VERSION_MAJOR}
-	VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+	# Link dependencies
+	target_link_libraries(${TARGET_NAME} PUBLIC
+		${Boost_LIBRARIES}
+		${OPENGL_LIBRARY}
+		${EPOXY_LIBRARIES}
+		${JPEG_LIBRARIES}
+		${SOIL_LIBRARIES})
 
-# Install target
-install(TARGETS shadertoy
-		DESTINATION ${CMAKE_INSTALL_LIBDIR}
-		EXPORT shadertoy)
-install(EXPORT shadertoy
-		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/shadertoy)
+	# Include directories for install
+	target_include_directories(${TARGET_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
 
-install(EXPORT shadertoy
-		COMPONENT shadertoy-dev
-		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
+	# Set library file version
+	set_target_properties(${TARGET_NAME} PROPERTIES
+		SOVERSION ${VERSION_MAJOR}
+		VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+
+	if(NOT WIN32)
+		set_target_properties(${TARGET_NAME} PROPERTIES
+			OUTPUT_NAME shadertoy)
+	endif()
+
+	# Install target
+	install(TARGETS ${TARGET_NAME}
+			DESTINATION ${CMAKE_INSTALL_LIBDIR}
+			EXPORT shadertoy)
+	install(EXPORT shadertoy
+			DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/shadertoy)
+
+	install(EXPORT shadertoy
+			COMPONENT shadertoy-dev
+			DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
+endforeach()
+
+# Export header for shared
+generate_export_header(shadertoy-shared
+	BASE_NAME shadertoy
+	EXPORT_MACRO_NAME shadertoy_EXPORT
+	EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/shadertoy_export.h)
 
 # Configure the -config.cmake file
 configure_file(shadertoy-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake @ONLY)

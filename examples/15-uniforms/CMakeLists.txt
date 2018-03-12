@@ -24,7 +24,7 @@ target_link_libraries(example15-uniforms
 	${OPENGL_LIBRARY}
 	${EPOXY_LIBRARIES}
 	${glfw3_LIBRARIES}
-	shadertoy)
+	shadertoy-shared)
 
 # C++14
 set_property(TARGET example15-uniforms PROPERTY CXX_STANDARD 14)

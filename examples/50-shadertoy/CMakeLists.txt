@@ -33,7 +33,7 @@ target_link_libraries(example50-shadertoy
 	${Boost_LIBRARIES}
 	${CURL_LIBRARIES}
 	${jsoncpp_LIBRARIES}
-	shadertoy)
+	shadertoy-shared)
 
 # C++14
 set_property(TARGET example50-shadertoy PROPERTY CXX_STANDARD 14)

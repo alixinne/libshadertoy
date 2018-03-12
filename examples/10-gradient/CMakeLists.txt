@@ -23,7 +23,7 @@ target_link_libraries(example10-gradient
 	${OPENGL_LIBRARY}
 	${EPOXY_LIBRARIES}
 	${glfw3_LIBRARIES}
-	shadertoy)
+	shadertoy-shared)
 
 # C++14
 set_property(TARGET example10-gradient PROPERTY CXX_STANDARD 14)

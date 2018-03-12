@@ -23,7 +23,7 @@ target_link_libraries(example00-build
 	${OPENGL_LIBRARY}
 	${EPOXY_LIBRARIES}
 	${glfw3_LIBRARIES}
-	shadertoy)
+	shadertoy-shared)
 
 # C++14
 set_property(TARGET example00-build PROPERTY CXX_STANDARD 14)
