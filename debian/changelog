@@ -1,6 +1,7 @@
 libshadertoy (1.0.0) unstable; urgency=medium
 
   * Add static version of the library
+  * Add xscreensaver example
   * Refactor library interface, use STL/Boost conventions
   * Move documentation into its own package, libshadertoy-doc
 
