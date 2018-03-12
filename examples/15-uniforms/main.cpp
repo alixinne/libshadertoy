@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 	// Initialize window
 	GLFWwindow *window = glfwCreateWindow(contextConfig.width,
 										  contextConfig.height,
-										  "libshadertoy example 10-gradient",
+										  "libshadertoy example 15-uniforms",
 										  nullptr,
 										  nullptr);
 
