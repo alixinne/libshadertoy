@@ -37,6 +37,11 @@ void query::end(GLenum target)
 	gl_call(glEndQuery, target);
 }
 
+void query::query_counter(GLenum target)
+{
+	gl_call(glQueryCounter, GLuint(*this), target);
+}
+
 void query::get_object_iv(GLenum pname, GLint *params)
 {
 	gl_call(glGetQueryObjectiv, GLuint(*this), pname, params);

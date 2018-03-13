@@ -72,6 +72,13 @@ namespace gl
 		static void end(GLenum target);
 
 		/**
+		 * @brief glQueryCounter
+		 *
+		 * @param target Query target. Must be GL_TIMESTAMP
+		 */
+		void query_counter(GLenum target);
+
+		/**
 		 * @brief glGetQueryObjectiv
 		 *
 		 * @param pname  Parameter name
