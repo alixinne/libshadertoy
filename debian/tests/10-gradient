@@ -9,8 +9,8 @@ if [ -z "$CMAKE_EXTRA_OPTS" ]; then
 fi
 
 # Copy example from datadir
-cp -r "$LIBSHADERTOY_DIR/examples/10-gradient" "$AUTOPKGTEST_TMP"
-cd "$AUTOPKGTEST_TMP/10-gradient"
+cp -r "$LIBSHADERTOY_DIR/examples" "$AUTOPKGTEST_TMP"
+cd "$AUTOPKGTEST_TMP/examples"
 
 # Configure
 set -eo pipefail
@@ -20,7 +20,7 @@ cd build
 cmake $CMAKE_EXTRA_OPTS ..
 
 # Build
-make -j VERBOSE=1
+make -j VERBOSE=1 example10-gradient
 
 # Execute
-./example10-gradient
+./src/10-gradient/example10-gradient

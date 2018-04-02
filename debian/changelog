@@ -5,6 +5,7 @@ libshadertoy (1.0.0) unstable; urgency=medium
   * GL: Add support for glQueryCounter
   * Refactor library interface, use STL/Boost conventions
   * Move documentation into its own package, libshadertoy-doc
+  * Refactor examples
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Thu, 08 Mar 2018 15:00:00 +0100
 

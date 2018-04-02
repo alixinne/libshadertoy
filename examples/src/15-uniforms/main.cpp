@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 
 	shadertoy::buffer_config imageBuffer;
 	imageBuffer.name = "image";
-	imageBuffer.shader_files.push_back(fs::path("..") / fs::path("shader.glsl"));
+	imageBuffer.shader_files.push_back(fs::path("..") / fs::path("shaders") / fs::path("shader-gradient-uniform.glsl"));
 
 	contextConfig.buffer_configs.insert(make_pair(imageBuffer.name,
 												 imageBuffer));

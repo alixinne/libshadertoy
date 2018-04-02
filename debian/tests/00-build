@@ -9,8 +9,8 @@ if [ -z "$CMAKE_EXTRA_OPTS" ]; then
 fi
 
 # Copy example from datadir
-cp -r "$LIBSHADERTOY_DIR/examples/00-build" "$AUTOPKGTEST_TMP"
-cd "$AUTOPKGTEST_TMP/00-build"
+cp -r "$LIBSHADERTOY_DIR/examples" "$AUTOPKGTEST_TMP"
+cd "$AUTOPKGTEST_TMP/examples"
 
 # Configure
 set -eo pipefail
@@ -20,7 +20,7 @@ cd build
 cmake $CMAKE_EXTRA_OPTS ..
 
 # Build
-make -j VERBOSE=1
+make -j VERBOSE=1 example00-build
 
 # Execute
-./example00-build
+./src/00-build/example00-build
