@@ -32,6 +32,7 @@ find_package(shadertoy REQUIRED 1.0.0)
 
 # Directories
 set(INCLUDE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(SRC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 if (OpenGL_FOUND AND EPOXY_FOUND AND GLFW3_FOUND)
 	add_subdirectory(src/00-build)

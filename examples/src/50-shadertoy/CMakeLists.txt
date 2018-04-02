@@ -1,9 +1,11 @@
 message(STATUS "Building example 50-shadertoy")
 
 add_executable(example50-shadertoy
-	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+	${SRC_ROOT}/api.cpp)
 
 target_include_directories(example50-shadertoy PRIVATE
+	${INCLUDE_ROOT}
 	${OPENGL_INCLUDE_DIRS}
 	${EPOXY_INCLUDE_DIRS}
 	${GLFW3_INCLUDE_DIRS}
