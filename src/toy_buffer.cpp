@@ -58,25 +58,14 @@ void toy_buffer::init(int width, int height)
 	// Dump the program if requested
 	if (context_.config().dump_shaders)
 	{
-		GLenum err;
-		// Get GL program id
-		GLuint progId = GLuint(program_);
 		// Allocate buffer
 		GLint len, actLen;
-		gl_call(glGetProgramiv, progId, GL_PROGRAM_BINARY_LENGTH, &len);
+		program_.get(GL_PROGRAM_BINARY_LENGTH, &len);
 
-		char *progBinary = new char[len];
+		std::vector<char> progBinary(len);
 		// Get binary
 		GLenum format;
-		glGetProgramBinary(progId, len, &actLen, &format, progBinary);
-		if ((err = glGetError()) != GL_NO_ERROR)
-		{
-			delete[] progBinary;
-
-			std::stringstream ss;
-			ss << "could not get program binary: " << err;
-			throw std::runtime_error(ss.str());
-		}
+		program_.get_binary(progBinary.size(), &actLen, &format, progBinary.data());
 
 		// Store in file
 		fs::path name(config.shader_files.front());
@@ -87,16 +76,13 @@ void toy_buffer::init(int width, int height)
 
 		if (!ofs.is_open())
 		{
-			delete[] progBinary;
-
 			std::stringstream ss;
 			ss << "could not open output file " << name.string();
 			throw std::runtime_error(ss.str());
 		}
 
-		ofs.write(progBinary, actLen);
+		ofs.write(progBinary.data(), actLen);
 		ofs.close();
-		delete[] progBinary;
 	}
 
 	// bind uniform inputs
@@ -149,8 +135,8 @@ void toy_buffer::render()
                 .input_texture(config.inputs[i]);
 		texture.bind(GL_TEXTURE_2D);
 
-		gl_call(glGetTexLevelParameterfv, GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &resolutions[i][0]);
-		gl_call(glGetTexLevelParameterfv, GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &resolutions[i][1]);
+		texture.get_parameter(0, GL_TEXTURE_WIDTH, &resolutions[i][0]);
+		texture.get_parameter(0, GL_TEXTURE_HEIGHT, &resolutions[i][1]);
 		resolutions[i][2] = 1.0f;
 	}
 
@@ -210,9 +196,5 @@ void toy_buffer::init_render_texture(shared_ptr<gl::texture> &texptr, int width,
 
 	// Clear the frame accumulator so it doesn't contain garbage
 	float black[4] = {0.f};
-	gl_call(glClearTexImage, GLuint(*texptr),
-		0,
-		GL_BGRA,
-		GL_FLOAT,
-		black);
+	texptr->clear_tex_image(0, GL_BGRA, GL_FLOAT, black);
 }

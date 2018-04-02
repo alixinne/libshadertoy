@@ -42,6 +42,11 @@ void texture::parameter(GLenum pname, GLfloat param)
     gl_call(glTextureParameterf, GLuint(*this), pname, param);
 }
 
+void texture::get_parameter(GLint level, GLenum pname, GLfloat *params)
+{
+	gl_call(glGetTextureLevelParameterfv, GLuint(*this), level, pname, params);
+}
+
 void texture::image_2d(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border,
                        GLenum format, GLenum type, const GLvoid *data)
 {
@@ -52,4 +57,9 @@ void texture::image_2d(GLenum target, GLint level, GLint internalFormat, GLsizei
 void texture::generate_mipmap()
 {
     gl_call(glGenerateTextureMipmap, GLuint(*this));
+}
+
+void texture::clear_tex_image(GLint level, GLenum format, GLenum type, const void *data)
+{
+	gl_call(glClearTexImage, GLuint(*this), level, format, type, data);
 }

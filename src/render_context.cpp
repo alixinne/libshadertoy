@@ -205,18 +205,17 @@ void render_context::init_buffers()
 
 	vector<gl::program *> programs{&screen_prog_};
 
-	GLint location;
 	for (auto it = programs.begin(); it != programs.end(); ++it)
 	{
 		// bind input "position" to vertex locations (3 floats)
-		location = gl_call(glGetAttribLocation, GLuint(**it), "position");
-		gl_call(glVertexAttribPointer, location, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)0);
-		gl_call(glEnableVertexAttribArray, location);
+		auto position = (*it)->get_attrib_location("position");
+		position.vertex_pointer(3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)0);
+		position.enable_vertex_array();
 
 		// bind input "texCoord" to vertex texture coordinates (2 floats)
-		location = gl_call(glGetAttribLocation, GLuint(**it), "texCoord");
-		gl_call(glVertexAttribPointer, location, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-		gl_call(glEnableVertexAttribArray, location);
+		auto texCoord = (*it)->get_attrib_location("texCoord");
+		texCoord.vertex_pointer(2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+		texCoord.enable_vertex_array();
 	}
 
 	last_texture_ = weak_ptr<gl::texture>();

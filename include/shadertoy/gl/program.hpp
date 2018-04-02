@@ -20,6 +20,43 @@ namespace gl
 	};
 
 	/**
+	 * @brief Represents the location of an attribute in a program.
+	 */
+	class shadertoy_EXPORT attrib_location
+	{
+	public:
+		/**
+		 * @brief Initializes a new instance of the attrib_location class.
+		 *
+		 * @param program  Program this location is defined in
+		 * @param location Location of the attrib
+		 */
+		attrib_location(const program &program, GLint location);
+
+		/**
+		 * @brief glVertexAttribPointer
+		 *
+		 * @param size       Size
+		 * @param type       Type
+		 * @param normalized Normalized
+		 * @param stride     Stride
+		 * @param pointer    Pointer
+		 */
+		void vertex_pointer(GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer);
+
+		/**
+		 * @brief glEnableVertexAttribArray
+		 */
+		void enable_vertex_array();
+
+	private:
+		/// Program id
+		const GLuint program_;
+		/// Attrib location
+		const GLint location_;
+	};
+
+	/**
 	 * @brief Represents the location of an uniform in a program.
 	 */
 	class shadertoy_EXPORT uniform_location
@@ -243,6 +280,17 @@ namespace gl
 		uniform_location get_uniform_location(const GLchar *name);
 
 		/**
+		 * @brief glGetAttribLocation
+		 *
+		 * @param name Name of the attribute
+		 * @return     Attribute location object that can be used to set this
+		 *             attribute's properties.
+		 *
+		 * @throws OpenGLError
+		 */
+		attrib_location get_attrib_location(const GLchar *name);
+
+		/**
 		 * @brief glAttachShader
 		 *
 		 * @param shader Shader object to attach
@@ -260,6 +308,30 @@ namespace gl
 		 * @throws OpenGLError
 		 */
 		std::string log();
+
+		/**
+		 * @brief glGetProgramiv
+		 *
+		 * @param pname  Parameter name
+		 * @param params Parameters
+		 *
+		 * @throws OpenGLError
+		 * @throws NullProgramError
+		 */
+		void get(GLenum pname, GLint *params);
+
+		/**
+		 * @brief glGetProgramBinary
+		 *
+		 * @param bufsize      Program binary buffer size
+		 * @param length       Program binary length
+		 * @param binaryFormat Program binary format
+		 * @param binary       Program binary
+		 *
+		 * @throws OpenGLError
+		 * @throws NullProgramError
+		 */
+		void get_binary(GLsizei bufsize, GLsizei *length, GLenum *binaryFormat, void *binary);
 	};
 }
 }

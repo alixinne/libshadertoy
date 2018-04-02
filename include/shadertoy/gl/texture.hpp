@@ -96,6 +96,18 @@ namespace gl
 		void parameter(GLenum pname, GLfloat param);
 
 		/**
+		 * @brief glGetTextureLevelParameterfv
+		 *
+		 * @param level  Level
+		 * @param pname  Parameter name
+		 * @param params Parameters
+		 *
+		 * @throws OpenGLError
+		 * @throws NullTextureError
+		 */
+		void get_parameter(GLint level, GLenum pname, GLfloat *params);
+
+		/**
 		 * @brief glTextureImage2DEXT
 		 *
 		 * @param target         Target
@@ -121,6 +133,19 @@ namespace gl
 		 * @throws NullTextureError
 		 */
 		void generate_mipmap();
+
+		/**
+		 * @brief glClearTexImage
+		 *
+		 * @param level  Level
+		 * @param format Format
+		 * @param type   Type
+		 * @param data   Data
+		 *
+		 * @throws OpenGLError
+		 * @throws NullTextureError
+		 */
+		void clear_tex_image(GLint level, GLenum format, GLenum type, const void *data);
 	};
 }
 }

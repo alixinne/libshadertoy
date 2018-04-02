@@ -16,6 +16,7 @@ namespace shadertoy
 		class framebuffer;
 
 		class null_program_error;
+		class attrib_location;
 		class uniform_location;
 		class program_link_error;
 		class program_validate_error;

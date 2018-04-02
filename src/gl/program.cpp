@@ -15,11 +15,26 @@ null_program_error::null_program_error()
 {
 }
 
+attrib_location::attrib_location(const program &program, GLint location)
+	: program_(GLuint(program)),
+	location_(location)
+{
+}
+
+void attrib_location::vertex_pointer(GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer)
+{
+	gl_call(glVertexAttribPointer, location_, size, type, normalized, stride, pointer);
+}
+
+void attrib_location::enable_vertex_array()
+{
+	gl_call(glEnableVertexAttribArray, location_);
+}
+
 uniform_location::uniform_location(const program &program, GLint location)
 	: program_(GLuint(program)),
 	location_(location)
 {
-
 }
 
 bool uniform_location::is_active() const
@@ -186,6 +201,12 @@ uniform_location program::get_uniform_location(const GLchar *name)
 	return uniform_location(*this, location);
 }
 
+attrib_location program::get_attrib_location(const GLchar *name)
+{
+	GLint location = gl_call(glGetAttribLocation, GLuint(*this), name);
+	return attrib_location(*this, location);
+}
+
 void program::attach_shader(const shader &shader)
 {
 	gl_call(glAttachShader, GLuint(*this), GLuint(shader));
@@ -206,4 +227,14 @@ std::string program::log()
 
 	// exclude the null character from the range passed to string constructor
 	return std::string(logStr.begin(), logStr.end() - 1);
+}
+
+void program::get(GLenum pname, GLint *params)
+{
+	gl_call(glGetProgramiv, GLuint(*this), pname, params);
+}
+
+void program::get_binary(GLsizei bufsize, GLsizei *length, GLenum *binaryFormat, void *binary)
+{
+	gl_call(glGetProgramBinary, GLuint(*this), bufsize, length, binaryFormat, binary);
 }
