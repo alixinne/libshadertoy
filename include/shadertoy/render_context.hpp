@@ -38,7 +38,7 @@ private:
 	std::shared_ptr<gl::texture> screen_quad_texture_;
 
 	/// Input texture engine
-	std::shared_ptr<texture_engine> tex_engine_;
+	std::unique_ptr<texture_engine> tex_engine_;
 
 	/// Aux buffers
 	std::map<std::string, std::shared_ptr<toy_buffer>> buffers_;
@@ -71,7 +71,7 @@ private:
 	 * @return     A pointer to a TextureEngine derived instance, which will be
 	 *             used by this instance.
 	 */
-	virtual std::shared_ptr<texture_engine> build_texture_engine();
+	virtual std::unique_ptr<texture_engine> build_texture_engine();
 
 	/**
 	 * @brief      When implemented in a derived class, provides a callback for

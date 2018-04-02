@@ -29,9 +29,9 @@ using namespace std;
 using namespace shadertoy;
 using shadertoy::gl::gl_call;
 
-shared_ptr<texture_engine> render_context::build_texture_engine()
+unique_ptr<texture_engine> render_context::build_texture_engine()
 {
-	auto engine = make_shared<texture_engine>(config_);
+	auto engine = make_unique<texture_engine>(config_);
 
 	engine->register_handler("buffer", input_handler([this]
 		(const input_config &inputConfig,
