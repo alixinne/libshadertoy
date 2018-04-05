@@ -254,12 +254,14 @@ void render_context::clear_state()
 
 void render_context::render()
 {
-	for (auto pair : buffers_)
+	for (auto buffer_spec : config_.buffer_configs)
 	{
-        pair.second->render();
-		last_texture_ = pair.second->source_texture();
+		auto &buffer(buffers_[buffer_spec.first]);
 
-        post_render_buffer(pair.first, pair.second);
+		buffer->render();
+		last_texture_ = buffer->source_texture();
+
+		post_render_buffer(buffer_spec.first, buffer);
 	}
 
 	frame_count_++;
