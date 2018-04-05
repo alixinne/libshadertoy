@@ -78,6 +78,12 @@ add_custom_command(OUTPUT ${SPDLOG_MAIN_INCLUDE}
 				   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog
 				   COMMAND ${CMAKE_COMMAND} -E copy_directory ${SPDLOG_DIR}/include/spdlog ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog)
 
+# libopenexr
+pkg_search_module(OpenEXR OpenEXR)
+if (OpenEXR_FOUND)
+	link_directories(${OpenEXR_LIBDIR})
+endif()
+
 # Copy shaders to source
 file(GLOB RESOURCES_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*)
 add_custom_command(
@@ -150,6 +156,18 @@ target_include_directories(shadertoy-objects PRIVATE
 	${SOIL_INCLUDE_DIRS}
 	${JPEG_INCLUDE_DIRS})
 
+if (OpenEXR_FOUND)
+	message("-- Building with OpenEXR support")
+	target_include_directories(shadertoy-objects PRIVATE
+		${OpenEXR_INCLUDE_DIRS})
+	target_compile_definitions(shadertoy-objects PRIVATE
+		LIBSHADERTOY_OPENEXR=1)
+else()
+	message("-- Building without OpenEXR support")
+	target_compile_definitions(shadertoy-objects PRIVATE
+		LIBSHADERTOY_OPENEXR=0)
+endif()
+
 # C++14
 set(CXX_STANDARD_REQUIRED ON)
 set_property(TARGET shadertoy-objects PROPERTY CXX_STANDARD 14)
@@ -198,6 +216,11 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 		${EPOXY_LIBRARIES}
 		${JPEG_LIBRARIES}
 		${SOIL_LIBRARIES})
+
+	if (OpenEXR_FOUND)
+		target_link_libraries(${TARGET_NAME} PUBLIC
+			${OpenEXR_LIBRARIES})
+	endif()
 
 	# Include directories for install
 	target_include_directories(${TARGET_NAME} INTERFACE $<INSTALL_INTERFACE:include>)

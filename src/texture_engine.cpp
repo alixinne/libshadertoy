@@ -2,6 +2,11 @@
 #include <sstream>
 #include <vector>
 
+#if LIBSHADERTOY_OPENEXR
+#include <OpenEXR/ImfRgba.h>
+#include <OpenEXR/ImfRgbaFile.h>
+#endif /* LIBSHADERTOY_OPENEXR */
+
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 
@@ -119,7 +124,32 @@ shared_ptr<gl::texture> texture_engine::soil_texture_handler(const input_config 
 			fclose(infile);
 		}
 	}
-	else
+#if LIBSHADERTOY_OPENEXR
+	else if (ext.compare(".exr") == 0)
+	{
+		Imf::RgbaInputFile in(inputConfig.source.c_str());
+
+		Imath::Box2i win = in.dataWindow();
+
+		Imath::V2i dim(win.max.x - win.min.x + 1, win.max.y - win.min.y + 1);
+
+		std::vector<Imf::Rgba> pixelBuffer(dim.x * dim.y);
+
+		// Set buffer stride according to reading direction
+		if (inputConfig.vflip)
+			in.setFrameBuffer(pixelBuffer.data() + (dim.y - 1) * dim.x, 1, -dim.x);
+		else
+			in.setFrameBuffer(pixelBuffer.data(), 1, dim.x);
+
+		// Read the whole image
+		in.readPixels(win.min.y, win.max.y);
+
+		texture = make_shared<gl::texture>(GL_TEXTURE_2D);
+		texture->image_2d(GL_TEXTURE_2D, 0, GL_RGBA16F, dim.x, dim.y, 0, GL_RGBA,
+						  GL_HALF_FLOAT, pixelBuffer.data());
+	}
+#endif /* LIBSHADERTOY_OPENEXR */
+	else 
 	{
 		// other, use SOIL
 		texture = make_shared<gl::texture>(GL_TEXTURE_2D);
