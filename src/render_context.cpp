@@ -46,7 +46,8 @@ unique_ptr<texture_engine> render_context::build_texture_engine()
 		framebufferSized = false;
 
 		auto &bufferConfigs = config_.buffer_configs;
-		auto bufferIt = bufferConfigs.find(inputConfig.source);
+		auto bufferIt = std::find_if(bufferConfigs.begin(), bufferConfigs.end(),
+			[&inputConfig](const auto &pair) { return pair.first == inputConfig.source; });
 
 		if (bufferIt == bufferConfigs.end())
 		{
@@ -309,7 +310,9 @@ void render_context::read_current_frame(GLuint &texIn)
 void render_context::build_buffer_shader(const string &id,
                                          gl::shader &fs)
 {
-	auto &bufferConfig(config_.buffer_configs[id]);
+	auto &bufferConfig(std::find_if(config_.buffer_configs.begin(),
+		config_.buffer_configs.end(),
+		[&id](const auto &pair) { return pair.first == id; })->second);
 
 	// Load all source parts
 	shader_compiler compiler;

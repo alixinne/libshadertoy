@@ -38,7 +38,9 @@ toy_buffer::toy_buffer(render_context &context,
 
 void toy_buffer::init(int width, int height)
 {
-	auto &config(context_.config().buffer_configs[id_]);
+	auto &config(std::find_if(context_.config().buffer_configs.begin(),
+		context_.config().buffer_configs.end(),
+		[this](const auto &pair) { return pair.first == id_; })->second);
 
 	// Attach the vertex shader for the screen quad
 	program_.attach_shader(context_.screen_quad_vertex_shader());
@@ -106,7 +108,9 @@ void toy_buffer::allocate_textures(int width, int height)
 
 void toy_buffer::render()
 {
-	auto &config(context_.config().buffer_configs[id_]);
+	auto &config(std::find_if(context_.config().buffer_configs.begin(),
+		context_.config().buffer_configs.end(),
+		[this](const auto &pair) { return pair.first == id_; })->second);
 
 	// Update renderbuffer to use the correct target texture
 	target_tex_->bind(GL_TEXTURE_2D);
