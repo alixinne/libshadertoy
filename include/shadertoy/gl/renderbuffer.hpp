@@ -25,28 +25,28 @@ namespace gl
 		null_renderbuffer_error>
 	{
 	public:
-		/**
-		 * @brief glBindRenderbuffer
-		 *
-		 * @param target Target to bind this renderbuffer to
-		 *
-		 * @throws OpenGLError
-		 * @throws NullRenderbufferError
-		 */
-		void bind(GLenum target);
+          /**
+           * @brief glBindRenderbuffer
+           *
+           * @param target Target to bind this renderbuffer to
+           *
+           * @throws OpenGLError
+           * @throws NullRenderbufferError
+           */
+          void bind(GLenum target);
 
-		// glNamedRenderbufferStorage
-		/**
-		 * @brief glNamedRenderbufferStorage
-		 *
-		 * @param internalFormat Internal format
-		 * @param width          Width
-		 * @param height         Height
-		 *
-		 * @throws OpenGLError
-		 * @throws NullRenderbufferError
-		 */
-		void storage(GLenum internalFormat, GLsizei width, GLsizei height);
+          // glNamedRenderbufferStorage
+          /**
+           * @brief glNamedRenderbufferStorage
+           *
+           * @param internalFormat Internal format
+           * @param width          Width
+           * @param height         Height
+           *
+           * @throws OpenGLError
+           * @throws NullRenderbufferError
+           */
+          void storage(GLenum internalFormat, GLsizei width, GLsizei height);
 	};
 }
 }

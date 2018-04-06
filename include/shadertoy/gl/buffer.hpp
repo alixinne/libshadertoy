@@ -13,10 +13,10 @@ namespace gl
 	class shadertoy_EXPORT null_buffer_error : public shadertoy::shadertoy_error
 	{
 	public:
-		/**
-		 * @brief Initializes a new instance of the NullBufferError class.
-		 */
-		explicit null_buffer_error();
+          /**
+           * @brief Initializes a new instance of the NullBufferError class.
+           */
+          explicit null_buffer_error();
 	};
 
 	/**
@@ -28,26 +28,26 @@ namespace gl
 		null_buffer_error>
 	{
 	public:
-		/**
-		 * @brief glBindBuffer
-		 *
-		 * @param target Target to bind this buffer to
-		 *
-		 * @throws OpenGLError
-		 * @throws NullBufferError
-		 */
-		void bind(GLenum target);
+          /**
+           * @brief glBindBuffer
+           *
+           * @param target Target to bind this buffer to
+           *
+           * @throws OpenGLError
+           * @throws NullBufferError
+           */
+          void bind(GLenum target);
 
-		/**
-		 * @brief glNamedBufferData
-		 * @param size  size of the data to send to the buffer
-		 * @param data  pointer to the data to send to the buffer
-		 * @param usage GL usage for this buffer
-		 *
-		 * @throws OpenGLError
-		 * @throws NullBufferError
-		 */
-		void data(GLsizei size, const void *data, GLenum usage);
+          /**
+           * @brief glNamedBufferData
+           * @param size  size of the data to send to the buffer
+           * @param data  pointer to the data to send to the buffer
+           * @param usage GL usage for this buffer
+           *
+           * @throws OpenGLError
+           * @throws NullBufferError
+           */
+          void data(GLsizei size, const void *data, GLenum usage);
 	};
 }
 }

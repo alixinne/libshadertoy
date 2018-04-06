@@ -109,23 +109,25 @@ render_context::render_context(context_config &config)
 	frame_count_(0)
 {
 	tex_engine_ = build_texture_engine();
-}
 
-void render_context::init()
-{
-	// Initialize constant uniforms
-	state_.get<iResolution>() = glm::vec3(config_.width, config_.height, 1.0f);
-	// Note that this will be overriden once query measurements are available
-	state_.get<iTimeDelta>() = 1.0f / (float) config_.target_framerate;
-	state_.get<iFrameRate>() = (float) config_.target_framerate;
+	// Prepare screen quad geometry
+	GLfloat coords[] = {
+		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		1.0f, -1.0f, 0.0f, 1.0f, 0.0f
+	};
 
-	state_.get<iChannel0>() = 1;
-	state_.get<iChannel1>() = 2;
-	state_.get<iChannel2>() = 3;
-	state_.get<iChannel3>() = 4;
+	GLuint indices[] = {
+		0, 1, 2,
+		0, 2, 3
+	};
 
-	state_.get<iChannelTime>() = { 0.f, 0.f, 0.f, 0.f };
-	state_.get<iSampleRate>() = 48000.f;
+	// Setup coords
+	screen_quad_corners_.data(sizeof(coords), static_cast<const GLvoid *>(&coords[0]), GL_STATIC_DRAW);
+
+	// Setup indices
+	scren_quad_indices_.data(sizeof(indices), static_cast<const GLvoid *>(&indices[0]), GL_STATIC_DRAW);
 
 	// Compile screen quad vertex shader
 	screen_vs_.source(string(screenQuad_vsh, screenQuad_vsh + screenQuad_vsh_size));
@@ -146,45 +148,61 @@ void render_context::init()
 	screen_prog_.use();
 	screen_prog_.get_uniform_location("screenTexture").set_value(0);
 
+	// Setup position and texCoord attributes for shaders
+	screen_quad_corners_.bind(GL_ARRAY_BUFFER);
+	scren_quad_indices_.bind(GL_ELEMENT_ARRAY_BUFFER);
+
+	vector<gl::program *> programs{ &screen_prog_ };
+
+	for (auto it = programs.begin(); it != programs.end(); ++it)
+	{
+		// bind input "position" to vertex locations (3 floats)
+		auto position = (*it)->get_attrib_location("position");
+		position.vertex_pointer(3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)0);
+		position.enable_vertex_array();
+
+		// bind input "texCoord" to vertex texture coordinates (2 floats)
+		auto texCoord = (*it)->get_attrib_location("texCoord");
+		texCoord.vertex_pointer(2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat)));
+		texCoord.enable_vertex_array();
+	}
+}
+
+void render_context::init()
+{
+	// Initialize constant uniforms
+	state_.get<iResolution>() = glm::vec3(config_.width, config_.height, 1.0f);
+	// Note that this will be overriden once query measurements are available
+	state_.get<iTimeDelta>() = 1.0f / (float)config_.target_framerate;
+	state_.get<iFrameRate>() = (float)config_.target_framerate;
+
+	state_.get<iChannel0>() = 1;
+	state_.get<iChannel1>() = 2;
+	state_.get<iChannel2>() = 3;
+	state_.get<iChannel3>() = 4;
+
+	state_.get<iChannelTime>() = { 0.f, 0.f, 0.f, 0.f };
+	state_.get<iSampleRate>() = 48000.f;
+
 	// Initialize the texture engine
-    tex_engine_->init();
-
-	// Prepare screen quad geometry
-	GLfloat coords[] = {
-		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-		1.0f, -1.0f, 0.0f, 1.0f, 0.0f
-	};
-
-	GLuint indices[] = {
-		0, 1, 2,
-		0, 2, 3
-	};
-
-	// Setup coords
-	screen_quad_corners_.data(sizeof(coords),
-		static_cast<const GLvoid*>(&coords[0]), GL_STATIC_DRAW);
-
-	// Setup indices
-	scren_quad_indices_.data(sizeof(indices),
-		static_cast<const GLvoid*>(&indices[0]), GL_STATIC_DRAW);
+	tex_engine_->init();
 
 	// Initialize buffers
-    init_buffers();
+	init_buffers();
 }
 
 void render_context::init_buffers()
 {
 	// Invoke callback
-    pre_init_buffers();
+	pre_init_buffers();
 
 	// Prepare the define wrapper
 	ostringstream oss;
 	for (auto define : config_.preprocessor_defines)
 	{
 		oss << "#define " << define.first;
-		if (!define.second.empty()) {
+		if (!define.second.empty())
+		{
 			oss << " " << define.second;
 		}
 		oss << endl;
@@ -195,34 +213,15 @@ void render_context::init_buffers()
 	auto bufferConfigs = config_.buffer_configs;
 	for (auto it = bufferConfigs.begin(); it != bufferConfigs.end(); ++it)
 	{
-		auto buf = make_shared<toy_buffer>(*this, it->first);
-        buf->init(config_.width, config_.height);
-		buffers_.insert(make_pair(it->first, buf));
-	}
-
-	// Setup position and texCoord attributes for shaders
-	screen_quad_corners_.bind(GL_ARRAY_BUFFER);
-	scren_quad_indices_.bind(GL_ELEMENT_ARRAY_BUFFER);
-
-	vector<gl::program *> programs{&screen_prog_};
-
-	for (auto it = programs.begin(); it != programs.end(); ++it)
-	{
-		// bind input "position" to vertex locations (3 floats)
-		auto position = (*it)->get_attrib_location("position");
-		position.vertex_pointer(3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)0);
-		position.enable_vertex_array();
-
-		// bind input "texCoord" to vertex texture coordinates (2 floats)
-		auto texCoord = (*it)->get_attrib_location("texCoord");
-		texCoord.vertex_pointer(2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-		texCoord.enable_vertex_array();
-	}
+          auto buf = make_shared<toy_buffer>(*this, it->first);
+          buf->init(config_.width, config_.height);
+          buffers_.insert(make_pair(it->first, buf));
+        }
 
 	last_texture_ = weak_ptr<gl::texture>();
 
 	// Invoke callback
-    post_init_buffers();
+	post_init_buffers();
 }
 
 void render_context::allocate_textures()
@@ -232,10 +231,10 @@ void render_context::allocate_textures()
 
 	// Reallocate buffer textures
 	for (auto &pair : buffers_)
-        pair.second->allocate_textures(config_.width, config_.height);
+          pair.second->allocate_textures(config_.width, config_.height);
 
 	// Reallocate inputs
-    tex_engine_->clear(true);
+	tex_engine_->clear(true);
 
 	// Update the iResolution uniform, as this method can be called after a
 	// framebuffer size change
@@ -245,7 +244,7 @@ void render_context::allocate_textures()
 void render_context::clear_state()
 {
 	// Clear previous input textures
-    tex_engine_->clear();
+	tex_engine_->clear();
 	// Clear previous buffers
 	buffers_.clear();
 	// Clear the source cache
@@ -258,8 +257,8 @@ void render_context::render()
 	{
 		auto &buffer(buffers_[buffer_spec.first]);
 
-		buffer->render();
-		last_texture_ = buffer->source_texture();
+                buffer->render();
+                last_texture_ = buffer->source_texture();
 
 		post_render_buffer(buffer_spec.first, buffer);
 	}
@@ -293,8 +292,9 @@ void render_context::read_write_current_frame(GLuint &texIn, GLuint &texOut)
 	}
 	else
 	{
-		throw runtime_error("DoReadWriteCurrentFrame: last_texture_ pointer has expired!");
-	}
+          throw runtime_error(
+              "DoReadWriteCurrentFrame: last_texture_ pointer has expired!");
+        }
 }
 
 void render_context::read_current_frame(GLuint &texIn)
@@ -305,8 +305,9 @@ void render_context::read_current_frame(GLuint &texIn)
 	}
 	else
 	{
-		throw runtime_error("DoReadCurrentFrame: last_texture_ pointer has expired!");
-	}
+          throw runtime_error(
+              "DoReadCurrentFrame: last_texture_ pointer has expired!");
+        }
 }
 
 void render_context::build_buffer_shader(const string &id,
@@ -349,7 +350,7 @@ void render_context::build_buffer_shader(const string &id,
 		string(wrapper_footer_fsh, wrapper_footer_fsh + wrapper_footer_fsh_size)));
 
 	// Load sources into fragment shader and compile
-    compiler.compile(fs);
+	compiler.compile(fs);
 }
 
 const GLchar *render_context::load_shader_source(const fs::path &path) throw(runtime_error)
@@ -358,7 +359,8 @@ const GLchar *render_context::load_shader_source(const fs::path &path) throw(run
 	ifstream src(shaderPath.string().c_str());
 	string loadedSource;
 	loadedSource.assign(istreambuf_iterator<char>(src), istreambuf_iterator<char>());
-	if (loadedSource.back() != '\n') {
+	if (loadedSource.back() != '\n')
+	{
 		loadedSource += "\n";
 	}
 	source_cache_.insert(make_pair(shaderPath.string(), loadedSource));
@@ -378,7 +380,7 @@ vector<shared_ptr<bound_inputs_base>> render_context::bound_inputs(gl::program &
 	vector<shared_ptr<bound_inputs_base>> result;
 
 	// External inputs
-    bind_inputs(result, program);
+	bind_inputs(result, program);
 
 	// Default inputs
 	result.insert(result.begin(), state_.bind_inputs(program));
