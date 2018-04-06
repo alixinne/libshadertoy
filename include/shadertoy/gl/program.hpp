@@ -205,29 +205,29 @@ namespace gl
 	class shadertoy_EXPORT program_validate_error : public shadertoy::shadertoy_error
 	{
 	public:
-          /**
-           * @brief Initializes a new instance of the ProgramValidateError
-           * class.
-           *
-           * @param  programId OpenGL resource id of the failed program
-           * @param  log       Contents of the validate step log
-           */
-          explicit program_validate_error(GLuint programId,
-                                          const std::string &log);
+		/**
+		 * @brief Initializes a new instance of the program_validate_error class.
+		 *
+		 * @param  programId OpenGL resource id of the failed program
+		 * @param  log       Contents of the validate step log
+		 */
+		explicit program_validate_error(GLuint programId, const std::string &log);
 
-          /**
-           * @brief Get the program id of the failed validation step.
-           *
-           * @return Id of the program that failed the validation step.
-           */
-          GLuint program_id() const { return program_id_; }
+		/**
+		 * @brief Get the program id of the failed validation step.
+		 *
+		 * @return Id of the program that failed the validation step.
+		 */
+		GLuint program_id() const
+		{ return program_id_; }
 
-          /**
-           * @brief Get the log of the validation step.
-           *
-           * @return Contents of the program validation log.
-           */
-          const std::string &log() const { return log_; }
+		/**
+		 * @brief Get the log of the validation step.
+		 *
+		 * @return Contents of the program validation log.
+		 */
+		const std::string &log() const
+		{ return log_; }
 
 	private:
 		/// Program id
@@ -245,94 +245,93 @@ namespace gl
 		null_program_error>
 	{
 	public:
-          /**
-           * @brief glLinkProgram
-           *
-           * @throws OpenGLError
-           * @throws ProgramLinkError
-           */
-          void link();
+		/**
+		 * @brief glLinkProgram
+		 *
+		 * @throws opengl_error
+		 * @throws ProgramLinkError
+		 */
+		void link();
 
-          /**
-           * @brief glUseProgram
-           *
-           * @throws OpenGLError
-           */
-          void use();
+		/**
+		 * @brief glUseProgram
+		 *
+		 * @throws opengl_error
+		 */
+		void use();
 
-          /**
-           * @brief glValidateProgram
-           *
-           * @throws OpenGLError
-           * @throws ProgramValidateError
-           */
-          void validate();
+		/**
+		 * @brief glValidateProgram
+		 *
+		 * @throws opengl_error
+		 * @throws program_validate_error
+		 */
+		void validate();
 
-          /**
-           * @brief glGetUniformLocation
-           *
-           * @param  name Name of the uniform
-           * @return      Uniform location object that can be used to set the
-           *              value of this uniform.
-           *
-           * @throws OpenGLError
-           */
-          uniform_location get_uniform_location(const GLchar *name);
+		/**
+		 * @brief glGetUniformLocation
+		 *
+		 * @param  name Name of the uniform
+		 * @return      Uniform location object that can be used to set the
+		 *              value of this uniform.
+		 *
+		 * @throws opengl_error
+		 */
+		uniform_location get_uniform_location(const GLchar *name);
 
-          /**
-           * @brief glGetAttribLocation
-           *
-           * @param name Name of the attribute
-           * @return     Attribute location object that can be used to set this
-           *             attribute's properties.
-           *
-           * @throws OpenGLError
-           */
-          attrib_location get_attrib_location(const GLchar *name);
+		/**
+		 * @brief glGetAttribLocation
+		 *
+		 * @param name Name of the attribute
+		 * @return     Attribute location object that can be used to set this
+		 *             attribute's properties.
+		 *
+		 * @throws opengl_error
+		 */
+		attrib_location get_attrib_location(const GLchar *name);
 
-          /**
-           * @brief glAttachShader
-           *
-           * @param shader Shader object to attach
-           *
-           * @throws OpenGLError
-           * @throws NullShaderError
-           */
-          void attach_shader(const shader &shader);
+		/**
+		 * @brief glAttachShader
+		 *
+		 * @param shader Shader object to attach
+		 *
+		 * @throws opengl_error
+		 * @throws null_shader_error
+		 */
+		void attach_shader(const shader &shader);
 
-          /**
-           * @brief glGetProgramInfoLog
-           *
-           * @return Contents of the information log
-           *
-           * @throws OpenGLError
-           */
-          std::string log();
+		/**
+		 * @brief glGetProgramInfoLog
+		 *
+		 * @return Contents of the information log
+		 *
+		 * @throws opengl_error
+		 */
+		std::string log();
 
-          /**
-           * @brief glGetProgramiv
-           *
-           * @param pname  Parameter name
-           * @param params Parameters
-           *
-           * @throws OpenGLError
-           * @throws NullProgramError
-           */
-          void get(GLenum pname, GLint *params);
+		/**
+		 * @brief glGetProgramiv
+		 *
+		 * @param pname  Parameter name
+		 * @param params Parameters
+		 *
+		 * @throws opengl_error
+		 * @throws null_program_error
+		 */
+		void get(GLenum pname, GLint *params);
 
-          /**
-           * @brief glGetProgramBinary
-           *
-           * @param bufsize      Program binary buffer size
-           * @param length       Program binary length
-           * @param binaryFormat Program binary format
-           * @param binary       Program binary
-           *
-           * @throws OpenGLError
-           * @throws NullProgramError
-           */
-          void get_binary(GLsizei bufsize, GLsizei *length,
-                          GLenum *binaryFormat, void *binary);
+		/**
+		 * @brief glGetProgramBinary
+		 *
+		 * @param bufsize      Program binary buffer size
+		 * @param length       Program binary length
+		 * @param binaryFormat Program binary format
+		 * @param binary       Program binary
+		 *
+		 * @throws opengl_error
+		 * @throws null_program_error
+		 */
+		void get_binary(GLsizei bufsize, GLsizei *length, GLenum *binaryFormat, void *binary);
 	};
 }
 }
