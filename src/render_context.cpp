@@ -65,13 +65,16 @@ unique_ptr<texture_engine> render_context::build_texture_engine()
 
 			auto texture = buffers_[inputConfig.source]->source_texture();
 
-			int minFilter = max((int)inputConfig.min_filter, GL_LINEAR),
-				magFilter = (int)inputConfig.mag_filter;
+			GLint minFilter = inputConfig.min_filter,
+				  magFilter = inputConfig.mag_filter;
 
 			texture->parameter(GL_TEXTURE_MAG_FILTER, magFilter);
 			texture->parameter(GL_TEXTURE_MIN_FILTER, minFilter);
 			texture->parameter(GL_TEXTURE_WRAP_S, inputConfig.wrap);
 			texture->parameter(GL_TEXTURE_WRAP_T, inputConfig.wrap);
+
+			if (minFilter > GL_LINEAR)
+				texture->generate_mipmap();
 
 			return texture;
 		}

@@ -189,10 +189,6 @@ void toy_buffer::init_render_texture(shared_ptr<gl::texture> &texptr, int width,
 		texptr = make_shared<gl::texture>(GL_TEXTURE_2D);
 
 	// Allocate texture storage according to width/height
-	texptr->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	texptr->parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	texptr->parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	texptr->parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	texptr->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_BGRA,
 		GL_UNSIGNED_BYTE, nullptr);
 
