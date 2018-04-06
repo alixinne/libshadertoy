@@ -292,9 +292,8 @@ void render_context::read_write_current_frame(GLuint &texIn, GLuint &texOut)
 	}
 	else
 	{
-          throw runtime_error(
-              "DoReadWriteCurrentFrame: last_texture_ pointer has expired!");
-        }
+		throw runtime_error(string(__func__) + ": last_texture_ pointer has expired!");
+	}
 }
 
 void render_context::read_current_frame(GLuint &texIn)
@@ -305,9 +304,8 @@ void render_context::read_current_frame(GLuint &texIn)
 	}
 	else
 	{
-          throw runtime_error(
-              "DoReadCurrentFrame: last_texture_ pointer has expired!");
-        }
+		throw runtime_error(string(__func__) + ": last_texture_ pointer has expired!");
+	}
 }
 
 void render_context::build_buffer_shader(const string &id,
