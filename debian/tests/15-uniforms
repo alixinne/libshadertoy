@@ -20,7 +20,7 @@ cd build
 cmake $CMAKE_EXTRA_OPTS ..
 
 # Build
-make -j VERBOSE=1 15-uniforms
+make -j VERBOSE=1 example15-uniforms
 
 # Execute
 ./src/15-uniforms/example15-uniforms
