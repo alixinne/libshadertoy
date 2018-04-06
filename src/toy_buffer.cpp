@@ -26,65 +26,70 @@ namespace fs = boost::filesystem;
 using namespace shadertoy;
 using shadertoy::gl::gl_call;
 
-toy_buffer::toy_buffer(render_context &context, const std::string &id)
-    : context_(context), id_(id), fs_(GL_FRAGMENT_SHADER), bound_inputs_(),
-      time_delta_query_(GL_TIME_ELAPSED) {}
+toy_buffer::toy_buffer(const std::string &id)
+	: id_(id),
+	  fs_(GL_FRAGMENT_SHADER),
+	  bound_inputs_(),
+	  time_delta_query_(GL_TIME_ELAPSED)
+{
+}
 
-void toy_buffer::init(int width, int height) {
-  auto &config(
-      std::find_if(context_.config().buffer_configs.begin(),
-                   context_.config().buffer_configs.end(),
-                   [this](const auto &pair) { return pair.first == id_; })
-          ->second);
+void toy_buffer::init(render_context &context, int width, int height)
+{
+	auto &config(std::find_if(context.config().buffer_configs.begin(),
+		context.config().buffer_configs.end(),
+		[this](const auto &pair) { return pair.first == id_; })->second);
 
-  // Attach the vertex shader for the screen quad
-  program_.attach_shader(context_.screen_quad_vertex_shader());
+	// Attach the vertex shader for the screen quad
+	program_.attach_shader(context.screen_quad_vertex_shader());
 
-  // Load the fragment shader for this buffer
-  context_.build_buffer_shader(id_, fs_);
+	// Load the fragment shader for this buffer
+    context.build_buffer_shader(id_, fs_);
 
-  // Attach shader
-  program_.attach_shader(fs_);
+	// Attach shader
+	program_.attach_shader(fs_);
 
-  // Link the program
-  program_.link();
+	// Link the program
+	program_.link();
 
-  // Use the program
-  program_.use();
+	// Use the program
+	program_.use();
 
-  // Dump the program if requested
-  if (context_.config().dump_shaders) {
-    // Allocate buffer
-    GLint len, actLen;
-    program_.get(GL_PROGRAM_BINARY_LENGTH, &len);
+	// Dump the program if requested
+	if (context.config().dump_shaders)
+	{
+		// Allocate buffer
+		GLint len, actLen;
+		program_.get(GL_PROGRAM_BINARY_LENGTH, &len);
 
-    std::vector<char> progBinary(len);
-    // Get binary
-    GLenum format;
-    program_.get_binary(progBinary.size(), &actLen, &format, progBinary.data());
+		std::vector<char> progBinary(len);
+		// Get binary
+		GLenum format;
+		program_.get_binary(progBinary.size(), &actLen, &format, progBinary.data());
 
-    // Store in file
-    fs::path name(config.shader_files.front());
-    name.replace_extension(".dump");
-    BOOST_LOG_TRIVIAL(info) << "dumping program binary to " << name;
+		// Store in file
+		fs::path name(config.shader_files.front());
+		name.replace_extension(".dump");
+		BOOST_LOG_TRIVIAL(info) << "dumping program binary to " << name;
 
-    ofstream ofs(name.string().c_str(), std::ofstream::binary);
+		ofstream ofs(name.string().c_str(), std::ofstream::binary);
 
-    if (!ofs.is_open()) {
-      std::stringstream ss;
-      ss << "could not open output file " << name.string();
-      throw std::runtime_error(ss.str());
-    }
+		if (!ofs.is_open())
+		{
+			std::stringstream ss;
+			ss << "could not open output file " << name.string();
+			throw std::runtime_error(ss.str());
+		}
 
-    ofs.write(progBinary.data(), actLen);
-    ofs.close();
-  }
+		ofs.write(progBinary.data(), actLen);
+		ofs.close();
+	}
 
-  // bind uniform inputs
-  bound_inputs_ = context_.bound_inputs(program_);
+	// bind uniform inputs
+	bound_inputs_ = context.bound_inputs(program_);
 
-  // Allocate render textures
-  allocate_textures(width, height);
+	// Allocate render textures
+    allocate_textures(width, height);
 }
 
 void toy_buffer::allocate_textures(int width, int height)
@@ -99,64 +104,65 @@ void toy_buffer::allocate_textures(int width, int height)
 	target_rbo_.storage(GL_DEPTH_COMPONENT, width, height);
 }
 
-void toy_buffer::render() {
-  auto &config(
-      std::find_if(context_.config().buffer_configs.begin(),
-                   context_.config().buffer_configs.end(),
-                   [this](const auto &pair) { return pair.first == id_; })
-          ->second);
+void toy_buffer::render(render_context &context)
+{
+	auto &config(std::find_if(context.config().buffer_configs.begin(),
+		context.config().buffer_configs.end(),
+		[this](const auto &pair) { return pair.first == id_; })->second);
 
-  // Update renderbuffer to use the correct target texture
-  target_tex_->bind(GL_TEXTURE_2D);
-  target_rbo_.bind(GL_RENDERBUFFER);
-  target_fbo_.bind(GL_DRAW_FRAMEBUFFER);
+	// Update renderbuffer to use the correct target texture
+	target_tex_->bind(GL_TEXTURE_2D);
+	target_rbo_.bind(GL_RENDERBUFFER);
+	target_fbo_.bind(GL_DRAW_FRAMEBUFFER);
 
-  target_fbo_.texture(GL_COLOR_ATTACHMENT0, *target_tex_, 0);
+	target_fbo_.texture(GL_COLOR_ATTACHMENT0, *target_tex_, 0);
 
-  // Prepare the render target
-  context_.clear(0.f);
+	// Prepare the render target
+	context.clear(0.f);
 
-  // Setup program and its uniforms
-  program_.use();
+	// Setup program and its uniforms
+	program_.use();
 
-  // Override values in bound inputs 0 (ShaderToy inputs)
-  auto &resolutions(
-      static_pointer_cast<shader_inputs_t::bound_inputs>(bound_inputs_[0])
-          ->state.get<iChannelResolution>());
+	// Override values in bound inputs 0 (ShaderToy inputs)
+	auto &resolutions(static_pointer_cast<shader_inputs_t::bound_inputs>(bound_inputs_[0])
+		->state.get<iChannelResolution>());
 
-  // Setup the texture targets
-  for (int i = 0; i < 4; ++i) {
-    gl_call(glActiveTexture, GL_TEXTURE0 + i + 1);
-    // Following have side effects, ensure it runs after we selected the new
-    // texture unit
-    auto &texture = context_.tex_engine().input_texture(config.inputs[i]);
-    texture.bind(GL_TEXTURE_2D);
+	// Setup the texture targets
+	for (int i = 0; i < 4; ++i)
+	{
+		gl_call(glActiveTexture, GL_TEXTURE0 + i + 1);
+		// Following have side effects, ensure it runs after we selected the new
+		// texture unit
+		auto &texture = context.tex_engine()
+                .input_texture(config.inputs[i]);
+		texture.bind(GL_TEXTURE_2D);
 
-    texture.get_parameter(0, GL_TEXTURE_WIDTH, &resolutions[i][0]);
-    texture.get_parameter(0, GL_TEXTURE_HEIGHT, &resolutions[i][1]);
-    resolutions[i][2] = 1.0f;
-  }
+		texture.get_parameter(0, GL_TEXTURE_WIDTH, &resolutions[i][0]);
+		texture.get_parameter(0, GL_TEXTURE_HEIGHT, &resolutions[i][1]);
+		resolutions[i][2] = 1.0f;
+	}
 
-  // Try to set iTimeDelta
-  GLint available = 0;
-  time_delta_query_.get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
-  if (available) {
-    // Result available, set uniform value
-    GLuint64 timeDelta;
-    time_delta_query_.get_object_ui64v(GL_QUERY_RESULT, &timeDelta);
-    static_pointer_cast<shader_inputs_t::bound_inputs>(bound_inputs_[0])
-        ->state.get<iTimeDelta>() = timeDelta / 1e9;
-  }
+	// Try to set iTimeDelta
+	GLint available = 0;
+	time_delta_query_.get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
+	if (available)
+	{
+		// Result available, set uniform value
+		GLuint64 timeDelta;
+		time_delta_query_.get_object_ui64v(GL_QUERY_RESULT, &timeDelta);
+		static_pointer_cast<shader_inputs_t::bound_inputs>(bound_inputs_[0])
+			->state.get<iTimeDelta>() = timeDelta / 1e9;
+	}
 
-  // Set all uniforms
-  for (auto &inputs : bound_inputs_)
-    inputs->apply();
+	// Set all uniforms
+	for (auto &inputs : bound_inputs_)
+        inputs->apply();
 
-  // Render the program
-  context_.render_screen_quad(time_delta_query_);
+	// Render the program
+    context.render_screen_quad(time_delta_query_);
 
-  // Swap texture object pointers
-  swap(source_tex_, target_tex_);
+	// Swap texture object pointers
+	swap(source_tex_, target_tex_);
 }
 
 unsigned long long toy_buffer::elapsed_time()

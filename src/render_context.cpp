@@ -213,10 +213,10 @@ void render_context::init_buffers()
 	auto bufferConfigs = config_.buffer_configs;
 	for (auto it = bufferConfigs.begin(); it != bufferConfigs.end(); ++it)
 	{
-          auto buf = make_shared<toy_buffer>(*this, it->first);
-          buf->init(config_.width, config_.height);
-          buffers_.insert(make_pair(it->first, buf));
-        }
+		auto buf = make_shared<toy_buffer>(it->first);
+		buf->init(*this, config_.width, config_.height);
+		buffers_.insert(make_pair(it->first, buf));
+	}
 
 	last_texture_ = weak_ptr<gl::texture>();
 
@@ -231,7 +231,7 @@ void render_context::allocate_textures()
 
 	// Reallocate buffer textures
 	for (auto &pair : buffers_)
-          pair.second->allocate_textures(config_.width, config_.height);
+		pair.second->allocate_textures(config_.width, config_.height);
 
 	// Reallocate inputs
 	tex_engine_->clear(true);
@@ -257,8 +257,8 @@ void render_context::render()
 	{
 		auto &buffer(buffers_[buffer_spec.first]);
 
-                buffer->render();
-                last_texture_ = buffer->source_texture();
+		buffer->render(*this);
+		last_texture_ = buffer->source_texture();
 
 		post_render_buffer(buffer_spec.first, buffer);
 	}
