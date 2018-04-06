@@ -178,8 +178,6 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 
 	# Add UNWIND if found
 	if (UNWIND_FOUND AND UNWIND_ARCH)
-		message("-- Using unwind for tracing OpenGL calls")
-
 		target_link_libraries(${TARGET_NAME} PRIVATE ${UNWIND_LIBRARIES} unwind-${UNWIND_ARCH})
 	endif()
 
