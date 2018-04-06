@@ -121,7 +121,6 @@ int shadertoy_load(const char *shader_id, const char *shader_api_key, int width,
 	ctx.config.width = width;
 	ctx.config.height = height;
 	ctx.config.target_framerate = 30.0;
-	ctx.config.dump_shaders = false;
 
 	// Fetch shader code
 	code = load_remote(ctx.config, shaderId, shaderApiKey);

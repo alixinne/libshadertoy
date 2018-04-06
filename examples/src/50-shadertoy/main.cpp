@@ -76,7 +76,7 @@ int parse_options(string &shaderId, string &shaderApiKey, bool &dump, int argc, 
 	return 0;
 }
 
-int render(GLFWwindow* window, shadertoy::context_config &contextConfig)
+int render(GLFWwindow* window, shadertoy::context_config &contextConfig, bool dumpShaders)
 {
 	int code = 0;
 
@@ -89,6 +89,22 @@ int render(GLFWwindow* window, shadertoy::context_config &contextConfig)
 		// Initialize context
 		context.init();
 		BOOST_LOG_TRIVIAL(info) << "Initialized rendering context";
+
+		if (dumpShaders)
+		{
+			for (auto &bufferConfig : contextConfig.buffer_configs)
+			{
+				auto &firstPath(bufferConfig.second.shader_files.front());
+				auto dumpPath(firstPath.replace_extension(".dump"));
+
+				BOOST_LOG_TRIVIAL(info) << "Dumping " << bufferConfig.first << " to " << dumpPath;
+
+				std::ofstream ofs(dumpPath.string());
+				auto dump(shadertoy::utils::dump_program(context.buffer(bufferConfig.first)->program()));
+				ofs.write(dump.data(), dump.size());
+				ofs.close();
+			}
+		}
 	}
 	catch (shadertoy::gl::shader_compilation_error &sce)
 	{
@@ -186,7 +202,7 @@ int render(GLFWwindow* window, shadertoy::context_config &contextConfig)
 	return code;
 }
 
-int performRender(shadertoy::context_config &contextConfig)
+int performRender(shadertoy::context_config &contextConfig, bool dumpShaders)
 {
 	int code = 0;
 
@@ -213,7 +229,7 @@ int performRender(shadertoy::context_config &contextConfig)
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
 
-	code = render(window, contextConfig);
+	code = render(window, contextConfig, dumpShaders);
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
@@ -238,7 +254,6 @@ int main(int argc, char *argv[])
 	contextConfig.width = 640;
 	contextConfig.height = 480;
 	contextConfig.target_framerate = 60.0;
-	contextConfig.dump_shaders = dumpShaders;
 
 	// Fetch shader code
 	code = load_remote(contextConfig, shaderApiKey, shaderId);
@@ -246,7 +261,7 @@ int main(int argc, char *argv[])
 		return code;
 
 	// Render
-	code = performRender(contextConfig);
+	code = performRender(contextConfig, dumpShaders);
 
 	return code;
 }

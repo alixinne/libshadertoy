@@ -89,6 +89,14 @@ public:
 	{ return target_tex_; }
 
 	/**
+	 * @brief      Get a reference to the program represented by this buffer
+	 *
+	 * @return     OpenGL program for this buffer.
+	 */
+	inline gl::program &program()
+	{ return program_; }
+
+	/**
 	 * @brief      Obtain the duration of the last rendering of this buffer, in
 	 *             nanoseconds. This method may block while waiting for the
 	 *             query object to be available.

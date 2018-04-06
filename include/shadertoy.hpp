@@ -29,3 +29,5 @@
 #include "shadertoy/toy_buffer.hpp"
 #include "shadertoy/texture_engine.hpp"
 #include "shadertoy/render_context.hpp"
+
+#include "shadertoy/utils.hpp"

@@ -123,6 +123,7 @@ add_library(shadertoy-objects OBJECT
 	${SRC_DIR}/gl/renderbuffer.cpp
 	${SRC_DIR}/gl/shader.cpp
 	${SRC_DIR}/gl/texture.cpp
+	${SRC_DIR}/utils/dump_program.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/resources.c)
 
 # Include directories
@@ -258,6 +259,11 @@ file(GLOB SHADERTOY_GL_HEADERS ${INCLUDE_DIR}/shadertoy/gl/*.hpp)
 install(FILES ${SHADERTOY_GL_HEADERS}
 		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy/gl)
+
+file(GLOB SHADERTOY_UTILS_HEADERS ${INCLUDE_DIR}/shadertoy/utils/*.hpp)
+install(FILES ${SHADERTOY_UTILS_HEADERS}
+		COMPONENT shadertoy-dev
+		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy/utils)
 
 # Enable warnings
 if(MSVC)

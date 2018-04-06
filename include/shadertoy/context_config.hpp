@@ -25,9 +25,6 @@ struct shadertoy_EXPORT context_config
 
 	/// List of configured buffers for this context
 	std::vector<std::pair<std::string, buffer_config>> buffer_configs;
-
-	/// True if binary versions of the compiled shaders should be dumped
-	bool dump_shaders;
 };
 }
 

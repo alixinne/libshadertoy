@@ -55,36 +55,6 @@ void toy_buffer::init(render_context &context, int width, int height)
 	// Use the program
 	program_.use();
 
-	// Dump the program if requested
-	if (context.config().dump_shaders)
-	{
-		// Allocate buffer
-		GLint len, actLen;
-		program_.get(GL_PROGRAM_BINARY_LENGTH, &len);
-
-		std::vector<char> progBinary(len);
-		// Get binary
-		GLenum format;
-		program_.get_binary(progBinary.size(), &actLen, &format, progBinary.data());
-
-		// Store in file
-		fs::path name(config.shader_files.front());
-		name.replace_extension(".dump");
-		BOOST_LOG_TRIVIAL(info) << "dumping program binary to " << name;
-
-		ofstream ofs(name.string().c_str(), std::ofstream::binary);
-
-		if (!ofs.is_open())
-		{
-			std::stringstream ss;
-			ss << "could not open output file " << name.string();
-			throw std::runtime_error(ss.str());
-		}
-
-		ofs.write(progBinary.data(), actLen);
-		ofs.close();
-	}
-
 	// bind uniform inputs
 	bound_inputs_ = context.bound_inputs(program_);
 
