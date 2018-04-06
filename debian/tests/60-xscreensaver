@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ -z "$LIBSHADERTOY_DIR" ]; then
+	LIBSHADERTOY_DIR=/usr/share/shadertoy
+fi
+
+if [ -z "$CMAKE_EXTRA_OPTS" ]; then
+	CMAKE_EXTRA_OPTS=""
+fi
+
+# Copy example from datadir
+cp -r "$LIBSHADERTOY_DIR/examples" "$AUTOPKGTEST_TMP"
+cd "$AUTOPKGTEST_TMP/examples"
+
+# Configure
+set -eo pipefail
+
+mkdir build
+cd build
+cmake $CMAKE_EXTRA_OPTS ..
+
+# Build
+make -j VERBOSE=1 example60-xscreensaver
+
+# Execute
+./src/60-xscreensaver/example50-shadertoy
