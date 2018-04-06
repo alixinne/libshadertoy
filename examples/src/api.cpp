@@ -218,14 +218,13 @@ int load_remote(shadertoy::context_config &ctx_config, const string &shaderId, c
 
 			// Add to context
 			imageBuffer.shader_files.push_back(p);
-			ctx_config.buffer_configs.insert(make_pair(imageBuffer.name,
-														 imageBuffer));
+			ctx_config.buffer_configs.emplace_back(imageBuffer.name, imageBuffer);
 		}
 
 		// Image buffer should be last
 		pair<string, shadertoy::buffer_config> imagebuf(*ctx_config.buffer_configs.begin());
 		ctx_config.buffer_configs.erase(ctx_config.buffer_configs.begin());
-		ctx_config.buffer_configs.insert(imagebuf);
+		ctx_config.buffer_configs.push_back(imagebuf);
 	}
 	catch (exception &ex)
 	{
