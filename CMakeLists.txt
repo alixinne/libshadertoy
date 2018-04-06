@@ -23,7 +23,7 @@ set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 mark_as_advanced(VERSION_MAJOR VERSION_MINOR VERSION_PATCH VERSION)
 
 # Print a message with the version number
-message("-- shadertoy v${VERSION}")
+message(STATUS "shadertoy v${VERSION}")
 
 # Project directories
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -156,12 +156,12 @@ list(GET COMPILER_ARCH_LIST 0 COMPILER_ARCH_NAME)
 string(REGEX REPLACE "i.86" "x86" UNWIND_ARCH ${COMPILER_ARCH_NAME})
 
 if (UNWIND_FOUND AND UNWIND_ARCH)
-	message("-- Using unwind for tracing OpenGL calls")
+	message(STATUS "Using unwind for tracing OpenGL calls")
 
 	target_include_directories(shadertoy-objects PRIVATE ${UNWIND_INCLUDE_DIRS})
 	target_compile_definitions(shadertoy-objects PRIVATE HAS_UNWIND=1 UNW_LOCAL_ONLY=1)
 else()
-	message("-- Not using unwind for tracing")
+	message(STATUS "Not using unwind for tracing")
 	target_compile_definitions(shadertoy-objects PRIVATE HAS_UNWIND=0)
 endif()
 
