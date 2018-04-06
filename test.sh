@@ -2,7 +2,9 @@
 
 (cd build && cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/install/usr/local .. && cmake -P cmake_install.cmake)
 
-for TEST_FILE in debian/tests/*; do
+DEFAULT_TESTS=debian/tests/*
+
+for TEST_FILE in ${@:-$DEFAULT_TESTS}; do
 	if [ -x "$TEST_FILE" ]; then
 		TEST_NAME=$(basename "$TEST_FILE")
 
