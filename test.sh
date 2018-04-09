@@ -1,6 +1,8 @@
 #!/bin/bash
 
-(cd build && cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/install/usr/local .. && cmake -P cmake_install.cmake)
+set -e
+(cd build && cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/install/usr/local .. && make -j && cmake -P cmake_install.cmake)
+set +e
 
 DEFAULT_TESTS=debian/tests/*
 
