@@ -23,4 +23,4 @@ cmake $CMAKE_EXTRA_OPTS ..
 make -j VERBOSE=1 example50-shadertoy
 
 # Execute
-./src/50-shadertoy/example50-shadertoy
+./src/50-shadertoy/example50-shadertoy -a fdnKWn -i XtX3Rr
