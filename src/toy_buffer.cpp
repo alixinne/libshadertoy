@@ -35,10 +35,6 @@ toy_buffer::toy_buffer(const std::string &id)
 
 void toy_buffer::init(render_context &context, int width, int height)
 {
-	auto &config(std::find_if(context.config().buffer_configs.begin(),
-		context.config().buffer_configs.end(),
-		[this](const auto &pair) { return pair.first == id_; })->second);
-
 	// Attach the vertex shader for the screen quad
 	program_.attach_shader(context.screen_quad_vertex_shader());
 
