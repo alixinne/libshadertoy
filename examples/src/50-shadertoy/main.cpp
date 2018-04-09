@@ -256,7 +256,7 @@ int main(int argc, char *argv[])
 	contextConfig.target_framerate = 60.0;
 
 	// Fetch shader code
-	code = load_remote(contextConfig, shaderApiKey, shaderId);
+	code = load_remote(contextConfig, shaderId, shaderApiKey);
 	if (code != 0)
 		return code;
 
