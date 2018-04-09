@@ -3,7 +3,6 @@
 #include <sstream>
 
 #include <boost/filesystem.hpp>
-#include <boost/log/trivial.hpp>
 #include <boost/variant.hpp>
 
 #include <epoxy/gl.h>

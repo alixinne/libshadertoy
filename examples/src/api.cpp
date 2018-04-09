@@ -1,7 +1,6 @@
 #include <iostream>
 #include <sstream>
 
-#include <boost/log/trivial.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 #include <epoxy/gl.h>
@@ -10,6 +9,7 @@
 
 using namespace std;
 
+namespace u = shadertoy::utils;
 namespace fs = boost::filesystem;
 
 size_t curl_write_data(char *buffer, size_t size, size_t nmemb, void *userp)
@@ -65,7 +65,7 @@ int load_remote(shadertoy::context_config &ctx_config, const string &shaderId, c
 
 	if (!curl)
 	{
-		BOOST_LOG_TRIVIAL(error) << "Failed to initialize curl.";
+		u::log::shadertoy()->error("Failed to initialize curl.");
 		return 1;
 	}
 
@@ -90,7 +90,7 @@ int load_remote(shadertoy::context_config &ctx_config, const string &shaderId, c
 		string endpoint =
 			string("https://www.shadertoy.com/api/v1/shaders/") + shaderId +
 			string("?key=") + shaderApiKey;
-		BOOST_LOG_TRIVIAL(info) << "Fetching shader info from " << endpoint;
+		u::log::shadertoy()->info("Fetching shader info from {}", endpoint);
 		Json::Value shaderSpec = json_get(curl, endpoint);
 
 		// Check errors from ShaderToy
@@ -116,7 +116,7 @@ int load_remote(shadertoy::context_config &ctx_config, const string &shaderId, c
 			// Skip if sound buffer
 			if (pass["type"].asString().compare("sound") == 0)
 			{
-				BOOST_LOG_TRIVIAL(warning) << "Skipping unsupported sound shader.";
+				u::log::shadertoy()->warn("Skipping unsupported sound shader.");
 				continue;
 			}
 
@@ -183,12 +183,12 @@ int load_remote(shadertoy::context_config &ctx_config, const string &shaderId, c
 
 					if (!fs::exists(dstpath))
 					{
-						BOOST_LOG_TRIVIAL(info) << "Downloading " << url;
+						u::log::shadertoy()->info("Downloading {}", url);
 						file_get(curl, url, dstpath);
 					}
 					else
 					{
-						BOOST_LOG_TRIVIAL(info) << "Using cache for " << url;
+						u::log::shadertoy()->info("Using cache for {}", url);
 					}
 
 					conf.source = dstpath.string();
@@ -201,18 +201,13 @@ int load_remote(shadertoy::context_config &ctx_config, const string &shaderId, c
 					std::transform(conf.source.begin(), conf.source.end(),
 							conf.source.begin(), ::tolower);
 
-					BOOST_LOG_TRIVIAL(debug) <<
-						"Pass " << i << ", input " << input["channel"].asInt()
-						<< ": binding " << conf.source << " buffer " <<
-						conf.enabled();
+					u::log::shadertoy()->debug("Pass {}, input {}: binding {} buffer {}", i, input["channel"].asInt(),
+											   conf.source, conf.enabled());
 				}
 				else
 				{
-					stringstream ss;
-					ss << "Unsupported input " << input["ctype"].asString()
-					   << " for pass " << i << ", input " << input["channel"].asInt();
-
-					BOOST_LOG_TRIVIAL(warning) << ss.str();
+					u::log::shadertoy()->warn("Unsupported input {} for pass {}, input {}", input["ctype"].asString(),
+											  i, input["channel"].asInt());
 				}
 			}
 
@@ -228,7 +223,7 @@ int load_remote(shadertoy::context_config &ctx_config, const string &shaderId, c
 	}
 	catch (exception &ex)
 	{
-		BOOST_LOG_TRIVIAL(error) << ex.what();
+		u::log::shadertoy()->critical(ex.what());
 		code = 1;
 	}
 

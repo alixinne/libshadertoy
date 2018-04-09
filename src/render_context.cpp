@@ -3,7 +3,6 @@
 #include <memory>
 #include <sstream>
 
-#include <boost/log/trivial.hpp>
 #include <boost/filesystem.hpp>
 
 #include <boost/variant.hpp>
@@ -14,6 +13,7 @@
 
 #include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl.hpp"
+#include "shadertoy/utils/log.hpp"
 
 #include "resources.h"
 #include "shadertoy/context_config.hpp"
@@ -27,6 +27,7 @@
 namespace fs = boost::filesystem;
 using namespace std;
 using namespace shadertoy;
+using namespace shadertoy::utils;
 using shadertoy::gl::gl_call;
 
 unique_ptr<texture_engine> render_context::build_texture_engine()
@@ -51,16 +52,14 @@ unique_ptr<texture_engine> render_context::build_texture_engine()
 
 		if (bufferIt == bufferConfigs.end())
 		{
-			BOOST_LOG_TRIVIAL(warning) << "buffer '" << inputConfig.source
-									   << "' not found for input " << inputConfig.id;
+			log::shadertoy()->warn("Buffer '{}' not found for input {}", inputConfig.source, inputConfig.id);
 			return shared_ptr<gl::texture>();
 		}
 		else
 		{
 			if (frame_count_ == 0)
 			{
-				BOOST_LOG_TRIVIAL(info) << "binding '" << inputConfig.source
-										<< "' to input " << inputConfig.id;
+				log::shadertoy()->info("Binding '{}' to input {}", inputConfig.source, inputConfig.id);
 			}
 
 			auto texture = buffers_[inputConfig.source]->source_texture();
@@ -366,7 +365,7 @@ const GLchar *render_context::load_shader_source(const fs::path &path) throw(run
 	}
 	source_cache_.insert(make_pair(shaderPath.string(), loadedSource));
 
-	BOOST_LOG_TRIVIAL(info) << "loaded " << shaderPath;
+	log::shadertoy()->info("Loaded {}", shaderPath);
 
 	return source_cache_.find(shaderPath.string())->second.c_str();
 }

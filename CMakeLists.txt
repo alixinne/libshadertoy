@@ -33,10 +33,11 @@ set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Required packages
-find_package(Boost 1.54 REQUIRED COMPONENTS filesystem log date_time)
+find_package(Boost 1.54 REQUIRED COMPONENTS filesystem date_time)
 find_package(OpenGL REQUIRED)
 find_package(SOIL REQUIRED)
 find_package(JPEG REQUIRED)
+find_package(spdlog REQUIRED)
 
 find_package(PkgConfig REQUIRED)
 
@@ -124,6 +125,7 @@ add_library(shadertoy-objects OBJECT
 	${SRC_DIR}/gl/shader.cpp
 	${SRC_DIR}/gl/texture.cpp
 	${SRC_DIR}/utils/dump_program.cpp
+	${SRC_DIR}/utils/log.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/resources.c)
 
 # Include directories
@@ -135,10 +137,6 @@ target_include_directories(shadertoy-objects PRIVATE
 	${GLM_INCLUDE_DIRS}
 	${SOIL_INCLUDE_DIRS}
 	${JPEG_INCLUDE_DIRS})
-
-# Fix Boost
-target_compile_definitions(shadertoy-objects PUBLIC
-	BOOST_LOG_DYN_LINK=1)
 
 # C++14
 set(CXX_STANDARD_REQUIRED ON)

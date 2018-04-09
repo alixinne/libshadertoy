@@ -22,8 +22,5 @@ target_link_libraries(example50-shadertoy
 	${JSONCPP_LIBRARIES}
 	shadertoy-shared)
 
-target_compile_definitions(example50-shadertoy PUBLIC
-	BOOST_LOG_DYN_LINK=1)
-
 # C++14
 set_property(TARGET example50-shadertoy PROPERTY CXX_STANDARD 14)

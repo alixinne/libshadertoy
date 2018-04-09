@@ -5,7 +5,6 @@
 
 #include <epoxy/gl.h>
 
-#include <boost/log/trivial.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/filesystem.hpp>
 
@@ -16,6 +15,7 @@ using namespace std;
 using shadertoy::gl::gl_call;
 
 namespace fs = boost::filesystem;
+namespace u = shadertoy::utils;
 
 struct my_context
 {
@@ -138,7 +138,7 @@ int shadertoy_load(const char *shader_id, const char *shader_api_key, int width,
 	{
 		// Initialize context
 		ctx.context->init();
-		BOOST_LOG_TRIVIAL(info) << "Initialized rendering context";
+		u::log::shadertoy()->info("Initialized rendering context");
 
 		auto &state(ctx.context->state());
 		state.get<shadertoy::iTimeDelta>() = 1 / ctx.config.target_framerate;
@@ -177,7 +177,7 @@ int shadertoy_init(const char *api_key, const char *query, const char *sort, int
 
 	if (!curl)
 	{
-		BOOST_LOG_TRIVIAL(error) << "Failed to initialize curl.";
+		u::log::shadertoy()->error("Failed to initialize curl.");
 		curl_global_cleanup();
 		return 1;
 	}

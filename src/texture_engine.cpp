@@ -3,7 +3,6 @@
 #include <vector>
 
 #include <boost/filesystem.hpp>
-#include <boost/log/trivial.hpp>
 #include <boost/algorithm/string.hpp>
 
 #include <SOIL/SOIL.h>
@@ -15,6 +14,7 @@
 
 #include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl.hpp"
+#include "shadertoy/utils/log.hpp"
 
 #include "shadertoy/buffer_config.hpp"
 #include "shadertoy/context_config.hpp"
@@ -23,6 +23,7 @@
 using namespace std;
 using namespace std::placeholders;
 using namespace shadertoy;
+using namespace shadertoy::utils;
 
 namespace fs = boost::filesystem;
 
@@ -38,8 +39,7 @@ shared_ptr<gl::texture> texture_engine::soil_texture_handler(const input_config 
 {
 	if (inputConfig.source.empty())
 	{
-		BOOST_LOG_TRIVIAL(error) << "Missing source path for input "
-								 << inputConfig.id;
+		log::shadertoy()->error("Missing source path for input {}", inputConfig.id);
 		return shared_ptr<gl::texture>();
 	}
 
@@ -47,8 +47,7 @@ shared_ptr<gl::texture> texture_engine::soil_texture_handler(const input_config 
 
 	if (!fs::exists(texPath))
 	{
-		BOOST_LOG_TRIVIAL(error) << texPath << " not found for input "
-								 << inputConfig.id;
+		log::shadertoy()->error("{} not found for input {}", texPath, inputConfig.id);
 		return shared_ptr<gl::texture>();
 	}
 
@@ -62,9 +61,7 @@ shared_ptr<gl::texture> texture_engine::soil_texture_handler(const input_config 
 		string sp(texPath.string());
 		if ((infile = fopen(sp.c_str(), "rb")) == NULL)
 		{
-			BOOST_LOG_TRIVIAL(error) << "could not open " << texPath
-									 << " for reading for input "
-									 << inputConfig.id;
+			log::shadertoy()->error("Could not open {} for reading for input {}", texPath, inputConfig.id);
 		}
 		else
 		{
@@ -86,8 +83,8 @@ shared_ptr<gl::texture> texture_engine::soil_texture_handler(const input_config 
 				fmt = GL_RGBA;
 			else if (cinfo.output_components != 3)
 			{
-				BOOST_LOG_TRIVIAL(error) << "unsupported component count for JPEG "
-										 << texPath << " for input " << inputConfig.id;
+				log::shadertoy()->error("Unsupported component count for JPEG {} for input {}", texPath,
+											 inputConfig.id);
 				// Don't decode unknown format
 				decode = false;
 			}
@@ -132,17 +129,15 @@ shared_ptr<gl::texture> texture_engine::soil_texture_handler(const input_config 
 											 inputConfig.vflip ? SOIL_FLAG_INVERT_Y : 0);
 		if (texid == 0)
 		{
-			BOOST_LOG_TRIVIAL(warning) << "failed to load '"
-									   << inputConfig.source << "' for input " << inputConfig.id
-									   << ": " << result_string_pointer;
+			log::shadertoy()->error("Failed to load '{}' for input {}: {}", inputConfig.source, inputConfig.id,
+										 result_string_pointer);
 			texture = shared_ptr<gl::texture>();
 		}
 	}
 
 	if (texture)
 	{
-		BOOST_LOG_TRIVIAL(info) << "loaded '" << inputConfig.source
-								<< "' for input " << inputConfig.id;
+		log::shadertoy()->info("Loaded '{}' for input {}", inputConfig.source, inputConfig.id);
 	}
 
 	return texture;
@@ -166,8 +161,7 @@ shared_ptr<gl::texture> texture_engine::noise_texture_handler(const input_config
 	noiseTexture->image_2d(GL_TEXTURE_2D, 0, GL_RED, config_.width, config_.height,
 		0, GL_RED, GL_UNSIGNED_BYTE, rnd.data());
 
-	BOOST_LOG_TRIVIAL(warning) << "generated noise texture for input "
-							   << inputConfig.id;
+	log::shadertoy()->info("Generated noise texture for input {}", inputConfig.id);
 
 	framebufferSized = true;
 
@@ -199,9 +193,7 @@ shared_ptr<gl::texture> texture_engine::checker_texture_handler(const input_conf
 	checkerTexture->image_2d(GL_TEXTURE_2D, 0, GL_RED, config_.width, config_.height,
 		0, GL_RED, GL_UNSIGNED_BYTE, chk.data());
 
-	BOOST_LOG_TRIVIAL(warning) << "generated " << size << "x" << size
-							   <<" checker texture for input "
-							   << inputConfig.id;
+	log::shadertoy()->info("Generated {}x{} checker texture for input {}", size, size, inputConfig.id);
 
 	framebufferSized = true;
 
@@ -304,8 +296,8 @@ gl::texture &texture_engine::input_texture(const input_config &inputConfig)
 			}
 			else
 			{
-				BOOST_LOG_TRIVIAL(error) << "failed loading " <<
-					inputConfig.type << " texture for input " << inputConfig.id;
+				log::shadertoy()->error("Failed loading {} texture for input {}", inputConfig.type,
+											 inputConfig.id);
 
 				if (!skipCache)
 					input_textures_.insert(make_pair(inputConfig.id,
@@ -316,8 +308,7 @@ gl::texture &texture_engine::input_texture(const input_config &inputConfig)
 		}
 		else
 		{
-			BOOST_LOG_TRIVIAL(error) << "unknown texture type "
-				<< inputConfig.type << " for input " << inputConfig.id;
+			log::shadertoy()->error("Unknown texture type {} for input {}", inputConfig.type, inputConfig.id);
 		}
 	}
 
@@ -335,7 +326,7 @@ void texture_engine::apply_texture_options(const input_config &inputConfig, gl::
 
 	if (minFilter > GL_LINEAR)
 	{
-		BOOST_LOG_TRIVIAL(debug) << "generating mipmaps for " << inputConfig.id;
+		log::shadertoy()->debug("Generating mipmaps for {}", inputConfig.id);
 		texture.generate_mipmap();
 	}
 }
@@ -346,6 +337,6 @@ void texture_engine::register_handler(const string &name,
 	if (name.empty())
 		throw std::runtime_error("Input handler name cannot be empty.");
 
-	BOOST_LOG_TRIVIAL(debug) << "registered " << name << " texture handler";
+	log::shadertoy()->debug("Registered {} texture handler", name);
 	handlers_.insert(make_pair(name, handler));
 }

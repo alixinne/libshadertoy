@@ -5,7 +5,6 @@
 #include <epoxy/gl.h>
 #include <GLFW/glfw3.h>
 
-#include <boost/log/trivial.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
@@ -17,6 +16,7 @@ using shadertoy::gl::gl_call;
 
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
+namespace u = shadertoy::utils;
 
 struct my_context
 {
@@ -63,7 +63,7 @@ int parse_options(string &shaderId, string &shaderApiKey, bool &dump, int argc, 
 	}
 	catch (po::error &ex)
 	{
-		BOOST_LOG_TRIVIAL(error) << ex.what();
+		u::log::shadertoy()->critical(ex.what());
 		return 2;
 	}
 
@@ -88,7 +88,7 @@ int render(GLFWwindow* window, shadertoy::context_config &contextConfig, bool du
 	{
 		// Initialize context
 		context.init();
-		BOOST_LOG_TRIVIAL(info) << "Initialized rendering context";
+		u::log::shadertoy()->info("Initialized rendering context");
 
 		if (dumpShaders)
 		{
@@ -97,7 +97,7 @@ int render(GLFWwindow* window, shadertoy::context_config &contextConfig, bool du
 				auto &firstPath(bufferConfig.second.shader_files.front());
 				auto dumpPath(firstPath.replace_extension(".dump"));
 
-				BOOST_LOG_TRIVIAL(info) << "Dumping " << bufferConfig.first << " to " << dumpPath;
+				u::log::shadertoy()->info("Dumping {} to {}", bufferConfig.first, dumpPath);
 
 				std::ofstream ofs(dumpPath.string());
 				auto dump(shadertoy::utils::dump_program(context.buffer(bufferConfig.first)->program()));
@@ -108,13 +108,12 @@ int render(GLFWwindow* window, shadertoy::context_config &contextConfig, bool du
 	}
 	catch (shadertoy::gl::shader_compilation_error &sce)
 	{
-		std::cerr << "Failed to compile shader: " << sce.log();
+		u::log::shadertoy()->error("Failed to compile shader: {}", sce.log());
 		code = 2;
 	}
 	catch (shadertoy::shadertoy_error &err)
 	{
-		std::cerr << "Error: "
-				  << err.what();
+		u::log::shadertoy()->error("{}", err.what());
 		code = 2;
 	}
 
@@ -208,7 +207,7 @@ int performRender(shadertoy::context_config &contextConfig, bool dumpShaders)
 
 	if (!glfwInit())
 	{
-		BOOST_LOG_TRIVIAL(error) << "Failed to initialize glfw";
+		u::log::shadertoy()->critical("Failed to initialize glfw");
 		return 1;
 	}
 
@@ -221,7 +220,7 @@ int performRender(shadertoy::context_config &contextConfig, bool dumpShaders)
 
 	if (!window)
 	{
-		BOOST_LOG_TRIVIAL(error) << "Failed to create glfw window";
+		u::log::shadertoy()->critical("Failed to create glfw window");
 		glfwTerminate();
 		return 1;
 	}
