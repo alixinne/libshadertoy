@@ -419,7 +419,12 @@ void render_context::bind_result()
 	screen_prog_.use();
 
 	gl_call(glActiveTexture, GL_TEXTURE0);
-	last_texture_.lock()->bind(GL_TEXTURE_2D);
+	if (auto ptr = last_texture_.lock())
+	{
+		ptr->bind(GL_TEXTURE_2D);
+		ptr->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		ptr->parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	}
 }
 
 gl::shader &render_context::screen_quad_vertex_shader()
