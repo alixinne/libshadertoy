@@ -209,6 +209,13 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 		target_link_libraries(${TARGET_NAME} PRIVATE ${UNWIND_LIBRARIES} unwind-${UNWIND_ARCH})
 	endif()
 
+	# Add OpenEXR define
+	if (OpenEXR_FOUND)
+		target_compile_definitions(${TARGET_NAME} INTERFACE LIBSHADERTOY_OPENEXR=1)
+	else()
+		target_compile_definitions(${TARGET_NAME} INTERFACE LIBSHADERTOY_OPENEXR=0)
+	endif()
+
 	# Link dependencies
 	target_link_libraries(${TARGET_NAME} PUBLIC
 		${Boost_LIBRARIES}
