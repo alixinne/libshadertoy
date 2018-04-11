@@ -10,7 +10,7 @@ std::shared_ptr<spd::logger> log::shadertoy()
 	if (!initialized_)
 	{
 		initialized_ = true;
-		return spd::stderr_logger_st("shadertoy", true);
+		return spd::stderr_color_st("shadertoy");
 	}
 
 	return spd::get("shadertoy");

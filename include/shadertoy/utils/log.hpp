@@ -3,9 +3,8 @@
 
 #include "shadertoy/pre.hpp"
 
-#undef CHAR_WIDTH
-#include <spdlog/spdlog.h>
-#include <spdlog/fmt/ostr.h>
+#include "shadertoy/spdlog/spdlog.h"
+#include "shadertoy/spdlog/fmt/ostr.h"
 
 namespace shadertoy
 {

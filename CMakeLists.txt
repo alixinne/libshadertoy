@@ -37,7 +37,6 @@ find_package(Boost 1.54 REQUIRED COMPONENTS filesystem date_time)
 find_package(OpenGL REQUIRED)
 find_package(SOIL REQUIRED)
 find_package(JPEG REQUIRED)
-find_package(spdlog REQUIRED)
 
 find_package(PkgConfig REQUIRED)
 
@@ -66,6 +65,18 @@ endif()
 # libepoxy extension loader
 pkg_search_module(EPOXY REQUIRED epoxy)
 link_directories(${EPOXY_LIBDIR})
+
+# Use bundled spdlog
+set(SPDLOG_BUILD_EXAMPLES OFF)
+set(SPDLOG_BUILD_TESTING OFF)
+set(SPDLOG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/spdlog)
+add_subdirectory(${SPDLOG_DIR} EXCLUDE_FROM_ALL)
+
+# Copy headers to include directory for build
+set(SPDLOG_MAIN_INCLUDE ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog/spdlog.h)
+add_custom_command(OUTPUT ${SPDLOG_MAIN_INCLUDE}
+				   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog
+				   COMMAND ${CMAKE_COMMAND} -E copy_directory ${SPDLOG_DIR}/include/spdlog ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog)
 
 # Copy shaders to source
 file(GLOB RESOURCES_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*)
@@ -126,6 +137,7 @@ add_library(shadertoy-objects OBJECT
 	${SRC_DIR}/gl/texture.cpp
 	${SRC_DIR}/utils/dump_program.cpp
 	${SRC_DIR}/utils/log.cpp
+	${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog/spdlog.h
 	${CMAKE_CURRENT_BINARY_DIR}/resources.c)
 
 # Include directories
@@ -260,6 +272,10 @@ file(GLOB SHADERTOY_UTILS_HEADERS ${INCLUDE_DIR}/shadertoy/utils/*.hpp)
 install(FILES ${SHADERTOY_UTILS_HEADERS}
 		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy/utils)
+
+install(DIRECTORY ${SPDLOG_DIR}/include/spdlog
+		COMPONENT shadertoy-dev
+		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
 
 # Enable warnings
 if(MSVC)
