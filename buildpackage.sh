@@ -30,7 +30,12 @@ if [ "x$DISTRIBUTION" = "x" ] || [ "x$ARCH" = "x" ]; then
 	exit 2
 fi
 
-mkdir -p libshadertoy-$LIBVERSION-$DISTRIBUTION
+TARGET_DIRECTORY=libshadertoy-$LIBVERSION-$DISTRIBUTION
+if [ "x$GIT_PREFIX" != "x" ]; then
+	TARGET_DIRECTORY="${TARGET_DIRECTORY}-${GIT_PREFIX}"
+fi
+
+mkdir -p $TARGET_DIRECTORY
 
 echo "[==== BUILDING $DISTRIBUTION-$ARCH ====]" >&2
 if [ "$ARCH" = "amd64" ]; then
@@ -56,13 +61,13 @@ fi
 echo "[==== MOVING ARTIFACTS $DISTRIBUTION-$ARCH ====]" >&2
 CHANGES_FILE=libshadertoy_$LIBVERSION-$(version_suffix $DISTRIBUTION)_$ARCH.changes
 BUILD_ARTIFACTS=$(awk '/^Files:/{a=1;next}/^$/{a=0}{if(a)print $NF}' "$CHANGES_FILE")
-mv $BUILD_ARTIFACTS $CHANGES_FILE libshadertoy-$LIBVERSION-$DISTRIBUTION
+mv $BUILD_ARTIFACTS $CHANGES_FILE $TARGET_DIRECTORY
 
 if [ "x$SKIP_TESTS" = "x" ]; then
 	echo "[==== TESTING ARTIFACTS $DISTRIBUTION-$ARCH ====]" >&2
 	(cd $LIBDIRECTORY &&
-		autopkgtest ../libshadertoy-$LIBVERSION-$DISTRIBUTION/libshadertoy*-$(version_suffix $DISTRIBUTION)_$ARCH.deb \
-		../libshadertoy-$LIBVERSION-$DISTRIBUTION/libshadertoy*-$(version_suffix $DISTRIBUTION)_all.deb \
+		autopkgtest ../$TARGET_DIRECTORY/libshadertoy*-$(version_suffix $DISTRIBUTION)_$ARCH.deb \
+		../$TARGET_DIRECTORY/libshadertoy*-$(version_suffix $DISTRIBUTION)_all.deb \
 		-- schroot $DISTRIBUTION-$ARCH-sbuild)
 	if [ "$?" -ne "0" ]; then
 		echo "[==== TESTS FAILED FOR $DISTRIBUTION-$ARCH ====]" >&2
