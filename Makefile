@@ -1,6 +1,6 @@
 ALL_DISTS=xenial stretch
-ALL_XENIAL_ARCHS=xenial-amd64 xenial-i386
-ALL_STRETCH_ARCHS=stretch-amd64 stretch-i386
+ALL_XENIAL_ARCHS=xenial-amd64 xenial-i386 xenial-source
+ALL_STRETCH_ARCHS=stretch-amd64 stretch-i386 stretch-source
 ALL_PKGS=$(ALL_XENIAL_ARCHS) $(ALL_STRETCH_ARCHS)
 
 IGNORE_TEST_FAILURES?=1
