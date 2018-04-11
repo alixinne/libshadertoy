@@ -26,11 +26,10 @@ for TEST_FILE in ${@:-$DEFAULT_TESTS}; do
 
 		if [ "$TEST_RESULT" -eq 0 ]; then
 			echo "[==== TEST: $TEST_NAME: PASSED ====]" >&2
+			# Cleanup
+			rm -rf "$TEST_DIR"
 		else
 			echo "[==== TEST: $TEST_NAME: FAILED ($TEST_RESULT) ====]" >&2
 		fi
-
-		# Cleanup
-		rm -rf "$TEST_DIR"
 	fi
 done
