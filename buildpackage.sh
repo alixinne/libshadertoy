@@ -89,7 +89,7 @@ if [ "$ARCH" != "source" ]; then
 		fi
 	fi
 else
-	(cd libshadertoy && dpkg-buildpackage -S -uc -us -rfakeroot \
+	(cd libshadertoy && dpkg-buildpackage -S -uc -us -rfakeroot -d \
 										   --changes-option=-DDistribution=$DISTRIBUTION
 	)
 
