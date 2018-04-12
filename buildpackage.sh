@@ -61,6 +61,7 @@ if [ "$ARCH" != "source" ]; then
 								-d $DISTRIBUTION \
 								--arch $ARCH \
 								$ARCHALL_ARG \
+								--verbose \
 								--append-to-version "-$(version_suffix $DISTRIBUTION)"
 	)
 
