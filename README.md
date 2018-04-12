@@ -1,4 +1,4 @@
-# libshadertoy
+# libshadertoy [![Build Status](https://ci.inria.fr/libshadertoy/buildStatus/icon?job=libshadertoy)](https://ci.inria.fr/libshadertoy/job/libshadertoy/)
 
 *libshadertoy* is a C++ library for rendering ShaderToy programs on an OpenGL
 desktop. This repository also contains the needed files to package this library
