@@ -79,10 +79,13 @@ build_pkg () {
 
 		if [ "x$SKIP_TESTS" = "x" ]; then
 			echo "[==== TESTING ARTIFACTS $DISTRIBUTION-$ARCH ====]" >&2
-			(cd libshadertoy &&
+			(
+				cd libshadertoy
+				shopt -s nullglob
 				autopkgtest $TARGET_DIRECTORY/libshadertoy*-$(version_suffix $DISTRIBUTION)_$ARCH.deb \
-				$TARGET_DIRECTORY/libshadertoy*-$(version_suffix $DISTRIBUTION)_all.deb \
-				-- schroot $DISTRIBUTION-$ARCH-sbuild)
+					$TARGET_DIRECTORY/libshadertoy*-$(version_suffix $DISTRIBUTION)_all.deb \
+					-- schroot $DISTRIBUTION-$ARCH-sbuild
+			)
 			if [ "$?" -ne "0" ]; then
 				echo "[==== TESTS FAILED FOR $DISTRIBUTION-$ARCH ====]" >&2
 				if [ "x$IGNORE_TEST_FAILURES" = "x" ]; then
