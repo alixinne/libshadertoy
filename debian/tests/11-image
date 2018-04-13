@@ -1,4 +1,5 @@
 #!/bin/bash
+export LIBSHADERTOY_TESTING=1
 
 if [ -z "$LIBSHADERTOY_DIR" ]; then
 	LIBSHADERTOY_DIR=/usr/share/shadertoy
@@ -13,14 +14,16 @@ cp -r "$LIBSHADERTOY_DIR/examples" "$AUTOPKGTEST_TMP"
 cd "$AUTOPKGTEST_TMP/examples"
 
 # Configure
-set -eo pipefail
+set -o pipefail
 
 mkdir build
 cd build
-cmake $CMAKE_EXTRA_OPTS ..
+cmake $CMAKE_EXTRA_OPTS .. || exit 1
 
 # Build
-make -j VERBOSE=1 example11-image
+make -j$(( $(nproc) + 1 )) VERBOSE=1 example11-image || exit 1
 
 # Execute
-./src/11-image/example11-image
+./src/11-image/example11-image || exit 2
+
+exit 0

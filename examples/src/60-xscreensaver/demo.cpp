@@ -11,6 +11,8 @@
 #include "api.hpp"
 #include "demo.h"
 
+#include "test.hpp"
+
 using namespace std;
 using shadertoy::gl::gl_call;
 
@@ -106,6 +108,9 @@ void shadertoy_render_frame()
 
 	// Update framecount
 	ctx.frame_count++;
+
+	if (libshadertoy_test_exit())
+		exit(0);
 }
 
 int shadertoy_load(const char *shader_id, const char *shader_api_key, int width, int height)

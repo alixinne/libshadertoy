@@ -51,7 +51,8 @@ else()
 	message(STATUS "You also need libcurl-dev, libboost-all-dev and libjsoncpp-dev")
 endif()
 
-if (OpenGL_FOUND AND EPOXY_FOUND AND Boost_FOUND AND CURL_FOUND AND JSONCPP_FOUND AND X11_FOUND)
+if (OpenGL_FOUND AND EPOXY_FOUND AND Boost_FOUND AND CURL_FOUND AND JSONCPP_FOUND AND X11_FOUND
+		AND X11_Xft_LIB AND X11_Xmu_LIB AND X11_Xt_LIB)
 	add_subdirectory(3rdparty/xscreensaver)
 	add_subdirectory(src/60-xscreensaver)
 endif()

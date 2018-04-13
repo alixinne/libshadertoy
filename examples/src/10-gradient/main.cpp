@@ -5,6 +5,8 @@
 
 #include <shadertoy.hpp>
 
+#include "test.hpp"
+
 namespace fs = boost::filesystem;
 using shadertoy::gl::gl_call;
 
@@ -121,7 +123,7 @@ int main(int argc, char *argv[])
 				t = glfwGetTime();
 				frameCount++;
 
-				if (t > 5.)
+				if (libshadertoy_test_exit())
 					glfwSetWindowShouldClose(window, true);
 			}
 		}

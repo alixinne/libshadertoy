@@ -10,6 +10,7 @@
 #include <boost/program_options.hpp>
 
 #include "api.hpp"
+#include "test.hpp"
 
 using namespace std;
 using shadertoy::gl::gl_call;
@@ -195,6 +196,9 @@ int render(GLFWwindow* window, shadertoy::context_config &contextConfig, bool du
 
 			// Update time and framecount
 			frameCount++;
+
+			if (libshadertoy_test_exit())
+				glfwSetWindowShouldClose(window, true);
 		}
 	}
 

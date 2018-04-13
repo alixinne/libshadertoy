@@ -1,9 +1,22 @@
 #!/bin/bash
 
-set -e
-(cd build && cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/install/usr/local .. && make -j && cmake -P cmake_install.cmake)
-set +e
+SKIP_BUILD=0
+while getopts ":s" opt; do
+	case "$opt" in
+		s)
+			SKIP_BUILD=1
+			;;
+	esac
+done
 
+if [ "$SKIP_BUILD" = "0" ]; then
+	set -e
+	(cd build && cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/install/usr/local .. && make -j && cmake -P cmake_install.cmake)
+	set +e
+fi
+
+FAILED_TESTS=0
+FAILED_TEST_NAMES=()
 DEFAULT_TESTS=debian/tests/*
 
 for TEST_FILE in ${@:-$DEFAULT_TESTS}; do
@@ -30,6 +43,25 @@ for TEST_FILE in ${@:-$DEFAULT_TESTS}; do
 			rm -rf "$TEST_DIR"
 		else
 			echo "[==== TEST: $TEST_NAME: FAILED ($TEST_RESULT) ====]" >&2
+
+			if [ "$TEST_RESULT" -eq 1 ]; then
+				FAILED_TESTS=$(( FAILED_TESTS + 1 ))
+				FAILED_TEST_NAMES+=("$TEST_NAME")
+			elif [ "$TEST_RESULT" -eq 2 ]; then
+				echo "  - Considered non-critical by test script" >&2
+			fi
 		fi
 	fi
 done
+
+if [ $FAILED_TESTS -gt 0 ]; then
+	echo "[==== TEST: SUMMARY OF FAILED TESTS ====]" >&2
+	for FAILED_TEST_NAME in "${FAILED_TEST_NAMES[@]}"; do
+		echo "  - $FAILED_TEST_NAME" >&2
+	done
+	exit 1
+else
+	echo "[==== TEST: ALL TESTS PASSED ====]" >&2
+	exit 0
+fi
+

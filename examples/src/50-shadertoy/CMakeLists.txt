@@ -2,7 +2,8 @@ message(STATUS "Building example 50-shadertoy")
 
 add_executable(example50-shadertoy
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-	${SRC_ROOT}/api.cpp)
+	${SRC_ROOT}/api.cpp
+	${SRC_ROOT}/test.cpp)
 
 target_include_directories(example50-shadertoy PRIVATE
 	${INCLUDE_ROOT}

@@ -7,6 +7,7 @@ libshadertoy (1.0.0) unstable; urgency=medium
   * Move documentation into its own package, libshadertoy-doc
   * Refactor examples
   * Remove dependency on boost::log
+  * Add more automated tests
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Thu, 08 Mar 2018 15:00:00 +0100
 

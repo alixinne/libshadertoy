@@ -1,7 +1,8 @@
 add_executable(example60-xscreensaver
 	${CMAKE_CURRENT_SOURCE_DIR}/demo.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/main.c
-	${SRC_ROOT}/api.cpp)
+	${SRC_ROOT}/api.cpp
+	${SRC_ROOT}/test.cpp)
 
 target_include_directories(example60-xscreensaver PRIVATE
 	${INCLUDE_ROOT}/60-xscreensaver
