@@ -18,7 +18,9 @@ VERS=$(shell head -n 1 debian/changelog | awk '{gsub("[()]","",$$2);print $$2}')
 OS_DIST=$(shell . /etc/os-release && test -n "$$VERSION_CODENAME" && echo -n "$$VERSION_CODENAME" || \
 	   echo -n "$$VERSION" | cut -d' ' -f2 | sed 's/[()]//g')
 CI_BUILD_TYPE?=ci-src
+
 GIT_PREFIX=$(shell git rev-parse --short HEAD)
+export GIT_PREFIX
 
 all: $(ALL_DISTS)
 
