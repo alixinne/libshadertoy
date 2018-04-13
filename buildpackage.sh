@@ -109,6 +109,8 @@ build_pkg () {
 }
 
 build_src () {
+	export DEBIAN_FRONTEND=noninteractive
+
 	# Remove build dependencies on exit
 	trap 'sudo apt-get -qy autoremove --purge libshadertoy-build-deps' EXIT
 
@@ -117,7 +119,9 @@ build_src () {
 
 	# Install build dependencies
 	echo "[==== INSTALLING DEPENDENCIES ====]" >&2
-	sudo mk-build-deps -i
+	sudo mk-build-deps -i -t \
+		'apt-get -o Debug::pkgProblemResolver=yes -y --no-install-recommends'
+
 	if [ "$?" -ne 0 ]; then
 		echo "[==== FAILED TO INSTALL BUILD DEPENDENCIES ====]" >&2
 		exit 1
