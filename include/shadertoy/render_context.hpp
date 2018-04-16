@@ -56,7 +56,7 @@ private:
 	shader_inputs_t state_;
 
 	// Callbacks
-
+protected:
 	/**
 	 * @brief      When implemented in a derived class, provides a callback for
 	 *             initializing a custom texture engine instead of the default
