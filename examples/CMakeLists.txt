@@ -15,7 +15,7 @@ if (GLFW3_FOUND)
 endif()
 
 # Extra libraries for shadertoy API examples
-find_package(Boost 1.58 COMPONENTS filesystem log serialization date_time program_options)
+find_package(Boost 1.58 COMPONENTS filesystem date_time program_options)
 
 find_package(CURL)
 
