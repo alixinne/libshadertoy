@@ -215,8 +215,8 @@ shared_ptr<gl::texture> texture_engine::checker_texture_handler(const input_conf
 
 	// Generate the checkerboard
 	vector<unsigned char> chk(config_.width * config_.height);
-	for (int i = 0; i < config_.width; ++i)
-		for (int j = 1; j < config_.height; ++j)
+	for (size_t i = 0; i < config_.width; ++i)
+		for (size_t j = 1; j < config_.height; ++j)
 			chk[j * config_.height + i] = ((i / size) % 2 == 0) ^ ((j / size) % 2 == 0) ? 255 : 0;
 
 	// Load it

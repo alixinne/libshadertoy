@@ -55,6 +55,16 @@ private:
 	/// Uniform state
 	shader_inputs_t state_;
 
+	/**
+	 * @brief     Ensures the given render size is valid.
+	 *
+	 * @param[in] width  Rendering width
+	 * @param[in] height Rendering height
+	 *
+	 * @throws shadertoy_error When the rendering size is invalid
+	 */
+	void check_render_size(size_t width, size_t height);
+
 	// Callbacks
 protected:
 	/**

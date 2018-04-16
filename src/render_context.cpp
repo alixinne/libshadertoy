@@ -30,6 +30,15 @@ using namespace shadertoy;
 using namespace shadertoy::utils;
 using shadertoy::gl::gl_call;
 
+void render_context::check_render_size(size_t width, size_t height)
+{
+	if (width == 0)
+		throw shadertoy_error("The rendering width must be greater than 0");
+
+	if (height == 0)
+		throw shadertoy_error("The rendering height must be greater than 0");
+}
+
 unique_ptr<texture_engine> render_context::build_texture_engine()
 {
 	auto engine = make_unique<texture_engine>(config_);
@@ -172,6 +181,8 @@ render_context::render_context(context_config &config)
 
 void render_context::init()
 {
+	check_render_size(config_.width, config_.height);
+
 	// Initialize constant uniforms
 	state_.get<iResolution>() = glm::vec3(config_.width, config_.height, 1.0f);
 	// Note that this will be overriden once query measurements are available
@@ -228,6 +239,8 @@ void render_context::init_buffers()
 
 void render_context::allocate_textures()
 {
+	check_render_size(config_.width, config_.height);
+
 	// Drop the reference to screen_quad_texture_, it will be recreated if needed
 	screen_quad_texture_ = shared_ptr<gl::texture>();
 

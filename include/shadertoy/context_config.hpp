@@ -12,10 +12,10 @@ namespace shadertoy
 struct shadertoy_EXPORT context_config
 {
 	/// Width of the rendering
-	int width;
+	size_t width;
 
 	/// Height of the rendering
-	int height;
+	size_t height;
 
 	/// Target framerate for the rendering (in frames per second)
 	double target_framerate;
