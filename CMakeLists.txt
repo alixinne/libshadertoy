@@ -105,6 +105,7 @@ set(shadertoy_INCLUDE_DIRS
 add_library(shadertoy-objects OBJECT
 	${INCLUDE_DIR}/shadertoy.hpp
 	${INCLUDE_DIR}/shadertoy/pre.hpp
+	${INCLUDE_DIR}/shadertoy/buffer_base.hpp
 	${INCLUDE_DIR}/shadertoy/buffer_config.hpp
 	${INCLUDE_DIR}/shadertoy/context_config.hpp
 	${INCLUDE_DIR}/shadertoy/render_context.hpp
@@ -125,6 +126,7 @@ add_library(shadertoy-objects OBJECT
 	${INCLUDE_DIR}/shadertoy/gl/resource.hpp
 	${INCLUDE_DIR}/shadertoy/gl/texture.hpp
 	${INCLUDE_DIR}/shadertoy/gl/shader.hpp
+	${SRC_DIR}/buffer_base.cpp
 	${SRC_DIR}/buffer_config.cpp
 	${SRC_DIR}/context_config.cpp
 	${SRC_DIR}/render_context.cpp

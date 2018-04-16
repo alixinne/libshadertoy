@@ -41,7 +41,7 @@ private:
 	std::unique_ptr<texture_engine> tex_engine_;
 
 	/// Aux buffers
-	std::map<std::string, std::shared_ptr<toy_buffer>> buffers_;
+	std::map<std::string, std::shared_ptr<buffer_base>> buffers_;
 
 	/// Cache for sources
 	std::map<std::string, std::string> source_cache_;
@@ -108,7 +108,7 @@ private:
 	 * @param      buffer  Buffer object
 	 */
 	virtual void post_render_buffer(const std::string &name,
-									std::shared_ptr<toy_buffer> &buffer);
+									std::shared_ptr<buffer_base> &buffer);
 
 	/**
 	 * @brief      When implemented in a dervied class, provides a callback for
@@ -269,7 +269,7 @@ public:
 	 * @return      Pointer to the buffer object, or a null pointer if no such
 	 *              buffer exists.
 	 */
-	std::shared_ptr<toy_buffer> buffer(const std::string &name = std::string());
+	std::shared_ptr<buffer_base> buffer(const std::string &name = std::string());
 };
 
 }

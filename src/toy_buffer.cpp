@@ -26,20 +26,19 @@ using namespace shadertoy;
 using shadertoy::gl::gl_call;
 
 toy_buffer::toy_buffer(const std::string &id)
-	: id_(id),
+	: buffer_base(id),
 	  fs_(GL_FRAGMENT_SHADER),
-	  bound_inputs_(),
-	  time_delta_query_(GL_TIME_ELAPSED)
+	  bound_inputs_()
 {
 }
 
-void toy_buffer::init(render_context &context, int width, int height)
+void toy_buffer::init_contents(render_context &context, int width, int height)
 {
 	// Attach the vertex shader for the screen quad
 	program_.attach_shader(context.screen_quad_vertex_shader());
 
 	// Load the fragment shader for this buffer
-    context.build_buffer_shader(id_, fs_);
+    context.build_buffer_shader(id(), fs_);
 
 	// Attach shader
 	program_.attach_shader(fs_);
@@ -52,35 +51,13 @@ void toy_buffer::init(render_context &context, int width, int height)
 
 	// bind uniform inputs
 	bound_inputs_ = context.bound_inputs(program_);
-
-	// Allocate render textures
-    allocate_textures(width, height);
 }
 
-void toy_buffer::allocate_textures(int width, int height)
-{
-	// Initialize buffer textures
-    init_render_texture(source_tex_, width, height);
-    init_render_texture(target_tex_, width, height);
-
-	// Setup render buffers
-	target_tex_->bind(GL_TEXTURE_2D);
-	target_rbo_.bind(GL_RENDERBUFFER);
-	target_rbo_.storage(GL_DEPTH_COMPONENT, width, height);
-}
-
-void toy_buffer::render(render_context &context)
+void toy_buffer::render_contents(render_context &context)
 {
 	auto &config(std::find_if(context.config().buffer_configs.begin(),
 		context.config().buffer_configs.end(),
-		[this](const auto &pair) { return pair.first == id_; })->second);
-
-	// Update renderbuffer to use the correct target texture
-	target_tex_->bind(GL_TEXTURE_2D);
-	target_rbo_.bind(GL_RENDERBUFFER);
-	target_fbo_.bind(GL_DRAW_FRAMEBUFFER);
-
-	target_fbo_.texture(GL_COLOR_ATTACHMENT0, *target_tex_, 0);
+		[this](const auto &pair) { return pair.first == this->id(); })->second);
 
 	// Prepare the render target
 	context.clear(0.f);
@@ -109,12 +86,12 @@ void toy_buffer::render(render_context &context)
 
 	// Try to set iTimeDelta
 	GLint available = 0;
-	time_delta_query_.get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
+	time_delta_query().get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
 	if (available)
 	{
 		// Result available, set uniform value
 		GLuint64 timeDelta;
-		time_delta_query_.get_object_ui64v(GL_QUERY_RESULT, &timeDelta);
+		time_delta_query().get_object_ui64v(GL_QUERY_RESULT, &timeDelta);
 		static_pointer_cast<shader_inputs_t::bound_inputs>(bound_inputs_[0])
 			->state.get<iTimeDelta>() = timeDelta / 1e9;
 	}
@@ -124,40 +101,6 @@ void toy_buffer::render(render_context &context)
         inputs->apply();
 
 	// Render the program
-    context.render_screen_quad(time_delta_query_);
-
-	// Swap texture object pointers
-	swap(source_tex_, target_tex_);
+    context.render_screen_quad(time_delta_query());
 }
 
-unsigned long long toy_buffer::elapsed_time()
-{
-	GLint available = 0;
-
-	// Wait for result to be available
-	while (!available)
-	{
-		time_delta_query_.get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
-	}
-
-	// Fetch result
-	GLuint64 result;
-	time_delta_query_.get_object_ui64v(GL_QUERY_RESULT, &result);
-
-	return result;
-}
-
-void toy_buffer::init_render_texture(shared_ptr<gl::texture> &texptr, int width, int height)
-{
-	// Only create a texture object if it is necessary
-	if (!texptr)
-		texptr = make_shared<gl::texture>(GL_TEXTURE_2D);
-
-	// Allocate texture storage according to width/height
-	texptr->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_BGRA,
-		GL_UNSIGNED_BYTE, nullptr);
-
-	// Clear the frame accumulator so it doesn't contain garbage
-	float black[4] = {0.f};
-	texptr->clear_tex_image(0, GL_BGRA, GL_FLOAT, black);
-}

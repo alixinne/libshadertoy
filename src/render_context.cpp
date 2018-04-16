@@ -95,7 +95,7 @@ void render_context::load_buffer_sources(vector<pair<string, string>> &sources)
 }
 
 void render_context::post_render_buffer(const string &name,
-                                        shared_ptr<toy_buffer> &buffer)
+                                        shared_ptr<buffer_base> &buffer)
 {
 }
 
@@ -431,13 +431,13 @@ gl::shader &render_context::screen_quad_vertex_shader()
 	return screen_vs_;
 }
 
-shared_ptr<toy_buffer> render_context::buffer(const string &name)
+shared_ptr<buffer_base> render_context::buffer(const string &name)
 {
 	if (name.empty())
 	{
 		if (buffers_.empty())
 		{
-			return shared_ptr<toy_buffer>();
+			return shared_ptr<buffer_base>();
 		}
 
 		return buffers_.rbegin()->second;
@@ -447,7 +447,7 @@ shared_ptr<toy_buffer> render_context::buffer(const string &name)
 		auto it = buffers_.find(name);
 		if (it == buffers_.end())
 		{
-			return shared_ptr<toy_buffer>();
+			return shared_ptr<buffer_base>();
 		}
 
 		return it->second;
