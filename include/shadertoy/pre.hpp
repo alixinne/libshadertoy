@@ -31,6 +31,9 @@ namespace shadertoy
 		class null_query_error;
 		class query;
 
+		class null_sampler_error;
+		class sampler;
+
 		class null_renderbuffer_error;
 		class renderbuffer;
 

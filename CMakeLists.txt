@@ -115,6 +115,7 @@ add_library(shadertoy-objects OBJECT
 	${INCLUDE_DIR}/shadertoy/gl/framebuffer.hpp
 	${INCLUDE_DIR}/shadertoy/gl/program.hpp
 	${INCLUDE_DIR}/shadertoy/gl/query.hpp
+	${INCLUDE_DIR}/shadertoy/gl/sampler.hpp
 	${INCLUDE_DIR}/shadertoy/gl/renderbuffer.hpp
 	${INCLUDE_DIR}/shadertoy/gl/resource.hpp
 	${INCLUDE_DIR}/shadertoy/gl/shader.hpp
@@ -139,6 +140,7 @@ add_library(shadertoy-objects OBJECT
 	${SRC_DIR}/gl/framebuffer.cpp
 	${SRC_DIR}/gl/program.cpp
 	${SRC_DIR}/gl/query.cpp
+	${SRC_DIR}/gl/sampler.cpp
 	${SRC_DIR}/gl/renderbuffer.cpp
 	${SRC_DIR}/gl/shader.cpp
 	${SRC_DIR}/gl/texture.cpp

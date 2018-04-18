@@ -10,6 +10,7 @@
 #include "shadertoy/gl/program.hpp"
 #include "shadertoy/gl/query.hpp"
 #include "shadertoy/gl/renderbuffer.hpp"
+#include "shadertoy/gl/sampler.hpp"
 #include "shadertoy/gl/shader.hpp"
 #include "shadertoy/gl/texture.hpp"
 
