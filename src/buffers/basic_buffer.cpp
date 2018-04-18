@@ -15,7 +15,7 @@
 #include "shadertoy/buffer_config.hpp"
 #include "shadertoy/context_config.hpp"
 #include "shadertoy/uniform_state.hpp"
-#include "shadertoy/buffer_base.hpp"
+#include "shadertoy/buffers/basic_buffer.hpp"
 #include "shadertoy/texture_engine.hpp"
 #include "shadertoy/render_context.hpp"
 
@@ -23,15 +23,16 @@ using namespace std;
 namespace fs = boost::filesystem;
 
 using namespace shadertoy;
+using namespace shadertoy::buffers;
 using shadertoy::gl::gl_call;
 
-buffer_base::buffer_base(const std::string &id)
+basic_buffer::basic_buffer(const std::string &id)
 	: id_(id),
 	  time_delta_query_(GL_TIME_ELAPSED)
 {
 }
 
-void buffer_base::init(render_context &context, int width, int height)
+void basic_buffer::init(render_context &context, int width, int height)
 {
 	// Allocate render textures
     allocate_textures(width, height);
@@ -40,7 +41,7 @@ void buffer_base::init(render_context &context, int width, int height)
 	init_contents(context, width, height);
 }
 
-void buffer_base::allocate_textures(int width, int height)
+void basic_buffer::allocate_textures(int width, int height)
 {
 	// Initialize buffer textures
     init_render_texture(source_tex_, width, height);
@@ -52,7 +53,7 @@ void buffer_base::allocate_textures(int width, int height)
 	target_rbo_.storage(GL_DEPTH_COMPONENT, width, height);
 }
 
-void buffer_base::render(render_context &context)
+void basic_buffer::render(render_context &context)
 {
 	// Update renderbuffer to use the correct target texture and bind as the curren target
 	target_tex_->bind(GL_TEXTURE_2D);
@@ -68,7 +69,7 @@ void buffer_base::render(render_context &context)
 	swap(source_tex_, target_tex_);
 }
 
-unsigned long long buffer_base::elapsed_time()
+unsigned long long basic_buffer::elapsed_time()
 {
 	GLint available = 0;
 
@@ -85,7 +86,7 @@ unsigned long long buffer_base::elapsed_time()
 	return result;
 }
 
-void buffer_base::init_render_texture(shared_ptr<gl::texture> &texptr, int width, int height)
+void basic_buffer::init_render_texture(shared_ptr<gl::texture> &texptr, int width, int height)
 {
 	// Only create a texture object if it is necessary
 	if (!texptr)

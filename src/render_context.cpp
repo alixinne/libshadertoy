@@ -19,7 +19,7 @@
 #include "shadertoy/context_config.hpp"
 #include "shadertoy/uniform_state.hpp"
 #include "shadertoy/buffer_config.hpp"
-#include "shadertoy/toy_buffer.hpp"
+#include "shadertoy/buffers/toy_buffer.hpp"
 #include "shadertoy/texture_engine.hpp"
 #include "shadertoy/shader_compiler.hpp"
 #include "shadertoy/render_context.hpp"
@@ -104,7 +104,7 @@ void render_context::load_buffer_sources(vector<pair<string, string>> &sources)
 }
 
 void render_context::post_render_buffer(const string &name,
-                                        shared_ptr<buffer_base> &buffer)
+                                        shared_ptr<buffers::basic_buffer> &buffer)
 {
 }
 
@@ -226,7 +226,7 @@ void render_context::init_buffers()
 	auto bufferConfigs = config_.buffer_configs;
 	for (auto it = bufferConfigs.begin(); it != bufferConfigs.end(); ++it)
 	{
-		auto buf = make_shared<toy_buffer>(it->first);
+		auto buf = make_shared<buffers::toy_buffer>(it->first);
 		buf->init(*this, config_.width, config_.height);
 		buffers_.insert(make_pair(it->first, buf));
 	}
@@ -444,13 +444,13 @@ gl::shader &render_context::screen_quad_vertex_shader()
 	return screen_vs_;
 }
 
-shared_ptr<buffer_base> render_context::buffer(const string &name)
+shared_ptr<buffers::basic_buffer> render_context::buffer(const string &name)
 {
 	if (name.empty())
 	{
 		if (buffers_.empty())
 		{
-			return shared_ptr<buffer_base>();
+			return shared_ptr<buffers::basic_buffer>();
 		}
 
 		return buffers_.rbegin()->second;
@@ -460,7 +460,7 @@ shared_ptr<buffer_base> render_context::buffer(const string &name)
 		auto it = buffers_.find(name);
 		if (it == buffers_.end())
 		{
-			return shared_ptr<buffer_base>();
+			return shared_ptr<buffers::basic_buffer>();
 		}
 
 		return it->second;

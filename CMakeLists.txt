@@ -104,8 +104,9 @@ set(shadertoy_INCLUDE_DIRS
 
 add_library(shadertoy-objects OBJECT
 	${INCLUDE_DIR}/shadertoy.hpp
-	${INCLUDE_DIR}/shadertoy/buffer_base.hpp
 	${INCLUDE_DIR}/shadertoy/buffer_config.hpp
+	${INCLUDE_DIR}/shadertoy/buffers/basic_buffer.hpp
+	${INCLUDE_DIR}/shadertoy/buffers/toy_buffer.hpp
 	${INCLUDE_DIR}/shadertoy/context_config.hpp
 	${INCLUDE_DIR}/shadertoy/gl.hpp
 	${INCLUDE_DIR}/shadertoy/gl/buffer.hpp
@@ -122,13 +123,13 @@ add_library(shadertoy-objects OBJECT
 	${INCLUDE_DIR}/shadertoy/shader_compiler.hpp
 	${INCLUDE_DIR}/shadertoy/shadertoy_error.hpp
 	${INCLUDE_DIR}/shadertoy/texture_engine.hpp
-	${INCLUDE_DIR}/shadertoy/toy_buffer.hpp
 	${INCLUDE_DIR}/shadertoy/uniform_state.hpp
 	${INCLUDE_DIR}/shadertoy/uniform_state_decl.hpp
 	${INCLUDE_DIR}/shadertoy/uniform_state_impl.hpp
 
-	${SRC_DIR}/buffer_base.cpp
 	${SRC_DIR}/buffer_config.cpp
+	${SRC_DIR}/buffers/basic_buffer.cpp
+	${SRC_DIR}/buffers/toy_buffer.cpp
 	${SRC_DIR}/context_config.cpp
 	${SRC_DIR}/gl/buffer.cpp
 	${SRC_DIR}/gl/caller.cpp
@@ -142,7 +143,6 @@ add_library(shadertoy-objects OBJECT
 	${SRC_DIR}/shader_compiler.cpp
 	${SRC_DIR}/shadertoy_error.cpp
 	${SRC_DIR}/texture_engine.cpp
-	${SRC_DIR}/toy_buffer.cpp
 	${SRC_DIR}/uniform_state.cpp
 	${SRC_DIR}/utils/dump_program.cpp
 	${SRC_DIR}/utils/log.cpp

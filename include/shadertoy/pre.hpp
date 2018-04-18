@@ -5,6 +5,12 @@
 
 namespace shadertoy
 {
+	namespace buffers
+	{
+		class basic_buffer;
+		class toy_buffer;
+	}
+
 	namespace gl
 	{
 		class null_buffer_error;
@@ -45,7 +51,6 @@ namespace shadertoy
 	class shader_compiler;
 	class shadertoy_error;
 	class texture_engine;
-	class toy_buffer;
 }
 
 #endif /* _SHADERTOY_PRE_HPP_ */

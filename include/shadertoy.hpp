@@ -26,7 +26,8 @@
 #include "shadertoy/buffer_config.hpp"
 #include "shadertoy/context_config.hpp"
 #include "shadertoy/uniform_state.hpp"
-#include "shadertoy/toy_buffer.hpp"
+#include "shadertoy/buffers/basic_buffer.hpp"
+#include "shadertoy/buffers/toy_buffer.hpp"
 #include "shadertoy/texture_engine.hpp"
 #include "shadertoy/render_context.hpp"
 

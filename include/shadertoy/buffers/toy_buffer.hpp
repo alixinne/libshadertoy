@@ -1,17 +1,19 @@
-#ifndef _SHADERTOY_TOY_BUFFER_HPP_
-#define _SHADERTOY_TOY_BUFFER_HPP_
+#ifndef _SHADERTOY_BUFFERS_TOY_BUFFER_HPP_
+#define _SHADERTOY_BUFFERS_TOY_BUFFER_HPP_
 
 #include "shadertoy/pre.hpp"
 
-#include "shadertoy/buffer_base.hpp"
+#include "shadertoy/buffers/basic_buffer.hpp"
 
 namespace shadertoy
+{
+namespace buffers
 {
 
 /**
  * @brief      Represents a ShaderToy-like buffer with inputs, programs and output
  */
-class shadertoy_EXPORT toy_buffer : public buffer_base
+class shadertoy_EXPORT toy_buffer : public basic_buffer
 {
 private:
 	/// Buffer program
@@ -57,5 +59,6 @@ public:
 	{ return program_; }
 };
 }
+}
 
-#endif /* _SHADERTOY_TOY_BUFFER_HPP_ */
+#endif /* _SHADERTOY_BUFFERS_TOY_BUFFER_HPP_ */

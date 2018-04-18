@@ -15,7 +15,7 @@
 #include "shadertoy/buffer_config.hpp"
 #include "shadertoy/context_config.hpp"
 #include "shadertoy/uniform_state.hpp"
-#include "shadertoy/toy_buffer.hpp"
+#include "shadertoy/buffers/toy_buffer.hpp"
 #include "shadertoy/texture_engine.hpp"
 #include "shadertoy/render_context.hpp"
 
@@ -23,10 +23,11 @@ using namespace std;
 namespace fs = boost::filesystem;
 
 using namespace shadertoy;
+using namespace shadertoy::buffers;
 using shadertoy::gl::gl_call;
 
 toy_buffer::toy_buffer(const std::string &id)
-	: buffer_base(id),
+	: basic_buffer(id),
 	  fs_(GL_FRAGMENT_SHADER),
 	  bound_inputs_()
 {

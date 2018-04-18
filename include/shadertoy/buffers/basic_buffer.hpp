@@ -1,9 +1,11 @@
-#ifndef _SHADERTOY_BUFFER_BASE_HPP_
-#define _SHADERTOY_BUFFER_BASE_HPP_
+#ifndef _SHADERTOY_BUFFERS_BASIC_BUFFER_HPP_
+#define _SHADERTOY_BUFFERS_BASIC_BUFFER_HPP_
 
 #include "shadertoy/pre.hpp"
 
 namespace shadertoy
+{
+namespace buffers
 {
 
 /**
@@ -13,7 +15,7 @@ namespace shadertoy
  * mainly includes having a dedicated framebuffer with associated
  * textures that are rendered to in a ping-pong manner.
  */
-class buffer_base
+class basic_buffer
 {
 	/// Buffer identifier
 	const std::string id_;
@@ -39,7 +41,7 @@ protected:
 	 *
 	 * @param[in] id        Identifier for this buffer
 	 */
-	buffer_base(const std::string &id);
+	basic_buffer(const std::string &id);
 
 	/**
 	 * @brief     Initializes the contents of the buffer for rendering. This method
@@ -141,5 +143,6 @@ private:
 	void init_render_texture(std::shared_ptr<gl::texture> &tex, int width, int height);
 };
 }
+}
 
-#endif /* _SHADERTOY_BUFFER_BASE_HPP_ */
+#endif /* _SHADERTOY_BUFFERS_BASIC_BUFFER_HPP_ */

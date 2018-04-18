@@ -102,7 +102,7 @@ int render(GLFWwindow* window, shadertoy::context_config &contextConfig, bool du
 
 				std::ofstream ofs(dumpPath.string());
 				auto dump(shadertoy::utils::dump_program(
-							std::static_pointer_cast<shadertoy::toy_buffer>(context.buffer(bufferConfig.first))
+							std::static_pointer_cast<shadertoy::buffers::toy_buffer>(context.buffer(bufferConfig.first))
 							->program()));
 				ofs.write(dump.data(), dump.size());
 				ofs.close();
