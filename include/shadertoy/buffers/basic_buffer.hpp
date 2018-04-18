@@ -11,20 +11,13 @@ namespace buffers
 /**
  * @brief Represents a buffer in a swap chain.
  *
- * This class only contains shared behavior among all buffers, which
- * mainly includes having a dedicated framebuffer with associated
- * textures that are rendered to in a ping-pong manner.
+ * This class only contains shared behavior among all buffers, which mainly
+ * includes having textures that are rendered to in a ping-pong manner.
  */
 class basic_buffer
 {
 	/// Buffer identifier
 	const std::string id_;
-
-	/// Target framebuffer
-	gl::framebuffer target_fbo_;
-
-	/// Target renderbuffer
-	gl::renderbuffer target_rbo_;
 
 	/// Source texture
 	std::shared_ptr<gl::texture> source_tex_;
@@ -53,6 +46,16 @@ protected:
 	 * @param[in]  height  Height of the rendering textures for this buffer.
 	 */
 	virtual void init_contents(render_context &context, int width, int height) = 0;
+
+	/**
+	 * @brief     Allocates size-dependent resources for the contents of this buffer.
+	 *            This method must be implemented by derived classes to respond to
+	 *            rendering size changes.
+	 *
+	 * @param[in] width  New rendering width
+	 * @param[in] height New rendering height
+	 */
+	virtual void allocate_contents(int width, int height) = 0;
 
 	/**
 	 * @brief     Renders the contents of this buffer. This method must

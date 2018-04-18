@@ -47,21 +47,12 @@ void basic_buffer::allocate_textures(int width, int height)
     init_render_texture(source_tex_, width, height);
     init_render_texture(target_tex_, width, height);
 
-	// Setup render buffers
-	target_tex_->bind(GL_TEXTURE_2D);
-	target_rbo_.bind(GL_RENDERBUFFER);
-	target_rbo_.storage(GL_DEPTH_COMPONENT, width, height);
+	// Allocate content resources
+	allocate_contents(width, height);
 }
 
 void basic_buffer::render(render_context &context)
 {
-	// Update renderbuffer to use the correct target texture and bind as the curren target
-	target_tex_->bind(GL_TEXTURE_2D);
-	target_rbo_.bind(GL_RENDERBUFFER);
-	target_fbo_.bind(GL_DRAW_FRAMEBUFFER);
-
-	target_fbo_.texture(GL_COLOR_ATTACHMENT0, *target_tex_, 0);
-	
 	// Render the contents of this buffer
 	render_contents(context);
 

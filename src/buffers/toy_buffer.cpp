@@ -27,7 +27,7 @@ using namespace shadertoy::buffers;
 using shadertoy::gl::gl_call;
 
 toy_buffer::toy_buffer(const std::string &id)
-	: basic_buffer(id),
+	: gl_buffer(id),
 	  fs_(GL_FRAGMENT_SHADER),
 	  bound_inputs_()
 {
@@ -54,7 +54,7 @@ void toy_buffer::init_contents(render_context &context, int width, int height)
 	bound_inputs_ = context.bound_inputs(program_);
 }
 
-void toy_buffer::render_contents(render_context &context)
+void toy_buffer::render_gl_contents(render_context &context)
 {
 	auto &config(std::find_if(context.config().buffer_configs.begin(),
 		context.config().buffer_configs.end(),

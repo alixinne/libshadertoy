@@ -106,6 +106,7 @@ add_library(shadertoy-objects OBJECT
 	${INCLUDE_DIR}/shadertoy.hpp
 	${INCLUDE_DIR}/shadertoy/buffer_config.hpp
 	${INCLUDE_DIR}/shadertoy/buffers/basic_buffer.hpp
+	${INCLUDE_DIR}/shadertoy/buffers/gl_buffer.hpp
 	${INCLUDE_DIR}/shadertoy/buffers/toy_buffer.hpp
 	${INCLUDE_DIR}/shadertoy/context_config.hpp
 	${INCLUDE_DIR}/shadertoy/gl.hpp
@@ -129,6 +130,7 @@ add_library(shadertoy-objects OBJECT
 
 	${SRC_DIR}/buffer_config.cpp
 	${SRC_DIR}/buffers/basic_buffer.cpp
+	${SRC_DIR}/buffers/gl_buffer.cpp
 	${SRC_DIR}/buffers/toy_buffer.cpp
 	${SRC_DIR}/context_config.cpp
 	${SRC_DIR}/gl/buffer.cpp

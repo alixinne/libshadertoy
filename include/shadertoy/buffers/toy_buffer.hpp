@@ -3,7 +3,7 @@
 
 #include "shadertoy/pre.hpp"
 
-#include "shadertoy/buffers/basic_buffer.hpp"
+#include "shadertoy/buffers/gl_buffer.hpp"
 
 namespace shadertoy
 {
@@ -13,7 +13,7 @@ namespace buffers
 /**
  * @brief      Represents a ShaderToy-like buffer with inputs, programs and output
  */
-class shadertoy_EXPORT toy_buffer : public basic_buffer
+class shadertoy_EXPORT toy_buffer : public gl_buffer
 {
 private:
 	/// Buffer program
@@ -33,14 +33,14 @@ protected:
 	 * @param[in]  width   Width of the rendering textures for this buffer
 	 * @param[in]  height  Height of the rendering textures for this buffer
 	 */
-	virtual void init_contents(render_context &context, int width, int height) override;
+	void init_contents(render_context &context, int width, int height) override;
 
 	/**
 	 * @brief      Renders the contents of this buffer.
 	 *
 	 * @param[in]  context Rendering context to use for rendering this buffer
 	 */
-	virtual void render_contents(render_context &context) override;
+	void render_gl_contents(render_context &context) override;
 
 public:
 	/**
