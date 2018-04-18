@@ -7,8 +7,6 @@
 
 #include <epoxy/gl.h>
 
-#include <glm/glm.hpp>
-
 #include "shadertoy/gl.hpp"
 
 #include "shadertoy/uniform_state.hpp"

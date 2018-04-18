@@ -2,8 +2,6 @@
 
 #include <epoxy/gl.h>
 
-#include <glm/glm.hpp>
-
 #include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl/shader.hpp"
 #include "shadertoy/gl/program.hpp"

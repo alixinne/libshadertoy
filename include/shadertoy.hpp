@@ -10,10 +10,6 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/variant.hpp>
 
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
-
 #include "shadertoy/pre.hpp"
 
 #include "shadertoy/gl.hpp"

@@ -3,6 +3,10 @@
 
 #include "shadertoy/gl/resource.hpp"
 
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+
 namespace shadertoy
 {
 namespace gl

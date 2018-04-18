@@ -4,8 +4,6 @@
 
 #include <epoxy/gl.h>
 
-#include <glm/glm.hpp>
-
 #include "shadertoy/gl.hpp"
 
 #include "shadertoy/shader_compiler.hpp"

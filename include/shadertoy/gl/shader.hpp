@@ -3,6 +3,9 @@
 
 #include "shadertoy/gl/resource.hpp"
 
+#include <string>
+#include <vector>
+
 namespace shadertoy
 {
 namespace gl
