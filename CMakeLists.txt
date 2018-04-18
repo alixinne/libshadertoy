@@ -104,10 +104,20 @@ set(shadertoy_INCLUDE_DIRS
 
 add_library(shadertoy-objects OBJECT
 	${INCLUDE_DIR}/shadertoy.hpp
-	${INCLUDE_DIR}/shadertoy/pre.hpp
 	${INCLUDE_DIR}/shadertoy/buffer_base.hpp
 	${INCLUDE_DIR}/shadertoy/buffer_config.hpp
 	${INCLUDE_DIR}/shadertoy/context_config.hpp
+	${INCLUDE_DIR}/shadertoy/gl.hpp
+	${INCLUDE_DIR}/shadertoy/gl/buffer.hpp
+	${INCLUDE_DIR}/shadertoy/gl/caller.hpp
+	${INCLUDE_DIR}/shadertoy/gl/framebuffer.hpp
+	${INCLUDE_DIR}/shadertoy/gl/program.hpp
+	${INCLUDE_DIR}/shadertoy/gl/query.hpp
+	${INCLUDE_DIR}/shadertoy/gl/renderbuffer.hpp
+	${INCLUDE_DIR}/shadertoy/gl/resource.hpp
+	${INCLUDE_DIR}/shadertoy/gl/shader.hpp
+	${INCLUDE_DIR}/shadertoy/gl/texture.hpp
+	${INCLUDE_DIR}/shadertoy/pre.hpp
 	${INCLUDE_DIR}/shadertoy/render_context.hpp
 	${INCLUDE_DIR}/shadertoy/shader_compiler.hpp
 	${INCLUDE_DIR}/shadertoy/shadertoy_error.hpp
@@ -116,25 +126,10 @@ add_library(shadertoy-objects OBJECT
 	${INCLUDE_DIR}/shadertoy/uniform_state.hpp
 	${INCLUDE_DIR}/shadertoy/uniform_state_decl.hpp
 	${INCLUDE_DIR}/shadertoy/uniform_state_impl.hpp
-	${INCLUDE_DIR}/shadertoy/gl.hpp
-	${INCLUDE_DIR}/shadertoy/gl/query.hpp
-	${INCLUDE_DIR}/shadertoy/gl/renderbuffer.hpp
-	${INCLUDE_DIR}/shadertoy/gl/caller.hpp
-	${INCLUDE_DIR}/shadertoy/gl/buffer.hpp
-	${INCLUDE_DIR}/shadertoy/gl/program.hpp
-	${INCLUDE_DIR}/shadertoy/gl/framebuffer.hpp
-	${INCLUDE_DIR}/shadertoy/gl/resource.hpp
-	${INCLUDE_DIR}/shadertoy/gl/texture.hpp
-	${INCLUDE_DIR}/shadertoy/gl/shader.hpp
+
 	${SRC_DIR}/buffer_base.cpp
 	${SRC_DIR}/buffer_config.cpp
 	${SRC_DIR}/context_config.cpp
-	${SRC_DIR}/render_context.cpp
-	${SRC_DIR}/shader_compiler.cpp
-	${SRC_DIR}/shadertoy_error.cpp
-	${SRC_DIR}/texture_engine.cpp
-	${SRC_DIR}/toy_buffer.cpp
-	${SRC_DIR}/uniform_state.cpp
 	${SRC_DIR}/gl/buffer.cpp
 	${SRC_DIR}/gl/caller.cpp
 	${SRC_DIR}/gl/framebuffer.cpp
@@ -143,10 +138,17 @@ add_library(shadertoy-objects OBJECT
 	${SRC_DIR}/gl/renderbuffer.cpp
 	${SRC_DIR}/gl/shader.cpp
 	${SRC_DIR}/gl/texture.cpp
+	${SRC_DIR}/render_context.cpp
+	${SRC_DIR}/shader_compiler.cpp
+	${SRC_DIR}/shadertoy_error.cpp
+	${SRC_DIR}/texture_engine.cpp
+	${SRC_DIR}/toy_buffer.cpp
+	${SRC_DIR}/uniform_state.cpp
 	${SRC_DIR}/utils/dump_program.cpp
 	${SRC_DIR}/utils/log.cpp
-	${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog/spdlog.h
-	${CMAKE_CURRENT_BINARY_DIR}/resources.c)
+
+	${CMAKE_CURRENT_BINARY_DIR}/resources.c
+	${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog/spdlog.h)
 
 # Include directories
 target_include_directories(shadertoy-objects PRIVATE
@@ -295,15 +297,15 @@ install(FILES ${SHADERTOY_HEADERS}
 		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
 
-file(GLOB SHADERTOY_GL_HEADERS ${INCLUDE_DIR}/shadertoy/gl/*.hpp)
-install(FILES ${SHADERTOY_GL_HEADERS}
-		COMPONENT shadertoy-dev
-		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy/gl)
-
-file(GLOB SHADERTOY_UTILS_HEADERS ${INCLUDE_DIR}/shadertoy/utils/*.hpp)
-install(FILES ${SHADERTOY_UTILS_HEADERS}
-		COMPONENT shadertoy-dev
-		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy/utils)
+file(GLOB SHADERTOY_HEADERS_DIRS RELATIVE ${INCLUDE_DIR}/shadertoy ${INCLUDE_DIR}/shadertoy/*)
+foreach(SHADERTOY_HEADERS_ITEM ${SHADERTOY_HEADERS_DIRS})
+	if(IS_DIRECTORY ${INCLUDE_DIR}/shadertoy/${SHADERTOY_HEADERS_ITEM})
+		file(GLOB SHADERTOY_HEADER_FILES ${INCLUDE_DIR}/shadertoy/${SHADERTOY_HEADERS_ITEM}/*.hpp)
+		install(FILES ${SHADERTOY_HEADER_FILES}
+			    COMPONENT shadertoy-dev
+				DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy/${SHADERTOY_HEADERS_ITEM})
+	endif()
+endforeach()
 
 install(DIRECTORY ${SPDLOG_DIR}/include/spdlog
 		COMPONENT shadertoy-dev
