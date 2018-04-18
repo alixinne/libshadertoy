@@ -1,9 +1,8 @@
 #ifndef _SHADERTOY_SHADERTOY_ERROR_HPP_
 #define _SHADERTOY_SHADERTOY_ERROR_HPP_
 
-#include "shadertoy/pre.hpp"
-
 #include <stdexcept>
+#include <string>
 
 namespace shadertoy
 {

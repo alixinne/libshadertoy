@@ -123,6 +123,7 @@ add_library(shadertoy-objects OBJECT
 	${INCLUDE_DIR}/shadertoy/render_context.hpp
 	${INCLUDE_DIR}/shadertoy/shader_compiler.hpp
 	${INCLUDE_DIR}/shadertoy/shadertoy_error.hpp
+	${INCLUDE_DIR}/shadertoy/size.hpp
 	${INCLUDE_DIR}/shadertoy/texture_engine.hpp
 	${INCLUDE_DIR}/shadertoy/uniform_state.hpp
 	${INCLUDE_DIR}/shadertoy/uniform_state_decl.hpp
@@ -144,6 +145,7 @@ add_library(shadertoy-objects OBJECT
 	${SRC_DIR}/render_context.cpp
 	${SRC_DIR}/shader_compiler.cpp
 	${SRC_DIR}/shadertoy_error.cpp
+	${SRC_DIR}/size.cpp
 	${SRC_DIR}/texture_engine.cpp
 	${SRC_DIR}/uniform_state.cpp
 	${SRC_DIR}/utils/dump_program.cpp

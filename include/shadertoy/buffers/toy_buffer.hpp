@@ -30,10 +30,8 @@ protected:
 	 * @brief      Initializes the contents of this buffer
 	 *
 	 * @param[in]  context Rendering context to use for shared objects
-	 * @param[in]  width   Width of the rendering textures for this buffer
-	 * @param[in]  height  Height of the rendering textures for this buffer
 	 */
-	void init_contents(render_context &context, int width, int height) override;
+	void init_contents(render_context &context) override;
 
 	/**
 	 * @brief      Renders the contents of this buffer.

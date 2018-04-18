@@ -9,7 +9,6 @@
 
 #include <glm/glm.hpp>
 
-#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl.hpp"
 
 #include "shadertoy/buffer_config.hpp"
@@ -32,23 +31,23 @@ basic_buffer::basic_buffer(const std::string &id)
 {
 }
 
-void basic_buffer::init(render_context &context, int width, int height)
+void basic_buffer::init(render_context &context)
 {
 	// Allocate render textures
-    allocate_textures(width, height);
+	allocate_textures(context);
 
 	// Initialize buffer contents
-	init_contents(context, width, height);
+	init_contents(context);
 }
 
-void basic_buffer::allocate_textures(int width, int height)
+void basic_buffer::allocate_textures(render_context &context)
 {
 	// Initialize buffer textures
-    init_render_texture(source_tex_, width, height);
-    init_render_texture(target_tex_, width, height);
+	init_render_texture(source_tex_);
+	init_render_texture(target_tex_);
 
 	// Allocate content resources
-	allocate_contents(width, height);
+	allocate_contents(context);
 }
 
 void basic_buffer::render(render_context &context)
@@ -77,15 +76,17 @@ unsigned long long basic_buffer::elapsed_time()
 	return result;
 }
 
-void basic_buffer::init_render_texture(shared_ptr<gl::texture> &texptr, int width, int height)
+void basic_buffer::init_render_texture(shared_ptr<gl::texture> &texptr)
 {
 	// Only create a texture object if it is necessary
 	if (!texptr)
 		texptr = make_shared<gl::texture>(GL_TEXTURE_2D);
 
+	// Resolve rendering size
+	rsize size(render_size_);
 	// Allocate texture storage according to width/height
-	texptr->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_BGRA,
-		GL_UNSIGNED_BYTE, nullptr);
+	texptr->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F, size.width(), size.height(), 0, GL_BGRA,
+					 GL_UNSIGNED_BYTE, nullptr);
 
 	// Clear the frame accumulator so it doesn't contain garbage
 	float black[4] = {0.f};

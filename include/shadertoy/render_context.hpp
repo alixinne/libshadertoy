@@ -58,12 +58,11 @@ private:
 	/**
 	 * @brief     Ensures the given render size is valid.
 	 *
-	 * @param[in] width  Rendering width
-	 * @param[in] height Rendering height
+	 * @param[in] size Size to check
 	 *
 	 * @throws shadertoy_error When the rendering size is invalid
 	 */
-	void check_render_size(size_t width, size_t height);
+	void check_render_size(rsize size);
 
 	// Callbacks
 protected:
@@ -150,8 +149,8 @@ public:
 	void init_buffers();
 
 	/**
-	 * @brief      Allocates textures based on the current config width and
-	 *             height. This can be useful for implementing framebuffer
+	 * @brief      Allocates textures based on the current config rendering
+	 *             size. This can be useful for implementing framebuffer
 	 *             resize, but is more lightweight than calling Initialize,
 	 *             which recompiles shaders.
 	 */

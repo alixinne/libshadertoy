@@ -17,8 +17,7 @@ void set_framebuffer_size(GLFWwindow *window, int width, int height)
 		*static_cast<shadertoy::render_context*>(glfwGetWindowUserPointer(window));
 
 	// Reallocate textures
-	context.config().width = width;
-	context.config().height = height;
+	context.config().render_size = shadertoy::rsize(width, height);
 	context.allocate_textures();
 }
 
@@ -27,8 +26,7 @@ int main(int argc, char *argv[])
 	int code = 0;
 
 	shadertoy::context_config contextConfig;
-	contextConfig.width = 640;
-	contextConfig.height = 480;
+	contextConfig.render_size = shadertoy::rsize(640, 480);
 	contextConfig.target_framerate = 60.0;
 
 	shadertoy::buffer_config imageBuffer;
@@ -52,8 +50,8 @@ int main(int argc, char *argv[])
 	}
 
 	// Initialize window
-	GLFWwindow *window = glfwCreateWindow(contextConfig.width,
-										  contextConfig.height,
+	GLFWwindow *window = glfwCreateWindow(contextConfig.render_size.width(),
+										  contextConfig.render_size.height(),
 										  "libshadertoy example 11-image",
 										  nullptr,
 										  nullptr);
@@ -116,7 +114,7 @@ int main(int argc, char *argv[])
 				// Render to screen
 				//  Setup framebuffer
 				gl_call(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
-				gl_call(glViewport, 0, 0, contextConfig.width, contextConfig.height);
+				gl_call(glViewport, 0, 0, contextConfig.render_size.width(), contextConfig.render_size.height());
 
 				//  Load texture and program
 				context.bind_result();

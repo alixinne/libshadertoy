@@ -9,7 +9,6 @@
 
 #include <glm/glm.hpp>
 
-#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl.hpp"
 
 #include "shadertoy/buffer_config.hpp"
@@ -31,17 +30,20 @@ gl_buffer::gl_buffer(const std::string &id)
 {
 }
 
-void gl_buffer::init_contents(render_context &context, int width, int height)
+void gl_buffer::init_contents(render_context &context)
 {
 	// Nothing currently
 }
 
-void gl_buffer::allocate_contents(int width, int height)
+void gl_buffer::allocate_contents(render_context &context)
 {
 	// Setup render buffers
 	target_texture()->bind(GL_TEXTURE_2D);
 	target_rbo_.bind(GL_RENDERBUFFER);
-	target_rbo_.storage(GL_DEPTH_COMPONENT, width, height);
+
+	// Resolve size
+	rsize size(render_size());
+	target_rbo_.storage(GL_DEPTH_COMPONENT, size.width(), size.height());
 }
 
 void gl_buffer::render_contents(render_context &context)

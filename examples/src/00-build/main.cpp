@@ -10,8 +10,7 @@ int main(int argc, char *argv[])
 	int code = 0;
 
 	shadertoy::context_config contextConfig;
-	contextConfig.width = 640;
-	contextConfig.height = 480;
+	contextConfig.render_size = shadertoy::rsize(640, 480);
 	contextConfig.target_framerate = 60.0;
 
 	if (!glfwInit())
@@ -21,8 +20,8 @@ int main(int argc, char *argv[])
 	}
 
 	// Initialize window
-	GLFWwindow *window = glfwCreateWindow(contextConfig.width,
-										  contextConfig.height,
+	GLFWwindow *window = glfwCreateWindow(contextConfig.render_size.width(),
+										  contextConfig.render_size.height(),
 										  "libshadertoy example 00-build",
 										  nullptr,
 										  nullptr);

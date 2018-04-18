@@ -11,7 +11,6 @@
 
 #include <glm/glm.hpp>
 
-#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl.hpp"
 #include "shadertoy/utils/log.hpp"
 
@@ -30,12 +29,12 @@ using namespace shadertoy;
 using namespace shadertoy::utils;
 using shadertoy::gl::gl_call;
 
-void render_context::check_render_size(size_t width, size_t height)
+void render_context::check_render_size(rsize size)
 {
-	if (width == 0)
+	if (size.width() <= 0)
 		throw shadertoy_error("The rendering width must be greater than 0");
 
-	if (height == 0)
+	if (size.height() <= 0)
 		throw shadertoy_error("The rendering height must be greater than 0");
 }
 
@@ -181,10 +180,10 @@ render_context::render_context(context_config &config)
 
 void render_context::init()
 {
-	check_render_size(config_.width, config_.height);
+	check_render_size(config_.render_size);
 
 	// Initialize constant uniforms
-	state_.get<iResolution>() = glm::vec3(config_.width, config_.height, 1.0f);
+	state_.get<iResolution>() = glm::vec3(config_.render_size.width(), config_.render_size.height(), 1.0f);
 	// Note that this will be overriden once query measurements are available
 	state_.get<iTimeDelta>() = 1.0f / (float)config_.target_framerate;
 	state_.get<iFrameRate>() = (float)config_.target_framerate;
@@ -227,7 +226,8 @@ void render_context::init_buffers()
 	for (auto it = bufferConfigs.begin(); it != bufferConfigs.end(); ++it)
 	{
 		auto buf = make_shared<buffers::toy_buffer>(it->first);
-		buf->init(*this, config_.width, config_.height);
+		buf->render_size(rsize_ref([this]() { return config_.render_size; }));
+		buf->init(*this);
 		buffers_.insert(make_pair(it->first, buf));
 	}
 
@@ -239,21 +239,21 @@ void render_context::init_buffers()
 
 void render_context::allocate_textures()
 {
-	check_render_size(config_.width, config_.height);
+	check_render_size(config_.render_size);
 
 	// Drop the reference to screen_quad_texture_, it will be recreated if needed
 	screen_quad_texture_ = shared_ptr<gl::texture>();
 
 	// Reallocate buffer textures
 	for (auto &pair : buffers_)
-		pair.second->allocate_textures(config_.width, config_.height);
+		pair.second->allocate_textures(*this);
 
 	// Reallocate inputs
 	tex_engine_->clear(true);
 
 	// Update the iResolution uniform, as this method can be called after a
 	// framebuffer size change
-	state_.get<iResolution>() = glm::vec3(config_.width, config_.height, 1.0f);
+	state_.get<iResolution>() = glm::vec3(config_.render_size.width(), config_.render_size.height(), 1.0f);
 }
 
 void render_context::clear_state()
@@ -297,7 +297,7 @@ void render_context::read_write_current_frame(GLuint &texIn, GLuint &texOut)
 			screen_quad_texture_->parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
 			screen_quad_texture_->parameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
 			screen_quad_texture_->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F,
-				config_.width, config_.height, 0, GL_BGRA, GL_FLOAT, nullptr);
+				config_.render_size.width(), config_.render_size.height(), 0, GL_BGRA, GL_FLOAT, nullptr);
 		}
 
 		texIn = *currentTex;
@@ -403,7 +403,7 @@ vector<shared_ptr<bound_inputs_base>> render_context::bound_inputs(gl::program &
 
 void render_context::clear(float level)
 {
-	gl_call(glViewport, 0, 0, config_.width, config_.height);
+	gl_call(glViewport, 0, 0, config_.render_size.width(), config_.render_size.height());
 	gl_call(glClearColor, level, level, level, level);
 	gl_call(glClear, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

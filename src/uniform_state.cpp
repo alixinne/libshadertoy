@@ -9,7 +9,6 @@
 
 #include <glm/glm.hpp>
 
-#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl.hpp"
 
 #include "shadertoy/uniform_state.hpp"

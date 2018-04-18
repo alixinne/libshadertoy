@@ -9,7 +9,6 @@
 
 #include <glm/glm.hpp>
 
-#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl.hpp"
 
 #include "shadertoy/buffer_config.hpp"
@@ -33,7 +32,7 @@ toy_buffer::toy_buffer(const std::string &id)
 {
 }
 
-void toy_buffer::init_contents(render_context &context, int width, int height)
+void toy_buffer::init_contents(render_context &context)
 {
 	// Attach the vertex shader for the screen quad
 	program_.attach_shader(context.screen_quad_vertex_shader());
@@ -67,8 +66,8 @@ void toy_buffer::render_gl_contents(render_context &context)
 	program_.use();
 
 	// Override values in bound inputs 0 (ShaderToy inputs)
-	auto &resolutions(static_pointer_cast<shader_inputs_t::bound_inputs>(bound_inputs_[0])
-		->state.get<iChannelResolution>());
+	auto &state(static_pointer_cast<shader_inputs_t::bound_inputs>(bound_inputs_[0])->state);
+	auto &resolutions(state.get<iChannelResolution>());
 
 	// Setup the texture targets
 	for (int i = 0; i < 4; ++i)
@@ -85,6 +84,11 @@ void toy_buffer::render_gl_contents(render_context &context)
 		resolutions[i][2] = 1.0f;
 	}
 
+	// Set the current buffer resolution
+	rsize size(render_size());
+	state.get<iResolution>()[0] = static_cast<float>(size.width());
+	state.get<iResolution>()[1] = static_cast<float>(size.height());
+
 	// Try to set iTimeDelta
 	GLint available = 0;
 	time_delta_query().get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
@@ -93,8 +97,7 @@ void toy_buffer::render_gl_contents(render_context &context)
 		// Result available, set uniform value
 		GLuint64 timeDelta;
 		time_delta_query().get_object_ui64v(GL_QUERY_RESULT, &timeDelta);
-		static_pointer_cast<shader_inputs_t::bound_inputs>(bound_inputs_[0])
-			->state.get<iTimeDelta>() = timeDelta / 1e9;
+		state.get<iTimeDelta>() = timeDelta / 1e9;
 	}
 
 	// Set all uniforms

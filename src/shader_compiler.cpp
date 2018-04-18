@@ -6,7 +6,6 @@
 
 #include <glm/glm.hpp>
 
-#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl.hpp"
 
 #include "shadertoy/shader_compiler.hpp"

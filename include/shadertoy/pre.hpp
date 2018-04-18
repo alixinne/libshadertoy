@@ -49,8 +49,11 @@ namespace shadertoy
 	struct context_config;
 	class render_context;
 	class shader_compiler;
-	class shadertoy_error;
 	class texture_engine;
 }
+
+// Include template and utilities everywhere
+#include "shadertoy/shadertoy_error.hpp"
+#include "shadertoy/size.hpp"
 
 #endif /* _SHADERTOY_PRE_HPP_ */

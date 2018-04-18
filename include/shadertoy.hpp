@@ -1,10 +1,7 @@
 #include <array>
-#include <functional>
 #include <map>
 #include <memory>
-#include <stdexcept>
 #include <sstream>
-#include <string>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -18,8 +15,6 @@
 #include <glm/vec4.hpp>
 
 #include "shadertoy/pre.hpp"
-
-#include "shadertoy/shadertoy_error.hpp"
 
 #include "shadertoy/gl.hpp"
 

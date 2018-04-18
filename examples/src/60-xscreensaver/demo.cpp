@@ -35,8 +35,7 @@ struct my_context
 void shadertoy_resize(int width, int height)
 {
 	// Reallocate textures
-	ctx.context->config().width = width;
-	ctx.context->config().height = height;
+	ctx.context->config().render_size = shadertoy::rsize(width, height);
 	ctx.context->allocate_textures();
 }
 
@@ -98,7 +97,7 @@ void shadertoy_render_frame()
 	// Render to screen
 	//  Setup framebuffer
 	gl_call(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
-	gl_call(glViewport, 0, 0, ctx.config.width, ctx.config.height);
+	gl_call(glViewport, 0, 0, ctx.config.render_size.width(), ctx.config.render_size.height());
 
 	//  Load texture and program
 	ctx.context->bind_result();
@@ -113,7 +112,7 @@ void shadertoy_render_frame()
 		exit(0);
 }
 
-int shadertoy_load(const char *shader_id, const char *shader_api_key, int width, int height)
+int shadertoy_load(const char *shader_id, const char *shader_api_key, shadertoy::rsize size)
 {
 	int code = 0;
 
@@ -123,8 +122,7 @@ int shadertoy_load(const char *shader_id, const char *shader_api_key, int width,
 	ctx.config = shadertoy::context_config();
 
 	// Context configuration
-	ctx.config.width = width;
-	ctx.config.height = height;
+	ctx.config.render_size = size;
 	ctx.config.target_framerate = 30.0;
 
 	// Fetch shader code
@@ -177,6 +175,7 @@ int shadertoy_load(const char *shader_id, const char *shader_api_key, int width,
 
 int shadertoy_init(const char *api_key, const char *query, const char *sort, int width, int height)
 {
+	shadertoy::rsize size(width, height);
 	curl_global_init(CURL_GLOBAL_DEFAULT);
 	CURL *curl = curl_easy_init();
 
@@ -211,7 +210,7 @@ int shadertoy_init(const char *api_key, const char *query, const char *sort, int
 
 		if (testedShaders.count(shaderId) == 0)
 		{
-			int code = shadertoy_load(shaderId.c_str(), api_key, width, height);
+			int code = shadertoy_load(shaderId.c_str(), api_key, size);
 
 			if (code == 0)
 			{
@@ -225,7 +224,7 @@ int shadertoy_init(const char *api_key, const char *query, const char *sort, int
 
 	if (!foundShader)
 	{
-		int code = shadertoy_load("XsyGRW", api_key, width, height);
+		int code = shadertoy_load("XsyGRW", api_key, size);
 
 		if (code != 0)
 		{

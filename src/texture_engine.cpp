@@ -17,7 +17,6 @@
 
 #include <glm/glm.hpp>
 
-#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl.hpp"
 #include "shadertoy/utils/log.hpp"
 
@@ -184,12 +183,12 @@ shared_ptr<gl::texture> texture_engine::noise_texture_handler(const input_config
 	noiseTexture->parameter(GL_TEXTURE_SWIZZLE_G, GL_RED);
 
 	// Create the actual noise
-	vector<unsigned char> rnd(config_.width * config_.height);
+	vector<unsigned char> rnd(config_.render_size.width() * config_.render_size.height());
 	generate(rnd.begin(), rnd.end(), []() { return rand() % 256; });
 
 	// Load it
-	noiseTexture->image_2d(GL_TEXTURE_2D, 0, GL_RED, config_.width, config_.height,
-		0, GL_RED, GL_UNSIGNED_BYTE, rnd.data());
+	noiseTexture->image_2d(GL_TEXTURE_2D, 0, GL_RED, config_.render_size.width(),
+						   config_.render_size.height(), 0, GL_RED, GL_UNSIGNED_BYTE, rnd.data());
 
 	log::shadertoy()->info("Generated noise texture for input {}", inputConfig.id);
 
@@ -214,14 +213,15 @@ shared_ptr<gl::texture> texture_engine::checker_texture_handler(const input_conf
 	checkerTexture->parameter(GL_TEXTURE_SWIZZLE_G, GL_RED);
 
 	// Generate the checkerboard
-	vector<unsigned char> chk(config_.width * config_.height);
-	for (size_t i = 0; i < config_.width; ++i)
-		for (size_t j = 1; j < config_.height; ++j)
-			chk[j * config_.height + i] = ((i / size) % 2 == 0) ^ ((j / size) % 2 == 0) ? 255 : 0;
+	vector<unsigned char> chk(config_.render_size.width() * config_.render_size.height());
+	for (size_t i = 0; i < config_.render_size.width(); ++i)
+		for (size_t j = 1; j < config_.render_size.height(); ++j)
+			chk[j * config_.render_size.height() + i] =
+			((i / size) % 2 == 0) ^ ((j / size) % 2 == 0) ? 255 : 0;
 
 	// Load it
-	checkerTexture->image_2d(GL_TEXTURE_2D, 0, GL_RED, config_.width, config_.height,
-		0, GL_RED, GL_UNSIGNED_BYTE, chk.data());
+	checkerTexture->image_2d(GL_TEXTURE_2D, 0, GL_RED, config_.render_size.width(),
+							 config_.render_size.height(), 0, GL_RED, GL_UNSIGNED_BYTE, chk.data());
 
 	log::shadertoy()->info("Generated {}x{} checker texture for input {}", size, size, inputConfig.id);
 

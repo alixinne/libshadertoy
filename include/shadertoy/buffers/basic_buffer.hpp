@@ -28,6 +28,9 @@ class basic_buffer
 	/// Query for iTimeDelta execution time
 	gl::query time_delta_query_;
 
+	/// Size of this buffer's output
+	rsize_ref render_size_;
+
 protected:
 	/**
 	 * @brief     Initializes a new base buffer
@@ -42,20 +45,17 @@ protected:
 	 *            routine.
 	 *
 	 * @param[in]  context Rendering context to use for shared objects
-	 * @param[in]  width   Width of the rendering textures for this buffer.
-	 * @param[in]  height  Height of the rendering textures for this buffer.
 	 */
-	virtual void init_contents(render_context &context, int width, int height) = 0;
+	virtual void init_contents(render_context &context) = 0;
 
 	/**
 	 * @brief     Allocates size-dependent resources for the contents of this buffer.
 	 *            This method must be implemented by derived classes to respond to
 	 *            rendering size changes.
 	 *
-	 * @param[in] width  New rendering width
-	 * @param[in] height New rendering height
+	 * @param[in]  context Rendering context to use for shared objects
 	 */
-	virtual void allocate_contents(int width, int height) = 0;
+	virtual void allocate_contents(render_context &context) = 0;
 
 	/**
 	 * @brief     Renders the contents of this buffer. This method must
@@ -88,19 +88,16 @@ public:
 	 * @brief      Prepare the current buffer for rendering
 	 *
 	 * @param[in]  context Rendering context to use for shared objects
-	 * @param[in]  width   Width of the rendering textures for this buffer.
-	 * @param[in]  height  Height of the rendering textures for this buffer.
 	 */
-	void init(render_context &context, int width, int height);
+	void init(render_context &context);
 
 	/**
 	 * @brief      Allocates the textures for this buffer. Note that the current
 	 *             contents of previous textures are discarded.
 	 *
-	 * @param[in]  width   Width of the texture
-	 * @param[in]  height  Height of the texture
+	 * @param[in]  context Rendering context to use for shared objects
 	 */
-	void allocate_textures(int width, int height);
+	void allocate_textures(render_context &context);
 
 	/**
 	 * @brief      Get a reference to the source texture for this buffer
@@ -135,15 +132,39 @@ public:
 	 */
 	unsigned long long elapsed_time();
 
+	/**
+	 * @brief      Obtains the rendering size object that specifies the size of
+	 *             this buffer's output.
+	 *
+	 * @return     rsize_ref currently in use
+	 */
+	inline const rsize_ref &render_size() const { return render_size_; }
+
+	/**
+	 * @brief      Obtains the rendering size object that specifies the size of
+	 *             this buffer's output.
+	 *
+	 * @return     rsize_ref currently in use
+	 */
+	inline rsize_ref &render_size() { return render_size_; }
+
+	/**
+	 * @brief      Sets the rendering size object that specifies the size of
+	 *             this buffer's output. Note that allocate_textures must be
+	 *             called after changing this property.
+	 *
+	 * @param[in]  new_size  New rendering size object
+	 */
+	inline void render_size(const rsize_ref &new_size) { render_size_ = new_size; }
+
 private:
 	/**
 	 * Initialize a texture that can be used to render this buffer.
+	 * The size of the texture is defined by the rendering size of this buffer.
 	 *
-	 * @param tex    Allocated texture object reference
-	 * @param width  Width of the target texture
-	 * @param height Height of the target texture
+	 * @param tex  Allocated texture object reference
 	 */
-	void init_render_texture(std::shared_ptr<gl::texture> &tex, int width, int height);
+	void init_render_texture(std::shared_ptr<gl::texture> &tex);
 };
 }
 }

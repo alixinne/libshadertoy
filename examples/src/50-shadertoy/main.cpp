@@ -39,8 +39,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 	my_context &ctx = *static_cast<my_context*>(glfwGetWindowUserPointer(window));
 
 	// Reallocate textures
-	ctx.context->config().width = width;
-	ctx.context->config().height = height;
+	ctx.context->config().render_size = shadertoy::rsize(width, height);
 	ctx.context->allocate_textures();
 }
 
@@ -158,7 +157,7 @@ int render(GLFWwindow* window, shadertoy::context_config &contextConfig, bool du
 				state.get<shadertoy::iMouse>()[0] =
 					state.get<shadertoy::iMouse>()[2] = xpos;
 				state.get<shadertoy::iMouse>()[1] =
-					state.get<shadertoy::iMouse>()[3] = contextConfig.height - ypos;
+					state.get<shadertoy::iMouse>()[3] = contextConfig.render_size.height() - ypos;
 			}
 			else
 			{
@@ -173,7 +172,8 @@ int render(GLFWwindow* window, shadertoy::context_config &contextConfig, bool du
 			// Render to screen
 			//  Setup framebuffer
 			gl_call(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
-			gl_call(glViewport, 0, 0, contextConfig.width, contextConfig.height);
+			gl_call(glViewport, 0, 0, contextConfig.render_size.width(), contextConfig.render_size.height());
+
 
 			//  Load texture and program
 			context.bind_result();
@@ -189,7 +189,7 @@ int render(GLFWwindow* window, shadertoy::context_config &contextConfig, bool du
 				auto renderTime = buffer->elapsed_time();
 				std::cerr << "frame time: " << renderTime
 						  << "ns fps: " << (1e9 / renderTime)
-						  << " mpx/s: " << (contextConfig.width * contextConfig.height / (renderTime / 1e3))
+						  << " mpx/s: " << (contextConfig.render_size.width() * contextConfig.render_size.height() / (renderTime / 1e3))
 						  << std::endl;
 			}
 
@@ -218,8 +218,8 @@ int performRender(shadertoy::context_config &contextConfig, bool dumpShaders)
 	}
 
 	// Initialize window
-	GLFWwindow *window = glfwCreateWindow(contextConfig.width,
-										  contextConfig.height,
+	GLFWwindow *window = glfwCreateWindow(contextConfig.render_size.width(),
+										  contextConfig.render_size.height(),
 										  "libshadertoy example 50-shadertoy",
 										  nullptr,
 										  nullptr);
@@ -256,8 +256,7 @@ int main(int argc, char *argv[])
 
 	// Context configuration
 	shadertoy::context_config contextConfig;
-	contextConfig.width = 640;
-	contextConfig.height = 480;
+	contextConfig.render_size = shadertoy::rsize(640, 480);
 	contextConfig.target_framerate = 60.0;
 
 	// Fetch shader code
