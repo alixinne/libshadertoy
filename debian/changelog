@@ -1,16 +1,22 @@
 libshadertoy (1.0.0) unstable; urgency=medium
 
-  * Add static version of the library
-  * Add xscreensaver example
-  * GL: Add support for glQueryCounter
-  * Refactor library interface, use STL/Boost conventions
-  * Move documentation into its own package, libshadertoy-doc
-  * Refactor examples
-  * Remove dependency on boost::log
-  * Add more automated tests
-  * Abstract buffer functionality
-  * Refactor texture engine functionality
-  * Fix access level of render_context callbacks
+  Vincent Tavernier <vince.tavernier@gmail.com>
+
+    * Add static version of the library
+    * Add xscreensaver example
+    * GL: Add support for glQueryCounter
+    * Refactor library interface, use STL/Boost conventions
+    * Move documentation into its own package, libshadertoy-doc
+    * Refactor examples
+    * Remove dependency on boost::log
+    * Add more automated tests
+    * Abstract buffer functionality
+    * Refactor texture engine functionality
+    * Fix access level of render_context callbacks
+
+  Noah Wong <noah.wong@inria.fr>
+
+    * Add support for .exr files as input textures
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Thu, 08 Mar 2018 15:00:00 +0100
 
