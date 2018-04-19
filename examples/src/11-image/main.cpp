@@ -41,6 +41,10 @@ int main(int argc, char *argv[])
 	imageBuffer.inputs[0].source = fs::path("../images/vase_rect.png").string();
 #endif /* LIBSHADERTOY_OPENEXR */
 
+	imageBuffer.inputs[0].mag_filter = GL_LINEAR;
+	imageBuffer.inputs[0].min_filter = GL_LINEAR_MIPMAP_LINEAR;
+	imageBuffer.inputs[0].wrap       = GL_REPEAT;
+
 	contextConfig.buffer_configs.emplace_back(imageBuffer.name, imageBuffer);
 
 	if (!glfwInit())
