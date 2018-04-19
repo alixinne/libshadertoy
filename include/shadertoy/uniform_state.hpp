@@ -40,9 +40,6 @@ struct shadertoy_EXPORT dynamic_shader_inputs_glsl_type_visitor : public boost::
 			std::string("[") + std::string(N) + std::string("]") +
 			std::get<1>((*this)(T())));
 	}
-
-	template<class T>
-	glsl_type_info operator()(std::shared_ptr<T> &) const { return (*this)(T()); }
 };
 
 /**
@@ -156,13 +153,13 @@ struct shadertoy_EXPORT dynamic_shader_inputs
 	static constexpr const char *name = DynamicInputName;
 	static constexpr const size_t size = 0;
 
-	typedef boost::variant<std::shared_ptr<Types>...> variant_ptr;
+	typedef boost::variant<Types...> variant_input;
 	typedef dynamic_shader_inputs<DynamicInputName, Types...> value_type;
 
 	using glsl_type_visitor = GLSLTypeVisitor;
 
 private:
-	std::map<std::string, variant_ptr> input_map;
+	std::map<std::string, variant_input> input_map;
 
 public:
 	/**
@@ -175,8 +172,8 @@ public:
 	template<typename T, typename ...Args>
 	void insert(const std::string &name, Args... args)
 	{
-		input_map.insert(std::make_pair<std::string, variant_ptr>(std::string(name),
-			std::make_shared<T>(std::forward<Args...>(args...))));
+		input_map.insert(std::make_pair<std::string, variant_input>(std::string(name),
+			T(std::forward<Args...>(args...))));
 	}
 
 	/**
@@ -188,7 +185,7 @@ public:
 	template<typename T>
 	T &get(const std::string &name)
 	{
-		return *boost::get<std::shared_ptr<T>>(input_map[name]);
+		return boost::get<T>(input_map[name]);
 	}
 
 	/**
@@ -282,14 +279,21 @@ public:
 	using indices = std::make_index_sequence<sizeof...(Inputs)>;
 
 private:
-	/// boost::variant pointer to the different supported input types
-	typedef boost::variant<std::shared_ptr<Inputs>...> variant_ptr;
-
-	/// Map of inputs where keys are uniform names, for fast lookup.
-	std::map<std::string, variant_ptr> input_map_;
-
 	/// Tuple of initialized inputs
-	std::tuple<std::shared_ptr<Inputs>...> all_inputs_;
+	std::tuple<Inputs...> all_inputs_;
+
+	template<size_t index, typename Target, typename Input, typename... Ts>
+	inline constexpr typename std::enable_if<std::is_same<Input, Target>::value, Target&>::type get_input() {
+		return std::get<index>(all_inputs_);
+	}
+
+	template<size_t index, typename Target, typename Input, typename... Ts>
+	inline constexpr typename std::enable_if<!(std::is_same<Input, Target>::value) && index <= sizeof...(Inputs), Target&>::type get_input() {
+		return get_input<index + 1, Target, Ts...>();
+	}
+
+	template<typename InputType>
+	constexpr InputType& input() { return get_input<0, InputType, Inputs...>(); }
 
 public:
 	/**
@@ -313,7 +317,7 @@ public:
 		{
 			gl::uniform_location location;
 
-			uniform(std::shared_ptr<Input> &, gl::program &program)
+			uniform(Input &, gl::program &program)
 				: location(program.get_uniform_location(Input::name))
 			{
 			}
@@ -321,15 +325,14 @@ public:
 			/**
 			 * @brief Applies the values of the given input to the associated location.
 			 *
-			 * @param  valptr Pointer to the input containing the value to set.
-			 * @return        true if the uniform location was set, false
-			 *                otherwise.
+			 * @param  val Reference to the input containing the value to set.
+			 * @return true if the uniform location was set, false otherwise.
 			 */
-			bool set_value(std::shared_ptr<Input> &valptr)
+			bool set_value(Input &val)
 			{
 				return location.set_value(
-					valptr->values().size(),
-					static_cast<const typename Input::value_type *>(valptr->values().data()));
+					val.values().size(),
+					static_cast<const typename Input::value_type *>(val.values().data()));
 			}
 		};
 
@@ -341,8 +344,8 @@ public:
 		{
 			std::map<std::string, gl::uniform_location> locations;
 
-			uniform(std::shared_ptr<Input> &input, gl::program &program)
-				: locations(input->bind_inputs(program))
+			uniform(Input &input, gl::program &program)
+				: locations(input.bind_inputs(program))
 			{
 			}
 
@@ -350,16 +353,18 @@ public:
 			 * @brief Applies all the values of the given dynamic input to the
 			 * associated locations.
 			 *
-			 * @param  valptr Pointer to the input containing the values to set.
-			 * @return        true if the uniform locations were set, false
-			 *                otherwise
+			 * @param  val Reference to the input containing the values to set.
+			 * @return true if the uniform locations were set, false otherwise
 			 */
-			bool set_value(std::shared_ptr<Input> &valptr)
+			bool set_value(Input &val)
 			{
 				bool result = true;
 
 				for (auto &pair : locations)
-					result = result && valptr->set_value(pair.first, pair.second);
+				{
+					bool success = val.set_value(pair.first, pair.second);
+					result = result && success;
+				}
 
 				return result;
 			}
@@ -428,7 +433,7 @@ public:
 	template<size_t... Indices>
 	void append_definitions(std::ostream &os, std::index_sequence<Indices...>)
 	{
-		int _[] = {(std::get<Indices>(all_inputs_)->append_definition(os), 0)...};
+		int _[] = {(std::get<Indices>(all_inputs_).append_definition(os), 0)...};
 		(void) _;
 	}
 
@@ -442,7 +447,7 @@ public:
 	template<typename Input, typename = typename std::enable_if<(Input::size < 1)>::type>
 	Input &get()
 	{
-		return *boost::get<std::shared_ptr<Input>>(input_map_[Input::name]);
+		return input<Input>();
 	}
 
 	/**
@@ -454,7 +459,7 @@ public:
 	template<typename Input, typename = typename std::enable_if<(Input::size == 1)>::type>
 	typename Input::value_type &get()
 	{
-		return std::get<0>(boost::get<std::shared_ptr<Input>>(input_map_[Input::name])->values());
+		return std::get<0>(input<Input>().values());
 	}
 
 	/**
@@ -466,7 +471,7 @@ public:
 	template<typename Input, typename = typename std::enable_if<(Input::size == 1)>::type>
 	const typename Input::value_type &get() const
 	{
-		return std::get<0>(boost::get<std::shared_ptr<Input>>(input_map_.find(Input::name)->second)->values());
+		return std::get<0>(input<Input>().values());
 	}
 
 	/**
@@ -478,7 +483,7 @@ public:
 	template<typename Input, typename = typename std::enable_if<(Input::size > 1)>::type>
 	typename Input::array_type &get()
 	{
-		return boost::get<std::shared_ptr<Input>>(input_map_[Input::name])->values();
+		return input<Input>().values();
 	}
 
 	/**
@@ -490,7 +495,7 @@ public:
 	template<typename Input, typename = typename std::enable_if<(Input::size > 1)>::type>
 	const typename Input::array_type &get() const
 	{
-		return boost::get<std::shared_ptr<Input>>(input_map_.find(Input::name)->second)->values();
+		return input<Input>().values();
 	}
 
 	/**
@@ -524,10 +529,7 @@ public:
 	 * @brief      Initialize a new instance of the ShaderInputs class.
 	 */
 	shader_inputs()
-		: input_map_{(std::make_pair<std::string, variant_ptr>(
-		Inputs::name,
-		std::make_shared<Inputs>()))...},
-		  all_inputs_((boost::get<std::shared_ptr<Inputs>>(input_map_[Inputs::name]))...)
+		: all_inputs_()
 	{
 	}
 };

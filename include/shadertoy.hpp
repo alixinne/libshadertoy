@@ -15,9 +15,7 @@
 #include "shadertoy/gl.hpp"
 
 #include "shadertoy/buffer_config.hpp"
-#include "shadertoy/buffers/basic_buffer.hpp"
-#include "shadertoy/buffers/toy_buffer.hpp"
-#include "shadertoy/context_config.hpp"
+
 #include "shadertoy/inputs/basic_input.hpp"
 #include "shadertoy/inputs/buffer_input.hpp"
 #include "shadertoy/inputs/checker_input.hpp"
@@ -28,8 +26,13 @@
 #include "shadertoy/inputs/jpeg_input.hpp"
 #include "shadertoy/inputs/noise_input.hpp"
 #include "shadertoy/inputs/soil_input.hpp"
+
+#include "shadertoy/uniform_state.hpp"
+
+#include "shadertoy/buffers/basic_buffer.hpp"
+#include "shadertoy/buffers/toy_buffer.hpp"
+#include "shadertoy/context_config.hpp"
 #include "shadertoy/render_context.hpp"
 #include "shadertoy/texture_engine.hpp"
-#include "shadertoy/uniform_state.hpp"
 
 #include "shadertoy/utils.hpp"

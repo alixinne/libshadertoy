@@ -13,6 +13,7 @@ libshadertoy (1.0.0) unstable; urgency=medium
     * Abstract buffer functionality
     * Refactor texture engine functionality
     * Fix access level of render_context callbacks
+    * Optimize uniform handler classes
 
   Noah Wong <noah.wong@inria.fr>
 
