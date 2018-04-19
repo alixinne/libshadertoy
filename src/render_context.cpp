@@ -80,7 +80,7 @@ void render_context::post_init_buffers()
 {
 }
 
-void render_context::load_buffer_sources(vector<pair<string, string>> &sources)
+void render_context::load_buffer_sources(compiler::shader_template &buffer_template)
 {
 }
 
@@ -98,6 +98,13 @@ render_context::render_context(context_config &config)
 	: config_(config),
 	screen_vs_(GL_VERTEX_SHADER),
 	screen_fs_(GL_FRAGMENT_SHADER),
+	buffer_template_{
+		compiler::template_part("internal:wrapper-header", std::string(wrapper_header_fsh, wrapper_header_fsh + wrapper_header_fsh_size)),
+		compiler::template_part("generated:define-wrapper"),
+		compiler::template_part("generated:shader-inputs", state_.definitions_string()),
+		compiler::template_part("input:buffer-sources"),
+		compiler::template_part("internal:wrapper-footer", std::string(wrapper_footer_fsh, wrapper_footer_fsh + wrapper_footer_fsh_size))
+	},
 	frame_count_(0)
 {
 	tex_engine_ = build_texture_engine();
@@ -244,8 +251,6 @@ void render_context::clear_state()
 	tex_engine_->clear();
 	// Clear previous buffers
 	buffers_.clear();
-	// Clear the source cache
-	source_cache_.clear();
 }
 
 void render_context::render()
@@ -313,56 +318,20 @@ void render_context::build_buffer_shader(const string &id,
 		[&id](const auto &pair) { return pair.first == id; })->second);
 
 	// Load all source parts
-	shader_compiler compiler;
-	auto &sources(compiler.sources());
+	std::vector<std::string> sources;
+	std::transform(bufferConfig.shader_files.begin(), bufferConfig.shader_files.end(),
+				   std::back_inserter(sources), [](const auto &path) { return path.string(); });
+
+	auto fs_template(buffer_template_.specify({
+											  compiler::template_part("generated:define-wrapper", define_wrapper_),
+											  compiler::template_part::from_files("input:buffer-sources", sources),
+											  }));
 
 	// Load callback sources
-    load_buffer_sources(sources);
-
-	// Add define wrapper
-	sources.insert(sources.begin(),
-		make_pair(string("generated:define-wrapper"), define_wrapper_));
-
-	// Add sources
-	for (auto &shaderFile : bufferConfig.shader_files)
-	{
-		sources.push_back(make_pair(shaderFile.string(), load_shader_source(shaderFile)));
-	}
-
-	// Add default wrapper around code
-	sources.insert(sources.begin(), make_pair(
-		string("internal:wrapper-header"),
-		string(wrapper_header_fsh, wrapper_header_fsh + wrapper_header_fsh_size)));
-
-	// Add source from uniform declarations
-	sources.insert(sources.begin() + 1, make_pair(
-		string("generated:shader-inputs"),
-		state_.definitions_string()));
-
-	// Add footer
-	sources.push_back(make_pair(
-		string("internal:wrapper-footer"),
-		string(wrapper_footer_fsh, wrapper_footer_fsh + wrapper_footer_fsh_size)));
+    load_buffer_sources(fs_template);
 
 	// Load sources into fragment shader and compile
-	compiler.compile(fs);
-}
-
-const GLchar *render_context::load_shader_source(const fs::path &path) throw(runtime_error)
-{
-	fs::path shaderPath(fs::canonical(path));
-	ifstream src(shaderPath.string().c_str());
-	string loadedSource;
-	loadedSource.assign(istreambuf_iterator<char>(src), istreambuf_iterator<char>());
-	if (loadedSource.back() != '\n')
-	{
-		loadedSource += "\n";
-	}
-	source_cache_.insert(make_pair(shaderPath.string(), loadedSource));
-
-	log::shadertoy()->info("Loaded {}", shaderPath);
-
-	return source_cache_.find(shaderPath.string())->second.c_str();
+	shader_compiler::compile(fs, fs_template.sources());
 }
 
 const GLchar *render_context::define_wrapper() const

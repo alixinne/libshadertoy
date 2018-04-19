@@ -11,23 +11,18 @@
 using namespace std;
 using namespace shadertoy;
 
-shader_compiler::shader_compiler()
-	: named_sources_()
-{
-}
-
-void shader_compiler::compile(gl::shader &shader)
+void shader_compiler::compile(gl::shader &shader, const std::vector<std::pair<std::string, std::string>> &named_sources)
 {
 	// Transform pairs into list of C strings
-	vector<std::string> sources(named_sources_.size());
-	transform(named_sources_.begin(), named_sources_.end(), sources.begin(),
+	vector<std::string> sources(named_sources.size());
+	transform(named_sources.begin(), named_sources.end(), sources.begin(),
 		[] (const pair<string, string> &namedSource) {
 			return namedSource.second;
 		});
 
 	// Also, build a line count
-	vector<int> lineCounts(named_sources_.size());
-	transform(named_sources_.begin(), named_sources_.end(), lineCounts.begin(),
+	vector<int> lineCounts(named_sources.size());
+	transform(named_sources.begin(), named_sources.end(), lineCounts.begin(),
 		[] (const pair<string, string> &namedSource) {
 			return count(namedSource.second.begin(),
 						 namedSource.second.end(),
@@ -89,7 +84,7 @@ void shader_compiler::compile(gl::shader &shader)
 				}
 
 				// Output a formatted message with the error
-				os << named_sources_.at(li).first
+				os << named_sources.at(li).first
 				   << c
 				   << (pline - lc)
 				   << d

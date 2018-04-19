@@ -1,0 +1,21 @@
+#ifndef _SHADERTOY_COMPILER_TEMPLATE_ERROR_HPP_
+#define _SHADERTOY_COMPILER_TEMPLATE_ERROR_HPP_
+
+#include "shadertoy/pre.hpp"
+
+#include "shadertoy/shadertoy_error.hpp"
+
+namespace shadertoy
+{
+namespace compiler
+{
+
+class shadertoy_EXPORT template_error : public shadertoy_error
+{
+public:
+	explicit template_error(const std::string &what);
+};
+}
+}
+
+#endif

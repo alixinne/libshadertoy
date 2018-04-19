@@ -3,6 +3,8 @@
 
 #include "shadertoy/pre.hpp"
 
+#include "shadertoy/compiler/shader_template.hpp"
+
 namespace shadertoy
 {
 
@@ -43,11 +45,11 @@ private:
 	/// Aux buffers
 	std::map<std::string, std::shared_ptr<buffers::basic_buffer>> buffers_;
 
-	/// Cache for sources
-	std::map<std::string, std::string> source_cache_;
-
 	/// Cache for define wrapper
 	std::string define_wrapper_;
+
+	/// Buffer source template
+	compiler::shader_template buffer_template_;
 
 	/// Raw frame count
 	int frame_count_;
@@ -98,12 +100,12 @@ protected:
 
 	/**
 	 * @brief      When implemented in a derived class, provides a callback for
-	 *             providing supplementary sources to insert in individual
-	 *             buffer fragment shaders.
+	 *             providing supplementary sources to add in the current template
+	 *             insert in individual buffer fragment shaders.
 	 *
-	 * @param      sources  List which should hold the sources to be inserted.
+	 * @param      buffer_template  Shader template object to add sources to
 	 */
-	virtual void load_buffer_sources(std::vector<std::pair<std::string, std::string>> &sources);
+	virtual void load_buffer_sources(compiler::shader_template &buffer_template);
 
 	/**
 	 * @brief      When implemented in a derived class, provides a callback for
@@ -200,15 +202,6 @@ public:
 	 */
 	void build_buffer_shader(const std::string &id,
 							 gl::shader &fs);
-
-	/**
-	 * @brief      Loads a shader source by its path.
-	 *
-	 * @param[in]  path  Path to the shader file.
-	 *
-	 * @return     Contents of the shader source.
-	 */
-	const GLchar *load_shader_source(const boost::filesystem::path &path) throw(std::runtime_error);
 
 	/**
 	 * @brief      Get the define wrapper for fragment shaders.
