@@ -59,6 +59,28 @@ namespace gl
 		 * @throws null_sampler_error
 		 */
 		void parameter(GLenum pname, GLfloat param);
+
+		/**
+		 * @brief glGetSamplerParameteriv
+		 *
+		 * @param pname Parameter name to get
+		 * @param param Returns the sampler parameters
+		 *
+		 * @throws opengl_error
+		 * @throws null_sampler_error
+		 */
+		void get_parameter(GLenum pname, GLint *params);
+
+		/**
+		 * @brief glGetSamplerParameterfv
+		 *
+		 * @param pname Parameter name to get
+		 * @param param Returns the sampler parameters
+		 *
+		 * @throws opengl_error
+		 * @throws null_sampler_error
+		 */
+		void get_parameter(GLenum pname, GLfloat *params);
 	};
 }
 }

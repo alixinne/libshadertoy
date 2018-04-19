@@ -120,6 +120,16 @@ add_library(shadertoy-objects OBJECT
 	${INCLUDE_DIR}/shadertoy/gl/resource.hpp
 	${INCLUDE_DIR}/shadertoy/gl/shader.hpp
 	${INCLUDE_DIR}/shadertoy/gl/texture.hpp
+	${INCLUDE_DIR}/shadertoy/inputs/basic_input.hpp
+	${INCLUDE_DIR}/shadertoy/inputs/buffer_input.hpp
+	${INCLUDE_DIR}/shadertoy/inputs/checker_input.hpp
+	${INCLUDE_DIR}/shadertoy/inputs/error_input.hpp
+	${INCLUDE_DIR}/shadertoy/inputs/exr_input.hpp
+	${INCLUDE_DIR}/shadertoy/inputs/file_input.hpp
+	${INCLUDE_DIR}/shadertoy/inputs/image_input.hpp
+	${INCLUDE_DIR}/shadertoy/inputs/jpeg_input.hpp
+	${INCLUDE_DIR}/shadertoy/inputs/noise_input.hpp
+	${INCLUDE_DIR}/shadertoy/inputs/soil_input.hpp
 	${INCLUDE_DIR}/shadertoy/pre.hpp
 	${INCLUDE_DIR}/shadertoy/render_context.hpp
 	${INCLUDE_DIR}/shadertoy/shader_compiler.hpp
@@ -144,6 +154,16 @@ add_library(shadertoy-objects OBJECT
 	${SRC_DIR}/gl/renderbuffer.cpp
 	${SRC_DIR}/gl/shader.cpp
 	${SRC_DIR}/gl/texture.cpp
+	${SRC_DIR}/inputs/basic_input.cpp
+	${SRC_DIR}/inputs/buffer_input.cpp
+	${SRC_DIR}/inputs/checker_input.cpp
+	${SRC_DIR}/inputs/error_input.cpp
+	${SRC_DIR}/inputs/exr_input.cpp
+	${SRC_DIR}/inputs/file_input.cpp
+	${SRC_DIR}/inputs/image_input.cpp
+	${SRC_DIR}/inputs/jpeg_input.cpp
+	${SRC_DIR}/inputs/noise_input.cpp
+	${SRC_DIR}/inputs/soil_input.cpp
 	${SRC_DIR}/render_context.cpp
 	${SRC_DIR}/shader_compiler.cpp
 	${SRC_DIR}/shadertoy_error.cpp

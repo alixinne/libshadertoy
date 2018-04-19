@@ -3,25 +3,20 @@
 
 #include "shadertoy/pre.hpp"
 
+#include "shadertoy/inputs/basic_input.hpp"
+
 namespace shadertoy
 {
 
 /**
  * @brief Handler callback definition for the texture engine. Instances of this method
- * are called when a texture is required for an input in a rendering context.
+ * are called when an input is required for an input in a rendering context.
  *
  * `inputConfig` is the configuration object for the given input.
- * `skipTextureOptions` should be set to true if no wrapping or filtering
- * options should be automatically applied. `skipCache` should be set to true if
- * the method should be invoked each time a texture for this input is requested.
  * `framebufferSized` should be set to true if any change in framebuffer
  * resolution should require generating a new instance of this texture.
  */
-typedef std::function<std::shared_ptr<gl::texture>(
-	const input_config &inputConfig,
-	bool &skipTextureOptions,
-	bool &skipCache,
-	bool &framebufferSized)> input_handler;
+typedef std::function<std::shared_ptr<inputs::basic_input>(const input_config &inputConfig, bool &framebufferSized)> input_handler;
 
 /**
  * @brief      Represents the engine responsible for loading input textures for
@@ -33,38 +28,28 @@ class shadertoy_EXPORT texture_engine
 	context_config &config_;
 
 	/// Input texture state
-	std::map<std::string, std::tuple<std::shared_ptr<gl::texture>, bool> > input_textures_;
+	std::map<std::string, std::tuple<std::shared_ptr<inputs::basic_input>, bool> > inputs_;
 
 	/// The empty texture
-	std::shared_ptr<gl::texture> empty_texture_;
+	std::shared_ptr<inputs::error_input> error_input_;
 
 	/// Registered texture handlers
 	std::map<std::string, input_handler> handlers_;
 
 	// Default texture handlers
-	std::shared_ptr<gl::texture> soil_texture_handler(const input_config &inputConfig,
-													  bool &skipTextureOptions,
-													  bool &skipCache,
-													  bool &framebufferSized);
-	std::shared_ptr<gl::texture> noise_texture_handler(const input_config &inputConfig,
-													   bool &skipTextureOptions,
-													   bool &skipCache,
-													   bool &framebufferSized);
-	std::shared_ptr<gl::texture> checker_texture_handler(const input_config &inputConfig,
-														 bool &skipTextureOptions,
-														 bool &skipCache,
-														 bool &framebufferSized);
+	std::shared_ptr<inputs::basic_input> soil_input_handler(const input_config &inputConfig, bool &framebufferSized);
+	std::shared_ptr<inputs::basic_input> noise_input_handler(const input_config &inputConfig, bool &framebufferSized);
+	std::shared_ptr<inputs::basic_input> checker_input_handler(const input_config &inputConfig, bool &framebufferSized);
 
 protected:
 	/**
 	 * @brief      Applies filtering and wrapping options of a given input onto
-	 *             an already allocated OpenGL texture object.
+	 *             an already allocated basic_input object.
 	 *
-	 * @param[in]  inputConfig  The input configuration for this texture
-	 * @param      texture      The texture to apply the options to
+	 * @param[in]  inputConfig The input configuration for this texture
+	 * @param      input       The input to apply the options to
 	 */
-	void apply_texture_options(const input_config &inputConfig,
-							   gl::texture &texture);
+	void apply_input_options(const input_config &inputConfig, inputs::basic_input &input);
 
 public:
 	/**
@@ -100,7 +85,7 @@ public:
 	 * @return     A texture instance to be used for rendering. If the actual
 	 *             input configuration is invalid, an empty texture is returned.
 	 */
-	gl::texture &input_texture(const input_config &inputConfig);
+	inputs::basic_input &input_texture(const input_config &inputConfig);
 
 	/**
 	 * @brief      Registers a texture type handler with the given name.

@@ -24,3 +24,13 @@ void sampler::parameter(GLenum pname, GLfloat param)
 {
 	gl_call(glSamplerParameterf, GLuint(*this), pname, param);
 }
+
+void sampler::get_parameter(GLenum pname, GLint *param)
+{
+	gl_call(glGetSamplerParameteriv, GLuint(*this), pname, param);
+}
+
+void sampler::get_parameter(GLenum pname, GLfloat *param)
+{
+	gl_call(glGetSamplerParameterfv, GLuint(*this), pname, param);
+}

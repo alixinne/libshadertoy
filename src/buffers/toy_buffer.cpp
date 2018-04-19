@@ -71,10 +71,15 @@ void toy_buffer::render_gl_contents(render_context &context)
 	for (int i = 0; i < 4; ++i)
 	{
 		gl_call(glActiveTexture, GL_TEXTURE0 + i + 1);
+
 		// Following have side effects, ensure it runs after we selected the new
 		// texture unit
-		auto &texture = context.tex_engine()
-                .input_texture(config.inputs[i]);
+		auto &input = context.tex_engine().input_texture(config.inputs[i]);
+		auto &texture(*input.use());
+
+		// Bind sampler for this input
+		input.sampler().bind(i + 1);
+		// Bind texture for this input
 		texture.bind(GL_TEXTURE_2D);
 
 		texture.get_parameter(0, GL_TEXTURE_WIDTH, &resolutions[i][0]);

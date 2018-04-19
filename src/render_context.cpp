@@ -23,6 +23,8 @@
 #include "shadertoy/shader_compiler.hpp"
 #include "shadertoy/render_context.hpp"
 
+#include "shadertoy/inputs/buffer_input.hpp"
+
 namespace fs = boost::filesystem;
 using namespace std;
 using namespace shadertoy;
@@ -44,14 +46,9 @@ unique_ptr<texture_engine> render_context::build_texture_engine()
 
 	engine->register_handler("buffer", input_handler([this]
 		(const input_config &inputConfig,
-		 bool &skipTextureOptions,
-		 bool &skipCache,
-		 bool &framebufferSized)
+		 bool &framebufferSized) -> std::shared_ptr<inputs::basic_input>
 	{
-		skipTextureOptions = true;
-		skipCache = true;
-		// No need to reallocate buffer textures, this is handled by the buffer
-		// itself
+		// No need to reallocate buffer textures, this is handled by the buffer itself
 		framebufferSized = false;
 
 		auto &bufferConfigs = config_.buffer_configs;
@@ -61,29 +58,14 @@ unique_ptr<texture_engine> render_context::build_texture_engine()
 		if (bufferIt == bufferConfigs.end())
 		{
 			log::shadertoy()->warn("Buffer '{}' not found for input {}", inputConfig.source, inputConfig.id);
-			return shared_ptr<gl::texture>();
+
+			return shared_ptr<inputs::basic_input>();
 		}
 		else
 		{
-			if (frame_count_ == 0)
-			{
-				log::shadertoy()->info("Binding '{}' to input {}", inputConfig.source, inputConfig.id);
-			}
+			log::shadertoy()->info("Binding '{}' to input {}", inputConfig.source, inputConfig.id);
 
-			auto texture = buffers_[inputConfig.source]->source_texture();
-
-			GLint minFilter = inputConfig.min_filter,
-				  magFilter = inputConfig.mag_filter;
-
-			texture->parameter(GL_TEXTURE_MAG_FILTER, magFilter);
-			texture->parameter(GL_TEXTURE_MIN_FILTER, minFilter);
-			texture->parameter(GL_TEXTURE_WRAP_S, inputConfig.wrap);
-			texture->parameter(GL_TEXTURE_WRAP_T, inputConfig.wrap);
-
-			if (minFilter > GL_LINEAR)
-				texture->generate_mipmap();
-
-			return texture;
+			return make_shared<inputs::buffer_input>(buffers_[inputConfig.source]);
 		}
 	}));
 
@@ -431,6 +413,8 @@ void render_context::bind_result()
 	screen_prog_.use();
 
 	gl_call(glActiveTexture, GL_TEXTURE0);
+	gl_call(glBindSampler, 0, 0);
+
 	if (auto ptr = last_texture_.lock())
 	{
 		ptr->bind(GL_TEXTURE_2D);

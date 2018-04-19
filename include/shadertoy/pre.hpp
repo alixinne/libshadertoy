@@ -47,6 +47,20 @@ namespace shadertoy
 		class texture;
 	}
 
+	namespace inputs
+	{
+		class basic_input;
+		class buffer_input;
+		class checker_input;
+		class error_input;
+		class exr_input;
+		class file_input;
+		class image_input;
+		class jpeg_input;
+		class noise_input;
+		class soil_input;
+	}
+
 	struct buffer_config;
 	struct input_config;
 	struct context_config;
