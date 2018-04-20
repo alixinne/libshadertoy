@@ -78,6 +78,14 @@ add_custom_command(OUTPUT ${SPDLOG_MAIN_INCLUDE}
 				   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog
 				   COMMAND ${CMAKE_COMMAND} -E copy_directory ${SPDLOG_DIR}/include/spdlog ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog)
 
+set(POLYMORPHIC_VALUE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/polymorphic_value)
+add_subdirectory(${POLYMORPHIC_VALUE_DIR} EXCLUDE_FROM_ALL)
+
+set(POLYMORPHIC_VALUE_INCLUDE ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/polymorphic_value.h)
+add_custom_command(OUTPUT ${POLYMORPHIC_VALUE_INCLUDE}
+				   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/shadertoy
+				   COMMAND ${CMAKE_COMMAND} -E copy ${POLYMORPHIC_VALUE_DIR}/polymorphic_value.h ${CMAKE_CURRENT_BINARY_DIR}/shadertoy)
+
 # libopenexr
 pkg_search_module(OpenEXR OpenEXR)
 if (OpenEXR_FOUND)
@@ -110,6 +118,7 @@ add_library(shadertoy-objects OBJECT
 	${SHADERTOY_LIBRARY_SOURCES}
 
 	${CMAKE_CURRENT_BINARY_DIR}/resources.c
+	${POLYMORPHIC_VALUE_INCLUDE}
 	${SPDLOG_MAIN_INCLUDE})
 
 # Include directories
@@ -270,6 +279,10 @@ foreach(SHADERTOY_HEADERS_ITEM ${SHADERTOY_HEADERS_DIRS})
 endforeach()
 
 install(DIRECTORY ${SPDLOG_DIR}/include/spdlog
+		COMPONENT shadertoy-dev
+		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
+
+install(FILES ${POLYMORPHIC_VALUE_DIR}/polymorphic_value.h
 		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
 

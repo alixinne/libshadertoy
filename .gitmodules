@@ -1,3 +1,6 @@
 [submodule "3rdparty/spdlog"]
 	path = 3rdparty/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "3rdparty/polymorphic_value"]
+	path = 3rdparty/polymorphic_value
+	url = https://github.com/jbcoe/polymorphic_value.git
