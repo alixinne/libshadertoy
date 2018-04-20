@@ -11,7 +11,7 @@ done
 
 if [ "$SKIP_BUILD" = "0" ]; then
 	set -e
-	(cd build && cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/install/usr/local .. && make -j && cmake -P cmake_install.cmake)
+	(cd build && cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/install/usr/local .. && make -j$(( $(nproc) + 1 )) && cmake -P cmake_install.cmake)
 	set +e
 fi
 
