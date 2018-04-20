@@ -28,7 +28,7 @@ endif()
 find_package(X11)
 
 # libshadertoy
-find_package(shadertoy REQUIRED 1.0.0)
+find_package(shadertoy 1.0.0 REQUIRED)
 
 # Directories
 set(INCLUDE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/include)
