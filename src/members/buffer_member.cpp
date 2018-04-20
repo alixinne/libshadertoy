@@ -37,3 +37,6 @@ std::shared_ptr<gl::texture> buffer_member::output(swap_chain &chain)
 {
 	return buffer_->source_texture();
 }
+
+std::shared_ptr<buffer_member> members::member_data(std::shared_ptr<buffers::basic_buffer>&& buffer)
+{ return std::make_shared<buffer_member>(buffer); }

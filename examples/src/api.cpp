@@ -256,7 +256,7 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 			else
 			{
 				// Add to chain
-				chain.push_back(std::make_shared<shadertoy::members::buffer_member>(buffer));
+				chain.emplace_back(buffer);
 			}
 		}
 

@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 			}
 
 			// Add the image buffer to the swap chain
-			chain.push_back(std::make_shared<shadertoy::members::buffer_member>(imageBuffer));
+			chain.emplace_back(imageBuffer);
 
 			// Create a swap chain member that renders to the screen
 			auto screenRender(std::make_shared<shadertoy::members::screen_member>());

@@ -66,6 +66,9 @@ public:
 	 */
 	std::shared_ptr<gl::texture> output(swap_chain &chain) override;
 };
+
+std::shared_ptr<buffer_member> member_data(std::shared_ptr<buffers::basic_buffer>&& buffer);
+
 }
 }
 

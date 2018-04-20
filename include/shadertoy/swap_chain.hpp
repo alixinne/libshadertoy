@@ -65,6 +65,21 @@ public:
 	void push_back(std::shared_ptr<members::basic_member> member);
 
 	/**
+	 * @brief Constructs a swap_chain member and adds it to the end of this swap chain
+	 *
+	 * @param args Arguments to forward to the swap chain member constructor
+	 *
+	 * @return Constructed member
+	 */
+	template<typename... Args>
+	auto emplace_back(Args&&... args)
+	{
+		auto member(members::member_data(std::forward<Args>(args)...));
+		push_back(member);
+		return member;
+	}
+
+	/**
 	 * @brief Renders the swap chain using \p context up to the specified \p target
 	 *
 	 * All members from members().begin() up to \p target will be fully rendered.

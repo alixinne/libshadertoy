@@ -4,10 +4,11 @@
 
 #include "shadertoy/uniform_state.hpp"
 
+#include "shadertoy/members/buffer_member.hpp"
+#include "shadertoy/members/screen_member.hpp"
+
 #include "shadertoy/swap_chain.hpp"
 #include "shadertoy/render_context.hpp"
-
-#include "shadertoy/members/screen_member.hpp"
 
 using namespace shadertoy;
 using namespace shadertoy::members;
