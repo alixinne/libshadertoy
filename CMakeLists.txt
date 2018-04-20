@@ -102,85 +102,15 @@ set(shadertoy_INCLUDE_DIRS
 	$<BUILD_INTERFACE:${INCLUDE_DIR}>
 	$<INSTALL_INTERFACE:include>)
 
-add_library(shadertoy-objects OBJECT
-	${INCLUDE_DIR}/shadertoy.hpp
-	${INCLUDE_DIR}/shadertoy/buffer_config.hpp
-	${INCLUDE_DIR}/shadertoy/buffers/basic_buffer.hpp
-	${INCLUDE_DIR}/shadertoy/buffers/gl_buffer.hpp
-	${INCLUDE_DIR}/shadertoy/buffers/toy_buffer.hpp
-	${INCLUDE_DIR}/shadertoy/compiler/shader_template.hpp
-	${INCLUDE_DIR}/shadertoy/compiler/template_error.hpp
-	${INCLUDE_DIR}/shadertoy/compiler/template_part.hpp
-	${INCLUDE_DIR}/shadertoy/context_config.hpp
-	${INCLUDE_DIR}/shadertoy/gl.hpp
-	${INCLUDE_DIR}/shadertoy/gl/buffer.hpp
-	${INCLUDE_DIR}/shadertoy/gl/caller.hpp
-	${INCLUDE_DIR}/shadertoy/gl/framebuffer.hpp
-	${INCLUDE_DIR}/shadertoy/gl/program.hpp
-	${INCLUDE_DIR}/shadertoy/gl/query.hpp
-	${INCLUDE_DIR}/shadertoy/gl/sampler.hpp
-	${INCLUDE_DIR}/shadertoy/gl/renderbuffer.hpp
-	${INCLUDE_DIR}/shadertoy/gl/resource.hpp
-	${INCLUDE_DIR}/shadertoy/gl/shader.hpp
-	${INCLUDE_DIR}/shadertoy/gl/texture.hpp
-	${INCLUDE_DIR}/shadertoy/inputs/basic_input.hpp
-	${INCLUDE_DIR}/shadertoy/inputs/buffer_input.hpp
-	${INCLUDE_DIR}/shadertoy/inputs/checker_input.hpp
-	${INCLUDE_DIR}/shadertoy/inputs/error_input.hpp
-	${INCLUDE_DIR}/shadertoy/inputs/exr_input.hpp
-	${INCLUDE_DIR}/shadertoy/inputs/file_input.hpp
-	${INCLUDE_DIR}/shadertoy/inputs/image_input.hpp
-	${INCLUDE_DIR}/shadertoy/inputs/jpeg_input.hpp
-	${INCLUDE_DIR}/shadertoy/inputs/noise_input.hpp
-	${INCLUDE_DIR}/shadertoy/inputs/soil_input.hpp
-	${INCLUDE_DIR}/shadertoy/pre.hpp
-	${INCLUDE_DIR}/shadertoy/render_context.hpp
-	${INCLUDE_DIR}/shadertoy/shader_compiler.hpp
-	${INCLUDE_DIR}/shadertoy/shadertoy_error.hpp
-	${INCLUDE_DIR}/shadertoy/size.hpp
-	${INCLUDE_DIR}/shadertoy/texture_engine.hpp
-	${INCLUDE_DIR}/shadertoy/uniform_state.hpp
-	${INCLUDE_DIR}/shadertoy/uniform_state_decl.hpp
-	${INCLUDE_DIR}/shadertoy/uniform_state_impl.hpp
+file(GLOB_RECURSE SHADERTOY_LIBRARY_HEADERS ${INCLUDE_DIR}/*.hpp)
+file(GLOB_RECURSE SHADERTOY_LIBRARY_SOURCES ${SRC_DIR}/*.cpp)
 
-	${SRC_DIR}/buffer_config.cpp
-	${SRC_DIR}/buffers/basic_buffer.cpp
-	${SRC_DIR}/buffers/gl_buffer.cpp
-	${SRC_DIR}/buffers/toy_buffer.cpp
-	${SRC_DIR}/compiler/shader_template.cpp
-	${SRC_DIR}/compiler/template_error.cpp
-	${SRC_DIR}/compiler/template_part.cpp
-	${SRC_DIR}/context_config.cpp
-	${SRC_DIR}/gl/buffer.cpp
-	${SRC_DIR}/gl/caller.cpp
-	${SRC_DIR}/gl/framebuffer.cpp
-	${SRC_DIR}/gl/program.cpp
-	${SRC_DIR}/gl/query.cpp
-	${SRC_DIR}/gl/sampler.cpp
-	${SRC_DIR}/gl/renderbuffer.cpp
-	${SRC_DIR}/gl/shader.cpp
-	${SRC_DIR}/gl/texture.cpp
-	${SRC_DIR}/inputs/basic_input.cpp
-	${SRC_DIR}/inputs/buffer_input.cpp
-	${SRC_DIR}/inputs/checker_input.cpp
-	${SRC_DIR}/inputs/error_input.cpp
-	${SRC_DIR}/inputs/exr_input.cpp
-	${SRC_DIR}/inputs/file_input.cpp
-	${SRC_DIR}/inputs/image_input.cpp
-	${SRC_DIR}/inputs/jpeg_input.cpp
-	${SRC_DIR}/inputs/noise_input.cpp
-	${SRC_DIR}/inputs/soil_input.cpp
-	${SRC_DIR}/render_context.cpp
-	${SRC_DIR}/shader_compiler.cpp
-	${SRC_DIR}/shadertoy_error.cpp
-	${SRC_DIR}/size.cpp
-	${SRC_DIR}/texture_engine.cpp
-	${SRC_DIR}/uniform_state.cpp
-	${SRC_DIR}/utils/dump_program.cpp
-	${SRC_DIR}/utils/log.cpp
+add_library(shadertoy-objects OBJECT
+	${SHADERTOY_LIBRARY_HEADERS}
+	${SHADERTOY_LIBRARY_SOURCES}
 
 	${CMAKE_CURRENT_BINARY_DIR}/resources.c
-	${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog/spdlog.h)
+	${SPDLOG_MAIN_INCLUDE})
 
 # Include directories
 target_include_directories(shadertoy-objects PRIVATE
