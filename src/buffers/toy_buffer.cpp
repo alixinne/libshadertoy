@@ -9,11 +9,10 @@
 
 #include "shadertoy/gl.hpp"
 
-#include "shadertoy/buffer_config.hpp"
-#include "shadertoy/context_config.hpp"
+#include "shadertoy/inputs/basic_input.hpp"
+
 #include "shadertoy/uniform_state.hpp"
 #include "shadertoy/buffers/toy_buffer.hpp"
-#include "shadertoy/texture_engine.hpp"
 #include "shadertoy/render_context.hpp"
 
 using namespace std;
@@ -26,7 +25,9 @@ using shadertoy::gl::gl_call;
 toy_buffer::toy_buffer(const std::string &id)
 	: gl_buffer(id),
 	  fs_(GL_FRAGMENT_SHADER),
-	  bound_inputs_()
+	  bound_inputs_(),
+	  inputs_(),
+	  source_files_()
 {
 }
 
@@ -36,7 +37,7 @@ void toy_buffer::init_contents(render_context &context)
 	program_.attach_shader(context.screen_quad_vertex_shader());
 
 	// Load the fragment shader for this buffer
-    context.build_buffer_shader(id(), fs_);
+	context.build_buffer_shader(id(), fs_, source_files_);
 
 	// Attach shader
 	program_.attach_shader(fs_);
@@ -53,10 +54,6 @@ void toy_buffer::init_contents(render_context &context)
 
 void toy_buffer::render_gl_contents(render_context &context)
 {
-	auto &config(std::find_if(context.config().buffer_configs.begin(),
-		context.config().buffer_configs.end(),
-		[this](const auto &pair) { return pair.first == this->id(); })->second);
-
 	// Prepare the render target
 	context.clear(0.f);
 
@@ -68,27 +65,32 @@ void toy_buffer::render_gl_contents(render_context &context)
 	auto &resolutions(state.get<iChannelResolution>());
 
 	// Setup the texture targets
-	for (int i = 0; i < 4; ++i)
+	for (size_t i = 0; i < inputs_.size(); ++i)
 	{
-		gl_call(glActiveTexture, GL_TEXTURE0 + i + 1);
+		auto &input(inputs_[i]);
 
-		// Following have side effects, ensure it runs after we selected the new
-		// texture unit
-		auto &input = context.tex_engine().input_texture(config.inputs[i]);
-		auto &texture(*input.use());
+		if (input)
+		{
+			auto &texture(*input->use());
 
-		// Bind sampler for this input
-		input.sampler().bind(i + 1);
-		// Bind texture for this input
-		texture.bind(GL_TEXTURE_2D);
+			input->sampler().bind(i + 1);
+			texture.bind_unit(i + 1);
 
-		texture.get_parameter(0, GL_TEXTURE_WIDTH, &resolutions[i][0]);
-		texture.get_parameter(0, GL_TEXTURE_HEIGHT, &resolutions[i][1]);
-		resolutions[i][2] = 1.0f;
+			texture.get_parameter(0, GL_TEXTURE_WIDTH, &resolutions[i][0]);
+			texture.get_parameter(0, GL_TEXTURE_HEIGHT, &resolutions[i][1]);
+			resolutions[i][2] = 1.0f;
+		}
+		else
+		{
+			gl_call(glBindTextureUnit, i + 1, 0);
+			gl_call(glBindSampler, i + 1, 0);
+
+			resolutions[i] = glm::vec3(0.f);
+		}
 	}
 
 	// Set the current buffer resolution
-	rsize size(render_size());
+	rsize size(render_size().resolve(context.render_size()));
 	state.get<iResolution>()[0] = static_cast<float>(size.width());
 	state.get<iResolution>()[1] = static_cast<float>(size.height());
 

@@ -1,5 +1,7 @@
 #include "shadertoy/uniform_state_decl.hpp"
 
+#define SHADERTOY_ICHANNEL_COUNT 4
+
 namespace shadertoy
 {
 
@@ -20,10 +22,10 @@ DECLARE_UNIFORM(GLfloat, iFrameRate, "float");
 
 // Time for channel (if video or sound), in seconds
 // Currently not used because video and sound is not supported
-DECLARE_UNIFORM_N(GLfloat, iChannelTime, 4, "float");
+DECLARE_UNIFORM_N(GLfloat, iChannelTime, SHADERTOY_ICHANNEL_COUNT, "float");
 
 // Input texture resolution for each channel
-DECLARE_UNIFORM_N(glm::vec3, iChannelResolution, 4, "vec3");
+DECLARE_UNIFORM_N(glm::vec3, iChannelResolution, SHADERTOY_ICHANNEL_COUNT, "vec3");
 
 // xy = current pixel coords (if LMB is down). zw = click pixel
 DECLARE_UNIFORM(glm::vec4, iMouse, "vec4");

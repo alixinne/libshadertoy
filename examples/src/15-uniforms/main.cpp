@@ -25,15 +25,6 @@ class example_render_context : public shadertoy::render_context {
 	// Declare the variable holding the extra uniform state
 	example_inputs_t extra_inputs_;
 
-	// Add auto-generated wrapper to the sources of all compiled programs
-	void load_buffer_sources(std::vector<std::pair<std::string, std::string>> &sources) override
-	{
-		sources.push_back(std::make_pair(
-			std::string("internal:example-uniforms"),
-			extra_inputs_.definitions_string()
-		));
-	}
-
 	// After compiling a program, bind the inputs from the extra state into the program
 	void bind_inputs(std::vector<std::shared_ptr<shadertoy::bound_inputs_base>> &inputs,
 		shadertoy::gl::program &program) override
@@ -45,39 +36,38 @@ public:
 	// Extra state accessor
 	example_inputs_t &extra_inputs() { return extra_inputs_; }
 
-	example_render_context(shadertoy::context_config &config)
-		: shadertoy::render_context(config),
-		extra_inputs_()
+	example_render_context() : shadertoy::render_context(), extra_inputs_()
 	{
 		// Add a custom runtime input
 		extra_inputs_.get<iDynamicFloats>().insert<float>("iCustomTime", 0.0f);
+
+		// Update the template
+		buffer_template().insert_after(shadertoy::compiler::template_part(
+				"generated:example-uniform-definitions",
+				extra_inputs_.definitions_string()),
+			"generated:shadertoy-uniform-definitions");
 	}
 };
+
+typedef struct
+{
+	example_render_context context;
+	shadertoy::swap_chain chain;
+} example_ctx;
 
 void set_framebuffer_size(GLFWwindow *window, int width, int height)
 {
 	// Get the context from the window user pointer
-	shadertoy::render_context &context =
-		*static_cast<shadertoy::render_context*>(glfwGetWindowUserPointer(window));
+	auto &ctx = *static_cast<example_ctx *>(glfwGetWindowUserPointer(window));
 
 	// Reallocate textures
-	context.config().render_size = shadertoy::rsize(width, height);
-	context.allocate_textures();
+	ctx.context.render_size(shadertoy::rsize(width, height));
+	ctx.context.allocate_textures(ctx.chain);
 }
 
 int main(int argc, char *argv[])
 {
 	int code = 0;
-
-	shadertoy::context_config contextConfig;
-	contextConfig.render_size = shadertoy::rsize(640, 480);
-	contextConfig.target_framerate = 60.0;
-
-	shadertoy::buffer_config imageBuffer;
-	imageBuffer.name = "image";
-	imageBuffer.shader_files.push_back(fs::path("..") / fs::path("shaders") / fs::path("shader-gradient-uniform.glsl"));
-
-	contextConfig.buffer_configs.emplace_back(imageBuffer.name, imageBuffer);
 
 	if (!glfwInit())
 	{
@@ -86,11 +76,8 @@ int main(int argc, char *argv[])
 	}
 
 	// Initialize window
-	GLFWwindow *window = glfwCreateWindow(contextConfig.render_size.width(),
-										  contextConfig.render_size.height(),
-										  "libshadertoy example 15-uniforms",
-										  nullptr,
-										  nullptr);
+	int width = 640, height = 480;
+	GLFWwindow *window = glfwCreateWindow(width, height, "libshadertoy example 15-uniforms", nullptr, nullptr);
 
 	if (!window)
 	{
@@ -103,14 +90,35 @@ int main(int argc, char *argv[])
 		glfwSwapInterval(1);
 
 		{
-			example_render_context context(contextConfig);
-			std::cout << "Created context based on config" << std::endl;
+			example_ctx ctx;
+			auto &context(ctx.context);
+			auto &chain(ctx.chain);
+
+			// Set the context parameters (render size and some uniforms)
+			context.render_size(shadertoy::rsize(width, height));
+			context.state().get<shadertoy::iTimeDelta>() = 1.0 / 60.0;
+			context.state().get<shadertoy::iFrameRate>() = 60.0;
+
+			// Create the image buffer
+			auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image"));
+			imageBuffer->render_size(shadertoy::rsize_ref([&context](){ return context.render_size(); }));
+			imageBuffer->source_files().push_back("../shaders/shader-gradient-uniform.glsl");
+
+			// Add the image buffer to the swap chain
+			chain.push_back(std::make_shared<shadertoy::members::buffer_member>(imageBuffer));
+
+			// Create a swap chain member that renders to the screen
+			auto screenRender(std::make_shared<shadertoy::members::screen_member>());
+			screenRender->viewport_size(shadertoy::rsize_ref([&context](){ return context.render_size(); }));
+			
+			// Add it to the swap chain
+			chain.push_back(screenRender);
 
 			try
 			{
 				// Initialize context
-				context.init();
-				std::cout << "Initialized rendering context" << std::endl;
+				context.init(chain);
+				std::cout << "Initialized swap chain" << std::endl;
 			}
 			catch (shadertoy::gl::shader_compilation_error &sce)
 			{
@@ -119,8 +127,7 @@ int main(int argc, char *argv[])
 			}
 			catch (shadertoy::shadertoy_error &err)
 			{
-				std::cerr << "Error: "
-						  << err.what();
+				std::cerr << "Error: " << err.what();
 				code = 2;
 			}
 
@@ -132,7 +139,7 @@ int main(int argc, char *argv[])
 			double t = 0.;
 
 			// Set the resize callback
-			glfwSetWindowUserPointer(window, &context);
+			glfwSetWindowUserPointer(window, &ctx);
 			glfwSetFramebufferSizeCallback(window, set_framebuffer_size);
 
 			while (!glfwWindowShouldClose(window))
@@ -147,19 +154,8 @@ int main(int argc, char *argv[])
 				// Update custom uniform
 				context.extra_inputs().get<iDynamicFloats>().get<float>("iCustomTime") = (int(t) % 2) == 0 ? 1.0f : 0.0f;
 
-				// Render to texture
-				context.render();
-
-				// Render to screen
-				//  Setup framebuffer
-				gl_call(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
-				gl_call(glViewport, 0, 0, contextConfig.render_size.width(), contextConfig.render_size.height());
-
-				//  Load texture and program
-				context.bind_result();
-
-				//  Render result
-				context.render_screen_quad();
+				// Render the swap chain
+				context.render(chain);
 
 				// Buffer swapping
 				glfwSwapBuffers(window);

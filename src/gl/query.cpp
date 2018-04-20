@@ -27,7 +27,7 @@ query::query(GLenum target)
 {
 }
 
-void query::begin(GLenum target)
+void query::begin(GLenum target) const
 {
 	gl_call(glBeginQuery, target, GLuint(*this));
 }
@@ -37,17 +37,17 @@ void query::end(GLenum target)
 	gl_call(glEndQuery, target);
 }
 
-void query::query_counter(GLenum target)
+void query::query_counter(GLenum target) const
 {
 	gl_call(glQueryCounter, GLuint(*this), target);
 }
 
-void query::get_object_iv(GLenum pname, GLint *params)
+void query::get_object_iv(GLenum pname, GLint *params) const
 {
 	gl_call(glGetQueryObjectiv, GLuint(*this), pname, params);
 }
 
-void query::get_object_ui64v(GLenum pname, GLuint64 *params)
+void query::get_object_ui64v(GLenum pname, GLuint64 *params) const
 {
 	gl_call(glGetQueryObjectui64v, GLuint(*this), pname, params);
 }

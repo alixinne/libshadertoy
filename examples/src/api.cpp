@@ -59,7 +59,111 @@ Json::Value json_get(CURL *curl, const string &url)
 	return result;
 }
 
-int load_remote(shadertoy::context_config &ctx_config, const string &shaderId, const string &shaderApiKey)
+std::string to_buffer_name(const Json::Value &pass)
+{
+	auto name(pass["name"].asString());
+	if (name.empty())
+		name = pass["type"].asString();
+	std::transform(name.begin(), name.end(), name.begin(), ::tolower);
+	return name;
+}
+
+void apply_sampler_options(std::shared_ptr<shadertoy::inputs::basic_input> &buffer_input, const Json::Value &sampler)
+{
+	if (buffer_input)
+	{
+		if (sampler["filter"].compare("mipmap") == 0)
+		{
+			buffer_input->min_filter(GL_LINEAR_MIPMAP_LINEAR);
+			buffer_input->mag_filter(GL_LINEAR);
+		}
+		else if (sampler["filter"].compare("linear") == 0)
+		{
+			buffer_input->min_filter(GL_LINEAR);
+			buffer_input->mag_filter(GL_LINEAR);
+		}
+		else if (sampler["filter"].compare("nearest") == 0)
+		{
+			buffer_input->min_filter(GL_LINEAR);
+			buffer_input->mag_filter(GL_LINEAR);
+		}
+
+		if (sampler["wrap"].compare("repeat") == 0)
+		{
+			buffer_input->wrap(GL_REPEAT);
+		}
+		else if (sampler["wrap"].compare("clamp") == 0)
+		{
+			buffer_input->wrap(GL_CLAMP_TO_EDGE);
+		}
+	}
+}
+
+void load_nonbuffer_input(std::shared_ptr<shadertoy::inputs::basic_input> &buffer_input,
+						  const Json::Value &input, CURL *curl, const fs::path &tmpdir, int i)
+{
+	auto &sampler(input["sampler"]);
+
+	if (input["ctype"].compare("texture") == 0 || input["ctype"].compare("cubemap") == 0)
+	{
+		fs::path srcpath(input["src"].asString());
+		string url = string("https://www.shadertoy.com") + input["src"].asString();
+		fs::path dstpath(tmpdir / srcpath.filename());
+
+		if (!fs::exists(dstpath))
+		{
+			u::log::shadertoy()->info("Downloading {}", url);
+			file_get(curl, url, dstpath);
+		}
+		else
+		{
+			u::log::shadertoy()->info("Using cache for {}", url);
+		}
+
+		auto extension(dstpath.extension().string());
+		std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+
+		std::shared_ptr<shadertoy::inputs::file_input> file_input;
+		if (extension == ".jpeg" || extension == ".jpg")
+			file_input = std::make_shared<shadertoy::inputs::jpeg_input>(dstpath.string());
+		else
+			file_input = std::make_shared<shadertoy::inputs::soil_input>(dstpath.string());
+
+		file_input->vflip(sampler["vflip"].compare("true") == 0);
+		buffer_input = file_input;
+
+		apply_sampler_options(buffer_input, sampler);
+	}
+	else
+	{
+		u::log::shadertoy()->warn("Unsupported input {} for pass {}, input {}",
+								  input["ctype"].asString(), i, input["channel"].asInt());
+	}
+}
+
+void load_buffer_input(std::shared_ptr<shadertoy::inputs::basic_input> &buffer_input, const Json::Value &input,
+					   std::map<std::string, std::shared_ptr<shadertoy::buffers::toy_buffer>> known_buffers, int i)
+{
+	auto &sampler(input["sampler"]);
+
+	if (input["ctype"].compare("buffer") == 0)
+	{
+		std::string source = "Buf A";
+		source.back() = 'A' + (input["id"].asInt() - 257);
+		std::transform(source.begin(), source.end(), source.begin(), ::tolower);
+
+		u::log::shadertoy()->info("Pass {}, input {}: binding {} buffer", i, input["channel"].asInt(), source);
+
+		auto src = known_buffers[source];
+		assert(src);
+		buffer_input = std::make_shared<shadertoy::inputs::buffer_input>(src);
+
+		apply_sampler_options(buffer_input, sampler);
+	}
+}
+
+int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain,
+				const string &shaderId, const string &shaderApiKey)
 {
 	CURL *curl = curl_easy_init();
 
@@ -99,19 +203,16 @@ int load_remote(shadertoy::context_config &ctx_config, const string &shaderId, c
 			throw runtime_error(shaderSpec["Error"].asString().c_str());
 		}
 
+		std::map<std::string, std::shared_ptr<shadertoy::buffers::toy_buffer>> known_buffers;
+		std::shared_ptr<shadertoy::buffers::toy_buffer> image_buffer;
+
 		// Create buffer configs for each render pass
 		for (int i = 0; i < shaderSpec["Shader"]["renderpass"].size(); ++i)
 		{
 			auto &pass(shaderSpec["Shader"]["renderpass"][i]);
 
-			// Create buffer
-			shadertoy::buffer_config imageBuffer;
-			imageBuffer.name = pass["name"].asString();
-			if (imageBuffer.name.empty())
-				imageBuffer.name = pass["type"].asString();
-
-			std::transform(imageBuffer.name.begin(), imageBuffer.name.end(),
-					imageBuffer.name.begin(), ::tolower);
+			// Find buffer name
+			auto name(to_buffer_name(pass));
 
 			// Skip if sound buffer
 			if (pass["type"].asString().compare("sound") == 0)
@@ -119,6 +220,9 @@ int load_remote(shadertoy::context_config &ctx_config, const string &shaderId, c
 				u::log::shadertoy()->warn("Skipping unsupported sound shader.");
 				continue;
 			}
+
+			// Create buffer
+			auto buffer(std::make_shared<shadertoy::buffers::toy_buffer>(name));
 
 			// Load code
 			stringstream sspath;
@@ -132,94 +236,58 @@ int load_remote(shadertoy::context_config &ctx_config, const string &shaderId, c
 				ofs.close();
 			}
 
+			buffer->source_files().push_back(p.string());
+
 			// Load inputs
 			for (int j = 0; j < pass["inputs"].size(); ++j)
 			{
 				auto &input(pass["inputs"][j]);
-				auto &conf(imageBuffer.inputs[input["channel"].asInt()]);
-				auto &sampler(input["sampler"]);
+				auto channel_id(input["channel"].asInt());
 
-				stringstream ssname;
-				ssname << imageBuffer.name << "." << input["channel"].asInt();
-				conf.id = ssname.str();
-
-				if (sampler["filter"].compare("mipmap") == 0)
-				{
-					conf.min_filter = GL_LINEAR_MIPMAP_LINEAR;
-					conf.mag_filter = GL_LINEAR;
-				}
-				else if (sampler["filter"].compare("linear") == 0)
-				{
-					conf.min_filter = GL_LINEAR;
-					conf.mag_filter = GL_LINEAR;
-				}
-				else if (sampler["filter"].compare("nearest") == 0)
-				{
-					conf.min_filter = GL_NEAREST;
-					conf.mag_filter = GL_NEAREST;
-				}
-
-				if (sampler["wrap"].compare("repeat") == 0)
-				{
-					conf.wrap = GL_REPEAT;
-				}
-				else if (sampler["wrap"].compare("clamp") == 0)
-				{
-					conf.wrap = GL_CLAMP_TO_EDGE;
-				}
-
-				conf.vflip = sampler["vflip"].compare("true") == 0;
-
-				if (input["ctype"].compare("texture") == 0
-					|| input["ctype"].compare("cubemap") == 0)
-				{
-					conf.type = "texture";
-
-					fs::path srcpath(input["src"].asString());
-					string url =
-						string("https://www.shadertoy.com")
-						+ input["src"].asString();
-					fs::path dstpath(tmpdir / srcpath.filename());
-
-					if (!fs::exists(dstpath))
-					{
-						u::log::shadertoy()->info("Downloading {}", url);
-						file_get(curl, url, dstpath);
-					}
-					else
-					{
-						u::log::shadertoy()->info("Using cache for {}", url);
-					}
-
-					conf.source = dstpath.string();
-				}
-				else if (input["ctype"].compare("buffer") == 0)
-				{
-					conf.type = "buffer";
-					conf.source = "Buf A";
-					conf.source.back() = 'A' + (input["id"].asInt() - 257);
-					std::transform(conf.source.begin(), conf.source.end(),
-							conf.source.begin(), ::tolower);
-
-					u::log::shadertoy()->debug("Pass {}, input {}: binding {} buffer {}", i, input["channel"].asInt(),
-											   conf.source, conf.enabled());
-				}
-				else
-				{
-					u::log::shadertoy()->warn("Unsupported input {} for pass {}, input {}", input["ctype"].asString(),
-											  i, input["channel"].asInt());
-				}
+				load_nonbuffer_input(buffer->inputs()[channel_id], input, curl, tmpdir, i);
 			}
 
-			// Add to context
-			imageBuffer.shader_files.push_back(p);
-			ctx_config.buffer_configs.emplace_back(imageBuffer.name, imageBuffer);
+			known_buffers.emplace(name, buffer);
+
+			if (name == "image")
+			{
+				image_buffer = buffer;
+			}
+			else
+			{
+				// Add to chain
+				chain.push_back(std::make_shared<shadertoy::members::buffer_member>(buffer));
+			}
 		}
 
-		// Image buffer should be last
-		pair<string, shadertoy::buffer_config> imagebuf(*ctx_config.buffer_configs.begin());
-		ctx_config.buffer_configs.erase(ctx_config.buffer_configs.begin());
-		ctx_config.buffer_configs.push_back(imagebuf);
+		// Create buffer configs for each render pass
+		for (int i = 0; i < shaderSpec["Shader"]["renderpass"].size(); ++i)
+		{
+			auto &pass(shaderSpec["Shader"]["renderpass"][i]);
+
+			// Find buffer name
+			auto name(to_buffer_name(pass));
+
+			// Skip if sound buffer
+			if (pass["type"].asString().compare("sound") == 0)
+				continue;
+
+			// Fetch buffer
+			auto buffer(known_buffers[name]);
+
+			// Load buffer inputs and apply options
+			for (int j = 0; j < pass["inputs"].size(); ++j)
+			{
+				auto &input(pass["inputs"][j]);
+				auto channel_id(input["channel"].asInt());
+
+				load_buffer_input(buffer->inputs()[channel_id], input, known_buffers, i);
+			}
+		}
+
+		// Add the image buffer last
+		assert(image_buffer);
+		chain.push_back(std::make_shared<shadertoy::members::buffer_member>(image_buffer));
 	}
 	catch (exception &ex)
 	{

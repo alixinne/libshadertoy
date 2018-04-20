@@ -1,0 +1,67 @@
+#include <epoxy/gl.h>
+
+#include "shadertoy/gl.hpp"
+
+#include "shadertoy/uniform_state.hpp"
+
+#include "shadertoy/swap_chain.hpp"
+#include "shadertoy/render_context.hpp"
+
+#include "shadertoy/members/screen_member.hpp"
+
+using namespace shadertoy;
+using namespace shadertoy::members;
+
+using shadertoy::gl::gl_call;
+
+void screen_member::render_member(swap_chain &chain, render_context &context)
+{
+	auto texptr(output(chain));
+
+	rsize vp_size(viewport_size_.resolve(context.render_size()));
+	gl_call(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
+	gl_call(glViewport, viewport_x_, viewport_y_, vp_size.width(), vp_size.height());
+
+	// Use the screen program
+	context.screen_prog().use();
+
+	// Bind the texture and sampler
+	texptr->bind_unit(0);
+	sampler_.bind(0);
+
+	context.render_screen_quad();
+}
+
+void screen_member::init_member(swap_chain &chain, render_context &context)
+{
+}
+
+void screen_member::allocate_member(swap_chain &chain, render_context &context)
+{
+}
+
+screen_member::screen_member()
+	: sampler_(),
+	viewport_x_(0),
+	viewport_y_(0),
+	viewport_size_()
+{
+	sampler_.parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	sampler_.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	sampler_.parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	sampler_.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+}
+
+std::shared_ptr<gl::texture> screen_member::output(swap_chain &chain)
+{
+	// Check that the swapchain has a last rendered-to member
+	auto before(chain.before(this));
+	assert(before);
+
+	auto texptr(before->output(chain));
+
+	// Check that that member has an output
+	assert(texptr);
+
+	return texptr;
+}

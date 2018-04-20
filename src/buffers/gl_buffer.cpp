@@ -9,11 +9,8 @@
 
 #include "shadertoy/gl.hpp"
 
-#include "shadertoy/buffer_config.hpp"
-#include "shadertoy/context_config.hpp"
 #include "shadertoy/uniform_state.hpp"
 #include "shadertoy/buffers/gl_buffer.hpp"
-#include "shadertoy/texture_engine.hpp"
 #include "shadertoy/render_context.hpp"
 
 using namespace std;
@@ -40,7 +37,7 @@ void gl_buffer::allocate_contents(render_context &context)
 	target_rbo_.bind(GL_RENDERBUFFER);
 
 	// Resolve size
-	rsize size(render_size());
+	rsize size(render_size().resolve(context.render_size()));
 	target_rbo_.storage(GL_DEPTH_COMPONENT, size.width(), size.height());
 }
 

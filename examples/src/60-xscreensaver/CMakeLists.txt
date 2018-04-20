@@ -1,3 +1,5 @@
+message(STATUS "Building example 60-xscreensaver")
+
 add_executable(example60-xscreensaver
 	${CMAKE_CURRENT_SOURCE_DIR}/demo.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/main.c

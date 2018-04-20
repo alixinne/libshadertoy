@@ -3,9 +3,7 @@
 
 #include "shadertoy/pre.hpp"
 
-#include <utility>
-#include <string>
-#include <vector>
+#include "shadertoy/compiler/basic_part.hpp"
 
 namespace shadertoy
 {
@@ -15,11 +13,8 @@ namespace compiler
 /**
  * @brief Represents a part of a shader template.
  */
-class shadertoy_EXPORT template_part
+class shadertoy_EXPORT template_part : public basic_part
 {
-	/// Name of this template part
-	std::string name_;
-
 	/// Sources for this template part, with their names
 	std::vector<std::pair<std::string, std::string>> sources_;
 
@@ -75,19 +70,11 @@ public:
 	static template_part from_files(const std::string &name, const std::vector<std::string> &filenames);
 
 	/**
-	 * @brief Obtains this template part's name
-	 *
-	 * @return Name of this template part
-	 */
-	inline const std::string &name() const
-	{ return name_; }
-
-	/**
 	 * @brief Converts this template_part to a boolean.
 	 *
 	 * @return true if the template_part is specified, false otherwise
 	 */
-	operator bool() const;
+	operator bool() const override;
 
 	/**
 	 * @brief Obtains this template part's sources
@@ -96,8 +83,7 @@ public:
 	 *
 	 * @throws template_error If this template's source is not defined
 	 */
-	const std::vector<std::pair<std::string, std::string>> &sources() const;
-
+	std::vector<std::pair<std::string, std::string>> sources() const override;
 };
 }
 }

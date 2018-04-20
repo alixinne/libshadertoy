@@ -19,12 +19,12 @@ attrib_location::attrib_location(const program &program, GLint location)
 {
 }
 
-void attrib_location::vertex_pointer(GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer)
+void attrib_location::vertex_pointer(GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer) const
 {
 	gl_call(glVertexAttribPointer, location_, size, type, normalized, stride, pointer);
 }
 
-void attrib_location::enable_vertex_array()
+void attrib_location::enable_vertex_array() const
 {
 	gl_call(glEnableVertexAttribArray, location_);
 }
@@ -164,7 +164,7 @@ program_validate_error::program_validate_error(GLuint programId, const std::stri
 {
 }
 
-void program::link()
+void program::link() const
 {
 	gl_call(glLinkProgram, GLuint(*this));
 
@@ -176,12 +176,12 @@ void program::link()
 	}
 }
 
-void program::use()
+void program::use() const
 {
 	gl_call(glUseProgram, GLuint(*this));
 }
 
-void program::validate()
+void program::validate() const
 {
 	gl_call(glValidateProgram, GLuint(*this));
 
@@ -205,12 +205,12 @@ attrib_location program::get_attrib_location(const GLchar *name)
 	return attrib_location(*this, location);
 }
 
-void program::attach_shader(const shader &shader)
+void program::attach_shader(const shader &shader) const
 {
 	gl_call(glAttachShader, GLuint(*this), GLuint(shader));
 }
 
-std::string program::log()
+std::string program::log() const
 {
 	// Get log length
 	GLint infoLogLength = 0;
@@ -227,12 +227,12 @@ std::string program::log()
 	return std::string(logStr.begin(), logStr.end() - 1);
 }
 
-void program::get(GLenum pname, GLint *params)
+void program::get(GLenum pname, GLint *params) const
 {
 	gl_call(glGetProgramiv, GLuint(*this), pname, params);
 }
 
-void program::get_binary(GLsizei bufsize, GLsizei *length, GLenum *binaryFormat, void *binary)
+void program::get_binary(GLsizei bufsize, GLsizei *length, GLenum *binaryFormat, void *binary) const
 {
 	gl_call(glGetProgramBinary, GLuint(*this), bufsize, length, binaryFormat, binary);
 }

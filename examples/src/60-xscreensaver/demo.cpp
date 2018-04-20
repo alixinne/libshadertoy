@@ -21,22 +21,33 @@ namespace u = shadertoy::utils;
 
 struct my_context
 {
-	shadertoy::render_context *context;
-	shadertoy::context_config config;
+	shadertoy::render_context context;
+	shadertoy::swap_chain chain;
 
-	shadertoy::gl::query *fps_query;
+	shadertoy::gl::query fps_query;
 	GLuint64 last_query_value;
 	int last_query_count;
 
 	int frame_count;
 	double last_clock;
-} ctx{nullptr, shadertoy::context_config(), nullptr, 0, 0, 0, 0.0};
+
+	my_context()
+		: fps_query(GL_TIMESTAMP),
+		last_query_value(0),
+		last_query_count(0),
+		frame_count(0),
+		last_clock(0.0)
+	{
+	}
+};
+
+std::unique_ptr<my_context> ctx;
 
 void shadertoy_resize(int width, int height)
 {
 	// Reallocate textures
-	ctx.context->config().render_size = shadertoy::rsize(width, height);
-	ctx.context->allocate_textures();
+	ctx->context.render_size(shadertoy::rsize(width, height));
+	ctx->context.allocate_textures(ctx->chain);
 }
 
 double now()
@@ -49,37 +60,37 @@ double now()
 
 void shadertoy_render_frame()
 {
-	auto &state(ctx.context->state());
+	auto &state(ctx->context.state());
 
 	// Update uniforms
 	//  iTime and iFrame
-	state.get<shadertoy::iFrame>() = ctx.frame_count;
-	state.get<shadertoy::iTime>() = now() - ctx.last_clock;
+	state.get<shadertoy::iFrame>() = ctx->frame_count;
+	state.get<shadertoy::iTime>() = now() - ctx->last_clock;
 
 	// No measurement of GL_TIMESTAMP yet, add it
-	if (ctx.last_query_value == 0)
+	if (ctx->last_query_value == 0)
 	{
-		ctx.fps_query->query_counter(GL_TIMESTAMP);
+		ctx->fps_query.query_counter(GL_TIMESTAMP);
 	}
 
 	GLint available = 0;
-	ctx.fps_query->get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
+	ctx->fps_query.get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
 
 	if (available)
 	{
 		// The time stamp is available
 		GLuint64 currentTime;
-		ctx.fps_query->get_object_ui64v(GL_QUERY_RESULT, &currentTime);
+		ctx->fps_query.get_object_ui64v(GL_QUERY_RESULT, &currentTime);
 
-		double timeDelta = (1e-9 * (currentTime - ctx.last_query_value)) / (double)(ctx.frame_count - ctx.last_query_count);
+		double timeDelta = (1e-9 * (currentTime - ctx->last_query_value)) / (double)(ctx->frame_count - ctx->last_query_count);
 
 		state.get<shadertoy::iTimeDelta>() = timeDelta;
 		state.get<shadertoy::iFrameRate>() = 1.0 / timeDelta;
 
-		ctx.last_query_value = currentTime;
-		ctx.last_query_count = ctx.frame_count;
+		ctx->last_query_value = currentTime;
+		ctx->last_query_count = ctx->frame_count;
 
-		ctx.fps_query->query_counter(GL_TIMESTAMP);
+		ctx->fps_query.query_counter(GL_TIMESTAMP);
 	}
 
 	//  iDate
@@ -92,65 +103,43 @@ void shadertoy_render_frame()
 	// End update uniforms
 
 	// Render to texture
-	ctx.context->render();
-
-	// Render to screen
-	//  Setup framebuffer
-	gl_call(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
-	gl_call(glViewport, 0, 0, ctx.config.render_size.width(), ctx.config.render_size.height());
-
-	//  Load texture and program
-	ctx.context->bind_result();
-
-	//  Render result
-	ctx.context->render_screen_quad();
+	ctx->context.render(ctx->chain);
 
 	// Update framecount
-	ctx.frame_count++;
+	ctx->frame_count++;
 
 	if (libshadertoy_test_exit())
 		exit(0);
 }
 
-int shadertoy_load(const char *shader_id, const char *shader_api_key, shadertoy::rsize size)
+int shadertoy_load(const char *shader_id, const char *shader_api_key)
 {
 	int code = 0;
 
 	// Options
 	string shaderId(shader_id), shaderApiKey(shader_api_key);
 
-	ctx.config = shadertoy::context_config();
-
-	// Context configuration
-	ctx.config.render_size = size;
-	ctx.config.target_framerate = 30.0;
-
 	// Fetch shader code
-	code = load_remote(ctx.config, shaderId, shaderApiKey);
+	ctx->chain = shadertoy::swap_chain();
+	code = load_remote(ctx->context, ctx->chain, shaderId, shaderApiKey);
+
 	if (code != 0)
 		return code;
 
-	// Initialize ctx
-	ctx.frame_count = 0;
-	ctx.last_clock = now();
-
-	// Create context
-	ctx.context = new shadertoy::render_context(ctx.config);
+	// Add screen_member
+	ctx->chain.push_back(std::make_shared<shadertoy::members::screen_member>());
 
 	try
 	{
-		// Initialize context
-		ctx.context->init();
-		u::log::shadertoy()->info("Initialized rendering context");
+		// Initialize chain
+		ctx->context.init(ctx->chain);
+		u::log::shadertoy()->info("Initialized rendering swap chain");
 
-		auto &state(ctx.context->state());
-		state.get<shadertoy::iTimeDelta>() = 1 / ctx.config.target_framerate;
-		state.get<shadertoy::iFrameRate>() = ctx.config.target_framerate;
-
-		// Create fps query
-		ctx.fps_query = new shadertoy::gl::query(GL_TIMESTAMP);
-		ctx.last_query_value = 0;
-		ctx.last_query_count = 0;
+		// Reset ctx
+		ctx->frame_count = 0;
+		ctx->last_clock = now();
+		ctx->last_query_value = 0;
+		ctx->last_query_count = 0;
 	}
 	catch (shadertoy::gl::shader_compilation_error &sce)
 	{
@@ -166,8 +155,7 @@ int shadertoy_load(const char *shader_id, const char *shader_api_key, shadertoy:
 
 	if (code != 0)
 	{
-		delete ctx.context;
-		ctx.context = nullptr;
+		ctx->chain = shadertoy::swap_chain();
 	}
 
 	return code;
@@ -198,6 +186,12 @@ int shadertoy_init(const char *api_key, const char *query, const char *sort, int
 	// Get returned json
 	Json::Value sr = json_get(curl, ss.str());
 
+	// Create context
+	ctx = std::make_unique<my_context>();
+	ctx->context.render_size(size);
+	ctx->context.state().get<shadertoy::iFrameRate>() = 30.0;
+	ctx->context.state().get<shadertoy::iTimeDelta>() = 1.0 / ctx->context.state().get<shadertoy::iTimeDelta>();
+
 	// Iterate shaders
 	bool foundShader = false;
 
@@ -210,7 +204,7 @@ int shadertoy_init(const char *api_key, const char *query, const char *sort, int
 
 		if (testedShaders.count(shaderId) == 0)
 		{
-			int code = shadertoy_load(shaderId.c_str(), api_key, size);
+			int code = shadertoy_load(shaderId.c_str(), api_key);
 
 			if (code == 0)
 			{
@@ -224,7 +218,7 @@ int shadertoy_init(const char *api_key, const char *query, const char *sort, int
 
 	if (!foundShader)
 	{
-		int code = shadertoy_load("XsyGRW", api_key, size);
+		int code = shadertoy_load("XsyGRW", api_key);
 
 		if (code != 0)
 		{
@@ -238,15 +232,5 @@ int shadertoy_init(const char *api_key, const char *query, const char *sort, int
 
 void shadertoy_free()
 {
-	if (ctx.fps_query)
-	{
-		delete ctx.fps_query;
-		ctx.fps_query = nullptr;
-	}
-
-	if (ctx.context)
-	{
-		delete ctx.context;
-		ctx.context = nullptr;
-	}
+	ctx.reset();
 }

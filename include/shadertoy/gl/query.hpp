@@ -62,7 +62,7 @@ namespace gl
 		 *
 		 * @param target Query target
 		 */
-		void begin(GLenum target);
+		void begin(GLenum target) const;
 
 		/**
 		 * @brief glEndQuery
@@ -76,7 +76,7 @@ namespace gl
 		 *
 		 * @param target Query target. Must be GL_TIMESTAMP
 		 */
-		void query_counter(GLenum target);
+		void query_counter(GLenum target) const;
 
 		/**
 		 * @brief glGetQueryObjectiv
@@ -84,7 +84,7 @@ namespace gl
 		 * @param pname  Parameter name
 		 * @param params Address to result variable
 		 */
-		void get_object_iv(GLenum pname, GLint *params);
+		void get_object_iv(GLenum pname, GLint *params) const;
 
 		/**
 		 * @brief glGetQueryObjectui64v
@@ -92,7 +92,7 @@ namespace gl
 		 * @param pname  Parameter name
 		 * @param params Address to result variable
 		 */
-		void get_object_ui64v(GLenum pname, GLuint64 *params);
+		void get_object_ui64v(GLenum pname, GLuint64 *params) const;
 	};
 }
 }

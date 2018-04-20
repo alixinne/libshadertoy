@@ -10,21 +10,21 @@ using namespace shadertoy::compiler;
 using namespace shadertoy::utils;
 
 template_part::template_part(const std::string &name)
-	: name_(name),
+	: basic_part(name),
 	sources_(),
 	has_sources_(false)
 {
 }
 
 template_part::template_part(const std::string &name, const std::string &source)
-	: name_(name),
+	: basic_part(name),
 	sources_{ std::make_pair(name, source) },
 	has_sources_(true)
 {
 }
 
 template_part::template_part(const std::string &name, const std::vector<std::pair<std::string, std::string>> &sources)
-	: name_(name),
+	: basic_part(name),
 	sources_(sources),
 	has_sources_(true)
 {
@@ -80,10 +80,10 @@ template_part::operator bool() const
 	return has_sources_;
 }
 
-const std::vector<std::pair<std::string, std::string>> &template_part::sources() const
+std::vector<std::pair<std::string, std::string>> template_part::sources() const
 {
 	if (!has_sources_)
-		throw template_error(std::string("Template part ") + name_ + std::string(" is not specified"));
+		throw template_error(std::string("Template part ") + name() + std::string(" is not specified"));
 	return sources_;
 }
 

@@ -1,5 +1,4 @@
 #include <array>
-#include <map>
 #include <memory>
 #include <sstream>
 #include <tuple>
@@ -8,13 +7,10 @@
 #include <vector>
 
 #include <boost/filesystem/path.hpp>
-#include <boost/variant.hpp>
 
 #include "shadertoy/pre.hpp"
 
 #include "shadertoy/gl.hpp"
-
-#include "shadertoy/buffer_config.hpp"
 
 #include "shadertoy/inputs/basic_input.hpp"
 #include "shadertoy/inputs/buffer_input.hpp"
@@ -29,10 +25,21 @@
 
 #include "shadertoy/uniform_state.hpp"
 
-#include "shadertoy/buffers/basic_buffer.hpp"
-#include "shadertoy/buffers/toy_buffer.hpp"
-#include "shadertoy/context_config.hpp"
+#include "shadertoy/compiler/basic_part.hpp"
+#include "shadertoy/compiler/define_part.hpp"
+#include "shadertoy/compiler/shader_template.hpp"
+#include "shadertoy/compiler/template_error.hpp"
+#include "shadertoy/compiler/template_part.hpp"
+
+#include "shadertoy/members/basic_member.hpp"
+#include "shadertoy/members/buffer_member.hpp"
+#include "shadertoy/members/screen_member.hpp"
+
 #include "shadertoy/render_context.hpp"
-#include "shadertoy/texture_engine.hpp"
+#include "shadertoy/swap_chain.hpp"
+
+#include "shadertoy/buffers/basic_buffer.hpp"
+#include "shadertoy/buffers/gl_buffer.hpp"
+#include "shadertoy/buffers/toy_buffer.hpp"
 
 #include "shadertoy/utils.hpp"

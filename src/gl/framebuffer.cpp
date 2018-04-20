@@ -11,12 +11,12 @@ null_framebuffer_error::null_framebuffer_error()
 {
 }
 
-void framebuffer::bind(GLenum target)
+void framebuffer::bind(GLenum target) const
 {
 	gl_call(glBindFramebuffer, target, GLuint(*this));
 }
 
-void framebuffer::texture(GLenum attachment, shadertoy::gl::texture &texture, GLint level)
+void framebuffer::texture(GLenum attachment, shadertoy::gl::texture &texture, GLint level) const
 {
 	gl_call(glNamedFramebufferTexture, GLuint(*this), attachment, GLuint(texture), level);
 }

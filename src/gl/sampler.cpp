@@ -10,27 +10,27 @@ null_sampler_error::null_sampler_error()
 {
 }
 
-void sampler::bind(GLuint unit)
+void sampler::bind(GLuint unit) const
 {
 	gl_call(glBindSampler, unit, GLuint(*this));
 }
 
-void sampler::parameter(GLenum pname, GLint param)
+void sampler::parameter(GLenum pname, GLint param) const
 {
 	gl_call(glSamplerParameteri, GLuint(*this), pname, param);
 }
 
-void sampler::parameter(GLenum pname, GLfloat param)
+void sampler::parameter(GLenum pname, GLfloat param) const
 {
 	gl_call(glSamplerParameterf, GLuint(*this), pname, param);
 }
 
-void sampler::get_parameter(GLenum pname, GLint *param)
+void sampler::get_parameter(GLenum pname, GLint *param) const
 {
 	gl_call(glGetSamplerParameteriv, GLuint(*this), pname, param);
 }
 
-void sampler::get_parameter(GLenum pname, GLfloat *param)
+void sampler::get_parameter(GLenum pname, GLfloat *param) const
 {
 	gl_call(glGetSamplerParameterfv, GLuint(*this), pname, param);
 }

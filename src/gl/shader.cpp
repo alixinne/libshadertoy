@@ -36,14 +36,14 @@ shader::shader(GLenum shaderType)
 {
 }
 
-void shader::source(const std::string &string)
+void shader::source(const std::string &string) const
 {
 	const GLchar *cstr = string.c_str();
 
 	gl_call(glShaderSource, GLuint(*this), 1, &cstr, nullptr);
 }
 
-void shader::source(const std::vector<std::string> &string)
+void shader::source(const std::vector<std::string> &string) const
 {
 	std::vector<const char *> cstr(string.size());
 
@@ -55,7 +55,7 @@ void shader::source(const std::vector<std::string> &string)
 	gl_call(glShaderSource, GLuint(*this), string.size(), cstr.data(), nullptr);
 }
 
-void shader::compile()
+void shader::compile() const
 {
 	// Try to compile shader
 	gl_call(glCompileShader, GLuint(*this));
@@ -71,7 +71,7 @@ void shader::compile()
 	}
 }
 
-std::string shader::log()
+std::string shader::log() const
 {
 	// Get log length
 	GLint infoLogLength = 0;

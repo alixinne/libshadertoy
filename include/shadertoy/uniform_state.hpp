@@ -3,6 +3,13 @@
 
 #include "shadertoy/pre.hpp"
 
+#include <map>
+#include <sstream>
+#include <string>
+#include <tuple>
+
+#include <boost/variant.hpp>
+
 namespace shadertoy
 {
 

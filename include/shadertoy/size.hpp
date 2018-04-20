@@ -119,6 +119,22 @@ public:
 			return size_.resolve(size_getter_());
 		return size_;
 	}
+
+	basic_size<T> resolve(basic_size<T> fallback) const
+	{
+		if (has_size_)
+		{
+			if (size_getter_)
+				return size_.resolve(size_getter_().resolve(fallback));
+			return size_.resolve(fallback);
+		}
+		else
+		{
+			if (size_getter_)
+				return fallback.resolve(size_getter_());
+			return fallback;
+		}
+	}
 };
 
 typedef basic_size<size_t> rsize;

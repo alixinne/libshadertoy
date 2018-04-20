@@ -108,7 +108,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_shader_error
 		 */
-		void source(const std::string &string);
+		void source(const std::string &string) const;
 
 		/**
 		 * @brief glShaderSource
@@ -118,7 +118,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_shader_error
 		 */
-		void source(const std::vector<std::string> &string);
+		void source(const std::vector<std::string> &string) const;
 
 		/**
 		 * @brief glCompileShader
@@ -127,7 +127,7 @@ namespace gl
 		 * @throws ShaderCompilationError
 		 * @throws null_shader_error
 		 */
-		void compile();
+		void compile() const;
 
 		/**
 		 * @brief glGetShaderInfoLog
@@ -137,7 +137,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_shader_error
 		 */
-		std::string log();
+		std::string log() const;
 	};
 }
 }

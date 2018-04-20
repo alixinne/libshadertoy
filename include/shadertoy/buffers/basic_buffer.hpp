@@ -14,7 +14,7 @@ namespace buffers
  * This class only contains shared behavior among all buffers, which mainly
  * includes having textures that are rendered to in a ping-pong manner.
  */
-class basic_buffer
+class shadertoy_EXPORT basic_buffer
 {
 	/// Buffer identifier
 	const std::string id_;
@@ -162,9 +162,10 @@ private:
 	 * Initialize a texture that can be used to render this buffer.
 	 * The size of the texture is defined by the rendering size of this buffer.
 	 *
-	 * @param tex  Allocated texture object reference
+	 * @param context Context to use for texture allocation
+	 * @param tex     Allocated texture object reference
 	 */
-	void init_render_texture(std::shared_ptr<gl::texture> &tex);
+	void init_render_texture(render_context &context, std::shared_ptr<gl::texture> &tex);
 };
 }
 }

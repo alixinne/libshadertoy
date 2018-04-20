@@ -61,9 +61,13 @@ namespace shadertoy
 		class soil_input;
 	}
 
-	struct buffer_config;
-	struct input_config;
-	struct context_config;
+	namespace members
+	{
+		class basic_member;
+	}
+
+	class swap_chain;
+
 	class render_context;
 	class shader_compiler;
 	class texture_engine;

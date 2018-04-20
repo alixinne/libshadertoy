@@ -9,11 +9,8 @@
 
 #include "shadertoy/gl.hpp"
 
-#include "shadertoy/buffer_config.hpp"
-#include "shadertoy/context_config.hpp"
 #include "shadertoy/uniform_state.hpp"
 #include "shadertoy/buffers/basic_buffer.hpp"
-#include "shadertoy/texture_engine.hpp"
 #include "shadertoy/render_context.hpp"
 
 using namespace std;
@@ -41,8 +38,8 @@ void basic_buffer::init(render_context &context)
 void basic_buffer::allocate_textures(render_context &context)
 {
 	// Initialize buffer textures
-	init_render_texture(source_tex_);
-	init_render_texture(target_tex_);
+	init_render_texture(context, source_tex_);
+	init_render_texture(context, target_tex_);
 
 	// Allocate content resources
 	allocate_contents(context);
@@ -74,14 +71,14 @@ unsigned long long basic_buffer::elapsed_time()
 	return result;
 }
 
-void basic_buffer::init_render_texture(shared_ptr<gl::texture> &texptr)
+void basic_buffer::init_render_texture(render_context &context, shared_ptr<gl::texture> &texptr)
 {
 	// Only create a texture object if it is necessary
 	if (!texptr)
 		texptr = make_shared<gl::texture>(GL_TEXTURE_2D);
 
 	// Resolve rendering size
-	rsize size(render_size_);
+	rsize size(render_size_.resolve(context.render_size()));
 	// Allocate texture storage according to width/height
 	texptr->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F, size.width(), size.height(), 0, GL_BGRA,
 					 GL_UNSIGNED_BYTE, nullptr);

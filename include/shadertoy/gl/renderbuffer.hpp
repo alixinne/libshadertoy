@@ -33,7 +33,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_renderbuffer_error
 		 */
-		void bind(GLenum target);
+		void bind(GLenum target) const;
 
 		// glNamedRenderbufferStorage
 		/**
@@ -46,7 +46,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_renderbuffer_error
 		 */
-		void storage(GLenum internalFormat, GLsizei width, GLsizei height);
+		void storage(GLenum internalFormat, GLsizei width, GLsizei height) const;
 	};
 }
 }

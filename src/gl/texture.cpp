@@ -27,39 +27,44 @@ texture::texture(GLenum target)
 {
 }
 
-void texture::bind(GLenum target)
+void texture::bind(GLenum target) const
 {
     gl_call(glBindTexture, target, GLuint(*this));
 }
 
-void texture::parameter(GLenum pname, GLint param)
+void texture::bind_unit(GLuint unit) const
+{
+	gl_call(glBindTextureUnit, unit, GLuint(*this));
+}
+
+void texture::parameter(GLenum pname, GLint param) const
 {
     gl_call(glTextureParameteri, GLuint(*this), pname, param);
 }
 
-void texture::parameter(GLenum pname, GLfloat param)
+void texture::parameter(GLenum pname, GLfloat param) const
 {
     gl_call(glTextureParameterf, GLuint(*this), pname, param);
 }
 
-void texture::get_parameter(GLint level, GLenum pname, GLfloat *params)
+void texture::get_parameter(GLint level, GLenum pname, GLfloat *params) const
 {
 	gl_call(glGetTextureLevelParameterfv, GLuint(*this), level, pname, params);
 }
 
-void texture::image_2d(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border,
-                       GLenum format, GLenum type, const GLvoid *data)
+void texture::image_2d(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height,
+					   GLint border, GLenum format, GLenum type, const GLvoid *data) const
 {
     gl_call(glTextureImage2DEXT, GLuint(*this), target, level, internalFormat, width, height, border, format, type,
             data);
 }
 
-void texture::generate_mipmap()
+void texture::generate_mipmap() const
 {
     gl_call(glGenerateTextureMipmap, GLuint(*this));
 }
 
-void texture::clear_tex_image(GLint level, GLenum format, GLenum type, const void *data)
+void texture::clear_tex_image(GLint level, GLenum format, GLenum type, const void *data) const
 {
 	gl_call(glClearTexImage, GLuint(*this), level, format, type, data);
 }

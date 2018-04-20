@@ -3,8 +3,9 @@
 
 #include "shadertoy/pre.hpp"
 
-#include "shadertoy/compiler/template_part.hpp"
+#include "shadertoy/compiler/basic_part.hpp"
 
+#include "shadertoy/polymorphic_value.h"
 #include <deque>
 
 namespace shadertoy
@@ -15,9 +16,11 @@ namespace compiler
 class shadertoy_EXPORT shader_template
 {
 	/// List of parts of this template
-	std::deque<template_part> parts_;
+	std::deque<jbcoe::polymorphic_value<basic_part>> parts_;
 
-	explicit shader_template(std::deque<template_part> parts);
+	explicit shader_template(std::deque<jbcoe::polymorphic_value<basic_part>> parts);
+
+	void check_unique(jbcoe::polymorphic_value<basic_part> part);
 
 public:
 	/**
@@ -30,7 +33,7 @@ public:
 	 *
 	 * @param parts Initial set of template parts
 	 */
-	shader_template(std::initializer_list<template_part> parts);
+	shader_template(std::initializer_list<jbcoe::polymorphic_value<basic_part>> parts);
 
 	/**
 	 * @brief Obtain a list of sources from this template
@@ -51,7 +54,7 @@ public:
 	 *
 	 * @return Copy of this template with unspecified replaced with specified parts from \p parts
 	 */
-	shader_template specify(std::initializer_list<template_part> parts) const;
+	shader_template specify(std::initializer_list<jbcoe::polymorphic_value<basic_part>> parts) const;
 
 	/**
 	 * @brief Add a part to this template
@@ -62,7 +65,33 @@ public:
 	 *
 	 * @throws template_error When a part with the same name as \p part already exists
 	 */
-	void add_part(const template_part &part);
+	void add_part(jbcoe::polymorphic_value<basic_part> part);
+
+	/**
+	 * @brief Add a part to this template, before another template part
+	 *
+	 * The part will be added before the \p target part name, or an error will be thrown.
+	 *
+	 * @param part   Part to add to this template
+	 * @param target Name of the target template part for insertion
+	 *
+	 * @throws template_error When a part with the same name as \p part already exists
+	 * @throws template_error When a part with the \p target name could not be found
+	 */
+	void insert_before(jbcoe::polymorphic_value<basic_part> part, const std::string &target);
+
+	/**
+	 * @brief Add a part to this template, before another template part
+	 *
+	 * The part will be added after the \p target part name, or an error will be thrown.
+	 *
+	 * @param part   Part to add to this template
+	 * @param target Name of the target template part for insertion
+	 *
+	 * @throws template_error When a part with the same name as \p part already exists
+	 * @throws template_error When a part with the \p target name could not be found
+	 */
+	void insert_after(jbcoe::polymorphic_value<basic_part> part, const std::string &target);
 };
 }
 }

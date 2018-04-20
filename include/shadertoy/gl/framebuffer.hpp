@@ -35,7 +35,7 @@ namespace gl
 		 *
 		 * @throws opengl_error
 		 */
-		void bind(GLenum target);
+		void bind(GLenum target) const;
 
 		/**
 		 * @brief glNamedFramebufferTexture
@@ -47,7 +47,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_texture_error
 		 */
-		void texture(GLenum attachment, texture &texture, GLint level);
+		void texture(GLenum attachment, texture &texture, GLint level) const;
 	};
 }
 }

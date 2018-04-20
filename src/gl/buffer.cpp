@@ -10,12 +10,12 @@ null_buffer_error::null_buffer_error()
 {
 }
 
-void buffer::bind(GLenum target)
+void buffer::bind(GLenum target) const
 {
 	gl_call(glBindBuffer, target, GLuint(*this));
 }
 
-void buffer::data(GLsizei size, const void *data, GLenum usage)
+void buffer::data(GLsizei size, const void *data, GLenum usage) const
 {
 	gl_call(glNamedBufferData, GLuint(*this), size, data, usage);
 }

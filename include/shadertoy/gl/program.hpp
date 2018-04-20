@@ -46,12 +46,12 @@ namespace gl
 		 * @param stride     Stride
 		 * @param pointer    Pointer
 		 */
-		void vertex_pointer(GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer);
+		void vertex_pointer(GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer) const;
 
 		/**
 		 * @brief glEnableVertexAttribArray
 		 */
-		void enable_vertex_array();
+		void enable_vertex_array() const;
 
 	private:
 		/// Program id
@@ -255,14 +255,14 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws ProgramLinkError
 		 */
-		void link();
+		void link() const;
 
 		/**
 		 * @brief glUseProgram
 		 *
 		 * @throws opengl_error
 		 */
-		void use();
+		void use() const;
 
 		/**
 		 * @brief glValidateProgram
@@ -270,7 +270,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws program_validate_error
 		 */
-		void validate();
+		void validate() const;
 
 		/**
 		 * @brief glGetUniformLocation
@@ -302,7 +302,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_shader_error
 		 */
-		void attach_shader(const shader &shader);
+		void attach_shader(const shader &shader) const;
 
 		/**
 		 * @brief glGetProgramInfoLog
@@ -311,7 +311,7 @@ namespace gl
 		 *
 		 * @throws opengl_error
 		 */
-		std::string log();
+		std::string log() const;
 
 		/**
 		 * @brief glGetProgramiv
@@ -322,7 +322,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_program_error
 		 */
-		void get(GLenum pname, GLint *params);
+		void get(GLenum pname, GLint *params) const;
 
 		/**
 		 * @brief glGetProgramBinary
@@ -335,7 +335,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_program_error
 		 */
-		void get_binary(GLsizei bufsize, GLsizei *length, GLenum *binaryFormat, void *binary);
+		void get_binary(GLsizei bufsize, GLsizei *length, GLenum *binaryFormat, void *binary) const;
 	};
 }
 }

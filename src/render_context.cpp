@@ -1,32 +1,21 @@
-#include <fstream>
-#include <map>
-#include <memory>
-#include <sstream>
-
-#include <boost/filesystem.hpp>
-
-#include <boost/variant.hpp>
-
 #include <epoxy/gl.h>
-
-#include <glm/glm.hpp>
 
 #include "shadertoy/gl.hpp"
 #include "shadertoy/utils/log.hpp"
 
 #include "resources.h"
-#include "shadertoy/context_config.hpp"
 #include "shadertoy/uniform_state.hpp"
-#include "shadertoy/buffer_config.hpp"
 #include "shadertoy/buffers/toy_buffer.hpp"
-#include "shadertoy/texture_engine.hpp"
 #include "shadertoy/shader_compiler.hpp"
 #include "shadertoy/render_context.hpp"
 
+#include "shadertoy/compiler/template_part.hpp"
+#include "shadertoy/compiler/define_part.hpp"
+
 #include "shadertoy/inputs/buffer_input.hpp"
 
-namespace fs = boost::filesystem;
-using namespace std;
+#include "shadertoy/swap_chain.hpp"
+
 using namespace shadertoy;
 using namespace shadertoy::utils;
 using shadertoy::gl::gl_call;
@@ -40,75 +29,27 @@ void render_context::check_render_size(rsize size)
 		throw shadertoy_error("The rendering height must be greater than 0");
 }
 
-unique_ptr<texture_engine> render_context::build_texture_engine()
-{
-	auto engine = make_unique<texture_engine>(config_);
-
-	engine->register_handler("buffer", input_handler([this]
-		(const input_config &inputConfig,
-		 bool &framebufferSized) -> std::shared_ptr<inputs::basic_input>
-	{
-		// No need to reallocate buffer textures, this is handled by the buffer itself
-		framebufferSized = false;
-
-		auto &bufferConfigs = config_.buffer_configs;
-		auto bufferIt = std::find_if(bufferConfigs.begin(), bufferConfigs.end(),
-			[&inputConfig](const auto &pair) { return pair.first == inputConfig.source; });
-
-		if (bufferIt == bufferConfigs.end())
-		{
-			log::shadertoy()->warn("Buffer '{}' not found for input {}", inputConfig.source, inputConfig.id);
-
-			return shared_ptr<inputs::basic_input>();
-		}
-		else
-		{
-			log::shadertoy()->info("Binding '{}' to input {}", inputConfig.source, inputConfig.id);
-
-			return make_shared<inputs::buffer_input>(buffers_[inputConfig.source]);
-		}
-	}));
-
-	return engine;
-}
-
-void render_context::pre_init_buffers()
-{
-}
-
-void render_context::post_init_buffers()
-{
-}
 
 void render_context::load_buffer_sources(compiler::shader_template &buffer_template)
 {
 }
 
-void render_context::post_render_buffer(const string &name,
-                                        shared_ptr<buffers::basic_buffer> &buffer)
-{
-}
-
-void render_context::bind_inputs(vector<shared_ptr<bound_inputs_base>> &inputs,
+void render_context::bind_inputs(std::vector<std::shared_ptr<bound_inputs_base>> &inputs,
                                  gl::program &program)
 {
 }
 
-render_context::render_context(context_config &config)
-	: config_(config),
-	screen_vs_(GL_VERTEX_SHADER),
+render_context::render_context()
+	: screen_vs_(GL_VERTEX_SHADER),
 	screen_fs_(GL_FRAGMENT_SHADER),
 	buffer_template_{
 		compiler::template_part("internal:wrapper-header", std::string(wrapper_header_fsh, wrapper_header_fsh + wrapper_header_fsh_size)),
-		compiler::template_part("generated:define-wrapper"),
-		compiler::template_part("generated:shader-inputs", state_.definitions_string()),
+		compiler::define_part("generated:define-wrapper"),
+		compiler::template_part("generated:shadertoy-uniform-definitions", state_.definitions_string()),
 		compiler::template_part("input:buffer-sources"),
 		compiler::template_part("internal:wrapper-footer", std::string(wrapper_footer_fsh, wrapper_footer_fsh + wrapper_footer_fsh_size))
-	},
-	frame_count_(0)
+	}
 {
-	tex_engine_ = build_texture_engine();
-
 	// Prepare screen quad geometry
 	GLfloat coords[] = {
 		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
@@ -129,11 +70,11 @@ render_context::render_context(context_config &config)
 	scren_quad_indices_.data(sizeof(indices), static_cast<const GLvoid *>(&indices[0]), GL_STATIC_DRAW);
 
 	// Compile screen quad vertex shader
-	screen_vs_.source(string(screenQuad_vsh, screenQuad_vsh + screenQuad_vsh_size));
+	screen_vs_.source(std::string(screenQuad_vsh, screenQuad_vsh + screenQuad_vsh_size));
 	screen_vs_.compile();
 
 	// Compile screen quad fragment shader
-	screen_fs_.source(string(screenQuad_fsh, screenQuad_fsh + screenQuad_fsh_size));
+	screen_fs_.source(std::string(screenQuad_fsh, screenQuad_fsh + screenQuad_fsh_size));
 	screen_fs_.compile();
 
 	// Prepare screen quad program
@@ -151,7 +92,7 @@ render_context::render_context(context_config &config)
 	screen_quad_corners_.bind(GL_ARRAY_BUFFER);
 	scren_quad_indices_.bind(GL_ELEMENT_ARRAY_BUFFER);
 
-	vector<gl::program *> programs{ &screen_prog_ };
+	std::vector<gl::program *> programs{ &screen_prog_ };
 
 	for (auto it = programs.begin(); it != programs.end(); ++it)
 	{
@@ -165,18 +106,8 @@ render_context::render_context(context_config &config)
 		texCoord.vertex_pointer(2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat)));
 		texCoord.enable_vertex_array();
 	}
-}
 
-void render_context::init()
-{
-	check_render_size(config_.render_size);
-
-	// Initialize constant uniforms
-	state_.get<iResolution>() = glm::vec3(config_.render_size.width(), config_.render_size.height(), 1.0f);
-	// Note that this will be overriden once query measurements are available
-	state_.get<iTimeDelta>() = 1.0f / (float)config_.target_framerate;
-	state_.get<iFrameRate>() = (float)config_.target_framerate;
-
+	// Set uniform texture units
 	state_.get<iChannel0>() = 1;
 	state_.get<iChannel1>() = 2;
 	state_.get<iChannel2>() = 3;
@@ -184,146 +115,38 @@ void render_context::init()
 
 	state_.get<iChannelTime>() = { 0.f, 0.f, 0.f, 0.f };
 	state_.get<iSampleRate>() = 48000.f;
-
-	// Initialize the texture engine
-	tex_engine_->init();
-
-	// Initialize buffers
-	init_buffers();
 }
 
-void render_context::init_buffers()
+void render_context::render_size(const rsize &new_render_size)
 {
-	// Invoke callback
-	pre_init_buffers();
+	check_render_size(new_render_size);
 
-	// Prepare the define wrapper
-	ostringstream oss;
-	for (auto define : config_.preprocessor_defines)
-	{
-		oss << "#define " << define.first;
-		if (!define.second.empty())
-		{
-			oss << " " << define.second;
-		}
-		oss << endl;
-	}
-	define_wrapper_ = oss.str();
+	render_size_ = new_render_size;
 
-	// Initialize program buffer
-	auto bufferConfigs = config_.buffer_configs;
-	for (auto it = bufferConfigs.begin(); it != bufferConfigs.end(); ++it)
-	{
-		auto buf = make_shared<buffers::toy_buffer>(it->first);
-		buf->render_size(rsize_ref([this]() { return config_.render_size; }));
-		buf->init(*this);
-		buffers_.insert(make_pair(it->first, buf));
-	}
-
-	last_texture_ = weak_ptr<gl::texture>();
-
-	// Invoke callback
-	post_init_buffers();
+	// Initialize constant uniforms
+	state_.get<iResolution>() = glm::vec3(render_size_.width(), render_size_.height(), 1.0f);
 }
 
-void render_context::allocate_textures()
+void render_context::init(swap_chain &chain)
 {
-	check_render_size(config_.render_size);
-
-	// Drop the reference to screen_quad_texture_, it will be recreated if needed
-	screen_quad_texture_ = shared_ptr<gl::texture>();
-
-	// Reallocate buffer textures
-	for (auto &pair : buffers_)
-		pair.second->allocate_textures(*this);
-
-	// Reallocate inputs
-	tex_engine_->clear(true);
-
-	// Update the iResolution uniform, as this method can be called after a
-	// framebuffer size change
-	state_.get<iResolution>() = glm::vec3(config_.render_size.width(), config_.render_size.height(), 1.0f);
+	chain.init(*this);
 }
 
-void render_context::clear_state()
+void render_context::allocate_textures(swap_chain &chain)
 {
-	// Clear previous input textures
-	tex_engine_->clear();
-	// Clear previous buffers
-	buffers_.clear();
+	chain.allocate_textures(*this);
 }
 
-void render_context::render()
+std::shared_ptr<members::basic_member> render_context::render(swap_chain &chain)
 {
-	for (auto buffer_spec : config_.buffer_configs)
-	{
-		auto &buffer(buffers_[buffer_spec.first]);
-
-		buffer->render(*this);
-		last_texture_ = buffer->source_texture();
-
-		post_render_buffer(buffer_spec.first, buffer);
-	}
-
-	frame_count_++;
+	return chain.render(*this);
 }
 
-void render_context::read_write_current_frame(GLuint &texIn, GLuint &texOut)
+void render_context::build_buffer_shader(const std::string &id, gl::shader &fs,
+										 const std::vector<std::string> &sources)
 {
-	if (auto currentTex = last_texture_.lock())
-	{
-		// Allocate the target screen quad texture as it is requested
-		if (!screen_quad_texture_)
-		{
-			// Create texture object
-			screen_quad_texture_ = make_shared<gl::texture>(GL_TEXTURE_2D);
-
-			// Setup screen_quad_texture_
-			screen_quad_texture_->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			screen_quad_texture_->parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			screen_quad_texture_->parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
-			screen_quad_texture_->parameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
-			screen_quad_texture_->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F,
-				config_.render_size.width(), config_.render_size.height(), 0, GL_BGRA, GL_FLOAT, nullptr);
-		}
-
-		texIn = *currentTex;
-		texOut = *screen_quad_texture_;
-
-		last_texture_ = screen_quad_texture_;
-	}
-	else
-	{
-		throw runtime_error(string(__func__) + ": last_texture_ pointer has expired!");
-	}
-}
-
-void render_context::read_current_frame(GLuint &texIn)
-{
-	if (auto currentTex = last_texture_.lock())
-	{
-		texIn = *currentTex;
-	}
-	else
-	{
-		throw runtime_error(string(__func__) + ": last_texture_ pointer has expired!");
-	}
-}
-
-void render_context::build_buffer_shader(const string &id,
-                                         gl::shader &fs)
-{
-	auto &bufferConfig(std::find_if(config_.buffer_configs.begin(),
-		config_.buffer_configs.end(),
-		[&id](const auto &pair) { return pair.first == id; })->second);
-
 	// Load all source parts
-	std::vector<std::string> sources;
-	std::transform(bufferConfig.shader_files.begin(), bufferConfig.shader_files.end(),
-				   std::back_inserter(sources), [](const auto &path) { return path.string(); });
-
 	auto fs_template(buffer_template_.specify({
-											  compiler::template_part("generated:define-wrapper", define_wrapper_),
 											  compiler::template_part::from_files("input:buffer-sources", sources),
 											  }));
 
@@ -334,14 +157,9 @@ void render_context::build_buffer_shader(const string &id,
 	shader_compiler::compile(fs, fs_template.sources());
 }
 
-const GLchar *render_context::define_wrapper() const
+std::vector<std::shared_ptr<bound_inputs_base>> render_context::bound_inputs(gl::program &program)
 {
-	return define_wrapper_.c_str();
-}
-
-vector<shared_ptr<bound_inputs_base>> render_context::bound_inputs(gl::program &program)
-{
-	vector<shared_ptr<bound_inputs_base>> result;
+	std::vector<std::shared_ptr<bound_inputs_base>> result;
 
 	// External inputs
 	bind_inputs(result, program);
@@ -354,7 +172,7 @@ vector<shared_ptr<bound_inputs_base>> render_context::bound_inputs(gl::program &
 
 void render_context::clear(float level)
 {
-	gl_call(glViewport, 0, 0, config_.render_size.width(), config_.render_size.height());
+	gl_call(glViewport, 0, 0, render_size_.width(), render_size_.height());
 	gl_call(glClearColor, level, level, level, level);
 	gl_call(glClear, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
@@ -376,46 +194,8 @@ void render_context::render_screen_quad(gl::query &timerQuery)
 	timerQuery.end(GL_TIME_ELAPSED);
 }
 
-void render_context::bind_result()
-{
-	// Prepare prog and texture
-	screen_prog_.use();
-
-	gl_call(glActiveTexture, GL_TEXTURE0);
-	gl_call(glBindSampler, 0, 0);
-
-	if (auto ptr = last_texture_.lock())
-	{
-		ptr->bind(GL_TEXTURE_2D);
-		ptr->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		ptr->parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	}
-}
-
 gl::shader &render_context::screen_quad_vertex_shader()
 {
 	return screen_vs_;
 }
 
-shared_ptr<buffers::basic_buffer> render_context::buffer(const string &name)
-{
-	if (name.empty())
-	{
-		if (buffers_.empty())
-		{
-			return shared_ptr<buffers::basic_buffer>();
-		}
-
-		return buffers_.rbegin()->second;
-	}
-	else
-	{
-		auto it = buffers_.find(name);
-		if (it == buffers_.end())
-		{
-			return shared_ptr<buffers::basic_buffer>();
-		}
-
-		return it->second;
-	}
-}

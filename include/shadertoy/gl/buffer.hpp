@@ -36,7 +36,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_buffer_error
 		 */
-		void bind(GLenum target);
+		void bind(GLenum target) const;
 
 		/**
 		 * @brief glNamedBufferData
@@ -47,7 +47,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_buffer_error
 		 */
-		void data(GLsizei size, const void *data, GLenum usage);
+		void data(GLsizei size, const void *data, GLenum usage) const;
 	};
 }
 }

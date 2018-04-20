@@ -36,7 +36,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_sampler_error
 		 */
-		void bind(GLuint unit);
+		void bind(GLuint unit) const;
 
 		/**
 		 * @brief glSamplerParameteri
@@ -47,7 +47,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_sampler_error
 		 */
-		void parameter(GLenum pname, GLint param);
+		void parameter(GLenum pname, GLint param) const;
 
 		/**
 		 * @brief glSamplerParameterf
@@ -58,7 +58,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_sampler_error
 		 */
-		void parameter(GLenum pname, GLfloat param);
+		void parameter(GLenum pname, GLfloat param) const;
 
 		/**
 		 * @brief glGetSamplerParameteriv
@@ -69,7 +69,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_sampler_error
 		 */
-		void get_parameter(GLenum pname, GLint *params);
+		void get_parameter(GLenum pname, GLint *params) const;
 
 		/**
 		 * @brief glGetSamplerParameterfv
@@ -80,7 +80,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_sampler_error
 		 */
-		void get_parameter(GLenum pname, GLfloat *params);
+		void get_parameter(GLenum pname, GLfloat *params) const;
 	};
 }
 }

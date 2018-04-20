@@ -71,7 +71,17 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_texture_error
 		 */
-		void bind(GLenum target);
+		void bind(GLenum target) const;
+
+		/**
+		 * @brief glBindTextureUnit
+		 *
+		 * @param unit Unit to bind the texture to
+		 *
+		 * @throws opengl_error
+		 * @throws null_texture_error
+		 */
+		void bind_unit(GLuint unit) const;
 
 		/**
 		 * @brief glTextureParameteri
@@ -82,7 +92,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_texture_error
 		 */
-		void parameter(GLenum pname, GLint param);
+		void parameter(GLenum pname, GLint param) const;
 
 		/**
 		 * @brief glTextureParameterf
@@ -93,7 +103,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_texture_error
 		 */
-		void parameter(GLenum pname, GLfloat param);
+		void parameter(GLenum pname, GLfloat param) const;
 
 		/**
 		 * @brief glGetTextureLevelParameterfv
@@ -105,7 +115,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_texture_error
 		 */
-		void get_parameter(GLint level, GLenum pname, GLfloat *params);
+		void get_parameter(GLint level, GLenum pname, GLfloat *params) const;
 
 		/**
 		 * @brief glTextureImage2DEXT
@@ -123,8 +133,8 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_texture_error
 		 */
-		void image_2d(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border,
-					  GLenum format, GLenum type, const GLvoid *data);
+		void image_2d(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height,
+					  GLint border, GLenum format, GLenum type, const GLvoid *data) const;
 
 		/**
 		 * @brief glGenerateTextureMipmap
@@ -132,7 +142,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_texture_error
 		 */
-		void generate_mipmap();
+		void generate_mipmap() const;
 
 		/**
 		 * @brief glClearTexImage
@@ -145,7 +155,7 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_texture_error
 		 */
-		void clear_tex_image(GLint level, GLenum format, GLenum type, const void *data);
+		void clear_tex_image(GLint level, GLenum format, GLenum type, const void *data) const;
 	};
 }
 }

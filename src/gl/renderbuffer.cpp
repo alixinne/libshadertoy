@@ -10,12 +10,12 @@ null_renderbuffer_error::null_renderbuffer_error()
 {
 }
 
-void renderbuffer::bind(GLenum target)
+void renderbuffer::bind(GLenum target) const
 {
 	gl_call(glBindRenderbuffer, target, GLuint(*this));
 }
 
-void renderbuffer::storage(GLenum internalFormat, GLsizei width, GLsizei height)
+void renderbuffer::storage(GLenum internalFormat, GLsizei width, GLsizei height) const
 {
 	gl_call(glNamedRenderbufferStorage, GLuint(*this), internalFormat, width, height);
 }

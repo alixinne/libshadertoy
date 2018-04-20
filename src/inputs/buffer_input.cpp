@@ -31,6 +31,7 @@ std::shared_ptr<gl::texture> buffer_input::use_input()
 
 		return tex;
 	}
+
 	return std::shared_ptr<gl::texture>();
 }
 

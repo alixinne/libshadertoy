@@ -10,30 +10,25 @@
 namespace fs = boost::filesystem;
 using shadertoy::gl::gl_call;
 
+typedef struct
+{
+	shadertoy::render_context context;
+	shadertoy::swap_chain chain;
+} example_ctx;
+
 void set_framebuffer_size(GLFWwindow *window, int width, int height)
 {
 	// Get the context from the window user pointer
-	shadertoy::render_context &context =
-		*static_cast<shadertoy::render_context*>(glfwGetWindowUserPointer(window));
+	auto &ctx = *static_cast<example_ctx *>(glfwGetWindowUserPointer(window));
 
 	// Reallocate textures
-	context.config().render_size = shadertoy::rsize(width, height);
-	context.allocate_textures();
+	ctx.context.render_size(shadertoy::rsize(width, height));
+	ctx.context.allocate_textures(ctx.chain);
 }
 
 int main(int argc, char *argv[])
 {
 	int code = 0;
-
-	shadertoy::context_config contextConfig;
-	contextConfig.render_size = shadertoy::rsize(640, 480);
-	contextConfig.target_framerate = 60.0;
-
-	shadertoy::buffer_config imageBuffer;
-	imageBuffer.name = "image";
-	imageBuffer.shader_files.push_back(fs::path("..") / fs::path("shaders") / fs::path("shader-gradient.glsl"));
-
-	contextConfig.buffer_configs.emplace_back(imageBuffer.name, imageBuffer);
 
 	if (!glfwInit())
 	{
@@ -42,11 +37,8 @@ int main(int argc, char *argv[])
 	}
 
 	// Initialize window
-	GLFWwindow *window = glfwCreateWindow(contextConfig.render_size.width(),
-										  contextConfig.render_size.height(),
-										  "libshadertoy example 10-gradient",
-										  nullptr,
-										  nullptr);
+	int width = 640, height = 480;
+	GLFWwindow *window = glfwCreateWindow(width, height, "libshadertoy example 10-gradient", nullptr, nullptr);
 
 	if (!window)
 	{
@@ -59,14 +51,35 @@ int main(int argc, char *argv[])
 		glfwSwapInterval(1);
 
 		{
-			shadertoy::render_context context(contextConfig);
-			std::cout << "Created context based on config" << std::endl;
+			example_ctx ctx;
+			auto &context(ctx.context);
+			auto &chain(ctx.chain);
+
+			// Set the context parameters (render size and some uniforms)
+			context.render_size(shadertoy::rsize(width, height));
+			context.state().get<shadertoy::iTimeDelta>() = 1.0 / 60.0;
+			context.state().get<shadertoy::iFrameRate>() = 60.0;
+
+			// Create the image buffer
+			auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image"));
+			imageBuffer->render_size(shadertoy::rsize_ref([&context](){ return context.render_size(); }));
+			imageBuffer->source_files().push_back("../shaders/shader-gradient.glsl");
+
+			// Add the image buffer to the swap chain
+			chain.push_back(std::make_shared<shadertoy::members::buffer_member>(imageBuffer));
+
+			// Create a swap chain member that renders to the screen
+			auto screenRender(std::make_shared<shadertoy::members::screen_member>());
+			screenRender->viewport_size(shadertoy::rsize_ref([&context](){ return context.render_size(); }));
+			
+			// Add it to the swap chain
+			chain.push_back(screenRender);
 
 			try
 			{
 				// Initialize context
-				context.init();
-				std::cout << "Initialized rendering context" << std::endl;
+				context.init(chain);
+				std::cout << "Initialized swap chain" << std::endl;
 			}
 			catch (shadertoy::gl::shader_compilation_error &sce)
 			{
@@ -75,8 +88,7 @@ int main(int argc, char *argv[])
 			}
 			catch (shadertoy::shadertoy_error &err)
 			{
-				std::cerr << "Error: "
-						  << err.what();
+				std::cerr << "Error: " << err.what();
 				code = 2;
 			}
 
@@ -88,7 +100,7 @@ int main(int argc, char *argv[])
 			double t = 0.;
 
 			// Set the resize callback
-			glfwSetWindowUserPointer(window, &context);
+			glfwSetWindowUserPointer(window, &ctx);
 			glfwSetFramebufferSizeCallback(window, set_framebuffer_size);
 
 			while (!glfwWindowShouldClose(window))
@@ -100,19 +112,8 @@ int main(int argc, char *argv[])
 				context.state().get<shadertoy::iTime>() = t;
 				context.state().get<shadertoy::iFrame>() = frameCount;
 
-				// Render to texture
-				context.render();
-
-				// Render to screen
-				//  Setup framebuffer
-				gl_call(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
-				gl_call(glViewport, 0, 0, contextConfig.render_size.width(), contextConfig.render_size.height());
-
-				//  Load texture and program
-				context.bind_result();
-
-				//  Render result
-				context.render_screen_quad();
+				// Render the swap chain
+				context.render(chain);
 
 				// Buffer swapping
 				glfwSwapBuffers(window);

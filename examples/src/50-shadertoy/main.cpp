@@ -19,10 +19,11 @@ namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 namespace u = shadertoy::utils;
 
-struct my_context
+typedef struct
 {
-	shadertoy::render_context *context;
-};
+	shadertoy::render_context context;
+	shadertoy::swap_chain chain;
+} example_ctx;
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
@@ -33,14 +34,14 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 	}
 }
 
-void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+void set_framebuffer_size(GLFWwindow *window, int width, int height)
 {
 	// Get the context from the window user pointer
-	my_context &ctx = *static_cast<my_context*>(glfwGetWindowUserPointer(window));
+	auto &ctx = *static_cast<example_ctx *>(glfwGetWindowUserPointer(window));
 
 	// Reallocate textures
-	ctx.context->config().render_size = shadertoy::rsize(width, height);
-	ctx.context->allocate_textures();
+	ctx.context.render_size(shadertoy::rsize(width, height));
+	ctx.context.allocate_textures(ctx.chain);
 }
 
 int parse_options(string &shaderId, string &shaderApiKey, bool &dump, int argc, char **argv)
@@ -76,35 +77,41 @@ int parse_options(string &shaderId, string &shaderApiKey, bool &dump, int argc, 
 	return 0;
 }
 
-int render(GLFWwindow* window, shadertoy::context_config &contextConfig, bool dumpShaders)
+int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 {
 	int code = 0;
 
-	shadertoy::render_context context(contextConfig);
+	auto &chain(ctx.chain);
+	auto &context(ctx.context);
 	auto &state(context.state());
-	my_context ctx = {&context};
+
+	// Add member that renders to the screen
+	chain.push_back(std::make_shared<shadertoy::members::screen_member>());
 
 	try
 	{
 		// Initialize context
-		context.init();
+		context.init(chain);
 		u::log::shadertoy()->info("Initialized rendering context");
 
 		if (dumpShaders)
 		{
-			for (auto &bufferConfig : contextConfig.buffer_configs)
+			for (auto &member : chain.members())
 			{
-				auto &firstPath(bufferConfig.second.shader_files.front());
-				auto dumpPath(firstPath.replace_extension(".dump"));
+				if (auto buffer_member = std::dynamic_pointer_cast<shadertoy::members::buffer_member>(member))
+				{
+					auto buffer(std::static_pointer_cast<shadertoy::buffers::toy_buffer>(buffer_member->buffer()));
 
-				u::log::shadertoy()->info("Dumping {} to {}", bufferConfig.first, dumpPath);
+					auto &firstPath(buffer->source_files().front());
+					auto dumpPath(firstPath + std::string(".dump"));
 
-				std::ofstream ofs(dumpPath.string());
-				auto dump(shadertoy::utils::dump_program(
-							std::static_pointer_cast<shadertoy::buffers::toy_buffer>(context.buffer(bufferConfig.first))
-							->program()));
-				ofs.write(dump.data(), dump.size());
-				ofs.close();
+					u::log::shadertoy()->info("Dumping {} to {}", buffer->id(), dumpPath);
+
+					auto dump(shadertoy::utils::dump_program(buffer->program()));
+					std::ofstream ofs(dumpPath, std::ios::out | std::ios::binary);
+					ofs.write(dump.data(), dump.size());
+					ofs.close();
+				}
 			}
 		}
 	}
@@ -128,7 +135,7 @@ int render(GLFWwindow* window, shadertoy::context_config &contextConfig, bool du
 		glfwSetWindowUserPointer(window, &ctx);
 
 		glfwSetKeyCallback(window, key_callback);
-		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+		glfwSetFramebufferSizeCallback(window, set_framebuffer_size);
 
 		while (!glfwWindowShouldClose(window))
 		{
@@ -137,7 +144,7 @@ int render(GLFWwindow* window, shadertoy::context_config &contextConfig, bool du
 
 			// Update uniforms
 			//  iTime and iFrame
-			state.get<shadertoy::iTime>() += 1.0 / contextConfig.target_framerate;
+			state.get<shadertoy::iTime>() += 1.0 / state.get<shadertoy::iFrameRate>();
 			state.get<shadertoy::iFrame>() = frameCount;
 
 			//  iDate
@@ -157,7 +164,7 @@ int render(GLFWwindow* window, shadertoy::context_config &contextConfig, bool du
 				state.get<shadertoy::iMouse>()[0] =
 					state.get<shadertoy::iMouse>()[2] = xpos;
 				state.get<shadertoy::iMouse>()[1] =
-					state.get<shadertoy::iMouse>()[3] = contextConfig.render_size.height() - ypos;
+					state.get<shadertoy::iMouse>()[3] = context.render_size().height() - ypos;
 			}
 			else
 			{
@@ -167,31 +174,16 @@ int render(GLFWwindow* window, shadertoy::context_config &contextConfig, bool du
 			// End update uniforms
 
 			// Render to texture
-			context.render();
-
-			// Render to screen
-			//  Setup framebuffer
-			gl_call(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
-			gl_call(glViewport, 0, 0, contextConfig.render_size.width(), contextConfig.render_size.height());
-
-
-			//  Load texture and program
-			context.bind_result();
-
-			//  Render result
-			context.render_screen_quad();
+			context.render(chain);
 
 			// Print execution time
-			auto buffer = context.buffer();
+			auto buffer = std::static_pointer_cast<shadertoy::buffers::toy_buffer>(std::static_pointer_cast<shadertoy::members::buffer_member>(chain.before(chain.members().back().get()))->buffer());
 
-			if (buffer)
-			{
-				auto renderTime = buffer->elapsed_time();
-				std::cerr << "frame time: " << renderTime
-						  << "ns fps: " << (1e9 / renderTime)
-						  << " mpx/s: " << (contextConfig.render_size.width() * contextConfig.render_size.height() / (renderTime / 1e3))
-						  << std::endl;
-			}
+			auto renderTime = buffer->elapsed_time();
+			std::cerr << "frame time: " << renderTime
+					  << "ns fps: " << (1e9 / renderTime)
+					  << " mpx/s: " << (context.render_size().width() * context.render_size().height() / (renderTime / 1e3))
+					  << std::endl;
 
 			// Buffer swapping
 			glfwSwapBuffers(window);
@@ -207,7 +199,8 @@ int render(GLFWwindow* window, shadertoy::context_config &contextConfig, bool du
 	return code;
 }
 
-int performRender(shadertoy::context_config &contextConfig, bool dumpShaders)
+template<typename... Args>
+int performRender(bool dumpShaders, Args&&... args)
 {
 	int code = 0;
 
@@ -218,11 +211,8 @@ int performRender(shadertoy::context_config &contextConfig, bool dumpShaders)
 	}
 
 	// Initialize window
-	GLFWwindow *window = glfwCreateWindow(contextConfig.render_size.width(),
-										  contextConfig.render_size.height(),
-										  "libshadertoy example 50-shadertoy",
-										  nullptr,
-										  nullptr);
+	int width = 640, height = 480;
+	GLFWwindow *window = glfwCreateWindow(width, height, "libshadertoy example 50-shadertoy", nullptr, nullptr);
 
 	if (!window)
 	{
@@ -234,7 +224,20 @@ int performRender(shadertoy::context_config &contextConfig, bool dumpShaders)
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
 
-	code = render(window, contextConfig, dumpShaders);
+	{
+		example_ctx ctx;
+		auto &context(ctx.context);
+
+		// Set the context parameters (render size and some uniforms)
+		context.render_size(shadertoy::rsize(width, height));
+		context.state().get<shadertoy::iTimeDelta>() = 1.0 / 60.0;
+		context.state().get<shadertoy::iFrameRate>() = 60.0;
+
+		code = load_remote(ctx.context, ctx.chain, args...);
+
+		if (code == 0)
+			code = render(window, ctx, dumpShaders);
+	}
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
@@ -254,18 +257,8 @@ int main(int argc, char *argv[])
 	if (code > 0)
 		return code;
 
-	// Context configuration
-	shadertoy::context_config contextConfig;
-	contextConfig.render_size = shadertoy::rsize(640, 480);
-	contextConfig.target_framerate = 60.0;
-
-	// Fetch shader code
-	code = load_remote(contextConfig, shaderId, shaderApiKey);
-	if (code != 0)
-		return code;
-
-	// Render
-	code = performRender(contextConfig, dumpShaders);
+	// Load shader code and render
+	code = performRender(dumpShaders, shaderId, shaderApiKey);
 
 	return code;
 }
