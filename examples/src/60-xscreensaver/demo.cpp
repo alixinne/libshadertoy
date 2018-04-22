@@ -11,6 +11,7 @@
 #include "api.hpp"
 #include "demo.h"
 
+#define TEST_NO_GLFW
 #include "test.hpp"
 
 using namespace std;
@@ -19,11 +20,8 @@ using shadertoy::gl::gl_call;
 namespace fs = boost::filesystem;
 namespace u = shadertoy::utils;
 
-struct my_context
+struct my_context : public example_ctx
 {
-	shadertoy::render_context context;
-	shadertoy::swap_chain chain;
-
 	shadertoy::gl::query fps_query;
 	GLuint64 last_query_value;
 	int last_query_count;
@@ -32,7 +30,8 @@ struct my_context
 	double last_clock;
 
 	my_context()
-		: fps_query(GL_TIMESTAMP),
+		: example_ctx(),
+		fps_query(GL_TIMESTAMP),
 		last_query_value(0),
 		last_query_count(0),
 		frame_count(0),
@@ -46,7 +45,7 @@ std::unique_ptr<my_context> ctx;
 void shadertoy_resize(int width, int height)
 {
 	// Reallocate textures
-	ctx->context.render_size(shadertoy::rsize(width, height));
+	ctx->render_size = shadertoy::rsize(width, height);
 	ctx->context.allocate_textures(ctx->chain);
 }
 
@@ -127,10 +126,15 @@ int shadertoy_load(const char *shader_id, const char *shader_api_key)
 		return code;
 
 	// Add screen_member
-	ctx->chain.push_back(std::make_shared<shadertoy::members::screen_member>());
+	ctx->chain.push_back(shadertoy::members::make_screen(shadertoy::make_size_ref(ctx->render_size)));
 
 	try
 	{
+		// Set member size
+		for (auto member : ctx->chain.members())
+			if (auto ptr = std::dynamic_pointer_cast<shadertoy::members::buffer_member>(member))
+				ptr->buffer()->render_size(shadertoy::make_size_ref(ctx->render_size));
+
 		// Initialize chain
 		ctx->context.init(ctx->chain);
 		u::log::shadertoy()->info("Initialized rendering swap chain");
@@ -188,7 +192,7 @@ int shadertoy_init(const char *api_key, const char *query, const char *sort, int
 
 	// Create context
 	ctx = std::make_unique<my_context>();
-	ctx->context.render_size(size);
+	ctx->render_size = size;
 	ctx->context.state().get<shadertoy::iFrameRate>() = 30.0;
 	ctx->context.state().get<shadertoy::iTimeDelta>() = 1.0 / ctx->context.state().get<shadertoy::iTimeDelta>();
 

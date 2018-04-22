@@ -21,16 +21,6 @@ using namespace shadertoy;
 using namespace shadertoy::utils;
 using shadertoy::gl::gl_call;
 
-void render_context::check_render_size(rsize size)
-{
-	if (size.width() <= 0)
-		throw shadertoy_error("The rendering width must be greater than 0");
-
-	if (size.height() <= 0)
-		throw shadertoy_error("The rendering height must be greater than 0");
-}
-
-
 void render_context::load_buffer_sources(compiler::shader_template &buffer_template)
 {
 }
@@ -118,16 +108,6 @@ render_context::render_context()
 	state_.get<iSampleRate>() = 48000.f;
 }
 
-void render_context::render_size(const rsize &new_render_size)
-{
-	check_render_size(new_render_size);
-
-	render_size_ = new_render_size;
-
-	// Initialize constant uniforms
-	state_.get<iResolution>() = glm::vec3(render_size_.width(), render_size_.height(), 1.0f);
-}
-
 void render_context::init(swap_chain &chain)
 {
 	chain.init(*this);
@@ -169,13 +149,6 @@ std::vector<std::shared_ptr<bound_inputs_base>> render_context::bound_inputs(gl:
 	result.insert(result.begin(), state_.bind_inputs(program));
 
 	return result;
-}
-
-void render_context::clear(float level)
-{
-	gl_call(glViewport, 0, 0, render_size_.width(), render_size_.height());
-	gl_call(glClearColor, level, level, level, level);
-	gl_call(glClear, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void render_context::render_screen_quad()

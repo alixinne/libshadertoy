@@ -49,21 +49,7 @@ public:
 	}
 };
 
-typedef struct
-{
-	example_render_context context;
-	shadertoy::swap_chain chain;
-} example_ctx;
-
-void set_framebuffer_size(GLFWwindow *window, int width, int height)
-{
-	// Get the context from the window user pointer
-	auto &ctx = *static_cast<example_ctx *>(glfwGetWindowUserPointer(window));
-
-	// Reallocate textures
-	ctx.context.render_size(shadertoy::rsize(width, height));
-	ctx.context.allocate_textures(ctx.chain);
-}
+typedef basic_example_ctx<example_render_context> custom_example_ctx;
 
 int main(int argc, char *argv[])
 {
@@ -90,29 +76,25 @@ int main(int argc, char *argv[])
 		glfwSwapInterval(1);
 
 		{
-			example_ctx ctx;
+			custom_example_ctx ctx;
 			auto &context(ctx.context);
 			auto &chain(ctx.chain);
 
 			// Set the context parameters (render size and some uniforms)
-			context.render_size(shadertoy::rsize(width, height));
+			ctx.render_size = shadertoy::rsize(width, height);
 			context.state().get<shadertoy::iTimeDelta>() = 1.0 / 60.0;
 			context.state().get<shadertoy::iFrameRate>() = 60.0;
 
 			// Create the image buffer
 			auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image"));
-			imageBuffer->render_size(shadertoy::rsize_ref([&context](){ return context.render_size(); }));
+			imageBuffer->render_size(shadertoy::make_size_ref(ctx.render_size));
 			imageBuffer->source_files().push_back("../shaders/shader-gradient-uniform.glsl");
 
 			// Add the image buffer to the swap chain
 			chain.emplace_back(imageBuffer);
 
 			// Create a swap chain member that renders to the screen
-			auto screenRender(std::make_shared<shadertoy::members::screen_member>());
-			screenRender->viewport_size(shadertoy::rsize_ref([&context](){ return context.render_size(); }));
-			
-			// Add it to the swap chain
-			chain.push_back(screenRender);
+			chain.push_back(shadertoy::members::make_screen(shadertoy::make_size_ref(ctx.render_size)));
 
 			try
 			{
@@ -140,7 +122,7 @@ int main(int argc, char *argv[])
 
 			// Set the resize callback
 			glfwSetWindowUserPointer(window, &ctx);
-			glfwSetFramebufferSizeCallback(window, set_framebuffer_size);
+			glfwSetFramebufferSizeCallback(window, example_set_framebuffer_size<custom_example_ctx>);
 
 			while (!glfwWindowShouldClose(window))
 			{

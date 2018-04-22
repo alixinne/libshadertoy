@@ -78,9 +78,9 @@ void basic_buffer::init_render_texture(render_context &context, shared_ptr<gl::t
 		texptr = make_shared<gl::texture>(GL_TEXTURE_2D);
 
 	// Resolve rendering size
-	rsize size(render_size_.resolve(context.render_size()));
+	rsize size(render_size_->resolve());
 	// Allocate texture storage according to width/height
-	texptr->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F, size.width(), size.height(), 0, GL_BGRA,
+	texptr->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F, size.width, size.height, 0, GL_BGRA,
 					 GL_UNSIGNED_BYTE, nullptr);
 
 	// Clear the frame accumulator so it doesn't contain garbage

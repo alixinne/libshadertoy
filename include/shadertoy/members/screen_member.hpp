@@ -46,8 +46,10 @@ protected:
 public:
 	/**
 	 * @brief Initializes a new instance of the screen_member class
+	 *
+	 * @param viewport_size Initial viewport size
 	 */
-	screen_member();
+	screen_member(rsize_ref &&viewport_size);
 
 	/**
 	 * @brief Returns the same output that will be drawn to the screen
@@ -93,17 +95,18 @@ public:
 	{ return viewport_size_; }
 
 	/**
-	 * @brief Obtains the viewport size object
-	 */
-	inline rsize_ref &viewport_size()
-	{ return viewport_size_; }
-
-	/**
 	 * @brief Sets the viewport size object
 	 */
-	inline void viewport_size(rsize_ref new_viewport_size)
-	{ viewport_size_ = new_viewport_size; }
+	inline void viewport_size(rsize_ref &&new_viewport_size)
+	{ viewport_size_ = std::move(new_viewport_size); }
 };
+
+template<typename... Args>
+std::shared_ptr<screen_member> make_screen(Args&&... args)
+{
+	return std::make_shared<screen_member>(std::forward<Args>(args)...);
+}
+
 }
 }
 

@@ -37,8 +37,8 @@ void gl_buffer::allocate_contents(render_context &context)
 	target_rbo_.bind(GL_RENDERBUFFER);
 
 	// Resolve size
-	rsize size(render_size().resolve(context.render_size()));
-	target_rbo_.storage(GL_DEPTH_COMPONENT, size.width(), size.height());
+	rsize size(render_size()->resolve());
+	target_rbo_.storage(GL_DEPTH_COMPONENT, size.width, size.height);
 }
 
 void gl_buffer::render_contents(render_context &context)

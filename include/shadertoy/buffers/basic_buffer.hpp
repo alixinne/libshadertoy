@@ -155,7 +155,7 @@ public:
 	 *
 	 * @param[in]  new_size  New rendering size object
 	 */
-	inline void render_size(const rsize_ref &new_size) { render_size_ = new_size; }
+	inline void render_size(rsize_ref &&new_size) { render_size_ = std::move(new_size); }
 
 private:
 	/**

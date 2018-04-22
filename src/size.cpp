@@ -4,4 +4,3 @@
 
 using namespace shadertoy;
 
-size_error::size_error(const std::string &what) : shadertoy_error(what) {}

@@ -54,8 +54,15 @@ void toy_buffer::init_contents(render_context &context)
 
 void toy_buffer::render_gl_contents(render_context &context)
 {
+	// Compute the rendering size
+	rsize size(render_size()->resolve());
+
+	// Set viewport
+	gl_call(glViewport, 0, 0, size.width, size.height);
+
 	// Prepare the render target
-	context.clear(0.f);
+	gl_call(glClearColor, 0.f, 0.f, 0.f, 1.f);
+	gl_call(glClear, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Setup program and its uniforms
 	program_.use();
@@ -90,9 +97,8 @@ void toy_buffer::render_gl_contents(render_context &context)
 	}
 
 	// Set the current buffer resolution
-	rsize size(render_size().resolve(context.render_size()));
-	state.get<iResolution>()[0] = static_cast<float>(size.width());
-	state.get<iResolution>()[1] = static_cast<float>(size.height());
+	state.get<iResolution>()[0] = static_cast<float>(size.width);
+	state.get<iResolution>()[1] = static_cast<float>(size.height);
 
 	// Try to set iTimeDelta
 	GLint available = 0;

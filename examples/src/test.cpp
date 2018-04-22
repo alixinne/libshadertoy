@@ -1,6 +1,11 @@
 #include <cstdlib>
 #include <chrono>
 
+#include <epoxy/gl.h>
+#include <GLFW/glfw3.h>
+
+#include <shadertoy.hpp>
+
 #include "test.hpp"
 
 static bool test_initialized_ = false;

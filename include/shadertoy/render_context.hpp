@@ -16,9 +16,6 @@ class shadertoy_EXPORT render_context
 	/// Program for screen quad
 	gl::program screen_prog_;
 
-	/// Render size
-	rsize render_size_;
-
 	/// Vertex shader for screen quad
 	gl::shader screen_vs_;
 
@@ -35,15 +32,6 @@ class shadertoy_EXPORT render_context
 
 	/// Uniform state
 	shader_inputs_t state_;
-
-	/**
-	 * @brief     Ensures the given render size is valid.
-	 *
-	 * @param[in] size Size to check
-	 *
-	 * @throws shadertoy_error When the rendering size is invalid
-	 */
-	void check_render_size(rsize size);
 
 	// Callbacks
 protected:
@@ -80,23 +68,6 @@ public:
 	 */
 	inline const gl::program &screen_prog() const
 	{ return screen_prog_; }
-
-	/**
-	 * @brief      Get the rendering size of this context
-	 *
-	 * @return     Reference to the rendering size object
-	 */
-	inline const rsize &render_size() const
-	{ return render_size_; }
-
-	/**
-	 * @brief      Sets the rendering size of this context
-	 *
-	 * \p new_render_size should be a resolvable rendering size
-	 *
-	 * @param new_render_size New render size
-	 */
-	void render_size(const rsize &new_render_size); 
 
 	/**
 	 * @brief        Initializes the given swap chain
@@ -147,13 +118,6 @@ public:
 	 * @return
 	 */
 	std::vector<std::shared_ptr<bound_inputs_base>> bound_inputs(gl::program &program);
-
-	/**
-	 * @brief      Resets the current context target using the default viewport size
-	 *
-	 * @param[in]  level       Gray-level of the output
-	 */
-	void clear(float level);
 
 	/**
 	 * @brief      Render a screen quad using the current context

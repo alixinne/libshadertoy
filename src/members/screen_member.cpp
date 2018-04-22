@@ -19,9 +19,9 @@ void screen_member::render_member(swap_chain &chain, render_context &context)
 {
 	auto texptr(output(chain));
 
-	rsize vp_size(viewport_size_.resolve(context.render_size()));
+	rsize vp_size(viewport_size_->resolve());
 	gl_call(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
-	gl_call(glViewport, viewport_x_, viewport_y_, vp_size.width(), vp_size.height());
+	gl_call(glViewport, viewport_x_, viewport_y_, vp_size.width, vp_size.height);
 
 	// Use the screen program
 	context.screen_prog().use();
@@ -41,11 +41,11 @@ void screen_member::allocate_member(swap_chain &chain, render_context &context)
 {
 }
 
-screen_member::screen_member()
+screen_member::screen_member(rsize_ref &&viewport_size)
 	: sampler_(),
 	viewport_x_(0),
 	viewport_y_(0),
-	viewport_size_()
+	viewport_size_(std::move(viewport_size))
 {
 	sampler_.parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	sampler_.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);

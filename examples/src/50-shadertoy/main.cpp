@@ -19,12 +19,6 @@ namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 namespace u = shadertoy::utils;
 
-typedef struct
-{
-	shadertoy::render_context context;
-	shadertoy::swap_chain chain;
-} example_ctx;
-
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
 	// Close on ESC key press
@@ -32,16 +26,6 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
-}
-
-void set_framebuffer_size(GLFWwindow *window, int width, int height)
-{
-	// Get the context from the window user pointer
-	auto &ctx = *static_cast<example_ctx *>(glfwGetWindowUserPointer(window));
-
-	// Reallocate textures
-	ctx.context.render_size(shadertoy::rsize(width, height));
-	ctx.context.allocate_textures(ctx.chain);
 }
 
 int parse_options(string &shaderId, string &shaderApiKey, bool &dump, int argc, char **argv)
@@ -86,7 +70,7 @@ int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 	auto &state(context.state());
 
 	// Add member that renders to the screen
-	chain.push_back(std::make_shared<shadertoy::members::screen_member>());
+	chain.push_back(shadertoy::members::make_screen(shadertoy::make_size_ref(ctx.render_size)));
 
 	try
 	{
@@ -135,7 +119,7 @@ int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 		glfwSetWindowUserPointer(window, &ctx);
 
 		glfwSetKeyCallback(window, key_callback);
-		glfwSetFramebufferSizeCallback(window, set_framebuffer_size);
+		glfwSetFramebufferSizeCallback(window, example_set_framebuffer_size<example_ctx>);
 
 		while (!glfwWindowShouldClose(window))
 		{
@@ -164,7 +148,7 @@ int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 				state.get<shadertoy::iMouse>()[0] =
 					state.get<shadertoy::iMouse>()[2] = xpos;
 				state.get<shadertoy::iMouse>()[1] =
-					state.get<shadertoy::iMouse>()[3] = context.render_size().height() - ypos;
+					state.get<shadertoy::iMouse>()[3] = ctx.render_size.height - ypos;
 			}
 			else
 			{
@@ -182,7 +166,7 @@ int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 			auto renderTime = buffer->elapsed_time();
 			std::cerr << "frame time: " << renderTime
 					  << "ns fps: " << (1e9 / renderTime)
-					  << " mpx/s: " << (context.render_size().width() * context.render_size().height() / (renderTime / 1e3))
+					  << " mpx/s: " << (ctx.render_size.width * ctx.render_size.height / (renderTime / 1e3))
 					  << std::endl;
 
 			// Buffer swapping
@@ -229,14 +213,20 @@ int performRender(bool dumpShaders, Args&&... args)
 		auto &context(ctx.context);
 
 		// Set the context parameters (render size and some uniforms)
-		context.render_size(shadertoy::rsize(width, height));
+		ctx.render_size = shadertoy::rsize(width, height);
 		context.state().get<shadertoy::iTimeDelta>() = 1.0 / 60.0;
 		context.state().get<shadertoy::iFrameRate>() = 60.0;
 
 		code = load_remote(ctx.context, ctx.chain, args...);
 
 		if (code == 0)
+		{
+			for (auto member : ctx.chain.members())
+				if (auto buffer_member = std::dynamic_pointer_cast<shadertoy::members::buffer_member>(member))
+					buffer_member->buffer()->render_size(shadertoy::make_size_ref(ctx.render_size));
+
 			code = render(window, ctx, dumpShaders);
+		}
 	}
 
 	glfwDestroyWindow(window);
