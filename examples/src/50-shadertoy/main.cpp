@@ -217,16 +217,10 @@ int performRender(bool dumpShaders, Args&&... args)
 		context.state().get<shadertoy::iTimeDelta>() = 1.0 / 60.0;
 		context.state().get<shadertoy::iFrameRate>() = 60.0;
 
-		code = load_remote(ctx.context, ctx.chain, args...);
+		code = load_remote(ctx.context, ctx.chain, ctx.render_size, args...);
 
 		if (code == 0)
-		{
-			for (auto member : ctx.chain.members())
-				if (auto buffer_member = std::dynamic_pointer_cast<shadertoy::members::buffer_member>(member))
-					buffer_member->buffer()->render_size(shadertoy::make_size_ref(ctx.render_size));
-
 			code = render(window, ctx, dumpShaders);
-		}
 	}
 
 	glfwDestroyWindow(window);

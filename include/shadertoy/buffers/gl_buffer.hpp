@@ -36,15 +36,17 @@ protected:
 	 * @brief     Initializes the contents of the buffer for rendering.
 	 *
 	 * @param[in]  context Rendering context to use for shared objects
+	 * @param[in]  io      IO resource object
 	 */
-	void init_contents(render_context &context) override;
+	void init_contents(render_context &context, io_resource &io) override;
 
 	/**
 	 * @brief     Initializes the renderbuffer object for the new specified size.
 	 *
 	 * @param[in]  context Rendering context to use for shared objects
+	 * @param[in]  io      IO resource object
 	 */
-	void allocate_contents(render_context &context) override;
+	void allocate_contents(render_context &context, io_resource &io) override;
 
 	/**
 	 * @brief     Renders the contents of this buffer. This methods binds the
@@ -53,8 +55,9 @@ protected:
 	 *            the derived class.
 	 *
 	 * @param[in]  context Rendering context to use for rendering this buffer
+	 * @param[in]  io      IO resource object
 	 */
-	void render_contents(render_context &context) final;
+	void render_contents(render_context &context, io_resource &io) final;
 
 	/**
 	 * @brief     Renders the contents of this buffer to the currently bound
@@ -62,8 +65,9 @@ protected:
 	 *            by derived classes as part of their rendering routine.
 	 *
 	 * @param[in]  context Rendering context to use for rendering this buffer
+	 * @param[in]  io      IO resource object
 	 */
-	virtual void render_gl_contents(render_context &context) = 0;
+	virtual void render_gl_contents(render_context &context, io_resource &io) = 0;
 
 public:
 	/**

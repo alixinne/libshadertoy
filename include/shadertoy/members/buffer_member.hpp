@@ -5,6 +5,8 @@
 
 #include "shadertoy/members/basic_member.hpp"
 
+#include "shadertoy/io_resource.hpp"
+
 namespace shadertoy
 {
 namespace members
@@ -17,6 +19,9 @@ class shadertoy_EXPORT buffer_member : public basic_member
 {
 	/// Buffer referenced by this member
 	std::shared_ptr<buffers::basic_buffer> buffer_;
+
+	/// IO resource object that handles texture allocations
+	io_resource io_;
 
 protected:
 	/**
@@ -47,9 +52,10 @@ public:
 	/**
 	 * @brief Initializes a new buffer swap chain member
 	 *
-	 * @param buffer Associated buffer
+	 * @param buffer      Associated buffer
+	 * @param render_size Initial render size
 	 */
-	buffer_member(std::shared_ptr<buffers::basic_buffer> buffer);
+	buffer_member(std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size);
 
 	/**
 	 * @brief Get the buffer associated with this member
@@ -60,6 +66,14 @@ public:
 	{ return buffer_; }
 
 	/**
+	 * @brief Get the IO resource object that holds this member's textures
+	 * 
+	 * @return Reference to the IO resource object
+	 */
+	inline const io_resource &io() const
+	{ return io_; }
+
+	/**
 	 * @brief Returns the buffer's latest output in the current chain
 	 *
 	 * @param chain  Chain to consider for the output
@@ -67,7 +81,7 @@ public:
 	std::shared_ptr<gl::texture> output(swap_chain &chain) override;
 };
 
-std::shared_ptr<buffer_member> member_data(std::shared_ptr<buffers::basic_buffer>&& buffer);
+std::shared_ptr<buffer_member> member_data(std::shared_ptr<buffers::basic_buffer>&& buffer, rsize_ref &&render_size);
 
 }
 }

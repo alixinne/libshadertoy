@@ -3,6 +3,8 @@
 
 #include "shadertoy/pre.hpp"
 
+#include "shadertoy/io_resource.hpp"
+
 namespace shadertoy
 {
 namespace buffers
@@ -18,12 +20,6 @@ class shadertoy_EXPORT basic_buffer
 {
 	/// Buffer identifier
 	const std::string id_;
-
-	/// Source texture
-	std::shared_ptr<gl::texture> source_tex_;
-
-	/// Target texture
-	std::shared_ptr<gl::texture> target_tex_;
 
 	/// Query for iTimeDelta execution time
 	gl::query time_delta_query_;
@@ -45,8 +41,9 @@ protected:
 	 *            routine.
 	 *
 	 * @param[in]  context Rendering context to use for shared objects
+	 * @param[in]  io      IO resource object
 	 */
-	virtual void init_contents(render_context &context) = 0;
+	virtual void init_contents(render_context &context, io_resource &io) = 0;
 
 	/**
 	 * @brief     Allocates size-dependent resources for the contents of this buffer.
@@ -54,8 +51,9 @@ protected:
 	 *            rendering size changes.
 	 *
 	 * @param[in]  context Rendering context to use for shared objects
+	 * @param[in]  io      IO resource object
 	 */
-	virtual void allocate_contents(render_context &context) = 0;
+	virtual void allocate_contents(render_context &context, io_resource &io) = 0;
 
 	/**
 	 * @brief     Renders the contents of this buffer. This method must
@@ -64,8 +62,9 @@ protected:
 	 *            function is called.
 	 *
 	 * @param[in]  context Rendering context to use for rendering this buffer
+	 * @param[in]  io      IO resource object
 	 */
-	virtual void render_contents(render_context &context) = 0;
+	virtual void render_contents(render_context &context, io_resource &io) = 0;
 
 public:
 	/**
@@ -88,39 +87,26 @@ public:
 	 * @brief      Prepare the current buffer for rendering
 	 *
 	 * @param[in]  context Rendering context to use for shared objects
+	 * @param[in]  io      IO resource object
 	 */
-	void init(render_context &context);
+	void init(render_context &context, io_resource &io);
 
 	/**
 	 * @brief      Allocates the textures for this buffer. Note that the current
 	 *             contents of previous textures are discarded.
 	 *
 	 * @param[in]  context Rendering context to use for shared objects
+	 * @param[in]  io      IO resource object
 	 */
-	void allocate_textures(render_context &context);
-
-	/**
-	 * @brief      Get a reference to the source texture for this buffer
-	 *
-	 * @return     Source texture for this buffer.
-	 */
-	inline std::shared_ptr<gl::texture> source_texture() const
-	{ return source_tex_; }
-
-	/**
-	 * @brief      Get a reference to the current texture for this buffer
-	 *
-	 * @return     Target (current) texture for this buffer.
-	 */
-	inline std::shared_ptr<gl::texture> target_texture() const
-	{ return target_tex_; }
+	void allocate_textures(render_context &context, io_resource &io);
 
 	/**
 	 * @brief      Render the buffer using the current OpenGL context
 	 *
 	 * @param[in]  context Context to use for rendering this buffer
+	 * @param[in]  io      IO resource object
 	 */
-	void render(render_context &context);
+	void render(render_context &context, io_resource &io);
 
 	/**
 	 * @brief      Obtain the duration of the last rendering of this buffer, in
@@ -131,41 +117,6 @@ public:
 	 *             buffer.
 	 */
 	unsigned long long elapsed_time();
-
-	/**
-	 * @brief      Obtains the rendering size object that specifies the size of
-	 *             this buffer's output.
-	 *
-	 * @return     rsize_ref currently in use
-	 */
-	inline const rsize_ref &render_size() const { return render_size_; }
-
-	/**
-	 * @brief      Obtains the rendering size object that specifies the size of
-	 *             this buffer's output.
-	 *
-	 * @return     rsize_ref currently in use
-	 */
-	inline rsize_ref &render_size() { return render_size_; }
-
-	/**
-	 * @brief      Sets the rendering size object that specifies the size of
-	 *             this buffer's output. Note that allocate_textures must be
-	 *             called after changing this property.
-	 *
-	 * @param[in]  new_size  New rendering size object
-	 */
-	inline void render_size(rsize_ref &&new_size) { render_size_ = std::move(new_size); }
-
-private:
-	/**
-	 * Initialize a texture that can be used to render this buffer.
-	 * The size of the texture is defined by the rendering size of this buffer.
-	 *
-	 * @param context Context to use for texture allocation
-	 * @param tex     Allocated texture object reference
-	 */
-	void init_render_texture(render_context &context, std::shared_ptr<gl::texture> &tex);
 };
 }
 }

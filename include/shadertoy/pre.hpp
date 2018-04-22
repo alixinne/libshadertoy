@@ -64,6 +64,8 @@ namespace shadertoy
 	namespace members
 	{
 		class basic_member;
+		class buffer_member;
+		class screen_member;
 	}
 
 	class swap_chain;

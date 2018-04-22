@@ -142,7 +142,7 @@ void load_nonbuffer_input(std::shared_ptr<shadertoy::inputs::basic_input> &buffe
 }
 
 void load_buffer_input(std::shared_ptr<shadertoy::inputs::basic_input> &buffer_input, const Json::Value &input,
-					   std::map<std::string, std::shared_ptr<shadertoy::buffers::toy_buffer>> known_buffers, int i)
+					   std::map<std::string, std::shared_ptr<shadertoy::members::buffer_member>> known_buffers, int i)
 {
 	auto &sampler(input["sampler"]);
 
@@ -162,7 +162,7 @@ void load_buffer_input(std::shared_ptr<shadertoy::inputs::basic_input> &buffer_i
 	}
 }
 
-int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain,
+int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain, const shadertoy::rsize &size,
 				const string &shaderId, const string &shaderApiKey)
 {
 	CURL *curl = curl_easy_init();
@@ -203,8 +203,7 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 			throw runtime_error(shaderSpec["Error"].asString().c_str());
 		}
 
-		std::map<std::string, std::shared_ptr<shadertoy::buffers::toy_buffer>> known_buffers;
-		std::shared_ptr<shadertoy::buffers::toy_buffer> image_buffer;
+		std::map<std::string, std::shared_ptr<shadertoy::members::buffer_member>> known_buffers;
 
 		// Create buffer configs for each render pass
 		for (int i = 0; i < shaderSpec["Shader"]["renderpass"].size(); ++i)
@@ -247,16 +246,13 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 				load_nonbuffer_input(buffer->inputs()[channel_id], input, curl, tmpdir, i);
 			}
 
-			known_buffers.emplace(name, buffer);
+			auto member(shadertoy::members::member_data(buffer, shadertoy::make_size_ref(size)));
+			known_buffers.emplace(name, member);
 
-			if (name == "image")
-			{
-				image_buffer = buffer;
-			}
-			else
+			if (name != "image")
 			{
 				// Add to chain
-				chain.emplace_back(buffer);
+				chain.push_back(member);
 			}
 		}
 
@@ -273,7 +269,8 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 				continue;
 
 			// Fetch buffer
-			auto buffer(known_buffers[name]);
+			auto buffer_member(known_buffers[name]);
+			auto buffer(std::static_pointer_cast<shadertoy::buffers::toy_buffer>(buffer_member->buffer()));
 
 			// Load buffer inputs and apply options
 			for (int j = 0; j < pass["inputs"].size(); ++j)
@@ -287,7 +284,7 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 
 		// Add the image buffer last
 		assert(image_buffer);
-		chain.push_back(std::make_shared<shadertoy::members::buffer_member>(image_buffer));
+		chain.push_back(known_buffers["image"]);
 	}
 	catch (exception &ex)
 	{

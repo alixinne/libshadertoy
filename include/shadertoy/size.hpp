@@ -127,6 +127,13 @@ public:
 	basic_size<T> resolve() const override { return int_ref_.resolve(); }
 };
 
+/// @see size_ref_interface_ref#size_ref_interface_ref
+template <typename T>
+std::unique_ptr<size_ref_interface<T>> make_ref(const size_ref_interface<T> &int_ref)
+{
+	return std::unique_ptr<size_ref_interface_ref<T>>(int_ref);
+}
+
 /**
  * @brief Represents a size object, wrapped in a size_ref_interface
  *

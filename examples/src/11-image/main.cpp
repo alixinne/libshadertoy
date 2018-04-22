@@ -46,7 +46,6 @@ int main(int argc, char *argv[])
 
 			// Create the image buffer
 			auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image"));
-			imageBuffer->render_size(shadertoy::make_size_ref(ctx.render_size));
 			imageBuffer->source_files().push_back("../shaders/shader-image.glsl");
 
 			imageBuffer->inputs()[1] = std::make_shared<shadertoy::inputs::soil_input>("../images/vase_rect.png");
@@ -66,7 +65,7 @@ int main(int argc, char *argv[])
 			}
 
 			// Add the image buffer to the swap chain
-			chain.emplace_back(imageBuffer);
+			chain.emplace_back(imageBuffer, shadertoy::make_size_ref(ctx.render_size));
 
 			// Create a swap chain member that renders to the screen
 			chain.push_back(shadertoy::members::make_screen(shadertoy::make_size_ref(ctx.render_size)));

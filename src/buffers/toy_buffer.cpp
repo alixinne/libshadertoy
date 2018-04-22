@@ -31,7 +31,7 @@ toy_buffer::toy_buffer(const std::string &id)
 {
 }
 
-void toy_buffer::init_contents(render_context &context)
+void toy_buffer::init_contents(render_context &context, io_resource &io)
 {
 	// Attach the vertex shader for the screen quad
 	program_.attach_shader(context.screen_quad_vertex_shader());
@@ -52,10 +52,10 @@ void toy_buffer::init_contents(render_context &context)
 	bound_inputs_ = context.bound_inputs(program_);
 }
 
-void toy_buffer::render_gl_contents(render_context &context)
+void toy_buffer::render_gl_contents(render_context &context, io_resource &io)
 {
 	// Compute the rendering size
-	rsize size(render_size()->resolve());
+	rsize size(io.size());
 
 	// Set viewport
 	gl_call(glViewport, 0, 0, size.width, size.height);

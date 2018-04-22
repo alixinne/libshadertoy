@@ -120,7 +120,7 @@ int shadertoy_load(const char *shader_id, const char *shader_api_key)
 
 	// Fetch shader code
 	ctx->chain = shadertoy::swap_chain();
-	code = load_remote(ctx->context, ctx->chain, shaderId, shaderApiKey);
+	code = load_remote(ctx->context, ctx->chain, ctx->render_size, shaderId, shaderApiKey);
 
 	if (code != 0)
 		return code;
@@ -130,11 +130,6 @@ int shadertoy_load(const char *shader_id, const char *shader_api_key)
 
 	try
 	{
-		// Set member size
-		for (auto member : ctx->chain.members())
-			if (auto ptr = std::dynamic_pointer_cast<shadertoy::members::buffer_member>(member))
-				ptr->buffer()->render_size(shadertoy::make_size_ref(ctx->render_size));
-
 		// Initialize chain
 		ctx->context.init(ctx->chain);
 		u::log::shadertoy()->info("Initialized rendering swap chain");

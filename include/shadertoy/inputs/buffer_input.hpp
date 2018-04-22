@@ -16,7 +16,7 @@ namespace inputs
 class shadertoy_EXPORT buffer_input : public basic_input
 {
 	/// Reference to the buffer for this input
-	std::shared_ptr<buffers::basic_buffer> buffer_;
+	std::shared_ptr<members::buffer_member> buffer_;
 
 protected:
 	/// unused
@@ -51,14 +51,14 @@ public:
 	 *
 	 * @param buffer Buffer to use as a source
 	 */
-	buffer_input(std::shared_ptr<buffers::basic_buffer> buffer);
+	buffer_input(std::shared_ptr<members::buffer_member> buffer);
 
 	/**
 	 * @brief Obtains the source buffer for this input
 	 *
 	 * @return Pointer to the source buffer for this input
 	 */
-	inline const std::shared_ptr<buffers::basic_buffer> &buffer() const { return buffer_; }
+	inline const std::shared_ptr<members::buffer_member> &buffer() const { return buffer_; }
 
 	/**
 	 * @brief Sets the source buffer for this input
@@ -68,7 +68,7 @@ public:
 	 *
 	 * @param new_buffer New source buffer
 	 */
-	inline void buffer(std::shared_ptr<buffers::basic_buffer> new_buffer) { buffer_ = new_buffer; }
+	inline void buffer(std::shared_ptr<members::buffer_member> new_buffer) { buffer_ = new_buffer; }
 };
 }
 }

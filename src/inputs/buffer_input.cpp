@@ -6,7 +6,7 @@
 
 #include "shadertoy/gl.hpp"
 
-#include "shadertoy/buffers/basic_buffer.hpp"
+#include "shadertoy/members/buffer_member.hpp"
 #include "shadertoy/inputs/buffer_input.hpp"
 
 using namespace shadertoy;
@@ -20,7 +20,7 @@ std::shared_ptr<gl::texture> buffer_input::use_input()
 {
 	if (buffer_)
 	{
-		auto tex(buffer_->source_texture());
+		auto tex(buffer_->io().source_texture());
 
 		// TODO: a buffer not currently in use in a swap chain
 		// might not need updating its mipmaps
@@ -37,4 +37,4 @@ std::shared_ptr<gl::texture> buffer_input::use_input()
 
 buffer_input::buffer_input() : buffer_() {}
 
-buffer_input::buffer_input(std::shared_ptr<buffers::basic_buffer> buffer) : buffer_(buffer) {}
+buffer_input::buffer_input(std::shared_ptr<members::buffer_member> buffer) : buffer_(buffer) {}

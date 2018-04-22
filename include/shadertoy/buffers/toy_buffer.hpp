@@ -36,15 +36,17 @@ protected:
 	 * @brief      Initializes the contents of this buffer
 	 *
 	 * @param[in]  context Rendering context to use for shared objects
+	 * @param[in]  io      IO resource object
 	 */
-	void init_contents(render_context &context) override;
+	void init_contents(render_context &context, io_resource &io) override;
 
 	/**
 	 * @brief      Renders the contents of this buffer.
 	 *
 	 * @param[in]  context Rendering context to use for rendering this buffer
+	 * @param[in]  io      IO resource object
 	 */
-	void render_gl_contents(render_context &context) override;
+	void render_gl_contents(render_context &context, io_resource &io) override;
 
 public:
 	/**
