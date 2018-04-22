@@ -110,7 +110,7 @@ add_custom_command(
 		-P ${CMAKE_MODULE_PATH}/resources.cmake)
 
 set(shadertoy_INCLUDE_DIRS
-	${CMAKE_CURRENT_BINARY_DIR} # for Resources.h
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> # for Resources.h
 	$<BUILD_INTERFACE:${INCLUDE_DIR}>
 	$<INSTALL_INTERFACE:include>)
 
@@ -231,7 +231,10 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 	endif()
 
 	# Include directories for install
-	target_include_directories(${TARGET_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+	target_include_directories(${TARGET_NAME} INTERFACE
+		${shadertoy_INCLUDE_DIRS}
+		${Boost_INCLUDE_DIR}
+		${GLM_INCLUDE_DIRS})
 
 	# Set library file version
 	set_target_properties(${TARGET_NAME} PROPERTIES
