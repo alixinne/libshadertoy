@@ -9,5 +9,5 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 	else if (id == 2)
 		fragColor = texture(iChannel2, cd);
 	else
-		fragColor = texture(iChannel3, cd);
+		fragColor = texture(noiseChannel, cd);
 }

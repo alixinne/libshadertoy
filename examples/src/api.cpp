@@ -222,6 +222,10 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 			// Create buffer
 			auto buffer(std::make_shared<shadertoy::buffers::toy_buffer>(name));
 
+			// Create iChannel0-3 beforehand
+			for (int j = 0; j < 4; ++j)
+				buffer->inputs().emplace_back();
+
 			// Load code
 			stringstream sspath;
 			sspath << shaderId << "-" << i << ".glsl";
@@ -242,7 +246,7 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 				auto &input(pass["inputs"][j]);
 				auto channel_id(input["channel"].asInt());
 
-				load_nonbuffer_input(buffer->inputs()[channel_id], input, curl, tmpdir, i);
+				load_nonbuffer_input(buffer->inputs()[channel_id].input(), input, curl, tmpdir, i);
 			}
 
 			auto member(shadertoy::members::member_data(buffer, shadertoy::make_size_ref(size)));
@@ -277,7 +281,7 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 				auto &input(pass["inputs"][j]);
 				auto channel_id(input["channel"].asInt());
 
-				load_buffer_input(buffer->inputs()[channel_id], input, known_buffers, i);
+				load_buffer_input(buffer->inputs()[channel_id].input(), input, known_buffers, i);
 			}
 		}
 

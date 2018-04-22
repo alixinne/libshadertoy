@@ -50,16 +50,16 @@ int main(int argc, char *argv[])
 
 			shadertoy::utils::input_loader loader;
 
-			imageBuffer->inputs()[0] = loader.create("file:../images/vase_rect.exr");
-			imageBuffer->inputs()[1] = loader.create("file:../images/vase_rect.png");
-			imageBuffer->inputs()[2] = loader.create("file:../images/vase_rect.jpg");
-			// let input 3 be an error input
+			imageBuffer->inputs().emplace_back(loader.create("file:../images/vase_rect.exr")); // implicit iChannel0
+			imageBuffer->inputs().emplace_back(loader.create("file:../images/vase_rect.png")); // implicit iChannel1
+			imageBuffer->inputs().emplace_back(loader.create("file:../images/vase_rect.jpg")); // implicit iChannel2
+			imageBuffer->inputs().emplace_back("noiseChannel", loader.create("noise:?width=50&height=50"));
 
-			for (size_t i = 0; i < 3; ++i)
+			for (auto &program_input : imageBuffer->inputs())
 			{
-				imageBuffer->inputs()[i]->mag_filter(GL_LINEAR);
-				imageBuffer->inputs()[i]->min_filter(GL_LINEAR_MIPMAP_LINEAR);
-				imageBuffer->inputs()[i]->wrap(GL_REPEAT);
+				program_input.input()->mag_filter(GL_LINEAR);
+				program_input.input()->min_filter(GL_LINEAR_MIPMAP_LINEAR);
+				program_input.input()->wrap(GL_REPEAT);
 			}
 
 			// Add the image buffer to the swap chain

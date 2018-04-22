@@ -5,6 +5,10 @@
 
 #include "shadertoy/buffers/gl_buffer.hpp"
 
+#include "shadertoy/program_input.hpp"
+
+#include <deque>
+
 namespace shadertoy
 {
 namespace buffers
@@ -26,7 +30,7 @@ private:
 	std::vector<std::shared_ptr<shadertoy::bound_inputs_base>> bound_inputs_;
 
 	/// Inputs for this shader
-	std::array<std::shared_ptr<inputs::basic_input>, SHADERTOY_ICHANNEL_COUNT> inputs_;
+	std::deque<program_input> inputs_;
 
 	/// List of source files
 	std::vector<std::string> source_files_;
@@ -69,8 +73,24 @@ public:
 	 *
 	 * @return     Reference to the input array for this buffer
 	 */
-	inline std::array<std::shared_ptr<inputs::basic_input>, SHADERTOY_ICHANNEL_COUNT> &inputs()
+	inline const std::deque<program_input> &inputs() const
 	{ return inputs_; }
+
+	/**
+	 * @brief      Get a reference to the input array for this buffer
+	 *
+	 * @return     Reference to the input array for this buffer
+	 */
+	inline std::deque<program_input> &inputs()
+	{ return inputs_; }
+
+	/**
+	 * @brief     Get a reference to the source file list for this buffer
+	 *
+	 * @return    Reference to the source file for this buffer
+	 */
+	inline const std::vector<std::string> &source_files() const
+	{ return source_files_; }
 
 	/**
 	 * @brief     Get a reference to the source file list for this buffer

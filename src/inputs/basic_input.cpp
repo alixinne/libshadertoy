@@ -58,3 +58,11 @@ void basic_input::wrap(GLint new_wrap)
 	sampler_.parameter(GL_TEXTURE_WRAP_T, new_wrap);
 	sampler_.parameter(GL_TEXTURE_WRAP_R, new_wrap);
 }
+
+std::shared_ptr<gl::texture> basic_input::bind(GLuint unit)
+{
+	sampler_.bind(unit);
+	auto tex(use());
+	tex->bind_unit(unit);
+	return tex;
+}

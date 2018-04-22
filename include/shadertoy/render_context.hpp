@@ -96,11 +96,10 @@ public:
 	/**
 	 * @brief      Compiles a fragment shader for use in a ToyBuffer.
 	 *
-	 * @param[in]  id      Buffer configuration identifier.
-	 * @param      fs      Fragment shader object to compile to.
-	 * @param[in]  sources List of source files to compile in the shader
+	 * @param buffer Buffer being compiled
+	 * @param fs     Fragment shader object to compile to.
 	 */
-	void build_buffer_shader(const std::string &id, gl::shader &fs, const std::vector<std::string> &sources);
+	void build_buffer_shader(const buffers::toy_buffer &buffer, gl::shader &fs);
 
 	/**
 	 * @brief      Gets a reference to the uniform state container

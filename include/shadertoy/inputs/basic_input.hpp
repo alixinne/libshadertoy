@@ -114,6 +114,15 @@ public:
 	 * @param new_wrap New wrap parameter
 	 */
 	void wrap(GLint new_wrap);
+
+	/**
+	 * @brief Binds the sampler and its texture to the given unit
+	 *
+	 * @param unit Unit to bind to
+	 *
+	 * @return The bound texture
+	 */
+	std::shared_ptr<gl::texture> bind(GLuint unit);
 };
 }
 }

@@ -11,6 +11,7 @@
 
 #include "shadertoy/compiler/template_part.hpp"
 #include "shadertoy/compiler/define_part.hpp"
+#include "shadertoy/compiler/input_part.hpp"
 
 #include "shadertoy/inputs/error_input.hpp"
 
@@ -37,6 +38,7 @@ render_context::render_context()
 		compiler::template_part("internal:wrapper-header", std::string(wrapper_header_fsh, wrapper_header_fsh + wrapper_header_fsh_size)),
 		compiler::define_part("generated:define-wrapper"),
 		compiler::template_part("generated:shadertoy-uniform-definitions", state_.definitions_string()),
+		compiler::template_part("generated:buffer-input-definitions"),
 		compiler::template_part("input:buffer-sources"),
 		compiler::template_part("internal:wrapper-footer", std::string(wrapper_footer_fsh, wrapper_footer_fsh + wrapper_footer_fsh_size))
 	},
@@ -100,10 +102,10 @@ render_context::render_context()
 	}
 
 	// Set uniform texture units
-	state_.get<iChannel0>() = 1;
-	state_.get<iChannel1>() = 2;
-	state_.get<iChannel2>() = 3;
-	state_.get<iChannel3>() = 4;
+	state_.get<iChannel0>() = 0;
+	state_.get<iChannel1>() = 1;
+	state_.get<iChannel2>() = 2;
+	state_.get<iChannel3>() = 3;
 
 	state_.get<iChannelTime>() = { 0.f, 0.f, 0.f, 0.f };
 	state_.get<iSampleRate>() = 48000.f;
@@ -124,13 +126,13 @@ std::shared_ptr<members::basic_member> render_context::render(swap_chain &chain)
 	return chain.render(*this);
 }
 
-void render_context::build_buffer_shader(const std::string &id, gl::shader &fs,
-										 const std::vector<std::string> &sources)
+void render_context::build_buffer_shader(const buffers::toy_buffer &buffer, gl::shader &fs)
 {
 	// Load all source parts
 	auto fs_template(buffer_template_.specify({
-											  compiler::template_part::from_files("input:buffer-sources", sources),
-											  }));
+		compiler::template_part::from_files("input:buffer-sources", buffer.source_files()),
+		compiler::input_part("generated:buffer-input-definitions", buffer.inputs()),
+	}));
 
 	// Load callback sources
     load_buffer_sources(fs_template);

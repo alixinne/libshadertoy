@@ -28,7 +28,7 @@ void toy_buffer::init_contents(render_context &context, io_resource &io)
 	program_.attach_shader(context.screen_quad_vertex_shader());
 
 	// Load the fragment shader for this buffer
-	context.build_buffer_shader(id(), fs_, source_files_);
+	context.build_buffer_shader(*this, fs_);
 
 	// Attach shader
 	program_.attach_shader(fs_);
@@ -41,6 +41,14 @@ void toy_buffer::init_contents(render_context &context, io_resource &io)
 
 	// bind uniform inputs
 	bound_inputs_ = context.bound_inputs(program_);
+
+	// Set input uniform units
+	size_t current_unit = 0;
+	for (auto it = inputs_.begin(); it != inputs_.end(); ++it, ++current_unit)
+	{
+		auto location(program_.get_uniform_location(it->sampler_name().c_str()));
+		location.set_value(static_cast<GLint>(current_unit));
+	}
 }
 
 void toy_buffer::render_gl_contents(render_context &context, io_resource &io)
@@ -63,30 +71,30 @@ void toy_buffer::render_gl_contents(render_context &context, io_resource &io)
 	auto &resolutions(state.get<iChannelResolution>());
 
 	// Setup the texture targets
-	for (size_t i = 0; i < inputs_.size(); ++i)
+	size_t current_unit = 0;
+	for (auto it = inputs_.begin(); it != inputs_.end(); ++it, ++current_unit)
 	{
-		auto &input(inputs_[i]);
+		auto &input(it->input());
 
 		if (input)
 		{
-			auto &texture(*input->use());
+			auto texture(input->bind(current_unit));
 
-			input->sampler().bind(i + 1);
-			texture.bind_unit(i + 1);
-
-			texture.get_parameter(0, GL_TEXTURE_WIDTH, &resolutions[i][0]);
-			texture.get_parameter(0, GL_TEXTURE_HEIGHT, &resolutions[i][1]);
-			resolutions[i][2] = 1.0f;
+			if (current_unit < SHADERTOY_ICHANNEL_COUNT)
+			{
+				texture->get_parameter(0, GL_TEXTURE_WIDTH, &resolutions[current_unit][0]);
+				texture->get_parameter(0, GL_TEXTURE_HEIGHT, &resolutions[current_unit][1]);
+				resolutions[current_unit][2] = 1.0f;
+			}
 		}
 		else
 		{
-			auto error_input(context.error_input());
-			auto &texture(*error_input->use());
+			context.error_input()->bind(current_unit);
 
-			error_input->sampler().bind(i + 1);
-			texture.bind_unit(i + 1);
-
-			resolutions[i] = glm::vec3(0.f);
+			if (current_unit < SHADERTOY_ICHANNEL_COUNT)
+			{
+				resolutions[current_unit] = glm::vec3(0.f);
+			}
 		}
 	}
 
