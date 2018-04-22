@@ -14,6 +14,8 @@
 #include "shadertoy/inputs/jpeg_input.hpp"
 #include "shadertoy/inputs/soil_input.hpp"
 
+#include "shadertoy/inputs/noise_input.hpp"
+
 using namespace shadertoy;
 using namespace shadertoy::utils;
 
@@ -116,12 +118,36 @@ public:
 	{}
 };
 
+class noise_input_factory : public input_factory
+{
+	const std::string type_name_;
+
+public:
+	int priority() const override { return 50; }
+
+	bool supported(const std::string &spec) const override { return true; }
+
+	std::shared_ptr<inputs::basic_input> create(const std::string &spec) const override
+	{
+		return std::make_shared<inputs::noise_input>(make_size(rsize(128, 128)));
+	}
+
+	const std::string &type_name() const override { return type_name_; }
+
+	noise_input_factory()
+		: type_name_("noise")
+	{}
+};
+
+
 input_loader::input_loader()
 	: factories_()
 {
 	add(std::make_unique<soil_input_factory>());
 	add(std::make_unique<jpeg_input_factory>());
 	add(std::make_unique<exr_input_factory>());
+	
+	add(std::make_unique<noise_input_factory>());
 }
 
 void input_loader::add(std::unique_ptr<input_factory> &&factory)
