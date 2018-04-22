@@ -55,7 +55,8 @@ std::shared_ptr<gl::texture> jpeg_input::load_file(const std::string &filename, 
 		{
 			int stride = cinfo.output_width * cinfo.output_components;
 			JSAMPARRAY buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr)&cinfo, JPOOL_IMAGE, stride, 1);
-			char *imgbuf = new char[cinfo.output_height * stride];
+			std::vector<char> imgbuf_vec(cinfo.output_height * stride);
+			char *imgbuf(imgbuf_vec.data());
 
 			while (cinfo.output_scanline < cinfo.output_height)
 			{
@@ -69,8 +70,6 @@ std::shared_ptr<gl::texture> jpeg_input::load_file(const std::string &filename, 
 			texture = std::make_shared<gl::texture>(GL_TEXTURE_2D);
 			texture->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F, cinfo.output_width, cinfo.output_height,
 							  0, fmt, GL_UNSIGNED_BYTE, imgbuf);
-
-			delete[] imgbuf;
 		}
 
 		jpeg_finish_decompress(&cinfo);
