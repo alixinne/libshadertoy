@@ -286,7 +286,6 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 		}
 
 		// Add the image buffer last
-		assert(image_buffer);
 		chain.push_back(known_buffers["image"]);
 	}
 	catch (exception &ex)
