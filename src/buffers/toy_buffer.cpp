@@ -1,10 +1,3 @@
-#include <fstream>
-#include <map>
-#include <sstream>
-
-#include <boost/filesystem.hpp>
-#include <boost/variant.hpp>
-
 #include <epoxy/gl.h>
 
 #include "shadertoy/gl.hpp"
@@ -14,9 +7,6 @@
 #include "shadertoy/uniform_state.hpp"
 #include "shadertoy/buffers/toy_buffer.hpp"
 #include "shadertoy/render_context.hpp"
-
-using namespace std;
-namespace fs = boost::filesystem;
 
 using namespace shadertoy;
 using namespace shadertoy::buffers;
@@ -68,7 +58,7 @@ void toy_buffer::render_gl_contents(render_context &context, io_resource &io)
 	program_.use();
 
 	// Override values in bound inputs 0 (ShaderToy inputs)
-	auto &state(static_pointer_cast<shader_inputs_t::bound_inputs>(bound_inputs_[0])->state);
+	auto &state(std::static_pointer_cast<shader_inputs_t::bound_inputs>(bound_inputs_[0])->state);
 	auto &resolutions(state.get<iChannelResolution>());
 
 	// Setup the texture targets

@@ -1,10 +1,6 @@
-#include <cstdio>
-
 #include <epoxy/gl.h>
 
 #include <SOIL/SOIL.h>
-
-#include "shadertoy/pre.hpp"
 
 #include "shadertoy/gl.hpp"
 #include "shadertoy/utils/log.hpp"

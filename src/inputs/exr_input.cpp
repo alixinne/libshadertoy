@@ -5,8 +5,6 @@
 #include <OpenEXR/ImfRgbaFile.h>
 #endif /* LIBSHADERTOY_OPENEXR */
 
-#include "shadertoy/pre.hpp"
-
 #include "shadertoy/gl.hpp"
 #include "shadertoy/utils/log.hpp"
 

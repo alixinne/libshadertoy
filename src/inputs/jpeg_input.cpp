@@ -4,8 +4,6 @@
 
 #include <jpeglib.h>
 
-#include "shadertoy/pre.hpp"
-
 #include "shadertoy/gl.hpp"
 #include "shadertoy/utils/log.hpp"
 

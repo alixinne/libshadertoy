@@ -1,10 +1,3 @@
-#include <fstream>
-#include <map>
-#include <sstream>
-
-#include <boost/filesystem.hpp>
-#include <boost/variant.hpp>
-
 #include <epoxy/gl.h>
 
 #include "shadertoy/gl.hpp"
@@ -13,12 +6,8 @@
 #include "shadertoy/buffers/gl_buffer.hpp"
 #include "shadertoy/render_context.hpp"
 
-using namespace std;
-namespace fs = boost::filesystem;
-
 using namespace shadertoy;
 using namespace shadertoy::buffers;
-using shadertoy::gl::gl_call;
 
 gl_buffer::gl_buffer(const std::string &id)
 	: basic_buffer(id)

@@ -1,10 +1,3 @@
-#include <map>
-#include <memory>
-#include <sstream>
-#include <vector>
-
-#include <boost/variant.hpp>
-
 #include <epoxy/gl.h>
 
 #include "shadertoy/gl.hpp"
