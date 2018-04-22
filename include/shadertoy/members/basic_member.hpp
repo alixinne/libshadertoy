@@ -66,7 +66,7 @@ public:
 	 * @param chain   Current swap_chain
 	 * @param context Context to use for texture allocation
 	 */
-	void allocate_textures(const swap_chain &chain, const render_context &context);
+	void allocate(const swap_chain &chain, const render_context &context);
 
 	/**
 	 * @brief Obtains the output of this member

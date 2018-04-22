@@ -13,7 +13,7 @@ void basic_member::init(const swap_chain &chain, const render_context &context)
 	init_member(chain, context);
 }
 
-void basic_member::allocate_textures(const swap_chain &chain, const render_context &context)
+void basic_member::allocate(const swap_chain &chain, const render_context &context)
 {
 	allocate_member(chain, context);
 }

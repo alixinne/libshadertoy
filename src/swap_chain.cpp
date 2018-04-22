@@ -62,6 +62,7 @@ void swap_chain::init(const render_context &context)
 {
 	for (auto &member : members_)
 	{
+		member->allocate(*this, context);
 		member->init(*this, context);
 	}
 }
@@ -70,6 +71,6 @@ void swap_chain::allocate_textures(const render_context &context)
 {
 	for (auto &member : members_)
 	{
-		member->allocate_textures(*this, context);
+		member->allocate(*this, context);
 	}
 }

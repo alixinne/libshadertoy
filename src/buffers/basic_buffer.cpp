@@ -17,9 +17,6 @@ basic_buffer::basic_buffer(const std::string &id)
 
 void basic_buffer::init(const render_context &context, const io_resource &io)
 {
-	// Allocate render textures
-	allocate_textures(context, io);
-
 	// Initialize buffer contents
 	init_contents(context, io);
 }
