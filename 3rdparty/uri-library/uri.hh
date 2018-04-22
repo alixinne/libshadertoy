@@ -54,8 +54,8 @@ public:
   uri(char const *uri_text, scheme_category category = scheme_category::Hierarchical,
       query_argument_separator separator = query_argument_separator::ampersand) :
     m_category(category),
-    m_path_is_rooted(false),
     m_port(0),
+    m_path_is_rooted(false),
     m_separator(separator)
   {
     setup(std::string(uri_text), category);
@@ -64,8 +64,8 @@ public:
   uri(std::string const &uri_text, scheme_category category = scheme_category::Hierarchical,
       query_argument_separator separator = query_argument_separator::ampersand) : 
     m_category(category),
-    m_path_is_rooted(false),
     m_port(0),
+    m_path_is_rooted(false),
     m_separator(separator)
   {
     setup(uri_text, category);
