@@ -16,11 +16,11 @@ void buffer_input::reset_input() {}
 
 std::shared_ptr<gl::texture> buffer_input::use_input()
 {
-	if (buffer_)
+	if (member_)
 	{
-		auto tex(buffer_->io().source_texture());
+		auto tex(member_->output());
 
-		// TODO: a buffer not currently in use in a swap chain
+		// TODO: a member not currently in use in a swap chain
 		// might not need updating its mipmaps
 		if (min_filter() > GL_LINEAR)
 		{
@@ -30,9 +30,9 @@ std::shared_ptr<gl::texture> buffer_input::use_input()
 		return tex;
 	}
 
-	return std::shared_ptr<gl::texture>();
+	return {};
 }
 
-buffer_input::buffer_input() : buffer_() {}
+buffer_input::buffer_input() : member_() {}
 
-buffer_input::buffer_input(std::shared_ptr<members::buffer_member> buffer) : buffer_(buffer) {}
+buffer_input::buffer_input(std::shared_ptr<members::basic_member> member) : member_(member) {}

@@ -41,6 +41,25 @@ void screen_member::allocate_member(swap_chain &chain, render_context &context)
 {
 }
 
+std::shared_ptr<gl::texture> screen_member::output(swap_chain &chain)
+{
+	if (member_)
+	{
+		auto out(member_->output());
+		assert(out);
+		return out;
+	}
+
+	// Check that the swapchain has a last rendered-to member
+	auto before(chain.before(this));
+	assert(before);
+
+	auto texptr(before->output());
+	assert(texptr);
+
+	return texptr;
+}
+
 screen_member::screen_member(rsize_ref &&viewport_size)
 	: sampler_(),
 	viewport_x_(0),
@@ -53,16 +72,10 @@ screen_member::screen_member(rsize_ref &&viewport_size)
 	sampler_.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
-std::shared_ptr<gl::texture> screen_member::output(swap_chain &chain)
+std::shared_ptr<gl::texture> screen_member::output()
 {
-	// Check that the swapchain has a last rendered-to member
-	auto before(chain.before(this));
-	assert(before);
+	if (member_)
+		return member_->output();
 
-	auto texptr(before->output(chain));
-
-	// Check that that member has an output
-	assert(texptr);
-
-	return texptr;
+	return {};
 }

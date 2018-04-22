@@ -29,7 +29,7 @@ std::shared_ptr<gl::texture> file_input::load_image()
 		}
 	}
 
-	return std::shared_ptr<gl::texture>();
+	return {};
 }
 
 file_input::file_input() : image_input(), filename_(), vflip_(true) {}

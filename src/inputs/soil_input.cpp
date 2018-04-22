@@ -35,7 +35,7 @@ std::shared_ptr<gl::texture> soil_input::load_file(const std::string &filename, 
 		log::shadertoy()->error("Failed to load {}: {}", filename, result_string_pointer);
 
 		// If loading failed, delete the texture object
-		texture = std::shared_ptr<gl::texture>();
+		texture = {};
 	}
 #else
 	log::shadertoy()->error("Cannot load {}: SOIL support is not enabled", filename);

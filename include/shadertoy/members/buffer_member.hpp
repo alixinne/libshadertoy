@@ -75,10 +75,8 @@ public:
 
 	/**
 	 * @brief Returns the buffer's latest output in the current chain
-	 *
-	 * @param chain  Chain to consider for the output
 	 */
-	std::shared_ptr<gl::texture> output(swap_chain &chain) override;
+	std::shared_ptr<gl::texture> output() override;
 };
 
 std::shared_ptr<buffer_member> member_data(std::shared_ptr<buffers::basic_buffer>&& buffer, rsize_ref &&render_size);

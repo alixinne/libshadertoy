@@ -71,11 +71,9 @@ public:
 	/**
 	 * @brief Obtains the output of this member
 	 *
-	 * @param chain  Chain to consider for the output
-	 *
 	 * @return Output of this member, or null if this member has no output
 	 */
-	virtual std::shared_ptr<gl::texture> output(swap_chain &chain) = 0;
+	virtual std::shared_ptr<gl::texture> output() = 0;
 };
 }
 }

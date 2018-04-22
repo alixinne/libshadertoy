@@ -30,7 +30,7 @@ std::shared_ptr<members::basic_member> swap_chain::before(members::basic_member 
 		}
 	}
 
-	return std::shared_ptr<members::basic_member>();
+	return {};
 }
 
 void swap_chain::push_back(std::shared_ptr<members::basic_member> member)

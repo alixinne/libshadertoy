@@ -34,7 +34,7 @@ buffer_member::buffer_member(std::shared_ptr<buffers::basic_buffer> buffer, rsiz
 {
 }
 
-std::shared_ptr<gl::texture> buffer_member::output(swap_chain &chain)
+std::shared_ptr<gl::texture> buffer_member::output()
 {
 	return io_.source_texture();
 }

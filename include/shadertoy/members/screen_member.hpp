@@ -12,6 +12,9 @@ namespace members
 
 class shadertoy_EXPORT screen_member : public basic_member
 {
+	/// Member to render the output of
+	std::shared_ptr<basic_member> member_;
+
 	/// Sampler object to control how the texture is rendered to the screen
 	gl::sampler sampler_;
 
@@ -43,20 +46,39 @@ protected:
 	 */
 	void allocate_member(swap_chain &chain, render_context &context) override;
 
+	/// Return the associated output or the latest output in the swap chain
+	std::shared_ptr<gl::texture> output(swap_chain &chain);
+
 public:
 	/**
 	 * @brief Initializes a new instance of the screen_member class
+	 *
+	 * By default, this instance will render the last rendered output in the
+	 * current swap chain.
 	 *
 	 * @param viewport_size Initial viewport size
 	 */
 	screen_member(rsize_ref &&viewport_size);
 
 	/**
+	 * @brief Initializes a new instance of the screen_member class
+	 *
+	 * By default, this instance will render the associated output instead
+	 * of the last rendered output in the current swap chain.
+	 *
+	 * @param viewport_size Initial viewport size
+	 * @param member        Target member
+	 */
+	screen_member(rsize_ref &&viewport_size, std::shared_ptr<members::basic_member> member);
+
+	/**
 	 * @brief Returns the same output that will be drawn to the screen
 	 *
-	 * @param chain  Chain to consider for the output
+	 * Note that unless an explicit output has been associated to this member,
+	 * this method will return null since in the absence of a swap chain, the
+	 * "latest" output is not defined.
 	 */
-	std::shared_ptr<gl::texture> output(swap_chain &chain) override;
+	std::shared_ptr<gl::texture> output() override;
 
 	/**
 	 * @brief Obtains a reference to the sampler object of this member
