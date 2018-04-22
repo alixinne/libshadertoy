@@ -33,6 +33,9 @@ class shadertoy_EXPORT render_context
 	/// Uniform state
 	shader_inputs_t state_;
 
+	/// Default error input
+	std::shared_ptr<inputs::error_input> error_input_;
+
 	// Callbacks
 protected:
 	/**
@@ -110,6 +113,12 @@ public:
 	 */
 	inline compiler::shader_template &buffer_template()
 	{ return buffer_template_; }
+
+	/**
+	 * @brief     Gets a reference to the default error_input instance
+	 */
+	inline const std::shared_ptr<inputs::error_input> &error_input()
+	{ return error_input_; }
 
 	/**
 	 * @brief      Binds uniforms to an actual program, returning the handle object to these bound uniforms.

@@ -3,6 +3,7 @@
 #include "shadertoy/gl.hpp"
 
 #include "shadertoy/inputs/basic_input.hpp"
+#include "shadertoy/inputs/error_input.hpp"
 
 #include "shadertoy/uniform_state.hpp"
 #include "shadertoy/buffers/toy_buffer.hpp"
@@ -79,8 +80,11 @@ void toy_buffer::render_gl_contents(render_context &context, io_resource &io)
 		}
 		else
 		{
-			gl_call(glBindTextureUnit, i + 1, 0);
-			gl_call(glBindSampler, i + 1, 0);
+			auto error_input(context.error_input());
+			auto &texture(*error_input->use());
+
+			error_input->sampler().bind(i + 1);
+			texture.bind_unit(i + 1);
 
 			resolutions[i] = glm::vec3(0.f);
 		}

@@ -12,7 +12,7 @@
 #include "shadertoy/compiler/template_part.hpp"
 #include "shadertoy/compiler/define_part.hpp"
 
-#include "shadertoy/inputs/buffer_input.hpp"
+#include "shadertoy/inputs/error_input.hpp"
 
 #include "shadertoy/members/buffer_member.hpp"
 #include "shadertoy/swap_chain.hpp"
@@ -39,7 +39,8 @@ render_context::render_context()
 		compiler::template_part("generated:shadertoy-uniform-definitions", state_.definitions_string()),
 		compiler::template_part("input:buffer-sources"),
 		compiler::template_part("internal:wrapper-footer", std::string(wrapper_footer_fsh, wrapper_footer_fsh + wrapper_footer_fsh_size))
-	}
+	},
+	error_input_(std::make_shared<inputs::error_input>())
 {
 	// Prepare screen quad geometry
 	GLfloat coords[] = {

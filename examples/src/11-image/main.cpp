@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 			imageBuffer->inputs()[0] = loader.create("file:../images/vase_rect.exr");
 			imageBuffer->inputs()[1] = loader.create("file:../images/vase_rect.png");
 			imageBuffer->inputs()[2] = loader.create("file:../images/vase_rect.jpg");
-			imageBuffer->inputs()[3] = std::make_shared<shadertoy::inputs::error_input>();
+			// let input 3 be an error input
 
 			for (size_t i = 0; i < 3; ++i)
 			{
