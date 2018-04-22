@@ -133,6 +133,9 @@ void load_nonbuffer_input(std::shared_ptr<shadertoy::inputs::basic_input> &buffe
 
 		apply_sampler_options(buffer_input, sampler);
 	}
+	else if (input["ctype"].compare("buffer") == 0)
+	{
+	}
 	else
 	{
 		u::log::shadertoy()->warn("Unsupported input {} for pass {}, input {}",
