@@ -120,17 +120,16 @@ void load_nonbuffer_input(std::shared_ptr<shadertoy::inputs::basic_input> &buffe
 			u::log::shadertoy()->info("Using cache for {}", url);
 		}
 
-		auto extension(dstpath.extension().string());
-		std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+		shadertoy::utils::input_loader loader;
 
-		std::shared_ptr<shadertoy::inputs::file_input> file_input;
-		if (extension == ".jpeg" || extension == ".jpg")
-			file_input = std::make_shared<shadertoy::inputs::jpeg_input>(dstpath.string());
-		else
-			file_input = std::make_shared<shadertoy::inputs::soil_input>(dstpath.string());
+		auto uri(dstpath.string());
+		std::transform(uri.begin(), uri.end(), uri.begin(), [](char cc)
+			{ if (cc == '\\') return '/'; return cc; });
 
-		file_input->vflip(sampler["vflip"].compare("true") == 0);
-		buffer_input = file_input;
+		buffer_input = loader.create("file:///" + uri);
+
+		if (buffer_input)
+			std::static_pointer_cast<shadertoy::inputs::file_input>(buffer_input)->vflip(sampler["vflip"].compare("true") == 0);
 
 		apply_sampler_options(buffer_input, sampler);
 	}

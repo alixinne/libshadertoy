@@ -84,6 +84,13 @@ add_custom_command(OUTPUT ${POLYMORPHIC_VALUE_INCLUDE}
 				   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/shadertoy
 				   COMMAND ${CMAKE_COMMAND} -E copy ${POLYMORPHIC_VALUE_DIR}/polymorphic_value.h ${CMAKE_CURRENT_BINARY_DIR}/shadertoy)
 
+# uri.hh
+set(URI_LIBRARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/uri-library)
+set(URI_LIBRARY_MAIN_INCLUDE ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/uri.hpp)
+add_custom_command(OUTPUT ${URI_LIBRARY_MAIN_INCLUDE}
+				   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/shadertoy
+				   COMMAND ${CMAKE_COMMAND} -E copy ${URI_LIBRARY_DIR}/uri.hh ${URI_LIBRARY_MAIN_INCLUDE})
+
 # libsoil
 find_package(SOIL)
 
@@ -123,7 +130,8 @@ add_library(shadertoy-objects OBJECT
 
 	${CMAKE_CURRENT_BINARY_DIR}/resources.c
 	${POLYMORPHIC_VALUE_INCLUDE}
-	${SPDLOG_MAIN_INCLUDE})
+	${SPDLOG_MAIN_INCLUDE}
+	${URI_LIBRARY_MAIN_INCLUDE})
 
 # Include directories
 target_include_directories(shadertoy-objects PRIVATE

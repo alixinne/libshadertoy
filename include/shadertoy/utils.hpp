@@ -4,4 +4,6 @@
 #include "shadertoy/utils/dump_program.hpp"
 #include "shadertoy/utils/log.hpp"
 
+#include "shadertoy/utils/input_loader.hpp"
+
 #endif /* _SHADERTOY_UTILS_HPP_ */
