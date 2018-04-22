@@ -50,3 +50,5 @@ std::shared_ptr<gl::texture> exr_input::load_file(const std::string &filename, b
 exr_input::exr_input() : file_input() {}
 
 exr_input::exr_input(const std::string &filename) : file_input(filename) {}
+
+bool exr_input::supported() { return LIBSHADERTOY_OPENEXR; }

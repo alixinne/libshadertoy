@@ -1,8 +1,10 @@
-#include <cstdio>
 
 #include <epoxy/gl.h>
 
+#if LIBSHADERTOY_JPEG
+#include <cstdio>
 #include <jpeglib.h>
+#endif /* LIBSHADERTOY_JPEG */
 
 #include "shadertoy/gl.hpp"
 #include "shadertoy/utils/log.hpp"
@@ -17,6 +19,7 @@ std::shared_ptr<gl::texture> jpeg_input::load_file(const std::string &filename, 
 {
 	std::shared_ptr<gl::texture> texture;
 
+#if LIBSHADERTOY_JPEG
 	// use libjpeg
 	FILE *infile;
 	if ((infile = fopen(filename.c_str(), "rb")) == NULL)
@@ -74,6 +77,9 @@ std::shared_ptr<gl::texture> jpeg_input::load_file(const std::string &filename, 
 		jpeg_destroy_decompress(&cinfo);
 		fclose(infile);
 	}
+#else /* LIBSHADERTOY_JPEG */
+	log::shadertoy()->error("Cannot load {}: JPEG support is not enabled", filename);
+#endif /* LIBSHADERTOY_JPEG */
 
 	return texture;
 }
@@ -81,3 +87,5 @@ std::shared_ptr<gl::texture> jpeg_input::load_file(const std::string &filename, 
 jpeg_input::jpeg_input() : file_input() {}
 
 jpeg_input::jpeg_input(const std::string &filename) : file_input(filename) {}
+
+bool jpeg_input::supported() { return LIBSHADERTOY_JPEG; }

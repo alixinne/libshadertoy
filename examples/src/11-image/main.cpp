@@ -48,15 +48,11 @@ int main(int argc, char *argv[])
 			auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image"));
 			imageBuffer->source_files().push_back("../shaders/shader-image.glsl");
 
+			imageBuffer->inputs()[0] = std::make_shared<shadertoy::inputs::exr_input>("../images/vase_rect.exr");
 			imageBuffer->inputs()[1] = std::make_shared<shadertoy::inputs::soil_input>("../images/vase_rect.png");
 			imageBuffer->inputs()[2] = std::make_shared<shadertoy::inputs::jpeg_input>("../images/vase_rect.jpg");
 			imageBuffer->inputs()[3] = std::make_shared<shadertoy::inputs::error_input>();
 
-#if LIBSHADERTOY_OPENEXR
-			imageBuffer->inputs()[0] = std::make_shared<shadertoy::inputs::exr_input>("../images/vase_rect.exr");
-#else
-			imageBuffer->inputs()[0] = std::make_shared<shadertoy::inputs::error_input>();
-#endif
 			for (size_t i = 0; i < 3; ++i)
 			{
 				imageBuffer->inputs()[i]->mag_filter(GL_LINEAR);

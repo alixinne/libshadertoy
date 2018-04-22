@@ -43,6 +43,13 @@ public:
 	 * @param filename Filename to load the image from
 	 */
 	explicit jpeg_input(const std::string &filename);
+
+	/**
+	 * @brief Get a value indicating if this input type is supported
+	 *
+	 * @return true if it is supported, false otherwise
+	 */
+	static bool supported();
 };
 }
 }

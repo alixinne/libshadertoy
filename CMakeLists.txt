@@ -35,8 +35,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Required packages
 find_package(Boost 1.54 REQUIRED COMPONENTS filesystem date_time)
 find_package(OpenGL REQUIRED)
-find_package(SOIL REQUIRED)
-find_package(JPEG REQUIRED)
 
 find_package(PkgConfig REQUIRED)
 
@@ -86,6 +84,12 @@ add_custom_command(OUTPUT ${POLYMORPHIC_VALUE_INCLUDE}
 				   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/shadertoy
 				   COMMAND ${CMAKE_COMMAND} -E copy ${POLYMORPHIC_VALUE_DIR}/polymorphic_value.h ${CMAKE_CURRENT_BINARY_DIR}/shadertoy)
 
+# libsoil
+find_package(SOIL)
+
+# libjpeg
+find_package(JPEG)
+
 # libopenexr
 pkg_search_module(OpenEXR OpenEXR)
 if (OpenEXR_FOUND)
@@ -127,9 +131,31 @@ target_include_directories(shadertoy-objects PRIVATE
 	${Boost_INCLUDE_DIR}
 	${OPENGL_INCLUDE_DIRS}
 	${EPOXY_INCLUDE_DIRS}
-	${GLM_INCLUDE_DIRS}
-	${SOIL_INCLUDE_DIRS}
-	${JPEG_INCLUDE_DIRS})
+	${GLM_INCLUDE_DIRS})
+
+if (SOIL_FOUND)
+	message("-- Building with SOIL support")
+	target_include_directories(shadertoy-objects PRIVATE
+		${SOIL_INCLUDE_DIRS})
+	target_compile_definitions(shadertoy-objects PRIVATE
+		LIBSHADERTOY_SOIL=1)
+else()
+	message("-- Building without SOIL support")
+	target_compile_definitions(shadertoy-objects PRIVATE
+		LIBSHADERTOY_SOIL=0)
+endif()
+
+if (JPEG_FOUND)
+	message("-- Building with JPEG support")
+	target_include_directories(shadertoy-objects PRIVATE
+		${JPEG_INCLUDE_DIRS})
+	target_compile_definitions(shadertoy-objects PRIVATE
+		LIBSHADERTOY_JPEG=1)
+else()
+	message("-- Building without SOIL support")
+	target_compile_definitions(shadertoy-objects PRIVATE
+		LIBSHADERTOY_JPEG=0)
+endif()
 
 if (OpenEXR_FOUND)
 	message("-- Building with OpenEXR support")
@@ -184,13 +210,6 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 		target_link_libraries(${TARGET_NAME} PRIVATE ${UNWIND_LIBRARIES} unwind-${UNWIND_ARCH})
 	endif()
 
-	# Add OpenEXR define
-	if (OpenEXR_FOUND)
-		target_compile_definitions(${TARGET_NAME} INTERFACE LIBSHADERTOY_OPENEXR=1)
-	else()
-		target_compile_definitions(${TARGET_NAME} INTERFACE LIBSHADERTOY_OPENEXR=0)
-	endif()
-
 	# Link dependencies
 	target_link_libraries(${TARGET_NAME} PUBLIC
 		${Boost_LIBRARIES}
@@ -199,9 +218,16 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 		${JPEG_LIBRARIES}
 		${SOIL_LIBRARIES})
 
+	if (SOIL_FOUND)
+		target_link_libraries(${TARGET_NAME} PUBLIC ${SOIL_LIBRARIES})
+	endif()
+
+	if (JPEG_FOUND)
+		target_link_libraries(${TARGET_NAME} PUBLIC ${JPEG_LIBRARIES})
+	endif()
+
 	if (OpenEXR_FOUND)
-		target_link_libraries(${TARGET_NAME} PUBLIC
-			${OpenEXR_LIBRARIES})
+		target_link_libraries(${TARGET_NAME} PUBLIC ${OpenEXR_LIBRARIES})
 	endif()
 
 	# Include directories for install

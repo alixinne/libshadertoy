@@ -1,4 +1,3 @@
-
 #ifndef _SHADERTOY_INPUTS_SOIL_INPUT_HPP_
 #define _SHADERTOY_INPUTS_SOIL_INPUT_HPP_
 
@@ -44,6 +43,13 @@ public:
 	 * @param filename Filename to load the image from
 	 */
 	explicit soil_input(const std::string &filename);
+
+	/**
+	 * @brief Get a value indicating if this input type is supported
+	 *
+	 * @return true if it is supported, false otherwise
+	 */
+	static bool supported();
 };
 }
 }

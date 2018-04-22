@@ -1,6 +1,8 @@
 #include <epoxy/gl.h>
 
+#if LIBSHADERTOY_SOIL
 #include <SOIL/SOIL.h>
+#endif /* LIBSHADERTOY_SOIL */
 
 #include "shadertoy/gl.hpp"
 #include "shadertoy/utils/log.hpp"
@@ -19,7 +21,10 @@ extern char *result_string_pointer;
 std::shared_ptr<gl::texture> soil_input::load_file(const std::string &filename, bool vflip)
 {
 	// Create a texture object
-	std::shared_ptr<gl::texture> texture(std::make_shared<gl::texture>(GL_TEXTURE_2D));
+	std::shared_ptr<gl::texture> texture;
+	
+#if LIBSHADERTOY_SOIL
+	texture = std::make_shared<gl::texture>(GL_TEXTURE_2D);
 
 	// Load image into texture object using SOIL
 	GLuint texid = SOIL_load_OGL_texture(filename.c_str(), SOIL_LOAD_AUTO, GLuint(*texture),
@@ -32,6 +37,9 @@ std::shared_ptr<gl::texture> soil_input::load_file(const std::string &filename, 
 		// If loading failed, delete the texture object
 		texture = std::shared_ptr<gl::texture>();
 	}
+#else
+	log::shadertoy()->error("Cannot load {}: SOIL support is not enabled", filename);
+#endif /* LIBSHADERTOY_SOIL */
 
 	return texture;
 }
@@ -39,3 +47,5 @@ std::shared_ptr<gl::texture> soil_input::load_file(const std::string &filename, 
 soil_input::soil_input() : file_input() {}
 
 soil_input::soil_input(const std::string &filename) : file_input(filename) {}
+
+bool soil_input::supported() { return LIBSHADERTOY_SOIL; }
