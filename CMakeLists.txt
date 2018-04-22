@@ -73,6 +73,7 @@ add_subdirectory(${SPDLOG_DIR} EXCLUDE_FROM_ALL)
 # Copy headers to include directory for build
 set(SPDLOG_MAIN_INCLUDE ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog/spdlog.h)
 add_custom_command(OUTPUT ${SPDLOG_MAIN_INCLUDE}
+				   MAIN_DEPENDENCY ${SPDLOG_DIR}/include/spdlog/spdlog.h
 				   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog
 				   COMMAND ${CMAKE_COMMAND} -E copy_directory ${SPDLOG_DIR}/include/spdlog ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog)
 
@@ -81,6 +82,7 @@ add_subdirectory(${POLYMORPHIC_VALUE_DIR} EXCLUDE_FROM_ALL)
 
 set(POLYMORPHIC_VALUE_INCLUDE ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/polymorphic_value.h)
 add_custom_command(OUTPUT ${POLYMORPHIC_VALUE_INCLUDE}
+				   MAIN_DEPENDENCY ${POLYMORPHIC_VALUE_DIR}/polymorphic_value.h
 				   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/shadertoy
 				   COMMAND ${CMAKE_COMMAND} -E copy ${POLYMORPHIC_VALUE_DIR}/polymorphic_value.h ${CMAKE_CURRENT_BINARY_DIR}/shadertoy)
 
@@ -88,6 +90,7 @@ add_custom_command(OUTPUT ${POLYMORPHIC_VALUE_INCLUDE}
 set(URI_LIBRARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/uri-library)
 set(URI_LIBRARY_MAIN_INCLUDE ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/uri.hpp)
 add_custom_command(OUTPUT ${URI_LIBRARY_MAIN_INCLUDE}
+				   MAIN_DEPENDENCY ${URI_LIBRARY_DIR}/uri.hh
 				   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/shadertoy
 				   COMMAND ${CMAKE_COMMAND} -E copy ${URI_LIBRARY_DIR}/uri.hh ${URI_LIBRARY_MAIN_INCLUDE})
 
