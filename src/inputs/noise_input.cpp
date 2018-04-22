@@ -27,6 +27,8 @@ void noise_input::load_input()
 
 	texture_->parameter(GL_TEXTURE_SWIZZLE_B, GL_RED);
 	texture_->parameter(GL_TEXTURE_SWIZZLE_G, GL_RED);
+
+	texture_->generate_mipmap();
 }
 
 void noise_input::reset_input() { texture_.reset(); }

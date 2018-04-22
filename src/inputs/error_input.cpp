@@ -28,6 +28,8 @@ void error_input::load_input()
 	wrap(GL_REPEAT);
 
 	texture_->parameter(GL_TEXTURE_SWIZZLE_B, GL_RED);
+
+	texture_->generate_mipmap();
 }
 
 void error_input::reset_input() { texture_.reset(); }
