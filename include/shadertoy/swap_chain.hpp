@@ -90,7 +90,7 @@ public:
 	 *
 	 * @return Pointer to the latest rendered member
 	 */
-	std::shared_ptr<members::basic_member> render(render_context &context,
+	std::shared_ptr<members::basic_member> render(const render_context &context,
 												  std::shared_ptr<members::basic_member> target 
 													= std::shared_ptr<members::basic_member>());
 
@@ -99,14 +99,14 @@ public:
 	 *
 	 * @param context Context used for initialization
 	 */
-	void init(render_context &context);
+	void init(const render_context &context);
 
 	/**
 	 * @brief Allocates the textures for all the members of this swap chain
 	 *
 	 * @param context Context used to allocate textures
 	 */
-	void allocate_textures(render_context &context);
+	void allocate_textures(const render_context &context);
 };
 }
 

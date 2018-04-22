@@ -10,7 +10,7 @@
 
 using namespace shadertoy;
 
-std::vector<char> utils::dump_program(gl::program &program)
+std::vector<char> utils::dump_program(const gl::program &program)
 {
 	// Allocate buffer
 	GLint len, actLen;

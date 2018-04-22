@@ -40,7 +40,7 @@ bool uniform_location::is_active() const
 	return location_ != -1;
 }
 
-bool uniform_location::set_value(const GLint &v0)
+bool uniform_location::set_value(const GLint &v0) const
 {
 	if (is_active())
 	{
@@ -51,7 +51,7 @@ bool uniform_location::set_value(const GLint &v0)
 	return false;
 }
 
-bool uniform_location::set_value(const GLfloat &v0)
+bool uniform_location::set_value(const GLfloat &v0) const
 {
 	if (is_active())
 	{
@@ -62,7 +62,7 @@ bool uniform_location::set_value(const GLfloat &v0)
 	return false;
 }
 
-bool uniform_location::set_value(const glm::vec2 &v)
+bool uniform_location::set_value(const glm::vec2 &v) const
 {
 	if (is_active())
 	{
@@ -73,7 +73,7 @@ bool uniform_location::set_value(const glm::vec2 &v)
 	return false;
 }
 
-bool uniform_location::set_value(const glm::vec3 &v)
+bool uniform_location::set_value(const glm::vec3 &v) const
 {
 	if (is_active())
 	{
@@ -84,7 +84,7 @@ bool uniform_location::set_value(const glm::vec3 &v)
 	return false;
 }
 
-bool uniform_location::set_value(const glm::vec4 &v)
+bool uniform_location::set_value(const glm::vec4 &v) const
 {
 	if (is_active())
 	{
@@ -95,7 +95,7 @@ bool uniform_location::set_value(const glm::vec4 &v)
 	return false;
 }
 
-bool uniform_location::set_value(size_t count, const GLint *v0)
+bool uniform_location::set_value(size_t count, const GLint *v0) const
 {
 	if (is_active())
 	{
@@ -106,7 +106,7 @@ bool uniform_location::set_value(size_t count, const GLint *v0)
 	return false;
 }
 
-bool uniform_location::set_value(size_t count, const GLfloat *v0)
+bool uniform_location::set_value(size_t count, const GLfloat *v0) const
 {
 	if (is_active())
 	{
@@ -117,7 +117,7 @@ bool uniform_location::set_value(size_t count, const GLfloat *v0)
 	return false;
 }
 
-bool uniform_location::set_value(size_t count, const glm::vec2 *v)
+bool uniform_location::set_value(size_t count, const glm::vec2 *v) const
 {
 	if (is_active())
 	{
@@ -128,7 +128,7 @@ bool uniform_location::set_value(size_t count, const glm::vec2 *v)
 	return false;
 }
 
-bool uniform_location::set_value(size_t count, const glm::vec3 *v)
+bool uniform_location::set_value(size_t count, const glm::vec3 *v) const
 {
 	if (is_active())
 	{
@@ -139,7 +139,7 @@ bool uniform_location::set_value(size_t count, const glm::vec3 *v)
 	return false;
 }
 
-bool uniform_location::set_value(size_t count, const glm::vec4 *v)
+bool uniform_location::set_value(size_t count, const glm::vec4 *v) const
 {
 	if (is_active())
 	{
@@ -193,13 +193,13 @@ void program::validate() const
 	}
 }
 
-uniform_location program::get_uniform_location(const GLchar *name)
+uniform_location program::get_uniform_location(const GLchar *name) const
 {
 	GLint location = gl_call(glGetUniformLocation, GLuint(*this), name);
 	return uniform_location(*this, location);
 }
 
-attrib_location program::get_attrib_location(const GLchar *name)
+attrib_location program::get_attrib_location(const GLchar *name) const
 {
 	GLint location = gl_call(glGetAttribLocation, GLuint(*this), name);
 	return attrib_location(*this, location);

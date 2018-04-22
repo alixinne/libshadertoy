@@ -15,7 +15,7 @@ basic_buffer::basic_buffer(const std::string &id)
 {
 }
 
-void basic_buffer::init(render_context &context, io_resource &io)
+void basic_buffer::init(const render_context &context, const io_resource &io)
 {
 	// Allocate render textures
 	allocate_textures(context, io);
@@ -24,22 +24,16 @@ void basic_buffer::init(render_context &context, io_resource &io)
 	init_contents(context, io);
 }
 
-void basic_buffer::allocate_textures(render_context &context, io_resource &io)
+void basic_buffer::allocate_textures(const render_context &context, const io_resource &io)
 {
-	// Initialize buffer textures
-	io.allocate();
-
 	// Allocate content resources
 	allocate_contents(context, io);
 }
 
-void basic_buffer::render(render_context &context, io_resource &io)
+void basic_buffer::render(const render_context &context, const io_resource &io)
 {
 	// Render the contents of this buffer
 	render_contents(context, io);
-
-	// Swap texture object pointers
-	io.swap();
 }
 
 unsigned long long basic_buffer::elapsed_time()

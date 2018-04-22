@@ -13,18 +13,24 @@
 using namespace shadertoy;
 using namespace shadertoy::members;
 
-void buffer_member::render_member(swap_chain &chain, render_context &context)
+void buffer_member::render_member(const swap_chain &chain, const render_context &context)
 {
 	buffer_->render(context, io_);
+
+	// Swap texture object pointers
+	io_.swap();
 }
 
-void buffer_member::init_member(swap_chain &chain, render_context &context)
+void buffer_member::init_member(const swap_chain &chain, const render_context &context)
 {
 	buffer_->init(context, io_);
 }
 
-void buffer_member::allocate_member(swap_chain &chain, render_context &context)
+void buffer_member::allocate_member(const swap_chain &chain, const render_context &context)
 {
+	// Initialize buffer textures
+	io_.allocate();
+
 	buffer_->allocate_textures(context, io_);
 }
 

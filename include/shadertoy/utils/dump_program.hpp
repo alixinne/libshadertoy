@@ -8,7 +8,7 @@ namespace shadertoy
 namespace utils
 {
 
-std::vector<char> dump_program(gl::program &program);
+std::vector<char> dump_program(const gl::program &program);
 }
 }
 

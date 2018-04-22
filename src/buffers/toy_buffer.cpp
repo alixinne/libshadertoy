@@ -22,7 +22,7 @@ toy_buffer::toy_buffer(const std::string &id)
 {
 }
 
-void toy_buffer::init_contents(render_context &context, io_resource &io)
+void toy_buffer::init_contents(const render_context &context, const io_resource &io)
 {
 	// Attach the vertex shader for the screen quad
 	program_.attach_shader(context.screen_quad_vertex_shader());
@@ -51,7 +51,7 @@ void toy_buffer::init_contents(render_context &context, io_resource &io)
 	}
 }
 
-void toy_buffer::render_gl_contents(render_context &context, io_resource &io)
+void toy_buffer::render_gl_contents(const render_context &context, const io_resource &io)
 {
 	// Compute the rendering size
 	rsize size(io.size());
@@ -66,41 +66,42 @@ void toy_buffer::render_gl_contents(render_context &context, io_resource &io)
 	// Setup program and its uniforms
 	program_.use();
 
+	// Apply context-level uniforms
+	for (auto &inputs : bound_inputs_)
+        inputs->apply();
+
 	// Override values in bound inputs 0 (ShaderToy inputs)
-	auto &state(std::static_pointer_cast<shader_inputs_t::bound_inputs>(bound_inputs_[0])->state);
-	auto &resolutions(state.get<iChannelResolution>());
+	auto &state(*std::static_pointer_cast<shader_inputs_t::bound_inputs>(bound_inputs_[0]));
+	std::array<glm::vec3, SHADERTOY_ICHANNEL_COUNT> resolutions(state.get<iChannelResolution>());
 
 	// Setup the texture targets
 	size_t current_unit = 0;
 	for (auto it = inputs_.begin(); it != inputs_.end(); ++it, ++current_unit)
 	{
 		auto &input(it->input());
+		glm::vec3 sz(0.f);
 
 		if (input)
 		{
 			auto texture(input->bind(current_unit));
 
-			if (current_unit < SHADERTOY_ICHANNEL_COUNT)
-			{
-				texture->get_parameter(0, GL_TEXTURE_WIDTH, &resolutions[current_unit][0]);
-				texture->get_parameter(0, GL_TEXTURE_HEIGHT, &resolutions[current_unit][1]);
-				resolutions[current_unit][2] = 1.0f;
-			}
+			texture->get_parameter(0, GL_TEXTURE_WIDTH, &sz.x);
+			texture->get_parameter(0, GL_TEXTURE_HEIGHT, &sz.y);
+			sz.z = 1.0f;
 		}
 		else
 		{
 			context.error_input()->bind(current_unit);
-
-			if (current_unit < SHADERTOY_ICHANNEL_COUNT)
-			{
-				resolutions[current_unit] = glm::vec3(0.f);
-			}
 		}
+
+		if (current_unit < SHADERTOY_ICHANNEL_COUNT)
+			resolutions[current_unit] = sz;
 	}
 
+	state.set<iChannelResolution>(resolutions);
+
 	// Set the current buffer resolution
-	state.get<iResolution>()[0] = static_cast<float>(size.width);
-	state.get<iResolution>()[1] = static_cast<float>(size.height);
+	state.set<iResolution>(glm::vec3(size.width, size.height, 1.f));
 
 	// Try to set iTimeDelta
 	GLint available = 0;
@@ -110,12 +111,8 @@ void toy_buffer::render_gl_contents(render_context &context, io_resource &io)
 		// Result available, set uniform value
 		GLuint64 timeDelta;
 		time_delta_query().get_object_ui64v(GL_QUERY_RESULT, &timeDelta);
-		state.get<iTimeDelta>() = timeDelta / 1e9;
+		state.set<iTimeDelta>(timeDelta / 1e9);
 	}
-
-	// Set all uniforms
-	for (auto &inputs : bound_inputs_)
-        inputs->apply();
 
 	// Render the program
     context.render_screen_quad(time_delta_query());

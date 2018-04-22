@@ -38,7 +38,7 @@ protected:
 	 * @param[in]  context Rendering context to use for shared objects
 	 * @param[in]  io      IO resource object
 	 */
-	void init_contents(render_context &context, io_resource &io) override;
+	void init_contents(const render_context &context, const io_resource &io) override;
 
 	/**
 	 * @brief     Initializes the renderbuffer object for the new specified size.
@@ -46,7 +46,7 @@ protected:
 	 * @param[in]  context Rendering context to use for shared objects
 	 * @param[in]  io      IO resource object
 	 */
-	void allocate_contents(render_context &context, io_resource &io) override;
+	void allocate_contents(const render_context &context, const io_resource &io) override;
 
 	/**
 	 * @brief     Renders the contents of this buffer. This methods binds the
@@ -57,7 +57,7 @@ protected:
 	 * @param[in]  context Rendering context to use for rendering this buffer
 	 * @param[in]  io      IO resource object
 	 */
-	void render_contents(render_context &context, io_resource &io) final;
+	void render_contents(const render_context &context, const io_resource &io) final;
 
 	/**
 	 * @brief     Renders the contents of this buffer to the currently bound
@@ -67,7 +67,7 @@ protected:
 	 * @param[in]  context Rendering context to use for rendering this buffer
 	 * @param[in]  io      IO resource object
 	 */
-	virtual void render_gl_contents(render_context &context, io_resource &io) = 0;
+	virtual void render_gl_contents(const render_context &context, const io_resource &io) = 0;
 
 public:
 	/**
@@ -75,7 +75,7 @@ public:
 	 *
 	 * @return Reference to the framebuffer object
 	 */
-	inline gl::framebuffer &target_fbo()
+	inline const gl::framebuffer &target_fbo() const
 	{ return target_fbo_; }
 
 	/**
@@ -83,7 +83,7 @@ public:
 	 *
 	 * @return Reference to the renderbuffer object
 	 */
-	inline gl::renderbuffer &target_rbo()
+	inline const gl::renderbuffer &target_rbo() const
 	{ return target_rbo_; }
 };
 }

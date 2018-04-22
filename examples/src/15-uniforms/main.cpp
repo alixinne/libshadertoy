@@ -27,7 +27,7 @@ class example_render_context : public shadertoy::render_context {
 
 	// After compiling a program, bind the inputs from the extra state into the program
 	void bind_inputs(std::vector<std::shared_ptr<shadertoy::bound_inputs_base>> &inputs,
-		shadertoy::gl::program &program) override
+		const shadertoy::gl::program &program) const override
 	{
 		inputs.push_back(extra_inputs_.bind_inputs(program));
 	}

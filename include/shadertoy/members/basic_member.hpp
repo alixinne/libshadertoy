@@ -23,7 +23,7 @@ protected:
 	 * @param chain   Current swap_chain being rendered
 	 * @param context Context to use for rendering
 	 */
-	virtual void render_member(swap_chain &chain, render_context &context) = 0;
+	virtual void render_member(const swap_chain &chain, const render_context &context) = 0;
 
 	/**
 	 * @brief Must be implemented by derived classes to perform
@@ -32,7 +32,7 @@ protected:
 	 * @param chain   Current swap_chain
 	 * @param context Context to use for initialization
 	 */
-	virtual void init_member(swap_chain &chain, render_context &context) = 0;
+	virtual void init_member(const swap_chain &chain, const render_context &context) = 0;
 
 	/**
 	 * @brief Must be implemented by derived classes to perform
@@ -41,7 +41,7 @@ protected:
 	 * @param chain   Current swap_chain
 	 * @param context Context to use for texture allocation
 	 */
-	virtual void allocate_member(swap_chain &chain, render_context &context) = 0;
+	virtual void allocate_member(const swap_chain &chain, const render_context &context) = 0;
 
 public:
 	/**
@@ -50,7 +50,7 @@ public:
 	 * @param chain   Current swap_chain being rendered
 	 * @param context Context to use for rendering
 	 */
-	void render(swap_chain &chain, render_context &context);
+	void render(const swap_chain &chain, const render_context &context);
 
 	/**
 	 * @brief Initialize this member
@@ -58,7 +58,7 @@ public:
 	 * @param chain   Current swap_chain being initialized
 	 * @param context Context to use for initialization
 	 */
-	void init(swap_chain &chain, render_context &context);
+	void init(const swap_chain &chain, const render_context &context);
 
 	/**
 	 * @brief Allocate the textures for this member
@@ -66,7 +66,7 @@ public:
 	 * @param chain   Current swap_chain
 	 * @param context Context to use for texture allocation
 	 */
-	void allocate_textures(swap_chain &chain, render_context &context);
+	void allocate_textures(const swap_chain &chain, const render_context &context);
 
 	/**
 	 * @brief Obtains the output of this member

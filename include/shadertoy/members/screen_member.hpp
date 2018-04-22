@@ -34,20 +34,20 @@ protected:
 	 * @param chain   Current swap_chain being rendered
 	 * @param context Context to use for rendering
 	 */
-	void render_member(swap_chain &chain, render_context &context) override;
+	void render_member(const swap_chain &chain, const render_context &context) override;
 
 	/**
 	 * @brief unused
 	 */
-	void init_member(swap_chain &chain, render_context &context) override;
+	void init_member(const swap_chain &chain, const render_context &context) override;
 
 	/**
 	 * @brief unused
 	 */
-	void allocate_member(swap_chain &chain, render_context &context) override;
+	void allocate_member(const swap_chain &chain, const render_context &context) override;
 
 	/// Return the associated output or the latest output in the swap chain
-	std::shared_ptr<gl::texture> output(swap_chain &chain);
+	std::shared_ptr<gl::texture> output(const swap_chain &chain);
 
 public:
 	/**

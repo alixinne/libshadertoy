@@ -15,7 +15,7 @@ using namespace shadertoy::members;
 
 using shadertoy::gl::gl_call;
 
-void screen_member::render_member(swap_chain &chain, render_context &context)
+void screen_member::render_member(const swap_chain &chain, const render_context &context)
 {
 	auto texptr(output(chain));
 
@@ -33,15 +33,15 @@ void screen_member::render_member(swap_chain &chain, render_context &context)
 	context.render_screen_quad();
 }
 
-void screen_member::init_member(swap_chain &chain, render_context &context)
+void screen_member::init_member(const swap_chain &chain, const render_context &context)
 {
 }
 
-void screen_member::allocate_member(swap_chain &chain, render_context &context)
+void screen_member::allocate_member(const swap_chain &chain, const render_context &context)
 {
 }
 
-std::shared_ptr<gl::texture> screen_member::output(swap_chain &chain)
+std::shared_ptr<gl::texture> screen_member::output(const swap_chain &chain)
 {
 	if (member_)
 	{

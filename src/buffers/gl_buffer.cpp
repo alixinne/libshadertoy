@@ -14,12 +14,12 @@ gl_buffer::gl_buffer(const std::string &id)
 {
 }
 
-void gl_buffer::init_contents(render_context &context, io_resource &io)
+void gl_buffer::init_contents(const render_context &context, const io_resource &io)
 {
 	// Nothing currently
 }
 
-void gl_buffer::allocate_contents(render_context &context, io_resource &io)
+void gl_buffer::allocate_contents(const render_context &context, const io_resource &io)
 {
 	// Setup render buffers
 	target_rbo_.bind(GL_RENDERBUFFER);
@@ -29,7 +29,7 @@ void gl_buffer::allocate_contents(render_context &context, io_resource &io)
 	target_rbo_.storage(GL_DEPTH_COMPONENT, size.width, size.height);
 }
 
-void gl_buffer::render_contents(render_context &context, io_resource &io)
+void gl_buffer::render_contents(const render_context &context, const io_resource &io)
 {
 	// Update renderbuffer to use the correct target texture and bind as the curren target
 	target_rbo_.bind(GL_RENDERBUFFER);

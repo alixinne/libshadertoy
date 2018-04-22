@@ -22,12 +22,12 @@ using namespace shadertoy;
 using namespace shadertoy::utils;
 using shadertoy::gl::gl_call;
 
-void render_context::load_buffer_sources(compiler::shader_template &buffer_template)
+void render_context::load_buffer_sources(compiler::shader_template &buffer_template) const
 {
 }
 
 void render_context::bind_inputs(std::vector<std::shared_ptr<bound_inputs_base>> &inputs,
-                                 gl::program &program)
+                                 const gl::program &program) const
 {
 }
 
@@ -111,22 +111,22 @@ render_context::render_context()
 	state_.get<iSampleRate>() = 48000.f;
 }
 
-void render_context::init(swap_chain &chain)
+void render_context::init(swap_chain &chain) const
 {
 	chain.init(*this);
 }
 
-void render_context::allocate_textures(swap_chain &chain)
+void render_context::allocate_textures(swap_chain &chain) const
 {
 	chain.allocate_textures(*this);
 }
 
-std::shared_ptr<members::basic_member> render_context::render(swap_chain &chain)
+std::shared_ptr<members::basic_member> render_context::render(swap_chain &chain) const
 {
 	return chain.render(*this);
 }
 
-void render_context::build_buffer_shader(const buffers::toy_buffer &buffer, gl::shader &fs)
+void render_context::build_buffer_shader(const buffers::toy_buffer &buffer, gl::shader &fs) const
 {
 	// Load all source parts
 	auto fs_template(buffer_template_.specify({
@@ -141,7 +141,7 @@ void render_context::build_buffer_shader(const buffers::toy_buffer &buffer, gl::
 	shader_compiler::compile(fs, fs_template.sources());
 }
 
-std::vector<std::shared_ptr<bound_inputs_base>> render_context::bound_inputs(gl::program &program)
+std::vector<std::shared_ptr<bound_inputs_base>> render_context::bound_inputs(gl::program &program) const
 {
 	std::vector<std::shared_ptr<bound_inputs_base>> result;
 
@@ -154,13 +154,13 @@ std::vector<std::shared_ptr<bound_inputs_base>> render_context::bound_inputs(gl:
 	return result;
 }
 
-void render_context::render_screen_quad()
+void render_context::render_screen_quad() const
 {
 	screen_quad_corners_.bind(GL_ARRAY_BUFFER);
 	gl_call(glDrawElements, GL_TRIANGLES, 3 * 2, GL_UNSIGNED_INT, nullptr);
 }
 
-void render_context::render_screen_quad(gl::query &timerQuery)
+void render_context::render_screen_quad(const gl::query &timerQuery) const
 {
 	screen_quad_corners_.bind(GL_ARRAY_BUFFER);
 
@@ -170,9 +170,3 @@ void render_context::render_screen_quad(gl::query &timerQuery)
 
 	timerQuery.end(GL_TIME_ELAPSED);
 }
-
-gl::shader &render_context::screen_quad_vertex_shader()
-{
-	return screen_vs_;
-}
-

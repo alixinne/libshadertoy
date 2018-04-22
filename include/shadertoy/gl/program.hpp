@@ -88,35 +88,35 @@ namespace gl
 		 * @param  v0 v0
 		 * @return    true if the value was set, false otherwise
 		 */
-		bool set_value(const GLint &v0);
+		bool set_value(const GLint &v0) const;
 		/**
 		 * @brief glProgramUniform1f
 		 *
 		 * @param  v0 v0
 		 * @return    true if the value was set, false otherwise
 		 */
-		bool set_value(const GLfloat &v0);
+		bool set_value(const GLfloat &v0) const;
 		/**
 		 * @brief glProgramUniform2f
 		 *
 		 * @param  v  v0 and v1 as a vec2
 		 * @return    true if the value was set, false otherwise
 		 */
-		bool set_value(const glm::vec2 &v);
+		bool set_value(const glm::vec2 &v) const;
 		/**
 		 * @brief glProgramUniform3f
 		 *
 		 * @param  v  v0 to v2 as a vec3
 		 * @return    true if the value was set, false otherwise
 		 */
-		bool set_value(const glm::vec3 &v);
+		bool set_value(const glm::vec3 &v) const;
 		/**
 		 * @brief glProgramUniform4f
 		 *
 		 * @param  v  v0 to v4 as a vec4
 		 * @return    true if the value was set, false otherwise
 		 */
-		bool set_value(const glm::vec4 &v);
+		bool set_value(const glm::vec4 &v) const;
 
 		/**
 		 * @brief glProgramUniform1iv
@@ -125,7 +125,7 @@ namespace gl
 		 * @param  v0    v0
 		 * @return       true if the value was set, false otherwise
 		 */
-		bool set_value(size_t count, const GLint *v0);
+		bool set_value(size_t count, const GLint *v0) const;
 		/**
 		 * @brief glProgramUniform1fv
 		 *
@@ -133,7 +133,7 @@ namespace gl
 		 * @param  v0    v0
 		 * @return       true if the value was set, false otherwise
 		 */
-		bool set_value(size_t count, const GLfloat *v0);
+		bool set_value(size_t count, const GLfloat *v0) const;
 		/**
 		 * @brief glProgramUniform2fv
 		 *
@@ -141,7 +141,7 @@ namespace gl
 		 * @param  v     v0, v1
 		 * @return       true if the value was set, false otherwise
 		 */
-		bool set_value(size_t count, const glm::vec2 *v);
+		bool set_value(size_t count, const glm::vec2 *v) const;
 		/**
 		 * @brief glProgramUniform3fv
 		 *
@@ -149,7 +149,7 @@ namespace gl
 		 * @param  v     v0, v1, v2
 		 * @return       true if the value was set, false otherwise
 		 */
-		bool set_value(size_t count, const glm::vec3 *v);
+		bool set_value(size_t count, const glm::vec3 *v) const;
 		/**
 		 * @brief glProgramUniform4fv
 		 *
@@ -157,7 +157,7 @@ namespace gl
 		 * @param  v     v0, v1, v2, v3
 		 * @return       true if the value was set, false otherwise
 		 */
-		bool set_value(size_t count, const glm::vec4 *v);
+		bool set_value(size_t count, const glm::vec4 *v) const;
 
 	private:
 		/// Program id
@@ -281,7 +281,7 @@ namespace gl
 		 *
 		 * @throws opengl_error
 		 */
-		uniform_location get_uniform_location(const GLchar *name);
+		uniform_location get_uniform_location(const GLchar *name) const;
 
 		/**
 		 * @brief glGetAttribLocation
@@ -292,7 +292,7 @@ namespace gl
 		 *
 		 * @throws opengl_error
 		 */
-		attrib_location get_attrib_location(const GLchar *name);
+		attrib_location get_attrib_location(const GLchar *name) const;
 
 		/**
 		 * @brief glAttachShader

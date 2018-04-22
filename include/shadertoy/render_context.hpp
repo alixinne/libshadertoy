@@ -45,7 +45,7 @@ protected:
 	 *
 	 * @param      buffer_template  Shader template object to add sources to
 	 */
-	virtual void load_buffer_sources(compiler::shader_template &buffer_template);
+	virtual void load_buffer_sources(compiler::shader_template &buffer_template) const;
 
 	/**
 	 * @brief      When implemented in a dervied class, provides a callback for
@@ -56,7 +56,7 @@ protected:
 	 * @param      program  Target shader program.
 	 */
 	virtual void bind_inputs(std::vector<std::shared_ptr<bound_inputs_base>> &inputs,
-							 gl::program &program);
+							 const gl::program &program) const;
 
 public:
 	/**
@@ -77,21 +77,21 @@ public:
 	 *
 	 * @param chain  Swap chain to initialize
 	 */
-	void init(swap_chain &chain);
+	void init(swap_chain &chain) const;
 
 	/**
 	 * @brief        Reallocates the textures used by the swap chain \p chain
 	 *
 	 * @param chain  Swap chain to allocate the textures
 	 */
-	void allocate_textures(swap_chain &chain);
+	void allocate_textures(swap_chain &chain) const;
 
 	/**
 	 * @brief      Render \p chain using the current context
 	 *
 	 * @return     Result of \c chain::render
 	 */
-	std::shared_ptr<members::basic_member> render(swap_chain &chain);
+	std::shared_ptr<members::basic_member> render(swap_chain &chain) const;
 
 	/**
 	 * @brief      Compiles a fragment shader for use in a ToyBuffer.
@@ -99,7 +99,13 @@ public:
 	 * @param buffer Buffer being compiled
 	 * @param fs     Fragment shader object to compile to.
 	 */
-	void build_buffer_shader(const buffers::toy_buffer &buffer, gl::shader &fs);
+	void build_buffer_shader(const buffers::toy_buffer &buffer, gl::shader &fs) const;
+
+	/**
+	 * @brief      Gets a reference to the uniform state container
+	 */
+	inline const shader_inputs_t &state() const
+	{ return state_; }
 
 	/**
 	 * @brief      Gets a reference to the uniform state container
@@ -110,13 +116,19 @@ public:
 	/**
 	 * @brief     Gets a reference to the buffer template
 	 */
+	inline const compiler::shader_template &buffer_template() const
+	{ return buffer_template_; }
+
+	/**
+	 * @brief     Gets a reference to the buffer template
+	 */
 	inline compiler::shader_template &buffer_template()
 	{ return buffer_template_; }
 
 	/**
 	 * @brief     Gets a reference to the default error_input instance
 	 */
-	inline const std::shared_ptr<inputs::error_input> &error_input()
+	inline const std::shared_ptr<inputs::error_input> &error_input() const
 	{ return error_input_; }
 
 	/**
@@ -125,12 +137,12 @@ public:
 	 * @param program Program to bind to
 	 * @return
 	 */
-	std::vector<std::shared_ptr<bound_inputs_base>> bound_inputs(gl::program &program);
+	std::vector<std::shared_ptr<bound_inputs_base>> bound_inputs(gl::program &program) const;
 
 	/**
 	 * @brief      Render a screen quad using the current context
 	 */
-	void render_screen_quad();
+	void render_screen_quad() const;
 
 	/**
 	 * @brief      Render a screen quad using the current context
@@ -138,12 +150,13 @@ public:
 	 * @param timerQuery Query object to use for measuring the runtime of the
 	 *                   draw call.
 	 */
-	void render_screen_quad(gl::query &timerQuery);
+	void render_screen_quad(const gl::query &timerQuery) const;
 
 	/**
 	 * @brief      Get the default screen quad vertex shader
 	 */
-	gl::shader &screen_quad_vertex_shader();
+	inline const gl::shader &screen_quad_vertex_shader() const
+	{ return screen_vs_; }
 };
 
 }

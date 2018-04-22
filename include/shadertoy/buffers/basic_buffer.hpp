@@ -43,7 +43,7 @@ protected:
 	 * @param[in]  context Rendering context to use for shared objects
 	 * @param[in]  io      IO resource object
 	 */
-	virtual void init_contents(render_context &context, io_resource &io) = 0;
+	virtual void init_contents(const render_context &context, const io_resource &io) = 0;
 
 	/**
 	 * @brief     Allocates size-dependent resources for the contents of this buffer.
@@ -53,7 +53,7 @@ protected:
 	 * @param[in]  context Rendering context to use for shared objects
 	 * @param[in]  io      IO resource object
 	 */
-	virtual void allocate_contents(render_context &context, io_resource &io) = 0;
+	virtual void allocate_contents(const render_context &context, const io_resource &io) = 0;
 
 	/**
 	 * @brief     Renders the contents of this buffer. This method must
@@ -64,7 +64,7 @@ protected:
 	 * @param[in]  context Rendering context to use for rendering this buffer
 	 * @param[in]  io      IO resource object
 	 */
-	virtual void render_contents(render_context &context, io_resource &io) = 0;
+	virtual void render_contents(const render_context &context, const io_resource &io) = 0;
 
 public:
 	/**
@@ -80,7 +80,7 @@ public:
 	 *
 	 * @return     Reference to the query object
 	 */
-	inline gl::query &time_delta_query()
+	inline const gl::query &time_delta_query() const
 	{ return time_delta_query_; }
 
 	/**
@@ -89,7 +89,7 @@ public:
 	 * @param[in]  context Rendering context to use for shared objects
 	 * @param[in]  io      IO resource object
 	 */
-	void init(render_context &context, io_resource &io);
+	void init(const render_context &context, const io_resource &io);
 
 	/**
 	 * @brief      Allocates the textures for this buffer. Note that the current
@@ -98,7 +98,7 @@ public:
 	 * @param[in]  context Rendering context to use for shared objects
 	 * @param[in]  io      IO resource object
 	 */
-	void allocate_textures(render_context &context, io_resource &io);
+	void allocate_textures(const render_context &context, const io_resource &io);
 
 	/**
 	 * @brief      Render the buffer using the current OpenGL context
@@ -106,7 +106,7 @@ public:
 	 * @param[in]  context Context to use for rendering this buffer
 	 * @param[in]  io      IO resource object
 	 */
-	void render(render_context &context, io_resource &io);
+	void render(const render_context &context, const io_resource &io);
 
 	/**
 	 * @brief      Obtain the duration of the last rendering of this buffer, in

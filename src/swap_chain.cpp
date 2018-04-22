@@ -41,7 +41,7 @@ void swap_chain::push_back(std::shared_ptr<members::basic_member> member)
 	members_set_.insert(member);
 }
 
-std::shared_ptr<members::basic_member> swap_chain::render(render_context &context,
+std::shared_ptr<members::basic_member> swap_chain::render(const render_context &context,
 														  std::shared_ptr<members::basic_member> target)
 {
 	current_.reset();
@@ -58,7 +58,7 @@ std::shared_ptr<members::basic_member> swap_chain::render(render_context &contex
 	return current_;
 }
 
-void swap_chain::init(render_context &context)
+void swap_chain::init(const render_context &context)
 {
 	for (auto &member : members_)
 	{
@@ -66,7 +66,7 @@ void swap_chain::init(render_context &context)
 	}
 }
 
-void swap_chain::allocate_textures(render_context &context)
+void swap_chain::allocate_textures(const render_context &context)
 {
 	for (auto &member : members_)
 	{

@@ -42,7 +42,7 @@ struct shadertoy_EXPORT dynamic_shader_inputs_glsl_type_visitor : public boost::
 	inline glsl_type_info operator()(glm::uvec4) const { return std::make_tuple("uvec4", ""); }
 
 	template<class T, std::size_t N>
-	glsl_type_info operator()(std::array<T, N> &) const {
+	glsl_type_info operator()(const std::array<T, N> &) const {
 		return std::make_tuple(std::get<0>((*this)(T())),
 			std::string("[") + std::string(N) + std::string("]") +
 			std::get<1>((*this)(T())));
@@ -56,7 +56,7 @@ struct shadertoy_EXPORT dynamic_shader_inputs_glsl_type_visitor : public boost::
 class shadertoy_EXPORT dynamic_shader_input_uniform_setter : public boost::static_visitor<bool>
 {
 	/// OpenGL GLSL uniform location to set
-	gl::uniform_location &location_;
+	const gl::uniform_location &location_;
 
 public:
 	template<class T>
@@ -84,7 +84,7 @@ public:
 	 *
 	 * @param location GLSL program location to set
 	 */
-	dynamic_shader_input_uniform_setter(gl::uniform_location &location)
+	dynamic_shader_input_uniform_setter(const gl::uniform_location &location)
 		: location_(location)
 	{}
 };
@@ -111,6 +111,11 @@ private:
 	array_type values_;
 
 public:
+	/**
+	 * @brief Obtains the values of this input as an array.
+	 */
+	inline const array_type &values() const { return values_; }
+
 	/**
 	 * @brief Obtains the values of this input as an array.
 	 */
@@ -190,6 +195,18 @@ public:
 	 * @return      Reference to the value of this uniform.
 	 */
 	template<typename T>
+	const T &get(const std::string &name) const
+	{
+		return boost::get<T>(input_map[name]);
+	}
+
+	/**
+	 * @brief Obtains a reference to the value of a dynamic uniform.
+	 *
+	 * @param  name Name of the uniform to obtain.
+	 * @return      Reference to the value of this uniform.
+	 */
+	template<typename T>
 	T &get(const std::string &name)
 	{
 		return boost::get<T>(input_map[name]);
@@ -210,7 +227,7 @@ public:
 	 *
 	 * @param os Output stream to append to
 	 */
-	void append_definition(std::ostream &os)
+	void append_definition(std::ostream &os) const
 	{
 		os << "/* " << name << " uniforms */" << std::endl;
 
@@ -227,7 +244,7 @@ public:
 	 *
 	 * @param program Program to bind uniforms to.
 	 */
-	std::map<std::string, gl::uniform_location> bind_inputs(gl::program &program)
+	std::map<std::string, gl::uniform_location> bind_inputs(const gl::program &program) const
 	{
 		std::map<std::string, gl::uniform_location> result;
 
@@ -247,9 +264,9 @@ public:
 	 * @param  location GLSL uniform location to set
 	 * @return          true if the location was set, false otherwise
 	 */
-	bool set_value(const std::string &name, gl::uniform_location &location)
+	bool set_value(const std::string &name, const gl::uniform_location &location) const
 	{
-		return boost::apply_visitor(dynamic_shader_input_uniform_setter(location), input_map[name]);
+		return boost::apply_visitor(dynamic_shader_input_uniform_setter(location), input_map.at(name));
 	}
 };
 
@@ -267,7 +284,7 @@ public:
 	 * @brief      Sets the current value of inputs bound to this program
 	 *             instance in the associated shader program.
 	 */
-	virtual void apply() = 0;
+	virtual void apply() const = 0;
 };
 
 /**
@@ -290,14 +307,27 @@ private:
 	std::tuple<Inputs...> all_inputs_;
 
 	template<size_t index, typename Target, typename Input, typename... Ts>
+	inline constexpr typename std::enable_if<std::is_same<Input, Target>::value, const Target&>::type get_input() const {
+		return std::get<index>(all_inputs_);
+	}
+
+	template<size_t index, typename Target, typename Input, typename... Ts>
 	inline constexpr typename std::enable_if<std::is_same<Input, Target>::value, Target&>::type get_input() {
 		return std::get<index>(all_inputs_);
+	}
+
+	template<size_t index, typename Target, typename Input, typename... Ts>
+	inline constexpr typename std::enable_if<!(std::is_same<Input, Target>::value) && index <= sizeof...(Inputs), const Target&>::type get_input() const {
+		return get_input<index + 1, Target, Ts...>();
 	}
 
 	template<size_t index, typename Target, typename Input, typename... Ts>
 	inline constexpr typename std::enable_if<!(std::is_same<Input, Target>::value) && index <= sizeof...(Inputs), Target&>::type get_input() {
 		return get_input<index + 1, Target, Ts...>();
 	}
+
+	template<typename InputType>
+	constexpr const InputType& input() const { return get_input<0, InputType, Inputs...>(); }
 
 	template<typename InputType>
 	constexpr InputType& input() { return get_input<0, InputType, Inputs...>(); }
@@ -310,7 +340,7 @@ public:
 	{
 	public:
 		/// State these bound inputs are derived from
-		state_type &state;
+		const state_type &state;
 
 	private:
 		template<typename Input, typename Enable = void>
@@ -324,7 +354,7 @@ public:
 		{
 			gl::uniform_location location;
 
-			uniform(Input &, gl::program &program)
+			uniform(const Input &, const gl::program &program)
 				: location(program.get_uniform_location(Input::name))
 			{
 			}
@@ -335,11 +365,23 @@ public:
 			 * @param  val Reference to the input containing the value to set.
 			 * @return true if the uniform location was set, false otherwise.
 			 */
-			bool set_value(Input &val)
+			bool set_value(Input &val) const
 			{
 				return location.set_value(
 					val.values().size(),
 					static_cast<const typename Input::value_type *>(val.values().data()));
+			}
+
+			/**
+			 * @brief Applies the values of the given input to the associated location.
+			 *
+			 * @param  val Value to set in the uniform
+			 * @return true if the uniform location was set, false otherwise.
+			 */
+			template<typename ValueType, size_t size>
+			bool set_value(const std::array<ValueType, size> &val) const
+			{
+				return location.set_value(val.size(), val.data());
 			}
 		};
 
@@ -351,7 +393,7 @@ public:
 		{
 			std::map<std::string, gl::uniform_location> locations;
 
-			uniform(Input &input, gl::program &program)
+			uniform(const Input &input, const gl::program &program)
 				: locations(input.bind_inputs(program))
 			{
 			}
@@ -363,7 +405,7 @@ public:
 			 * @param  val Reference to the input containing the values to set.
 			 * @return true if the uniform locations were set, false otherwise
 			 */
-			bool set_value(Input &val)
+			bool set_value(const Input &val) const
 			{
 				bool result = true;
 
@@ -388,10 +430,10 @@ public:
 		 * @return       true if the value has been set, false if the associated uniform was inactive
 		 */
 		template<size_t Index, class Type>
-		bool set_value()
+		bool set_value() const
 		{
 			auto valptr = std::get<Index>(state.all_inputs_);
-			auto &uniform(std::get<Index>(uniforms_));
+			const auto &uniform(std::get<Index>(uniforms_));
 
 			// Set uniform using state value
 			return uniform.set_value(valptr);
@@ -403,10 +445,20 @@ public:
 		 * @tparam Indices Index range of the uniforms in the parent state type declaration
 		 */
 		template<size_t... Indices>
-		void set_values(std::index_sequence<Indices...>)
+		void set_values(std::index_sequence<Indices...>) const
 		{
 			bool _[] = {set_value<Indices, Inputs>()...};
 			(void) _;
+		}
+
+		template<size_t index, typename Target, typename Input, typename... Ts>
+		inline constexpr typename std::enable_if<std::is_same<Input, Target>::value, uniform<Target>&>::type get_uniform() {
+			return std::get<index>(uniforms_);
+		}
+
+		template<size_t index, typename Target, typename Input, typename... Ts>
+		inline constexpr typename std::enable_if<!(std::is_same<Input, Target>::value) && index <= sizeof...(Inputs), uniform<Target>&>::type get_uniform() {
+			return get_uniform<index + 1, Target, Ts...>();
 		}
 
 	public:
@@ -418,16 +470,48 @@ public:
 		 * @param program Program to bind to
 		 */
 		template<size_t... Indices>
-		bound_inputs(state_type &state, gl::program &program, std::index_sequence<Indices...>)
+		bound_inputs(const state_type &state, const gl::program &program, std::index_sequence<Indices...>)
 			: state(state),
 			  uniforms_(uniform<Inputs>(std::get<Indices>(state.all_inputs_), program)...)
 		{
 		}
 
+		template<typename Input>
+		const auto &get() const
+		{ return state.get<Input>(); }
+
+		/**
+		 * @brief Sets a bound uniform input to the given value
+		 *
+		 * @tparam Input Uniform typed identifier
+		 * @param  value Value to set
+		 *
+		 * @return true if the uniform was set
+		 */
+		template<typename Input, typename = typename std::enable_if<(Input::size == 1)>::type>
+		bool set(const typename Input::value_type& value)
+		{
+			return get_uniform<0, Input, Inputs...>().set_value<typename Input::value_type, Input::size>({value});
+		}
+
+		/**
+		 * @brief Sets a bound uniform input to the given value
+		 *
+		 * @tparam Input Uniform typed identifier
+		 * @param  value Value to set
+		 *
+		 * @return true if the uniform was set
+		 */
+		template<typename Input, typename = typename std::enable_if<(Input::size > 1)>::type>
+		bool set(const typename Input::array_type& value)
+		{
+			return get_uniform<0, Input, Inputs...>().set_value<typename Input::value_type, Input::size>(value);
+		}
+
 		/**
 		 * @brief      Applies the value of all uniforms to the current program.
 		 */
-		void apply() override
+		void apply() const override
 		{
 			set_values(std::make_index_sequence<sizeof...(Inputs)>());
 		}
@@ -511,7 +595,7 @@ public:
 	 * @param program Program to bind to.
 	 * @return
 	 */
-	std::shared_ptr<bound_inputs> bind_inputs(gl::program &program)
+	std::shared_ptr<bound_inputs> bind_inputs(const gl::program &program) const
 	{
 		return std::make_shared<bound_inputs>(*this, program, indices());
 	}

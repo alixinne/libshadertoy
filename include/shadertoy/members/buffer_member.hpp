@@ -30,7 +30,7 @@ protected:
 	 * @param chain   Current swap_chain being rendered
 	 * @param context Context to use for rendering
 	 */
-	void render_member(swap_chain &chain, render_context &context) override;
+	void render_member(const swap_chain &chain, const render_context &context) override;
 
 	/**
 	 * @brief Initializes the associated buffer
@@ -38,7 +38,7 @@ protected:
 	 * @param chain   Current swap_chain
 	 * @param context Context to use for initialization
 	 */
-	void init_member(swap_chain &chain, render_context &context) override;
+	void init_member(const swap_chain &chain, const render_context &context) override;
 
 	/**
 	 * @brief Allocates the associated buffer's textures
@@ -46,7 +46,7 @@ protected:
 	 * @param chain   Current swap_chain
 	 * @param context Context to use for texture allocation
 	 */
-	void allocate_member(swap_chain &chain, render_context &context) override;
+	void allocate_member(const swap_chain &chain, const render_context &context) override;
 
 public:
 	/**
