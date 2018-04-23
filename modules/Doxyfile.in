@@ -9,5 +9,7 @@ FILE_PATTERNS          = *.hpp \
                          *.cpp
 RECURSIVE              = YES
 USE_MDFILE_AS_MAINPAGE = @doxy_main_page@
-EXCLUDE_PATTERNS       = @PROJECT_BINARY_DIR@/oglplus \
-                         @PROJECT_BINARY_DIR@/_build
+EXCLUDE_PATTERNS       = @PROJECT_BINARY_DIR@/install \
+                         @PROJECT_BINARY_DIR@/shadertoy/spdlog \
+                         @PROJECT_BINARY_DIR@/shadertoy/polymorphic_value.h \
+                         @PROJECT_BINARY_DIR@/shadertoy/uri.hpp
