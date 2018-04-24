@@ -156,6 +156,20 @@ namespace gl
 		 * @throws null_texture_error
 		 */
 		void clear_tex_image(GLint level, GLenum format, GLenum type, const void *data) const;
+
+		/**
+		 * @brief glGetTextureImage
+		 *
+		 * @param level   Level
+		 * @param format  Format
+		 * @param type    Type
+		 * @param bufSize Buffer size
+		 * @param pixels  Buffer
+		 *
+		 * @throws opengl_error
+		 * @throws null_texture_error
+		 */
+		void get_image(GLint level, GLenum format, GLenum type, GLsizei bufSize, void *pixels) const;
 	};
 }
 }

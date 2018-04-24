@@ -68,3 +68,8 @@ void texture::clear_tex_image(GLint level, GLenum format, GLenum type, const voi
 {
 	gl_call(glClearTexImage, GLuint(*this), level, format, type, data);
 }
+
+void texture::get_image(GLint level, GLenum format, GLenum type, GLsizei bufSize, void *pixels) const
+{
+	gl_call(glGetTextureImage, GLuint(*this), level, format, type, bufSize, pixels);
+}
