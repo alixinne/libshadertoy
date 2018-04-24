@@ -1,3 +1,4 @@
 tar-ignore = "build/*"
 tar-ignore = ".git"
 tar-ignore = ".idea/*"
+tar-ignore = "examples/build/*"
