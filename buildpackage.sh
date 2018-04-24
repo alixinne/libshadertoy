@@ -62,9 +62,7 @@ build_pkg () {
 			-d $DISTRIBUTION \
 			--arch $ARCH \
 			$ARCHALL_ARG \
-			--verbose \
-			--append-to-version "-$(version_suffix $DISTRIBUTION)"
-		)
+			--verbose)
 
 		RESULT="$?"
 		if [ "$RESULT" -ne "0" ]; then
@@ -73,7 +71,7 @@ build_pkg () {
 		fi
 
 		echo "[==== MOVING ARTIFACTS $DISTRIBUTION-$ARCH ====]" >&2
-		CHANGES_FILE=libshadertoy_$LIBVERSION-$(version_suffix $DISTRIBUTION)_$ARCH.changes
+		CHANGES_FILE=libshadertoy_${LIBVERSION}_$ARCH.changes
 		BUILD_ARTIFACTS=$(awk '/^Files:/{a=1;next}/^$/{a=0}{if(a)print $NF}' "$CHANGES_FILE")
 		mv $BUILD_ARTIFACTS $CHANGES_FILE $TARGET_DIRECTORY
 
@@ -82,8 +80,8 @@ build_pkg () {
 			(
 				cd libshadertoy
 				shopt -s nullglob
-				autopkgtest $TARGET_DIRECTORY/libshadertoy*-$(version_suffix $DISTRIBUTION)_$ARCH.deb \
-					$TARGET_DIRECTORY/libshadertoy*-$(version_suffix $DISTRIBUTION)_all.deb \
+				autopkgtest $TARGET_DIRECTORY/libshadertoy*_$ARCH.deb \
+					$TARGET_DIRECTORY/libshadertoy*_all.deb \
 					-- schroot $DISTRIBUTION-$ARCH-sbuild
 			)
 			if [ "$?" -ne "0" ]; then

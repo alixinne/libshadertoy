@@ -12,7 +12,7 @@ include(CMakePackageConfigHelpers)
 file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/debian/changelog DEBIAN_CHANGELOG
 	REGEX "^libshadertoy \\(.*\\) ")
 list(GET DEBIAN_CHANGELOG 0 DEBIAN_CHANGELOG_HEAD)
-string(REGEX REPLACE "^.*\\(([0-9]+\\.[0-9]+\\.[0-9]+)(-.*)?\\).*$" "\\1" ST_VERSION ${DEBIAN_CHANGELOG_HEAD})
+string(REGEX REPLACE "^.*\\(([0-9]+\\.[0-9]+\\.[0-9]+)([-~].*)?\\).*$" "\\1" ST_VERSION ${DEBIAN_CHANGELOG_HEAD})
 
 # Parse the version string into major, minor and patch
 string(REPLACE "." ";" ST_VERSION_LIST ${ST_VERSION})
