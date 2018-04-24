@@ -191,7 +191,7 @@ int performRender(bool dumpShaders, Args&&... args)
 	if (!glfwInit())
 	{
 		u::log::shadertoy()->critical("Failed to initialize glfw");
-		return 1;
+		return 2;
 	}
 
 	// Initialize window

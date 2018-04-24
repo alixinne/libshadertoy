@@ -1,29 +1,3 @@
 #!/bin/bash
-export LIBSHADERTOY_TESTING=1
 
-if [ -z "$LIBSHADERTOY_DIR" ]; then
-	LIBSHADERTOY_DIR=/usr/share/shadertoy
-fi
-
-if [ -z "$CMAKE_EXTRA_OPTS" ]; then
-	CMAKE_EXTRA_OPTS=""
-fi
-
-# Copy example from datadir
-cp -r "$LIBSHADERTOY_DIR/examples" "$AUTOPKGTEST_TMP"
-cd "$AUTOPKGTEST_TMP/examples"
-
-# Configure
-set -o pipefail
-
-mkdir build
-cd build
-cmake $CMAKE_EXTRA_OPTS .. || exit 1
-
-# Build
-make -j$(( $(nproc) + 1 )) VERBOSE=1 example10-gradient || exit 1
-
-# Execute
-./src/10-gradient/example10-gradient || exit 2
-
-exit 0
+"$(dirname "${BASH_SOURCE[0]}")/st-autotest.sh" -n 10-gradient

@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 	if (!glfwInit())
 	{
 		std::cerr << "Failed to initialize glfw" << std::endl;
-		return 1;
+		return 2;
 	}
 
 	// Initialize window
