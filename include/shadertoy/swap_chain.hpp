@@ -80,6 +80,29 @@ public:
 	}
 
 	/**
+	 * @brief Find and return the first member of this chain that matches a given predicate
+	 *
+	 * @param  predicate  Predicate to find a match. Should accept a std::shared_ptr<MemberType> as a parameter and return
+	 * a boolean.
+	 * @tparam MemberType Type of the member to look for
+	 * @tparam Callable   Type of the predicate
+	 *
+	 * @return Pointer to the member if found, or null otherwise
+	 */
+	template<typename MemberType, typename Callable>
+	std::shared_ptr<MemberType> find_if(Callable predicate)
+	{
+		for (const auto &member : members_)
+		{
+			if (auto ptr_member = std::dynamic_pointer_cast<MemberType>(member))
+				if (predicate(ptr_member))
+					return ptr_member;
+		}
+
+		return {};
+	}
+
+	/**
 	 * @brief Renders the swap chain using \p context up to the specified \p target
 	 *
 	 * All members from members().begin() up to \p target will be fully rendered.
