@@ -261,13 +261,12 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 	install(TARGETS ${TARGET_NAME}
 			DESTINATION ${CMAKE_INSTALL_LIBDIR}
 			EXPORT shadertoy)
-	install(EXPORT shadertoy
-			DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/shadertoy)
-
-	install(EXPORT shadertoy
-			COMPONENT shadertoy-dev
-			DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy)
 endforeach()
+
+# Export component
+install(EXPORT shadertoy
+		COMPONENT shadertoy-dev
+		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/shadertoy)
 
 # Export header for shared
 generate_export_header(shadertoy-shared
@@ -337,7 +336,7 @@ endif()
 find_package(Doxygen)
 cmake_dependent_option(SHADERTOY_BUILD_DOCUMENTATION
 	"Build the HTML docs" ON
-	"DOXYGEN_FOUND;LIBSHADERTOY_BUILD_DOCUMENTATION" OFF)
+	"DOXYGEN_FOUND" OFF)
 
 if(SHADERTOY_BUILD_DOCUMENTATION)
 	if(NOT DOXYGEN_FOUND)
@@ -350,7 +349,13 @@ if(SHADERTOY_BUILD_DOCUMENTATION)
 
 	configure_file(${doxyfile_in} ${doxyfile} @ONLY)
 
-	add_custom_target(shadertoy_doc ALL
+	if (LIBSHADERTOY_BUILD_DOCUMENTATION)
+		set(DOC_ARG_MODE ALL)
+	else()
+		set(DOC_ARG_MODE "")
+	endif()
+
+	add_custom_target(shadertoy_doc ${DOC_ARG_MODE}
 		COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
 		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 		COMMENT "Generating API documentation with Doxygen"
