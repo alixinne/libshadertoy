@@ -35,12 +35,13 @@ render_context::render_context()
 	: screen_vs_(GL_VERTEX_SHADER),
 	screen_fs_(GL_FRAGMENT_SHADER),
 	buffer_template_{
-		compiler::template_part("internal:wrapper-header", std::string(wrapper_header_fsh, wrapper_header_fsh + wrapper_header_fsh_size)),
-		compiler::define_part("generated:define-wrapper"),
-		compiler::template_part("generated:shadertoy-uniform-definitions", state_.definitions_string()),
-		compiler::template_part("generated:buffer-input-definitions"),
-		compiler::template_part("input:buffer-sources"),
-		compiler::template_part("internal:wrapper-footer", std::string(wrapper_footer_fsh, wrapper_footer_fsh + wrapper_footer_fsh_size))
+		compiler::template_part("glsl:header", std::string(glsl_header_frag, glsl_header_frag + glsl_header_frag_size)),
+		compiler::define_part("glsl:defines"),
+		compiler::template_part("shadertoy:header", std::string(shadertoy_header_frag, shadertoy_header_frag + shadertoy_header_frag_size)),
+		compiler::template_part("shadertoy:uniforms", state_.definitions_string()),
+		compiler::template_part("buffer:inputs"),
+		compiler::template_part("buffer:sources"),
+		compiler::template_part("shadertoy:footer", std::string(shadertoy_footer_frag, shadertoy_footer_frag + shadertoy_footer_frag_size))
 	},
 	error_input_(std::make_shared<inputs::error_input>())
 {
@@ -130,8 +131,8 @@ void render_context::build_buffer_shader(const buffers::toy_buffer &buffer, gl::
 {
 	// Load all source parts
 	auto fs_template(buffer_template_.specify({
-		compiler::template_part::from_files("input:buffer-sources", buffer.source_files()),
-		compiler::input_part("generated:buffer-input-definitions", buffer.inputs()),
+		compiler::input_part("buffer:inputs", buffer.inputs()),
+		compiler::template_part::from_files("buffer:sources", buffer.source_files()),
 	}));
 
 	// Load callback sources

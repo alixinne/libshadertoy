@@ -10,6 +10,67 @@ namespace shadertoy
 
 /**
  * @brief      Represents a context for rendering a specific ShaderToy program.
+ *
+ * The render context manages shared resources among a set of buffers, which may or may not be
+ * members of the same swap chain. This includes the screen drawing programs, the fallback error
+ * input, the shared uniforms and the buffer template.
+ *
+ * The buffer template specifies how the sources of a buffers::toy_buffer will be composed with
+ * the default sources to make a full fragment shader.
+ *
+ * The default parts of the buffer template are as follows:
+ *   * `glsl:header`: Fragment shader header
+ * ```
+ * #version 330
+ * ```
+ *   * `glsl:defines`: List of pre-processor defines
+ * ```
+ * // Generated on the fly depending on its value
+ * // Example:
+ * #define MY_VALUE 10
+ * ```
+ *   * `shadertoy:header`: Header for Shadertoy compatibility
+ * ```
+ * precision highp float;
+ * precision highp int;
+ * precision highp sampler2D;
+ *
+ * // Input texture coordinate
+ * in vec2 vtexCoord;
+ * // Output fragment color
+ * out vec4 fragColor;
+ * ```
+ *   * `shadertoy:uniforms`: Uniform variables defined by the render context
+ * ```
+ * // Generated on the fly from the definitions in uniform_state.hpp
+ * uniform vec3 iResolution;
+ * uniform vec4 iMouse;
+ * // etc.
+ * ```
+ *   * `buffer:inputs`: Sampler uniforms defined by the buffer being compiled
+ * ```
+ * // Generated on the fly from the input definitions
+ * uniform sampler2D myTexture;
+ * uniform sampler3D my3DTexture;
+ * ```
+ *   * `buffer:sources`: Sources provided by the buffer being compiled
+ * ```
+ * // Should define mainImage, as in a Shadertoy
+ * void mainImage(out vec4 O, in vec2 U) { O = vec4(1.); }
+ * ```
+ *   * `shadertoy:footer`: Footer for Shadertoy compatibility
+ * ```
+ * // GLSL entry point
+ * void main(void) {
+ *     fragColor = vec4(0.,0.,0.,1.);
+ *     mainImage(fragColor, vtexCoord.xy * iResolution.xy);
+ * }
+ * ```
+ *
+ * These parts may be overriden in order to fully control how the resulting shaders are built.
+ * Note that the `buffer:*` parts are filled in by render_context#build_buffer_shader from the
+ * properties of the current buffer, so they should be present in any template used with the context.
+ * Other parts are not mandatory and can be removed.
  */
 class shadertoy_EXPORT render_context
 {

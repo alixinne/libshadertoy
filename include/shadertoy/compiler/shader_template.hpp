@@ -65,33 +65,53 @@ public:
 	 *
 	 * @throws template_error When a part with the same name as \p part already exists
 	 */
-	void add_part(jbcoe::polymorphic_value<basic_part> part);
+	void push_back(jbcoe::polymorphic_value<basic_part> part);
+
+	/**
+	 * @brief Replaces a part from this template
+	 *
+	 * @param name Name of the part to replace
+	 * @param part Part to add to this template
+	 *
+	 * @throws template_error When a part with the name \p name does not exist
+	 * @throws template_error When a part with the same name as \p part already exists
+	 */
+	void replace(const std::string &name, jbcoe::polymorphic_value<basic_part> part);
 
 	/**
 	 * @brief Add a part to this template, before another template part
 	 *
 	 * The part will be added before the \p target part name, or an error will be thrown.
 	 *
-	 * @param part   Part to add to this template
 	 * @param target Name of the target template part for insertion
+	 * @param part   Part to add to this template
 	 *
 	 * @throws template_error When a part with the same name as \p part already exists
 	 * @throws template_error When a part with the \p target name could not be found
 	 */
-	void insert_before(jbcoe::polymorphic_value<basic_part> part, const std::string &target);
+	void insert_before(const std::string &target, jbcoe::polymorphic_value<basic_part> part);
 
 	/**
 	 * @brief Add a part to this template, before another template part
 	 *
 	 * The part will be added after the \p target part name, or an error will be thrown.
 	 *
-	 * @param part   Part to add to this template
 	 * @param target Name of the target template part for insertion
+	 * @param part   Part to add to this template
 	 *
 	 * @throws template_error When a part with the same name as \p part already exists
 	 * @throws template_error When a part with the \p target name could not be found
 	 */
-	void insert_after(jbcoe::polymorphic_value<basic_part> part, const std::string &target);
+	void insert_after(const std::string &target, jbcoe::polymorphic_value<basic_part> part);
+
+	/**
+	 * @brief Removes a part from this template
+	 *
+	 * @param target Name of the part to remove
+	 *
+	 * @return true if the part was removed, false if no such part was found
+	 */
+	bool erase(const std::string &name);
 };
 }
 }

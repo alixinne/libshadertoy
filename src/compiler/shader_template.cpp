@@ -33,7 +33,7 @@ shader_template::shader_template(std::initializer_list<jbcoe::polymorphic_value<
 	: parts_()
 {
 	for (const auto &part : parts)
-		add_part(part);
+		push_back(part);
 }
 
 std::vector<std::pair<std::string, std::string>> shader_template::sources() const
@@ -88,13 +88,34 @@ shader_template shader_template::specify(std::initializer_list<jbcoe::polymorphi
 	return shader_template(specified_parts);
 }
 
-void shader_template::add_part(jbcoe::polymorphic_value<basic_part> part)
+void shader_template::push_back(jbcoe::polymorphic_value<basic_part> part)
 {
 	check_unique(part);
 	parts_.push_back(part);
 }
 
-void shader_template::insert_before(jbcoe::polymorphic_value<basic_part> part, const std::string &target)
+void shader_template::replace(const std::string &name, jbcoe::polymorphic_value<basic_part> part)
+{
+	auto target_it = std::find_if(parts_.begin(), parts_.end(), [&name](const auto &item)
+								  { return item->name() == name; });
+
+	if (target_it == parts_.end())
+	{
+		throw template_error(std::string("A part named ") + name + std::string(" could not be found for replacement"));
+	}
+
+	auto duplicate = std::find_if(parts_.begin(), parts_.end(), [&part](const auto &item)
+								  { return item->name() == part->name(); });
+
+	if (duplicate != parts_.end() && duplicate != target_it)
+	{
+		throw template_error(std::string("A part named ") + part->name() + std::string(" already exists"));
+	}
+
+	*target_it = part;
+}
+
+void shader_template::insert_before(const std::string &target, jbcoe::polymorphic_value<basic_part> part)
 {
 	check_unique(part);
 
@@ -112,7 +133,7 @@ void shader_template::insert_before(jbcoe::polymorphic_value<basic_part> part, c
 	parts_.insert(it, part);
 }
 
-void shader_template::insert_after(jbcoe::polymorphic_value<basic_part> part, const std::string &target)
+void shader_template::insert_after(const std::string &target, jbcoe::polymorphic_value<basic_part> part)
 {
 	check_unique(part);
 
@@ -128,4 +149,18 @@ void shader_template::insert_after(jbcoe::polymorphic_value<basic_part> part, co
 	}
 
 	parts_.insert(++it, part);
+}
+
+bool shader_template::erase(const std::string &name)
+{
+	auto it = std::find_if(parts_.begin(), parts_.end(), [&name](const auto &item)
+						   { return item->name() == name; });
+
+	if (it != parts_.end())
+	{
+		parts_.erase(it);
+		return true;
+	}
+
+	return false;
 }
