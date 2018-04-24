@@ -32,8 +32,8 @@ Description: Library for rendering ShaderToy programs using OpenGL
 Package: libshadertoy-doc
 Section: doc
 Architecture: all
-Breaks: libshadertoy-dev (<< 1.0.0)
-Replaces: libshadertoy-dev (<< 1.0.0)
+Breaks: libshadertoy-dev (<< 1)
+Replaces: libshadertoy-dev (<< 1)
 Description: Documentation of libshadertoy
  HTML documentation of libshadertoy, a library for rendering
  ShaderToy programs using OpenGL desktop
