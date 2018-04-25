@@ -72,6 +72,44 @@ screen_member::screen_member(rsize_ref &&viewport_size)
 	sampler_.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
+screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size)
+	: sampler_(),
+	viewport_x_(viewport_x),
+	viewport_y_(viewport_y),
+	viewport_size_(std::move(viewport_size))
+{
+	sampler_.parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	sampler_.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	sampler_.parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	sampler_.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+}
+
+screen_member::screen_member(rsize_ref &&viewport_size, std::shared_ptr<members::basic_member> member)
+	: member_(member),
+	sampler_(),
+	viewport_x_(0),
+	viewport_y_(0),
+	viewport_size_(std::move(viewport_size))
+{
+	sampler_.parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	sampler_.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	sampler_.parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	sampler_.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+}
+
+screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size, std::shared_ptr<members::basic_member> member)
+	: member_(member),
+	sampler_(),
+	viewport_x_(viewport_x),
+	viewport_y_(viewport_y),
+	viewport_size_(std::move(viewport_size))
+{
+	sampler_.parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	sampler_.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	sampler_.parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	sampler_.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+}
+
 std::shared_ptr<gl::texture> screen_member::output()
 {
 	if (member_)

@@ -63,6 +63,18 @@ public:
 	/**
 	 * @brief Initializes a new instance of the screen_member class
 	 *
+	 * By default, this instance will render the last rendered output in the
+	 * current swap chain.
+	 *
+	 * @param viewport_x    Initial viewport X offset
+	 * @param viewport_y    Initial viewport Y offset
+	 * @param viewport_size Initial viewport size
+	 */
+	screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size);
+
+	/**
+	 * @brief Initializes a new instance of the screen_member class
+	 *
 	 * By default, this instance will render the associated output instead
 	 * of the last rendered output in the current swap chain.
 	 *
@@ -70,6 +82,20 @@ public:
 	 * @param member        Target member
 	 */
 	screen_member(rsize_ref &&viewport_size, std::shared_ptr<members::basic_member> member);
+
+
+	/**
+	 * @brief Initializes a new instance of the screen_member class
+	 *
+	 * By default, this instance will render the associated output instead
+	 * of the last rendered output in the current swap chain.
+	 *
+	 * @param viewport_x    Initial viewport X offset
+	 * @param viewport_y    Initial viewport Y offset
+	 * @param viewport_size Initial viewport size
+	 * @param member        Target member
+	 */
+	screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size, std::shared_ptr<members::basic_member> member);
 
 	/**
 	 * @brief Returns the same output that will be drawn to the screen
