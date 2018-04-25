@@ -1,4 +1,4 @@
-libshadertoy (1.0.0~rc2) UNRELEASED; urgency=medium
+libshadertoy (1.0.0~rc2) unstable; urgency=medium
 
   * Fix test 50-shadertoy
   * Simplify interface for swap_chain manipulation
