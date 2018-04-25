@@ -2,10 +2,13 @@
 
 export LIBSHADERTOY_TESTING=1
 
-while getopts ":n:" opt; do
+while getopts ":n:a:" opt; do
 	case "$opt" in
+		a)
+			TEST_ARGS="$OPTARG"
+			;;
 		n)
-			TEST_NAME=$OPTARG
+			TEST_NAME="$OPTARG"
 			;;
 	esac
 done
@@ -60,7 +63,7 @@ cmake $CMAKE_EXTRA_OPTS .. || exit 1
 # Build
 make -j$(( $(nproc) + 1 )) VERBOSE=1 example$TEST_NAME || exit 1
 
-./src/$TEST_NAME/example$TEST_NAME
+./src/$TEST_NAME/example$TEST_NAME $TEST_ARGS
 RESULT="$?"
 
 if [ "$RESULT" -eq 2 ]; then
