@@ -62,7 +62,6 @@ void swap_chain::init(const render_context &context)
 {
 	for (auto &member : members_)
 	{
-		member->allocate(*this, context);
 		member->init(*this, context);
 	}
 }

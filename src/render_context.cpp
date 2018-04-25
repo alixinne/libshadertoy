@@ -115,6 +115,7 @@ render_context::render_context()
 void render_context::init(swap_chain &chain) const
 {
 	chain.init(*this);
+	chain.allocate_textures(*this);
 }
 
 void render_context::allocate_textures(swap_chain &chain) const
