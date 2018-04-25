@@ -20,7 +20,7 @@ FAILED_TEST_NAMES=()
 DEFAULT_TESTS=debian/tests/*
 
 for TEST_FILE in ${@:-$DEFAULT_TESTS}; do
-	if [ -x "$TEST_FILE" ]; then
+	if [ -x "$TEST_FILE" ] && [[ "$TEST_FILE" != *".sh" ]]; then
 		TEST_NAME=$(basename "$TEST_FILE")
 
 		echo "[==== RUNNING TEST: $TEST_NAME ====]" >&2
