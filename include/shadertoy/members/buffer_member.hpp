@@ -62,7 +62,7 @@ public:
 	 *
 	 * @return Pointer to the buffer associated with this member
 	 */
-	inline std::shared_ptr<buffers::basic_buffer> buffer() const
+	inline const std::shared_ptr<buffers::basic_buffer> &buffer() const
 	{ return buffer_; }
 
 	/**

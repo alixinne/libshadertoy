@@ -74,7 +74,7 @@ public:
 	 *
 	 * @return     Source texture for this buffer.
 	 */
-	inline std::shared_ptr<gl::texture> source_texture() const
+	inline const std::shared_ptr<gl::texture> &source_texture() const
 	{ return source_tex_; }
 
 	/**
@@ -82,7 +82,7 @@ public:
 	 *
 	 * @return     Target (current) texture for this buffer.
 	 */
-	inline std::shared_ptr<gl::texture> target_texture() const
+	inline const std::shared_ptr<gl::texture> &target_texture() const
 	{ return target_tex_; }
 
 };
