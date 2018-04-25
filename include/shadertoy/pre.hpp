@@ -3,14 +3,17 @@
 
 #include "shadertoy/shadertoy_export.h"
 
+/// Base namespace for libshadertoy
 namespace shadertoy
 {
+	/// Definition of rendering buffers
 	namespace buffers
 	{
 		class basic_buffer;
 		class toy_buffer;
 	}
 
+	/// OpenGL wrapper helpers
 	namespace gl
 	{
 		class null_buffer_error;
@@ -47,6 +50,7 @@ namespace shadertoy
 		class texture;
 	}
 
+	/// Buffer input class definitions
 	namespace inputs
 	{
 		class basic_input;
@@ -61,6 +65,7 @@ namespace shadertoy
 		class soil_input;
 	}
 
+	/// Swap chain member class definitions
 	namespace members
 	{
 		class basic_member;
