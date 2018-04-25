@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 			chain.emplace_back(imageBuffer, shadertoy::make_size_ref(ctx.render_size));
 
 			// Create a swap chain member that renders to the screen
-			chain.push_back(shadertoy::members::make_screen(shadertoy::make_size_ref(ctx.render_size)));
+			chain.emplace_back<shadertoy::members::screen_member>(shadertoy::make_size_ref(ctx.render_size));
 
 			try
 			{

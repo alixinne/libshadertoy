@@ -44,6 +44,3 @@ std::shared_ptr<gl::texture> buffer_member::output()
 {
 	return io_.source_texture();
 }
-
-std::shared_ptr<buffer_member> members::member_data(std::shared_ptr<buffers::basic_buffer>&& buffer, rsize_ref &&render_size)
-{ return std::make_shared<buffer_member>(buffer, std::forward<rsize_ref&&>(render_size)); }

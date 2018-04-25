@@ -74,7 +74,23 @@ public:
 	template<typename... Args>
 	auto emplace_back(Args&&... args)
 	{
-		auto member(members::member_data(std::forward<Args>(args)...));
+		auto member(members::make_member(std::forward<Args>(args)...));
+		push_back(member);
+		return member;
+	}
+
+	/**
+	 * @brief Constructs a swap_chain member and adds it to the end of this swap chain
+	 *
+	 * @param  args       Arguments to forward to the swap chain member constructor
+	 * @tparam TargetType Type of the member to create
+	 *
+	 * @return Constructed member
+	 */
+	template<typename TargetType, typename... Args>
+	std::shared_ptr<TargetType> emplace_back(Args&&... args)
+	{
+		auto member(std::make_shared<TargetType>(std::forward<Args>(args)...));
 		push_back(member);
 		return member;
 	}

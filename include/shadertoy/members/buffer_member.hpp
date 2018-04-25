@@ -79,8 +79,24 @@ public:
 	std::shared_ptr<gl::texture> output() override;
 };
 
-std::shared_ptr<buffer_member> member_data(std::shared_ptr<buffers::basic_buffer>&& buffer, rsize_ref &&render_size);
+/**
+ * @brief Constructs a pointer to a buffer_member
+ *
+ * @see buffer_member#buffer_member
+ */
+template<typename... Args>
+std::shared_ptr<buffer_member> make_buffer(Args&&... args)
+{
+	return std::make_shared<buffer_member>(std::forward<Args>(args)...);
+}
 
+/**
+ * @see buffer_member#buffer_member(std::shared_ptr<buffers::basic_buffer>, rsize_ref &&)
+ */
+inline std::shared_ptr<buffer_member> make_member(std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size)
+{
+	return make_buffer(buffer, std::forward<rsize_ref&&>(render_size));
+}
 }
 }
 

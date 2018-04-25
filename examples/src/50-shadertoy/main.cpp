@@ -71,7 +71,7 @@ int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 	auto &state(context.state());
 
 	// Add member that renders to the screen
-	chain.push_back(shadertoy::members::make_screen(shadertoy::make_size_ref(ctx.render_size)));
+	chain.emplace_back<shadertoy::members::screen_member>(shadertoy::make_size_ref(ctx.render_size));
 
 	try
 	{

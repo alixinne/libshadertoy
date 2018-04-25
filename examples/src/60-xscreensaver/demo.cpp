@@ -126,7 +126,7 @@ int shadertoy_load(const char *shader_id, const char *shader_api_key)
 		return code;
 
 	// Add screen_member
-	ctx->chain.push_back(shadertoy::members::make_screen(shadertoy::make_size_ref(ctx->render_size)));
+	ctx->chain.emplace_back<shadertoy::members::screen_member>(shadertoy::make_size_ref(ctx->render_size));
 
 	try
 	{

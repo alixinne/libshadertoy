@@ -123,12 +123,16 @@ public:
 	{ viewport_size_ = std::move(new_viewport_size); }
 };
 
+/**
+ * @brief Constructs a pointer to a screen member
+ *
+ * @see screen_member#screen_member
+ */
 template<typename... Args>
 std::shared_ptr<screen_member> make_screen(Args&&... args)
 {
 	return std::make_shared<screen_member>(std::forward<Args>(args)...);
 }
-
 }
 }
 
