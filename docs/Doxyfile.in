@@ -1,12 +1,17 @@
-PROJECT_NAME           = "@CMAKE_PROJECT_NAME@"
+PROJECT_NAME           = "libshadertoy"
 PROJECT_NUMBER         = @VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@
+PROJECT_BRIEF          = "A C++ library for multipass OpenGL rendering on desktop"
+PROJECT_LOGO           = @PROJECT_SOURCE_DIR@/docs/logo55.png
 STRIP_FROM_PATH        = @PROJECT_SOURCE_DIR@ \
                          @PROJECT_BINARY_DIR@
 INPUT                  = @doxy_main_page@ \
-                         @PROJECT_SOURCE_DIR@/include \
-                         @PROJECT_BINARY_DIR@
+                         @PROJECT_SOURCE_DIR@/docs \
+                         @PROJECT_SOURCE_DIR@/include
+                         #@PROJECT_BINARY_DIR@
 FILE_PATTERNS          = *.hpp \
-                         *.cpp
+                         *.cpp \
+                         *.md \
+                         *.dox
 RECURSIVE              = YES
 USE_MDFILE_AS_MAINPAGE = @doxy_main_page@
 EXCLUDE_PATTERNS       = @PROJECT_BINARY_DIR@/install \
@@ -14,3 +19,9 @@ EXCLUDE_PATTERNS       = @PROJECT_BINARY_DIR@/install \
                          @PROJECT_BINARY_DIR@/shadertoy/polymorphic_value.h \
                          @PROJECT_BINARY_DIR@/shadertoy/uri.hpp
 SHOW_NAMESPACES        = YES
+GENERATE_TREEVIEW      = YES
+ALWAYS_DETAILED_SEC    = YES
+MULTILINE_CPP_IS_BRIEF = YES
+TAB_SIZE               = 4
+BUILTIN_STL_SUPPORT    = YES
+WARN_NO_PARAMDOC       = YES
