@@ -1,27 +1,41 @@
-# libshadertoy [![Build Status](https://ci.inria.fr/libshadertoy/buildStatus/icon?job=libshadertoy)](https://ci.inria.fr/libshadertoy/job/libshadertoy/)
+# libshadertoy
 
-*libshadertoy* is a C++ library for rendering ShaderToy programs on an OpenGL
-desktop. This repository also contains the needed files to package this library
-as native Debian packages.
+[![Build Status](https://ci.inria.fr/libshadertoy/buildStatus/icon?job=libshadertoy)](https://ci.inria.fr/libshadertoy/job/libshadertoy/)
 
-## Dependencies (local build)
+*libshadertoy* is a C++ library for rendering multipass programs using OpenGL
+desktop. Its defaults allow running programs written for the
+[shadertoy](https://www.shadertoy.com) website, but it can be easily extended.
+This library can be either compiled from source, or installed from the built
+Debian packages.
+
+## Dependencies (build from source)
 
 The following tools and libraries are required:
 
-* OpenGL 4.x
-* C++14-enabled compiler (GCC 5.x or clang3.8+)
+* OpenGL 4.5
+* C++14-enabled compiler (GCC 5 or Clang 3.4)
 * [CMake 3.1+](https://launchpad.net/ubuntu/xenial/+source/cmake)
 * [Boost 1.54+](https://launchpad.net/ubuntu/xenial/+package/libboost-all-dev)
-* [SOIL](https://launchpad.net/ubuntu/xenial/+package/libsoil-dev)
-* [libjpeg](https://launchpad.net/ubuntu/xenial/+package/libjpeg-dev)
 * [libepoxy 1.3+](https://launchpad.net/ubuntu/xenial/+source/libepoxy)
+
+These additional dependencies can be installed to support loading images as inputs:
+
+* BMP, PNG, JPG, TGA, DDS, PSD, HDR: [libsoil-dev](https://launchpad.net/ubuntu/xenial/+package/libsoil-dev)
+* JPG (including progressive): [libjpeg-dev](https://launchpad.net/ubuntu/xenial/+package/libjpeg-dev)
+* OpenEXR (half precision): [libopenexr-dev](https://launchpad.net/ubuntu/xenial/+package/libopenexr-dev)
+
+If you want the OpenGL exceptions to include the backtrace, the following
+dependencies are also required:
+
+* [libunwind-dev](https://launchpad.net/ubuntu/xenial/+package/libunwind8-dev)
 
 ## Usage
 
 This library only uses an existing OpenGL context that must be created and made
-current before trying to render frames from a ShaderToy program. This can be
+current before trying to render frames from a program. This can be
 achieved using GLFW3 (recommended), GLUT or any other context creation library.
-Extension loading is done using libepoxy.
+Extension loading is done using libepoxy, although this is transparent to the
+user of the library.
 
 See the `examples/` folder on how to use this library.
 
@@ -32,28 +46,27 @@ such as `iFrame`, `iTime` and such.
 
 ## Building the examples
 
-These are the instructions to build the *00-build* sample from scratch.
+These are the instructions to build all the examples from scratch.
 
 ```bash
-# Copy the sample to a working directory
-cp -r /usr/share/shadertoy/examples/00-build shadertoy-example
+# Copy the samples to a working directory
+cp -r /usr/share/shadertoy/examples shadertoy-example
 cd shadertoy-example
 
-# With libshadertoy-dev and libshadertoy0, install additional dependencies
-sudo apt-get install libglfw3-dev cmake g++ pkg-config
+# With libshadertoy-dev and libshadertoy1, install additional dependencies
+sudo apt-get install libglfw3-dev cmake g++ pkg-config libcurl4-openssl-dev \
+    libjsoncpp-dev
 
 # Create a build directory and make the project
-mkdir build
-cd build
+mkdir -p build && cd build
 cmake ..
 make -j
 
-# Run the example
-./example00-build
+# Run the examples
+./src/00-build/example00-build
+./src/10-gradient/example10-gradient
+# etc.
 ```
-
-***Note to Ubuntu Trusty (14.04) users: GLFW3 is not part of the official repositories.
-You will have to use an other context creation library, such as GLFW2 or GLUT.***
 
 Other examples may require more dependencies, see the associated README for more
 details.
@@ -78,7 +91,7 @@ sudo apt install libshadertoy-dev
 ## Building the packages
 
 To build the library on the development machine (needed for running tests) the
-`build.sh` script should be used. See `debian/control` for the up-to-date list
+provided `Makefile` should be used. See `debian/control` for the up-to-date list
 of build dependencies.
 
 The packages for Ubuntu Xenial and Debian Stretch can be built using
@@ -87,19 +100,31 @@ The packages for Ubuntu Xenial and Debian Stretch can be built using
 such an environment (Debian Stretch instructions, based on provided links).
 
 ```bash
+# Note: replace /disc/schroot with the location of the chroot you chose
+
 # Debian Stretch amd64
 sudo sbuild-createchroot --include=eatmydata,ccache,gnupg stretch /disc/schroot/stretch-amd64-sbuild http://deb.debian.org/debian
 
 # Ubuntu Xenial amd64
 sudo sbuild-createchroot --include=eatmydata,ccache,gnupg xenial /disc/schroot/xenial-amd64-sbuild http://archive.ubuntu.com/ubuntu/
-# Ubuntu Trusty : you have to use dpkg-buildpackage manually on a machine where GCC 5 (installed via a PPA)
-# is the default compiler, and a libepoxy 1.3 package is available (which would be backported from Xenial)
 ```
 
-In order to test the build packages, you can use the `autopkgtest` package. Note
-that at this time, only the schroot method has been working. Here are the steps
-to build a working schroot for autopkgtest, using the schroot created for
-building the packages.
+Once the sbuild environment is setup, the Makefile can be used as follows.
+
+```bash
+# Build all Xenial packages (amd64, i386, source)
+make xenial
+
+# Build Debian Stretch amd64
+make stretch-amd64
+
+# The result can be found in ../libshadertoy-{version}-{distribution}-{git-revision}
+```
+
+The built packages are tested by the package building script using
+`autopkgtest`. Note that at this time, only the schroot method has been working.
+Here are the steps to build a working schroot for autopkgtest, using the schroot
+created for building the packages.
 
 ```bash
 # Switch into chroot
@@ -112,22 +137,14 @@ sed -i 's/main$/main contrib non-free/' /etc/apt/sources.list
 apt-get update
 apt-get install -y nvidia-driver
 
-# You can also install the build dependencies beforehand
-apt-get install -y build-essential libboost-all-dev libsoil-dev libepoxy-dev \
-	libglfw3-dev libunwind-dev libglm-dev cmake git ca-certificates
+# You can also install the build dependencies beforehand to speed up the
+# compilation
+apt-get install -y build-essential libsoil-dev libjpeg-dev libepoxy-dev \
+    libgl1-mesa-dev libglm-dev libopenexr-dev libunwind-dev doxygen doxygen-latex \
+    graphviz pkg-config cmake git ca-certificates
 
 # Leave the chroot
 exit
-```
-
-You can then run the tests using autopkgtest:
-
-```bash
-# Authorize local connections to X11
-xhost +local:
-
-# Run tests
-sudo autopkgtest ../*.deb -- schroot stretch-amd64-sbuild
 ```
 
 ## Copyright
