@@ -1,3 +1,9 @@
+libshadertoy (1.0.0~rc3) UNRELEASED; urgency=medium
+
+  * Fix toy_buffer program reloading and shader object usage
+
+ -- Vincent Tavernier <vince.tavernier@gmail.com>  Fri, 27 Apr 2018 14:09:51 +0200
+
 libshadertoy (1.0.0~rc2) unstable; urgency=medium
 
   * Fix test 50-shadertoy

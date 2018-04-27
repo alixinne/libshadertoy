@@ -23,9 +23,6 @@ private:
 	/// Buffer program
 	gl::program program_;
 
-	/// Fragment shader
-	gl::shader fs_;
-
 	/// Bound uniform state
 	std::vector<std::shared_ptr<shadertoy::bound_inputs_base>> bound_inputs_;
 

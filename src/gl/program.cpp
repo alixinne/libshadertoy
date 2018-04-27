@@ -210,6 +210,11 @@ void program::attach_shader(const shader &shader) const
 	gl_call(glAttachShader, GLuint(*this), GLuint(shader));
 }
 
+void program::detach_shader(const shader &shader) const
+{
+	gl_call(glDetachShader, GLuint(*this), GLuint(shader));
+}
+
 std::string program::log() const
 {
 	// Get log length

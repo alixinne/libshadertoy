@@ -15,7 +15,6 @@ using shadertoy::gl::gl_call;
 
 toy_buffer::toy_buffer(const std::string &id)
 	: gl_buffer(id),
-	  fs_(GL_FRAGMENT_SHADER),
 	  bound_inputs_(),
 	  inputs_(),
 	  source_files_()
@@ -24,17 +23,23 @@ toy_buffer::toy_buffer(const std::string &id)
 
 void toy_buffer::init_contents(const render_context &context, const io_resource &io)
 {
-	// Attach the vertex shader for the screen quad
-	program_.attach_shader(context.screen_quad_vertex_shader());
+	// Shader objects
+	const gl::shader &vs(context.screen_quad_vertex_shader());
+	gl::shader fs(GL_FRAGMENT_SHADER);
 
 	// Load the fragment shader for this buffer
-	context.build_buffer_shader(*this, fs_);
+	context.build_buffer_shader(*this, fs);
 
-	// Attach shader
-	program_.attach_shader(fs_);
+	// Attach the shaders
+	program_.attach_shader(vs);
+	program_.attach_shader(fs);
 
 	// Link the program
 	program_.link();
+
+	// Detach the shaders
+	program_.detach_shader(vs);
+	program_.detach_shader(fs);
 
 	// Use the program
 	program_.use();

@@ -305,6 +305,16 @@ namespace gl
 		void attach_shader(const shader &shader) const;
 
 		/**
+		 * @brief glDetachShader
+		 *
+		 * @param shader Shader object to detach
+		 *
+		 * @throws opengl_error
+		 * @throws null_shader_error
+		 */
+		void detach_shader(const shader &shader) const;
+
+		/**
 		 * @brief glGetProgramInfoLog
 		 *
 		 * @return Contents of the information log
