@@ -1,5 +1,5 @@
 PROJECT_NAME           = "libshadertoy"
-PROJECT_NUMBER         = @VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@
+PROJECT_NUMBER         = @ST_VERSION_FULL@
 PROJECT_BRIEF          = "A C++ library for multipass OpenGL rendering on desktop"
 PROJECT_LOGO           = @PROJECT_SOURCE_DIR@/docs/logo55.png
 STRIP_FROM_PATH        = @PROJECT_SOURCE_DIR@ \
