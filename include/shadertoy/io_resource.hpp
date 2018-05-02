@@ -28,7 +28,7 @@ class io_resource
 
 public:
 	/**
-	 * @brief Creates a new io_resource of the given size
+	 * @brief Create a new io_resource of the given size
 	 *
 	 * @param render_size Initial size
 	 */

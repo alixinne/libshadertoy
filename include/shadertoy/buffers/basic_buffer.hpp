@@ -29,14 +29,14 @@ class shadertoy_EXPORT basic_buffer
 
 protected:
 	/**
-	 * @brief     Initializes a new base buffer
+	 * @brief     Initialize a new base buffer
 	 *
 	 * @param[in] id        Identifier for this buffer
 	 */
 	basic_buffer(const std::string &id);
 
 	/**
-	 * @brief     Initializes the contents of the buffer for rendering. This method
+	 * @brief     Initialize the contents of the buffer for rendering. This method
 	 *            must be implemented by derived classes as part of their initialization
 	 *            routine.
 	 *
@@ -46,7 +46,7 @@ protected:
 	virtual void init_contents(const render_context &context, const io_resource &io) = 0;
 
 	/**
-	 * @brief     Allocates size-dependent resources for the contents of this buffer.
+	 * @brief     Allocate size-dependent resources for the contents of this buffer.
 	 *            This method must be implemented by derived classes to respond to
 	 *            rendering size changes.
 	 *
@@ -56,7 +56,7 @@ protected:
 	virtual void allocate_contents(const render_context &context, const io_resource &io) = 0;
 
 	/**
-	 * @brief     Renders the contents of this buffer. This method must
+	 * @brief     Render the contents of this buffer. This method must
 	 *            be implemented by derived classes as part of their rendering routine.
 	 *            The target framebuffer and renderbuffer are already bound when this
 	 *            function is called.
@@ -68,7 +68,7 @@ protected:
 
 public:
 	/**
-	 * @brief      Obtains the identifier of this buffer
+	 * @brief      Obtain the identifier of this buffer
 	 *
 	 * @return     String identifying this buffer
 	 */
@@ -76,7 +76,7 @@ public:
 	{ return id_; }
 
 	/**
-	 * @brief      Obtains the query object used to measure this buffer runtime
+	 * @brief      Obtain the query object used to measure this buffer runtime
 	 *
 	 * @return     Reference to the query object
 	 */
@@ -92,7 +92,7 @@ public:
 	void init(const render_context &context, const io_resource &io);
 
 	/**
-	 * @brief      Allocates the textures for this buffer. Note that the current
+	 * @brief      Allocate the textures for this buffer. Note that the current
 	 *             contents of previous textures are discarded.
 	 *
 	 * @param[in]  context Rendering context to use for shared objects

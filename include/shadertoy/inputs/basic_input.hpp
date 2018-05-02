@@ -23,7 +23,7 @@ class shadertoy_EXPORT basic_input
 
 protected:
 	/**
-	 * @brief Loads this input's contents.
+	 * @brief Load this input's contents.
 	 *
 	 * This method must be implemented by derived classes as part
 	 * of their loading routine.
@@ -31,7 +31,7 @@ protected:
 	virtual void load_input() = 0;
 
 	/**
-	 * @brief Resets this input's contents.
+	 * @brief Reset this input's contents.
 	 *
 	 * This method must be implemented by derived classes as part
 	 * of their reset routine.
@@ -39,7 +39,7 @@ protected:
 	virtual void reset_input() = 0;
 
 	/**
-	 * @brief Obtains this input's texture object.
+	 * @brief Obtain this input's texture object.
 	 *
 	 * This method must be implemented by derived classes in order
 	 * to return a texture object to be used on the device. Note
@@ -51,13 +51,13 @@ protected:
 	virtual std::shared_ptr<gl::texture> use_input() = 0;
 
 	/**
-	 * @brief Initializes a new instance of the basic_input class.
+	 * @brief Initialize a new instance of the basic_input class.
 	 */
 	basic_input();
 
 public:
 	/**
-	 * @brief Loads this input's contents.
+	 * @brief Load this input's contents.
 	 *
 	 * If the input has already been loaded, it will not be loaded again. In
 	 * order to load it again, use the reset() method.
@@ -65,14 +65,14 @@ public:
 	void load();
 
 	/**
-	 * @brief Resets this input's contents.
+	 * @brief Reset this input's contents.
 	 *
 	 * If the input has not been loaded, this method is a no-op.
 	 */
 	void reset();
 
 	/**
-	 * @brief Uses this input for a rendering pass.
+	 * @brief Use this input for a rendering pass.
 	 *
 	 * If the input has not yet been loaded, it will be loaded.
 	 *
@@ -81,42 +81,42 @@ public:
 	std::shared_ptr<gl::texture> use();
 
 	/**
-	 * @brief Obtains the sampler object for this input
+	 * @brief Obtain the sampler object for this input
 	 *
 	 * @return Reference to the sampler object
 	 */
 	inline gl::sampler &sampler() { return sampler_; }
 
 	/**
-	 * @brief Gets the minification filter of this input's sampler
+	 * @brief Get the minification filter of this input's sampler
 	 *
 	 * @return Current value of the GL_MIN_FILTER parameter
 	 */
 	GLint min_filter();
 
 	/**
-	 * @brief Sets the minification filter of this input's sampler
+	 * @brief Set the minification filter of this input's sampler
 	 *
 	 * @param new_min_filter New minification filter
 	 */
 	void min_filter(GLint new_min_filter);
 
 	/**
-	 * @brief Sets the magnification filter of this input's sampler
+	 * @brief Set the magnification filter of this input's sampler
 	 *
 	 * @param new_mag_filter New magnification filter
 	 */
 	void mag_filter(GLint new_mag_filter);
 
 	/**
-	 * @brief Sets the wrap parameter of this input's sampler
+	 * @brief Set the wrap parameter of this input's sampler
 	 *
 	 * @param new_wrap New wrap parameter
 	 */
 	void wrap(GLint new_wrap);
 
 	/**
-	 * @brief Binds the sampler and its texture to the given unit
+	 * @brief Bind the sampler and its texture to the given unit
 	 *
 	 * @param unit Unit to bind to
 	 *

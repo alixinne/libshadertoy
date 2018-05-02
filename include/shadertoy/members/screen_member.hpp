@@ -10,6 +10,24 @@ namespace shadertoy
 namespace members
 {
 
+/**
+ * @brief swap_chain member that renders to the default framebuffer
+ *
+ * The screen_member can be added to a swap_chain to render the output of any
+ * basic_member (which may not be part of the same swap chain) to the default
+ * framebuffer of the current OpenGL context.
+ *
+ * The default constructor (screen_member#screen_member(rsize_ref &&)) queries
+ * the swap_chain object in order to find out the latest rendered member. Note
+ * that this fails if the swap chain only contains the screen_member instance.
+ *
+ * A member (screen_member#screen_member(rsize_ref &&, std::shared_ptr<members::basic_member>))
+ * can instead be specified. The screen_member instance then renders the output
+ * of the specified member independently of the preceding node in the
+ * swap_chain.
+ *
+ * Additional parameters are available to change the viewport when rendering.
+ */
 class shadertoy_EXPORT screen_member : public basic_member
 {
 	/// Member to render the output of
@@ -29,7 +47,7 @@ class shadertoy_EXPORT screen_member : public basic_member
 
 protected:
 	/**
-	 * @brief Implements rendering the last swap chain output to the screen
+	 * @brief Implement rendering the last swap chain output to the screen
 	 *
 	 * @param chain   Current swap_chain being rendered
 	 * @param context Context to use for rendering
@@ -46,12 +64,18 @@ protected:
 	 */
 	void allocate_member(const swap_chain &chain, const render_context &context) override;
 
-	/// Return the associated output or the latest output in the swap chain
+	/**
+	 * @brief Return the associated output or the latest output in the swap chain
+	 *
+	 * @param chain Swap chain to pull the output from
+	 *
+	 * @return Pointer to the OpenGL texture output object
+	 */
 	std::shared_ptr<gl::texture> output(const swap_chain &chain);
 
 public:
 	/**
-	 * @brief Initializes a new instance of the screen_member class
+	 * @brief Initialize a new instance of the screen_member class
 	 *
 	 * By default, this instance will render the last rendered output in the
 	 * current swap chain.
@@ -61,7 +85,7 @@ public:
 	screen_member(rsize_ref &&viewport_size);
 
 	/**
-	 * @brief Initializes a new instance of the screen_member class
+	 * @brief Initialize a new instance of the screen_member class
 	 *
 	 * By default, this instance will render the last rendered output in the
 	 * current swap chain.
@@ -73,7 +97,7 @@ public:
 	screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size);
 
 	/**
-	 * @brief Initializes a new instance of the screen_member class
+	 * @brief Initialize a new instance of the screen_member class
 	 *
 	 * By default, this instance will render the associated output instead
 	 * of the last rendered output in the current swap chain.
@@ -85,7 +109,7 @@ public:
 
 
 	/**
-	 * @brief Initializes a new instance of the screen_member class
+	 * @brief Initialize a new instance of the screen_member class
 	 *
 	 * By default, this instance will render the associated output instead
 	 * of the last rendered output in the current swap chain.
@@ -98,59 +122,79 @@ public:
 	screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size, std::shared_ptr<members::basic_member> member);
 
 	/**
-	 * @brief Returns the same output that will be drawn to the screen
+	 * @brief Return the same output that will be drawn to the screen
 	 *
 	 * Note that unless an explicit output has been associated to this member,
 	 * this method will return null since in the absence of a swap chain, the
 	 * "latest" output is not defined.
+	 *
+	 * @return Pointer to the corresponding OpenGL texture object
 	 */
 	std::shared_ptr<gl::texture> output() override;
 
 	/**
-	 * @brief Obtains a reference to the sampler object of this member
+	 * @brief Obtain a reference to the sampler object of this member
+	 *
+	 * @return Reference to the OpenGL sampler object used for the rendering
 	 */
 	inline const gl::sampler &sampler() const
 	{ return sampler_; }
 
 	/**
-	 * @brief Obtains the viewport X offset
+	 * @brief Obtain the viewport X offset
+	 *
+	 * @return Value of the viewport X offset
 	 */
 	inline int viewport_x() const
 	{ return viewport_x_; }
 
 	/**
-	 * @brief Sets the viewport X offset
+	 * @brief Set the viewport X offset
+	 *
+	 * @param new_viewport_x New viewport X offset
 	 */
 	inline void viewport_x(int new_viewport_x)
 	{ viewport_x_ = new_viewport_x; }
 
 	/**
-	 * @brief Obtains the viewport Y offset
+	 * @brief Obtain the viewport Y offset
+	 *
+	 * @return Value of the viewport Y offset
 	 */
 	inline int viewport_y() const
 	{ return viewport_y_; }
 
 	/**
-	 * @brief Sets the viewport Y offset
+	 * @brief Set the viewport Y offset
+	 *
+	 * @param new_viewport_y New viewport Y offset
 	 */
 	inline void viewport_y(int new_viewport_y)
 	{ viewport_y_ = new_viewport_y; }
 
 	/**
-	 * @brief Obtains the viewport size object
+	 * @brief Obtain the viewport size object
+	 *
+	 * @return Reference to the viewport size object
 	 */
 	inline const rsize_ref &viewport_size() const
 	{ return viewport_size_; }
 
 	/**
-	 * @brief Sets the viewport size object
+	 * @brief Set the viewport size object
+	 *
+	 * @param new_viewport_size New viewport size
 	 */
 	inline void viewport_size(rsize_ref &&new_viewport_size)
 	{ viewport_size_ = std::move(new_viewport_size); }
 };
 
 /**
- * @brief Constructs a pointer to a screen member
+ * @brief Construct a pointer to a screen member
+ *
+ * @param args Arguments to screen_member#screen_member
+ *
+ * @return Pointer to the constructed screen_member
  *
  * @see screen_member#screen_member
  */

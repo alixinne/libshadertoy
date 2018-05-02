@@ -14,6 +14,9 @@ namespace shadertoy
 namespace compiler
 {
 
+/**
+ * @brief Represents a set of GLSL preprocessor definitions
+ */
 class shadertoy_EXPORT preprocessor_defines
 {
 	/// Generated source
@@ -27,12 +30,12 @@ class shadertoy_EXPORT preprocessor_defines
 
 public:
 	/**
-	 * @brief Initializes a new instance of the preprocessor_defines class
+	 * @brief Initialize a new instance of the preprocessor_defines class
 	 */
 	preprocessor_defines();
 
 	/**
-	 * @brief Obtains a non-const reference to the definitions map
+	 * @brief Obtain a non-const reference to the definitions map
 	 *
 	 * @return Non-const reference to the definitions map
 	 */
@@ -43,7 +46,7 @@ public:
 	}
 
 	/**
-	 * @brief Obtains a const reference to the definitions map
+	 * @brief Obtain a const reference to the definitions map
 	 *
 	 * @return Const reference to the definitions map
 	 */
@@ -51,13 +54,16 @@ public:
 	{ return definitions_; }
 
 	/**
-	 * @brief Obtains the source corresponding to the definitions in this object
+	 * @brief Obtain the source corresponding to the definitions in this object
 	 *
 	 * @return GLSL Source including the definitions as a string
 	 */
 	const std::string &source();
 };
 
+/**
+ * @brief Represents a shader template part that defines preprocessor variables
+ */
 class shadertoy_EXPORT define_part : public basic_part
 {
 	/// Preprocessor defines block
@@ -65,7 +71,7 @@ class shadertoy_EXPORT define_part : public basic_part
 
 public:
 	/**
-	 * @brief Initializes a new instance of the define_part class
+	 * @brief Initialize a new instance of the define_part class
 	 *
 	 * A new empty preprocessor define block is created.
 	 *
@@ -74,7 +80,7 @@ public:
 	define_part(const std::string &name);
 
 	/**
-	 * @brief Initializes a new instance of the define_part class
+	 * @brief Initialize a new instance of the define_part class
 	 *
 	 * The given preprocessor define block is used. It must be non-null.
 	 *
@@ -92,14 +98,14 @@ public:
 	{ return definitions_; }
 
 	/**
-	 * @brief Converts this template_part to a boolean.
+	 * @brief Convert this template_part to a boolean.
 	 *
 	 * @return true if the template_part is specified, false otherwise
 	 */
 	operator bool() const override;
 
 	/**
-	 * @brief Obtains this template part's sources
+	 * @brief Obtain this template part's sources
 	 *
 	 * @return Sources for this template part
 	 *

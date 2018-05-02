@@ -18,7 +18,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Initializes a new instance of the null_program_error class.
+		 * @brief Initialize a new instance of the null_program_error class.
 		 */
 		explicit null_program_error();
 	};
@@ -30,7 +30,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Initializes a new instance of the attrib_location class.
+		 * @brief Initialize a new instance of the attrib_location class.
 		 *
 		 * @param program  Program this location is defined in
 		 * @param location Location of the attrib
@@ -67,7 +67,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Initializes a new instance of the UniformLocation class.
+		 * @brief Initialize a new instance of the UniformLocation class.
 		 *
 		 * @param program  Program this location is defined in
 		 * @param location Location of the uniform
@@ -75,7 +75,7 @@ namespace gl
 		uniform_location(const program &program, GLint location);
 
 		/**
-		 * @brief Returns a value indicating if this uniform location is active in its
+		 * @brief Return a value indicating if this uniform location is active in its
 		 * program.
 		 *
 		 * @return true if the uniform is active, false otherwise.
@@ -173,7 +173,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Initializes a new instance of the program_link_error class.
+		 * @brief Initialize a new instance of the program_link_error class.
 		 *
 		 * @param  programId OpenGL resource id of the failed program
 		 * @param  log       Contents of the link step log
@@ -210,7 +210,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Initializes a new instance of the program_validate_error class.
+		 * @brief Initialize a new instance of the program_validate_error class.
 		 *
 		 * @param  programId OpenGL resource id of the failed program
 		 * @param  log       Contents of the validate step log

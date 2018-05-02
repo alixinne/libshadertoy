@@ -9,7 +9,7 @@ namespace shadertoy
 {
 
 /**
- * @brief      Represents a context for rendering a specific ShaderToy program.
+ * @brief      Represent a context for rendering a specific ShaderToy program.
  *
  * The render context manages shared resources among a set of buffers, which may or may not be
  * members of the same swap chain. This includes the screen drawing programs, the fallback error
@@ -134,14 +134,14 @@ public:
 	{ return screen_prog_; }
 
 	/**
-	 * @brief        Initializes the given swap chain
+	 * @brief        Initialize the given swap chain
 	 *
 	 * @param chain  Swap chain to initialize
 	 */
 	void init(swap_chain &chain) const;
 
 	/**
-	 * @brief        Reallocates the textures used by the swap chain \p chain
+	 * @brief        Reallocate the textures used by the swap chain \p chain
 	 *
 	 * @param chain  Swap chain to allocate the textures
 	 */
@@ -150,12 +150,14 @@ public:
 	/**
 	 * @brief      Render \p chain using the current context
 	 *
-	 * @return     Result of \c chain::render
+	 * @param      chain Chain to render using this context
+	 *
+	 * @return     Result of chain#render
 	 */
 	std::shared_ptr<members::basic_member> render(swap_chain &chain) const;
 
 	/**
-	 * @brief      Compiles a fragment shader for use in a ToyBuffer.
+	 * @brief      Compile a fragment shader for use in a ToyBuffer.
 	 *
 	 * @param buffer Buffer being compiled
 	 * @param fs     Fragment shader object to compile to.
@@ -163,37 +165,47 @@ public:
 	void build_buffer_shader(const buffers::toy_buffer &buffer, gl::shader &fs) const;
 
 	/**
-	 * @brief      Gets a reference to the uniform state container
+	 * @brief  Get a reference to the uniform state container
+	 *
+	 * @return Reference to the state object
 	 */
 	inline const shader_inputs_t &state() const
 	{ return state_; }
 
 	/**
-	 * @brief      Gets a reference to the uniform state container
+	 * @brief  Get a reference to the uniform state container
+	 *
+	 * @return Reference to the state object
 	 */
 	inline shader_inputs_t &state()
 	{ return state_; }
 
 	/**
-	 * @brief     Gets a reference to the buffer template
+	 * @brief  Get a reference to the buffer template
+	 *
+	 * @return Reference to the shader_template in use by this context
 	 */
 	inline const compiler::shader_template &buffer_template() const
 	{ return buffer_template_; }
 
 	/**
-	 * @brief     Gets a reference to the buffer template
+	 * @brief  Get a reference to the buffer template
+	 *
+	 * @return Reference to the shader_template in use by this context
 	 */
 	inline compiler::shader_template &buffer_template()
 	{ return buffer_template_; }
 
 	/**
-	 * @brief     Gets a reference to the default error_input instance
+	 * @brief  Get a reference to the default error_input instance
+	 *
+	 * @return Reference to the error_input fallback object
 	 */
 	inline const std::shared_ptr<inputs::error_input> &error_input() const
 	{ return error_input_; }
 
 	/**
-	 * @brief      Binds uniforms to an actual program, returning the handle object to these bound uniforms.
+	 * @brief Bind uniforms to an actual program, returning the handle object to these bound uniforms.
 	 *
 	 * @param program Program to bind to
 	 * @return
@@ -201,12 +213,12 @@ public:
 	std::vector<std::shared_ptr<bound_inputs_base>> bound_inputs(gl::program &program) const;
 
 	/**
-	 * @brief      Render a screen quad using the current context
+	 * @brief Render a screen quad using the current context
 	 */
 	void render_screen_quad() const;
 
 	/**
-	 * @brief      Render a screen quad using the current context
+	 * @brief Render a screen quad using the current context
 	 *
 	 * @param timerQuery Query object to use for measuring the runtime of the
 	 *                   draw call.
@@ -214,7 +226,9 @@ public:
 	void render_screen_quad(const gl::query &timerQuery) const;
 
 	/**
-	 * @brief      Get the default screen quad vertex shader
+	 * @brief  Get the default screen quad vertex shader
+	 *
+	 * @return Reference to the screen quad vertex shader object
 	 */
 	inline const gl::shader &screen_quad_vertex_shader() const
 	{ return screen_vs_; }

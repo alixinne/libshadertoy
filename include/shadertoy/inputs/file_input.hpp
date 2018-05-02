@@ -23,7 +23,7 @@ class shadertoy_EXPORT file_input : public image_input
 
 protected:
 	/**
-	 * @brief Loads the image from filename
+	 * @brief Load the image from filename
 	 *
 	 * @param filename Filename to load the image from
 	 * @param vflip    true if the image should be flipped vertically while loading
@@ -33,7 +33,7 @@ protected:
 	virtual std::shared_ptr<gl::texture> load_file(const std::string &filename, bool vflip) = 0;
 
 	/**
-	 * @brief Loads the decoded image into device memory.
+	 * @brief Load the decoded image into device memory.
 	 *
 	 * Derived classes should implement load_file.
 	 *
@@ -42,12 +42,12 @@ protected:
 	std::shared_ptr<gl::texture> load_image() final;
 
 	/**
-	 * @brief Initializes a new instance of the file_input class.
+	 * @brief Initialize a new instance of the file_input class.
 	 */
 	file_input();
 
 	/**
-	 * @brief Initialies a new instance of the file_input class with a default
+	 * @brief Initialie a new instance of the file_input class with a default
 	 * filename
 	 *
 	 * @param filename Default filename to load the image from
@@ -56,14 +56,14 @@ protected:
 
 public:
 	/**
-	 * @brief Obtains the filename this input will be loaded from.
+	 * @brief Obtain the filename this input will be loaded from.
 	 *
 	 * @return Filename this input will be loaded from
 	 */
 	inline const std::string &filename() const { return filename_; }
 
 	/**
-	 * @brief Sets the filename this input will be loaded from.
+	 * @brief Set the filename this input will be loaded from.
 	 *
 	 * Note that this method does not invalidate the input contents,
 	 * so reset should be called to trigger a reload step.
@@ -73,14 +73,14 @@ public:
 	void filename(const std::string &new_filename) { filename_ = new_filename; }
 
 	/**
-	 * @brief Obtains the vflip flag status
+	 * @brief Obtain the vflip flag status
 	 *
 	 * @return true if the image will be flipped on loading
 	 */
 	inline bool vflip() const { return vflip_; }
 
 	/**
-	 * @brief Sets the vflip flag
+	 * @brief Set the vflip flag
 	 *
 	 * Note that this method does not invalidate the input contents,
 	 * so reset should be called to trigger a reload step.

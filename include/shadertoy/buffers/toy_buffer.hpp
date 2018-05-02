@@ -34,7 +34,7 @@ private:
 
 protected:
 	/**
-	 * @brief      Initializes the contents of this buffer
+	 * @brief      Initialize the contents of this buffer
 	 *
 	 * @param[in]  context Rendering context to use for shared objects
 	 * @param[in]  io      IO resource object
@@ -42,7 +42,7 @@ protected:
 	void init_contents(const render_context &context, const io_resource &io) override;
 
 	/**
-	 * @brief      Renders the contents of this buffer.
+	 * @brief      Render the contents of this buffer.
 	 *
 	 * @param[in]  context Rendering context to use for rendering this buffer
 	 * @param[in]  io      IO resource object
@@ -51,7 +51,7 @@ protected:
 
 public:
 	/**
-	 * @brief      Initializes a new ShaderToy buffer
+	 * @brief      Initialize a new ShaderToy buffer
 	 *
 	 * @param[in]  id       Identifier for this buffer
 	 */

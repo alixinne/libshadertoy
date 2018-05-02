@@ -18,7 +18,7 @@ class shadertoy_EXPORT exr_input : public file_input
 {
 protected:
 	/**
-	 * @brief Loads the image from filename
+	 * @brief Load the image from filename
 	 *
 	 * @param filename Filename to load the image from
 	 * @param vflip    true if the image should be flipped vertically while loading
@@ -29,7 +29,7 @@ protected:
 
 public:
 	/**
-	 * @brief Initializes a new instance of the exr_input class
+	 * @brief Initialize a new instance of the exr_input class
 	 *
 	 * This instance will have no filename setup, therefore it will not load
 	 * any texture.
@@ -37,7 +37,7 @@ public:
 	exr_input();
 
 	/**
-	 * @brief Initializes a new instance of the exr_input class
+	 * @brief Initialize a new instance of the exr_input class
 	 * with a default filename
 	 *
 	 * @param filename Filename to load the image from

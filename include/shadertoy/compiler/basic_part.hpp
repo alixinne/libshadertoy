@@ -12,6 +12,9 @@ namespace shadertoy
 namespace compiler
 {
 
+/**
+ * @brief Base class representing a part of a shader_template
+ */
 class shadertoy_EXPORT basic_part
 {
 	/// Name of this template part
@@ -19,7 +22,7 @@ class shadertoy_EXPORT basic_part
 
 protected:
 	/**
-	 * @brief Initializes a new instance of basic_part
+	 * @brief Initialize a new instance of basic_part
 	 *
 	 * @param name Name of this part
 	 */
@@ -27,7 +30,7 @@ protected:
 
 public:
 	/**
-	 * @brief Obtains this template part's name
+	 * @brief Obtain this template part's name
 	 *
 	 * @return Name of this template part
 	 */
@@ -35,22 +38,26 @@ public:
 	{ return name_; }
 
 	/**
-	 * @brief See operator bool()
+	 * @brief Get a value indicating if this template_part is specified
+	 *
+	 * @return true if the template_part is specified, false otherwise
 	 */
 	inline bool specified() const
 	{ return static_cast<bool>(*this); }
 
 	/**
-	 * @brief Converts this template_part to a boolean.
+	 * @brief Convert this template_part to a boolean.
 	 *
 	 * @return true if the template_part is specified, false otherwise
 	 */
 	virtual operator bool() const = 0;
 
 	/**
-	 * @brief Obtains this template part's sources
+	 * @brief Obtain this template part's sources
 	 *
-	 * @return Sources for this template part
+	 * @return Sources for this template part. The first element of each pair is the name of the source part,
+	 * and the second element is the GLSL source contents. The first element
+	 * may be the name of the basic_part instance.
 	 *
 	 * @throws template_error If this template's source is not defined
 	 */

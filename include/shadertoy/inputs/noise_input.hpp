@@ -23,23 +23,25 @@ class shadertoy_EXPORT noise_input : public basic_input
 
 protected:
 	/**
-	 * @brief Loads this input's contents
+	 * @brief Load this input's contents
 	 */
 	void load_input() override;
 
 	/**
-	 * @brief Resets this input's contents
+	 * @brief Reset this input's contents
 	 */
 	void reset_input() override;
 
 	/**
-	 * @brief Obtains this input's texture object
+	 * @brief Obtain this input's texture object
+	 *
+	 * @return OpenGL texture object representing the noise texture
 	 */
 	std::shared_ptr<gl::texture> use_input() override;
 
 public:
 	/**
-	 * @brief Initializes a new instance of the noise_input class of the given size
+	 * @brief Initialize a new instance of the noise_input class of the given size
 	 *
 	 * @param size Size object to define the noise texture size
 	 */

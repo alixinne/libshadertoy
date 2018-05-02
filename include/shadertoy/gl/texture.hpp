@@ -14,7 +14,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Initializes a new instance of the null_texture_error class.
+		 * @brief Initialize a new instance of the null_texture_error class.
 		 */
 		explicit null_texture_error();
 	};
@@ -29,7 +29,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Creates a new texture of the given type.
+		 * @brief Create a new texture of the given type.
 		 *
 		 * @param  target Target of the texture to create
 		 * @return        Id of the created texture
@@ -39,7 +39,7 @@ namespace gl
 		GLuint create(GLenum target);
 
 		/**
-		 * @brief Deletes the given texture
+		 * @brief Delete the given texture
 		 *
 		 * @param resource Id of the texture to delete
 		 *
@@ -55,7 +55,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Creates a new texture for the given target.
+		 * @brief Create a new texture for the given target.
 		 *
 		 * @param target Target of the new texture.
 		 *

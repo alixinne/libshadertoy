@@ -14,7 +14,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Initializes a new instance of the null_framebuffer_error class.
+		 * @brief Initialize a new instance of the null_framebuffer_error class.
 		 */
 		explicit null_framebuffer_error();
 	};

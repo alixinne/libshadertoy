@@ -14,16 +14,19 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Initializes a new instance of the null_query_error class.
+		 * @brief Initialize a new instance of the null_query_error class.
 		 */
 		explicit null_query_error();
 	};
 
+	/**
+	 * @brief Implement the allocation logic for gl::query objects
+	 */
 	class shadertoy_EXPORT query_allocator
 	{
 	public:
 		/**
-		 * @brief Creates a new query of the given type.
+		 * @brief Create a new query of the given type.
 		 *
 		 * @param  target Target of the query to create
 		 * @return        Id of the created query
@@ -33,7 +36,7 @@ namespace gl
 		GLuint create(GLenum target);
 
 		/**
-		 * @brief Deletes the given query
+		 * @brief Delete the given query
 		 *
 		 * @param resource Id of the query to delete
 		 *
@@ -49,7 +52,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Creates a new query for the given target.
+		 * @brief Create a new query for the given target.
 		 *
 		 * @param target Target of the new query.
 		 *

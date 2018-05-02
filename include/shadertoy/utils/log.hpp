@@ -11,11 +11,17 @@ namespace shadertoy
 namespace utils
 {
 
+/// Logging utility class for shadertoy
 class log
 {
 	static bool initialized_;
 
 public:
+	/**
+	 * @brief Get the default logger instance for libshadertoy
+	 *
+	 * @return Pointer to the logger instance for libshadertoy
+	 */
 	static std::shared_ptr<spdlog::logger> shadertoy();
 };
 

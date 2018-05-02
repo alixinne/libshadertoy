@@ -10,9 +10,17 @@ namespace shadertoy
 namespace compiler
 {
 
+/**
+ * @brief Error thrown on invalid use of a shader_template
+ */
 class shadertoy_EXPORT template_error : public shadertoy_error
 {
 public:
+	/**
+	 * @brief Initialize a new instance of the template_error class
+	 *
+	 * @param what Message describing the template exception
+	 */
 	explicit template_error(const std::string &what);
 };
 }

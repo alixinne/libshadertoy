@@ -14,7 +14,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Initializes a new instance of the opengl_error class.
+		 * @brief Initialize a new instance of the opengl_error class.
 		 *
 		 * @param  error    OpenGL error code
 		 * @param  extraMsg Extra information to include in what()
@@ -23,14 +23,14 @@ namespace gl
 	};
 
 	/**
-	 * @brief Throws an opengl_error if glGetError returns non-zero
+	 * @brief Throw an opengl_error if glGetError returns non-zero
 	 *
 	 * @throws opengl_error
 	 */
 	void shadertoy_EXPORT check_errors();
 
 	/**
-	 * @brief Invokes the given OpenGL function
+	 * @brief Invoke the given OpenGL function
 	 *
 	 * @param  function OpenGL function to invoke
 	 *
@@ -46,7 +46,7 @@ namespace gl
 	}
 
 	/**
-	 * @brief Invokes the given OpenGL function
+	 * @brief Invoke the given OpenGL function
 	 *
 	 * @param  function OpenGL function to invoke
 	 * @return          Return value of the OpenGL function
@@ -64,7 +64,7 @@ namespace gl
 	}
 
 	/**
-	 * @brief Invokes the given OpenGL function
+	 * @brief Invoke the given OpenGL function
 	 *
 	 * @param  function OpenGL function to invoke
 	 * @param  params   Parameters to forward to the OpenGL function
@@ -81,7 +81,7 @@ namespace gl
 	}
 
 	/**
-	 * @brief Invokes the given OpenGL function
+	 * @brief Invoke the given OpenGL function
 	 *
 	 * @param  function OpenGL function to invoke
 	 * @param  params   Parameters to forward to the OpenGL function

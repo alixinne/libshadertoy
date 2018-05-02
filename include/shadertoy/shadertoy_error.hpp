@@ -13,13 +13,13 @@ class shadertoy_error : public std::runtime_error
 {
 public:
 	/**
-	 * @brief Initializes a new instance of the ShadertoyError class.
+	 * @brief Initialize a new instance of the ShadertoyError class.
 	 *
 	 * @param  what_arg Error message
 	 */
 	explicit shadertoy_error(const std::string &what_arg);
 	/**
-	 * @brief Initializes a new instance of the ShadertoyError class.
+	 * @brief Initialize a new instance of the ShadertoyError class.
 	 *
 	 * @param  what_arg Error message
 	 */

@@ -14,7 +14,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Initializes a new instance of the null_sampler_error class.
+		 * @brief Initialize a new instance of the null_sampler_error class.
 		 */
 		explicit null_sampler_error();
 	};
@@ -63,8 +63,8 @@ namespace gl
 		/**
 		 * @brief glGetSamplerParameteriv
 		 *
-		 * @param pname Parameter name to get
-		 * @param param Returns the sampler parameters
+		 * @param pname  Parameter name to get
+		 * @param params Returns the sampler parameters
 		 *
 		 * @throws opengl_error
 		 * @throws null_sampler_error
@@ -74,8 +74,8 @@ namespace gl
 		/**
 		 * @brief glGetSamplerParameterfv
 		 *
-		 * @param pname Parameter name to get
-		 * @param param Returns the sampler parameters
+		 * @param pname  Parameter name to get
+		 * @param params Returns the sampler parameters
 		 *
 		 * @throws opengl_error
 		 * @throws null_sampler_error

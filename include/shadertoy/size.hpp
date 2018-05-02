@@ -21,14 +21,14 @@ template <typename T> struct basic_size
 	T height;
 
 	/**
-	 * @brief Creates a default 2D size
+	 * @brief Create a default 2D size
 	 */
 	basic_size()
 		: width(0), height(0)
 	{}
 
 	/**
-	 * @brief Creates a 2D size from the given dimensions
+	 * @brief Create a 2D size from the given dimensions
 	 *
 	 * @param width  Width of the created size object
 	 * @param height Height of the created size object
@@ -38,7 +38,7 @@ template <typename T> struct basic_size
 	{}
 
 	/**
-	 * @brief Compares this size object with another
+	 * @brief Compare this size object with another
 	 *
 	 * @param rhs Size to compare
 	 *
@@ -50,7 +50,7 @@ template <typename T> struct basic_size
 	}
 
 	/**
-	 * @brief Compares this size object with another
+	 * @brief Compare this size object with another
 	 *
 	 * @param rhs Size to compare
 	 *
@@ -62,7 +62,7 @@ template <typename T> struct basic_size
 	}
 
 	/**
-	 * @brief Compares this size object with another
+	 * @brief Compare this size object with another
 	 *
 	 * The comparison is done by width and then by height.
 	 *
@@ -92,7 +92,7 @@ public:
 	virtual basic_size<T> resolve() const = 0;
 
 	/**
-	 * @brief Casts this size reference into an actual size
+	 * @brief Cast this size reference into an actual size
 	 *
 	 * @see #resolve
 	 *
@@ -113,7 +113,7 @@ template <typename T> class size_ref_interface_ref : public size_ref_interface<T
 
 public:
 	/**
-	 * @brief Builds a new size_ref_interface&lt;T&gt; from a reference
+	 * @brief Build a new size_ref_interface&lt;T&gt; from a reference
 	 *
 	 * \p int_ref must remain valid for as long as this object will be in use.
 	 *
@@ -123,11 +123,15 @@ public:
 		: int_ref_(int_ref)
 	{}
 
-	/// @see size_ref_interface#resolve
 	basic_size<T> resolve() const override { return int_ref_.resolve(); }
 };
 
-/// @see size_ref_interface_ref#size_ref_interface_ref
+/**
+ * @param args Arguments to size_ref_interface_ref#size_ref_interface_ref
+ * @see size_ref_interface_ref#size_ref_interface_ref
+ *
+ * @return Pointer to the constructed size_ref_interface_ref
+ */
 template <typename T>
 std::unique_ptr<size_ref_interface<T>> make_ref(const size_ref_interface<T> &int_ref)
 {
@@ -146,7 +150,7 @@ template <typename T> class explicit_size : public size_ref_interface<T>
 
 public:
 	/**
-	 * @brief Buils a new explicit_size from the size object \p size
+	 * @brief Build a new explicit_size from the size object \p size
 	 *
 	 * @param size Size of this explicit_size instance
 	 */
@@ -154,7 +158,6 @@ public:
 		: size_(size)
 	{}
 
-	/// @see size_ref_interface#resolve
 	basic_size<T> resolve() const override { return size_; }
 };
 
@@ -186,7 +189,7 @@ template <typename T> class explicit_size_ref : public size_ref_interface<T>
 
 public:
 	/**
-	 * @brief Builds a new explicit_size_ref&lt;T&gt; from a reference
+	 * @brief Build a new explicit_size_ref&lt;T&gt; from a reference
 	 *
 	 * \p size must remain valid for as long as this object will be in use.
 	 *
@@ -196,7 +199,6 @@ public:
 		: size_(size)
 	{}
 
-	/// @see size_ref_interface#resolve
 	basic_size<T> resolve() const override { return size_; }
 };
 
@@ -229,7 +231,7 @@ template <typename T, typename Callable> class getter_size_ref : public size_ref
 
 public:
 	/**
-	 * @brief Buils a new getter_size_ref&lt;T&gt;
+	 * @brief Buil a new getter_size_ref&lt;T&gt;
 	 *
 	 * @param getter Callback to obtain the size object
 	 */
@@ -237,14 +239,16 @@ public:
 		: getter_(getter)
 	{}
 
-	/// @see size_ref_interface#resolve
 	basic_size<T> resolve() const override { return getter_(); }
 };
 
 /**
  * @brief Helper method to construct getter_size_ref objects
  *
+ * @param getter Callable object for getter_size_ref
  * @see getter_size_ref#getter_size_ref
+ *
+ * @return Pointer to the constructed getter_size_ref&lt;T&gt;
  */
 template <typename T, typename Callable>
 std::unique_ptr<size_ref_interface<T>> make_size_getter(Callable getter)

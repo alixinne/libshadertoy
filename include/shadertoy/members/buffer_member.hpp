@@ -25,7 +25,7 @@ class shadertoy_EXPORT buffer_member : public basic_member
 
 protected:
 	/**
-	 * @brief Renders the buffer using the given \p context
+	 * @brief Render the buffer using the given \p context
 	 *
 	 * @param chain   Current swap_chain being rendered
 	 * @param context Context to use for rendering
@@ -33,7 +33,7 @@ protected:
 	void render_member(const swap_chain &chain, const render_context &context) override;
 
 	/**
-	 * @brief Initializes the associated buffer
+	 * @brief Initialize the associated buffer
 	 *
 	 * @param chain   Current swap_chain
 	 * @param context Context to use for initialization
@@ -41,7 +41,7 @@ protected:
 	void init_member(const swap_chain &chain, const render_context &context) override;
 
 	/**
-	 * @brief Allocates the associated buffer's textures
+	 * @brief Allocate the associated buffer's textures
 	 *
 	 * @param chain   Current swap_chain
 	 * @param context Context to use for texture allocation
@@ -50,7 +50,7 @@ protected:
 
 public:
 	/**
-	 * @brief Initializes a new buffer swap chain member
+	 * @brief Initialize a new buffer swap chain member
 	 *
 	 * @param buffer      Associated buffer
 	 * @param render_size Initial render size
@@ -74,13 +74,19 @@ public:
 	{ return io_; }
 
 	/**
-	 * @brief Returns the buffer's latest output in the current chain
+	 * @brief Return the buffer's latest output in the current chain
+	 *
+	 * @return Texture object representing the output of the buffer
 	 */
 	std::shared_ptr<gl::texture> output() override;
 };
 
 /**
- * @brief Constructs a pointer to a buffer_member
+ * @brief Construct a pointer to a buffer_member
+ *
+ * @param args Arguments to buffer_member#buffer_member
+ *
+ * @return Pointer to the constructed buffer_member
  *
  * @see buffer_member#buffer_member
  */
@@ -91,6 +97,13 @@ std::shared_ptr<buffer_member> make_buffer(Args&&... args)
 }
 
 /**
+ * @brief Construct a pointer to a buffer_member
+ *
+ * @param buffer      Buffer to add to the swap chain
+ * @param render_size Size to render the buffer at when integrated in the swap chain
+ *
+ * @return Pointer to the constructed buffer_member
+ *
  * @see buffer_member#buffer_member(std::shared_ptr<buffers::basic_buffer>, rsize_ref &&)
  */
 inline std::shared_ptr<buffer_member> make_member(std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size)

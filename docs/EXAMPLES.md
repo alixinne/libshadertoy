@@ -5,7 +5,7 @@ distributions to help you getting started using the library. They highlight some
 features that are desirable for users of the library.
 
 The examples can be built as follows (assuming the correct version of
-libshadertoy is already installed according to [INSTALL.md](INSTALL.md)).
+libshadertoy is already installed.
 
 ```bash
 # Copy the samples to a working directory

@@ -15,7 +15,7 @@ class shader_compiler
 {
 public:
 	/**
-	 * @brief      Loads the sources in the provided shader object, and compiles
+	 * @brief      Load the sources in the provided shader object, and compiles
 	 *             the program. Any program building errors will be rewritten so
 	 *             known named sources will have their name in the output
 	 *             instead of numerical source ids.

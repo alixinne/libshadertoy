@@ -26,14 +26,14 @@ class gl_buffer : public basic_buffer
 
 protected:
 	/**
-	 * @brief     Initializes a new gl_buffer
+	 * @brief     Initialize a new gl_buffer
 	 *
 	 * @param[in] id        Identifier for this buffer
 	 */
 	gl_buffer(const std::string &id);
 
 	/**
-	 * @brief     Initializes the contents of the buffer for rendering.
+	 * @brief     Initialize the contents of the buffer for rendering.
 	 *
 	 * @param[in]  context Rendering context to use for shared objects
 	 * @param[in]  io      IO resource object
@@ -41,7 +41,7 @@ protected:
 	void init_contents(const render_context &context, const io_resource &io) override;
 
 	/**
-	 * @brief     Initializes the renderbuffer object for the new specified size.
+	 * @brief     Initialize the renderbuffer object for the new specified size.
 	 *
 	 * @param[in]  context Rendering context to use for shared objects
 	 * @param[in]  io      IO resource object
@@ -49,7 +49,7 @@ protected:
 	void allocate_contents(const render_context &context, const io_resource &io) override;
 
 	/**
-	 * @brief     Renders the contents of this buffer. This methods binds the
+	 * @brief     Render the contents of this buffer. This methods binds the
 	 *            framebuffer and renderbuffer to the appropriate texture for
 	 *            rendering, and then calls render_gl_contents as defined by
 	 *            the derived class.
@@ -60,7 +60,7 @@ protected:
 	void render_contents(const render_context &context, const io_resource &io) final;
 
 	/**
-	 * @brief     Renders the contents of this buffer to the currently bound
+	 * @brief     Render the contents of this buffer to the currently bound
 	 *            framebuffer and renderbuffer. This method must be implemented
 	 *            by derived classes as part of their rendering routine.
 	 *
@@ -71,7 +71,7 @@ protected:
 
 public:
 	/**
-	 * @brief Obtains this buffer's GL framebuffer object
+	 * @brief Obtain this buffer's GL framebuffer object
 	 *
 	 * @return Reference to the framebuffer object
 	 */
@@ -79,7 +79,7 @@ public:
 	{ return target_fbo_; }
 
 	/**
-	 * @brief Obtains this buffer's GL renderbuffer object
+	 * @brief Obtain this buffer's GL renderbuffer object
 	 *
 	 * @return Reference to the renderbuffer object
 	 */

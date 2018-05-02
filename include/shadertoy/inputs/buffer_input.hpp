@@ -26,7 +26,7 @@ protected:
 	void reset_input() override;
 
 	/**
-	 * @brief Obtains this input's texture object.
+	 * @brief Obtain this input's texture object.
 	 *
 	 * In the case of a member input, it is the source texture
 	 * of the associated member, or a null texture if there is
@@ -41,12 +41,12 @@ protected:
 
 public:
 	/**
-	 * @brief Initializes a new instance of the buffer_input class with no associated buffer.
+	 * @brief Initialize a new instance of the buffer_input class with no associated buffer.
 	 */
 	buffer_input();
 
 	/**
-	 * @brief Initializes a new instance of the buffer_input class with \p
+	 * @brief Initialize a new instance of the buffer_input class with \p
 	 * member as an associated member.
 	 *
 	 * @param member Buffer to use as a source
@@ -54,14 +54,14 @@ public:
 	buffer_input(std::shared_ptr<members::basic_member> member);
 
 	/**
-	 * @brief Obtains the source member for this input
+	 * @brief Obtain the source member for this input
 	 *
 	 * @return Pointer to the source member for this input
 	 */
 	inline const std::shared_ptr<members::basic_member> &member() const { return member_; }
 
 	/**
-	 * @brief Sets the source member for this input
+	 * @brief Set the source member for this input
 	 *
 	 * As a buffer input is stateless, the reset method does not
 	 * need to be called after changing the source member.

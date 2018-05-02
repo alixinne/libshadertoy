@@ -27,12 +27,12 @@ class swap_chain
 
 public:
 	/**
-	 * @brief Initializes a new instance of the swap_chain class.
+	 * @brief Initialize a new instance of the swap_chain class.
 	 */
 	swap_chain();
 
 	/**
-	 * @brief Obtains the list of members of this swap_chain
+	 * @brief Obtain the list of members of this swap_chain
 	 *
 	 * @return Reference to the list of members
 	 */
@@ -40,7 +40,7 @@ public:
 	{ return members_; }
 
 	/**
-	 * @brief Obtains the last member that has been rendered in this swap_chain
+	 * @brief Obtain the last member that has been rendered in this swap_chain
 	 *
 	 * @return Last member that has been rendered, or null
 	 */
@@ -48,7 +48,7 @@ public:
 	{ return current_; }
 
 	/**
-	 * @brief Obtains the member that occurs before \p member
+	 * @brief Obtain the member that occurs before \p member
 	 *
 	 * @param member Member that immediately follows the return value
 	 *
@@ -58,14 +58,14 @@ public:
 	std::shared_ptr<members::basic_member> before(members::basic_member *member) const;
 
 	/**
-	 * @brief Adds a member to the end of this swap chain
+	 * @brief Add a member to the end of this swap chain
 	 *
 	 * @param member Member to add to the end of this swap chain
 	 */
 	void push_back(std::shared_ptr<members::basic_member> member);
 
 	/**
-	 * @brief Constructs a swap_chain member and adds it to the end of this swap chain
+	 * @brief Construct a swap_chain member and adds it to the end of this swap chain
 	 *
 	 * @param args Arguments to forward to the swap chain member constructor
 	 *
@@ -80,7 +80,7 @@ public:
 	}
 
 	/**
-	 * @brief Constructs a swap_chain member and adds it to the end of this swap chain
+	 * @brief Construct a swap_chain member and adds it to the end of this swap chain
 	 *
 	 * @param  args       Arguments to forward to the swap chain member constructor
 	 * @tparam TargetType Type of the member to create
@@ -119,7 +119,7 @@ public:
 	}
 
 	/**
-	 * @brief Renders the swap chain using \p context up to the specified \p target
+	 * @brief Render the swap chain using \p context up to the specified \p target
 	 *
 	 * All members from members().begin() up to \p target will be fully rendered.
 	 *
@@ -134,14 +134,14 @@ public:
 													= std::shared_ptr<members::basic_member>());
 
 	/**
-	 * @brief Initializes the members of this swap chain
+	 * @brief Initialize the members of this swap chain
 	 *
 	 * @param context Context used for initialization
 	 */
 	void init(const render_context &context);
 
 	/**
-	 * @brief Allocates the textures for all the members of this swap chain
+	 * @brief Allocate the textures for all the members of this swap chain
 	 *
 	 * @param context Context used to allocate textures
 	 */

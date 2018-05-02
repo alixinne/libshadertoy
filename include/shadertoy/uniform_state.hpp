@@ -59,6 +59,13 @@ class shadertoy_EXPORT dynamic_shader_input_uniform_setter : public boost::stati
 	const gl::uniform_location &location_;
 
 public:
+	/**
+	 * @brief Set the target uniform to \p value
+	 *
+	 * @param value Value of the uniform to set
+	 *
+	 * @return true if the uniform was set
+	 */
 	template<class T>
 	inline bool operator()(const T& value) const
 	{
@@ -66,6 +73,13 @@ public:
 		return true;
 	}
 
+	/**
+	 * @brief Set the target uniform to \p value
+	 *
+	 * @param value Value of the uniform to set
+	 *
+	 * @return true if the uniform was set
+	 */
 	template<class T, std::size_t N>
 	inline bool operator()(const std::array<T, N> &value) const
 	{
@@ -73,6 +87,13 @@ public:
 		return true;
 	}
 
+	/**
+	 * @brief Set the target uniform to \p value
+	 *
+	 * @param ptr Pointer to the value of the uniform to set
+	 *
+	 * @return true if the uniform was set
+	 */
 	template<class T>
 	inline bool operator()(const std::shared_ptr<T> &ptr) const
 	{
@@ -80,7 +101,7 @@ public:
 	}
 
 	/**
-	 * @brief Creates a new setter visitor.
+	 * @brief Create a new setter visitor.
 	 *
 	 * @param location GLSL program location to set
 	 */
@@ -101,10 +122,15 @@ template<const char *UniformName, const char *UniformType, typename TUniform,
 	size_t Size = 1, typename = typename std::enable_if<(Size >= 1)>::type>
 struct shadertoy_EXPORT shader_input
 {
+	/// Name of the uniform in GLSL
 	static constexpr const char *name = UniformName;
+	/// Type of the uniform in GLSL
 	static constexpr const char *glsl_type_name = UniformType;
+	/// Number of elements in the GLSL uniform
 	static constexpr const size_t size = Size;
+	/// C++ type of the uniform value
 	using value_type = TUniform;
+	/// C++ type of the array that stores the uniform value
 	using array_type = std::array<value_type, size>;
 
 private:
@@ -112,17 +138,21 @@ private:
 
 public:
 	/**
-	 * @brief Obtains the values of this input as an array.
+	 * @brief  Obtain the values of this input as an array.
+	 *
+	 * @return Reference to the values of this input as an array
 	 */
 	inline const array_type &values() const { return values_; }
 
 	/**
-	 * @brief Obtains the values of this input as an array.
+	 * @brief  Obtain the values of this input as an array.
+	 *
+	 * @return Reference to the values of this input as an array
 	 */
 	inline array_type &values() { return values_; }
 
 	/**
-	 * @brief Initializes a new shader input.
+	 * @brief Initialize a new shader input.
 	 */
 	shader_input()
 		: values_()
@@ -130,7 +160,7 @@ public:
 	}
 
 	/**
-	 * @brief Appends the GLSL definition of this input to the given output stream.
+	 * @brief Append the GLSL definition of this input to the given output stream.
 	 *
 	 * @param os Output stream to append to
 	 */
@@ -162,12 +192,17 @@ public:
 template<const char *DynamicInputName, class GLSLTypeVisitor, class ...Types>
 struct shadertoy_EXPORT dynamic_shader_inputs
 {
+	/// Name of the input block
 	static constexpr const char *name = DynamicInputName;
+	/// Unused, only applies to static uniforms
 	static constexpr const size_t size = 0;
 
+	/// Type of the variant to hold the possible uniform values
 	typedef boost::variant<Types...> variant_input;
+	/// Type of the shader input value
 	typedef dynamic_shader_inputs<DynamicInputName, Types...> value_type;
 
+	/// Type of the variant visitor to generate the uniform variable declarations
 	using glsl_type_visitor = GLSLTypeVisitor;
 
 private:
@@ -175,7 +210,7 @@ private:
 
 public:
 	/**
-	 * @brief Adds a new input to this dynamic block.
+	 * @brief Add a new input to this dynamic block.
 	 *
 	 * @param name  Name to use for the uniform variable. This must be a
 	 *              valid GLSL identifier.
@@ -189,7 +224,7 @@ public:
 	}
 
 	/**
-	 * @brief Obtains a reference to the value of a dynamic uniform.
+	 * @brief Obtain a reference to the value of a dynamic uniform.
 	 *
 	 * @param  name Name of the uniform to obtain.
 	 * @return      Reference to the value of this uniform.
@@ -201,7 +236,7 @@ public:
 	}
 
 	/**
-	 * @brief Obtains a reference to the value of a dynamic uniform.
+	 * @brief Obtain a reference to the value of a dynamic uniform.
 	 *
 	 * @param  name Name of the uniform to obtain.
 	 * @return      Reference to the value of this uniform.
@@ -213,7 +248,7 @@ public:
 	}
 
 	/**
-	 * @brief Removes a dynamic uniform.
+	 * @brief Remove a dynamic uniform.
 	 *
 	 * @param name Name of the uniform to remove from this block.
 	 */
@@ -223,7 +258,7 @@ public:
 	}
 
 	/**
-	 * @brief Appends the GLSL definition of this input to the given output stream.
+	 * @brief Append the GLSL definition of this input to the given output stream.
 	 *
 	 * @param os Output stream to append to
 	 */
@@ -240,9 +275,11 @@ public:
 	}
 
 	/**
-	 * @brief Binds the inputs of this dynamic uniform block to the given program.
+	 * @brief Bind the inputs of this dynamic uniform block to the given program.
 	 *
 	 * @param program Program to bind uniforms to.
+	 *
+	 * @return Map of uniform names to location objects
 	 */
 	std::map<std::string, gl::uniform_location> bind_inputs(const gl::program &program) const
 	{
@@ -257,7 +294,7 @@ public:
 	}
 
 	/**
-	 * @brief Applies the values of the input with the given name, to the given
+	 * @brief Applie the values of the input with the given name, to the given
 	 * location.
 	 *
 	 * @param  name     Name of the uniform input to apply
@@ -281,7 +318,7 @@ protected:
 
 public:
 	/**
-	 * @brief      Sets the current value of inputs bound to this program
+	 * @brief      Set the current value of inputs bound to this program
 	 *             instance in the associated shader program.
 	 */
 	virtual void apply() const = 0;
@@ -334,7 +371,7 @@ private:
 
 public:
 	/**
-	 * @brief      Represents the binding of inputs to a specific program.
+	 * @brief      Represent the binding of inputs to a specific program.
 	 */
 	class bound_inputs : public bound_inputs_base
 	{
@@ -360,7 +397,7 @@ public:
 			}
 
 			/**
-			 * @brief Applies the values of the given input to the associated location.
+			 * @brief Applie the values of the given input to the associated location.
 			 *
 			 * @param  val Reference to the input containing the value to set.
 			 * @return true if the uniform location was set, false otherwise.
@@ -373,7 +410,7 @@ public:
 			}
 
 			/**
-			 * @brief Applies the values of the given input to the associated location.
+			 * @brief Applie the values of the given input to the associated location.
 			 *
 			 * @param  val Value to set in the uniform
 			 * @return true if the uniform location was set, false otherwise.
@@ -399,7 +436,7 @@ public:
 			}
 
 			/**
-			 * @brief Applies all the values of the given dynamic input to the
+			 * @brief Applie all the values of the given dynamic input to the
 			 * associated locations.
 			 *
 			 * @param  val Reference to the input containing the values to set.
@@ -423,7 +460,7 @@ public:
 		std::tuple<uniform<Inputs>...> uniforms_;
 
 		/**
-		 * @brief      Sets the value of a given uniform in this bound input object
+		 * @brief      Set the value of a given uniform in this bound input object
 		 *
 		 * @tparam Index Index of the uniform in the parent state type declaration
 		 * @tparam Type  Type of the shader input object in the parent state type declaration
@@ -440,7 +477,7 @@ public:
 		}
 
 		/**
-		 * @brief      Sets all the values of uniforms declared by the parent state
+		 * @brief      Set all the values of uniforms declared by the parent state
 		 *
 		 * @tparam Indices Index range of the uniforms in the parent state type declaration
 		 */
@@ -463,7 +500,7 @@ public:
 
 	public:
 		/**
-		 * @brief      Initializes a new instance of a bound uniform object.
+		 * @brief      Initialize a new instance of a bound uniform object.
 		 *
 		 * @tparam Indices Index range of the uniforms in the parent state type declaration
 		 * @param state Parent state of this uniform object
@@ -481,7 +518,7 @@ public:
 		{ return state.get<Input>(); }
 
 		/**
-		 * @brief Sets a bound uniform input to the given value
+		 * @brief Set a bound uniform input to the given value
 		 *
 		 * @tparam Input Uniform typed identifier
 		 * @param  value Value to set
@@ -495,7 +532,7 @@ public:
 		}
 
 		/**
-		 * @brief Sets a bound uniform input to the given value
+		 * @brief Set a bound uniform input to the given value
 		 *
 		 * @tparam Input Uniform typed identifier
 		 * @param  value Value to set
@@ -509,7 +546,7 @@ public:
 		}
 
 		/**
-		 * @brief      Applies the value of all uniforms to the current program.
+		 * @brief      Applie the value of all uniforms to the current program.
 		 */
 		void apply() const override
 		{
@@ -590,7 +627,7 @@ public:
 	}
 
 	/**
-	 * @brief      Binds uniform inputs to a specific programs, and returns the handle object.
+	 * @brief      Bind uniform inputs to a specific programs, and returns the handle object.
 	 *
 	 * @param program Program to bind to.
 	 * @return

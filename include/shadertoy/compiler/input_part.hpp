@@ -21,7 +21,7 @@ class shadertoy_EXPORT input_part : public basic_part
 
 public:
 	/**
-	 * @brief Initializes a new instance of the input_part class
+	 * @brief Initialize a new instance of the input_part class
 	 *
 	 * The given inputs are used to generate the source.
 	 *
@@ -31,14 +31,14 @@ public:
 	input_part(const std::string &name, const std::deque<program_input> &inputs);
 
 	/**
-	 * @brief Converts this template_part to a boolean.
+	 * @brief Convert this template_part to a boolean.
 	 *
 	 * @return true if the template_part is specified, false otherwise
 	 */
 	operator bool() const override;
 
 	/**
-	 * @brief Obtains this template part's sources
+	 * @brief Obtain this template part's sources
 	 *
 	 * @return Sources for this template part
 	 *

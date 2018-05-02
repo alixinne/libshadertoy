@@ -21,23 +21,25 @@ class shadertoy_EXPORT error_input : public basic_input
 
 protected:
 	/**
-	 * @brief Loads this input's contents
+	 * @brief Load this input's contents
 	 */
 	void load_input() override;
 
 	/**
-	 * @brief Resets this input's contents
+	 * @brief Reset this input's contents
 	 */
 	void reset_input() override;
 
 	/**
-	 * @brief Obtains this input's texture object
+	 * @brief Obtain this input's texture object
+	 *
+	 * @return OpenGL texture object representing the error texture
 	 */
 	std::shared_ptr<gl::texture> use_input() override;
 
 public:
 	/**
-	 * @brief Initializes a new instance of the error_input class
+	 * @brief Initialize a new instance of the error_input class
 	 */
 	error_input();
 };

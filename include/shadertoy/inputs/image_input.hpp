@@ -28,7 +28,7 @@ protected:
 	virtual std::shared_ptr<gl::texture> load_image() = 0;
 
 	/**
-	 * @brief Loads the input's contents.
+	 * @brief Load the input's contents.
 	 *
 	 * Classes implementing image_input should implement load_image to
 	 * support this behavior.
@@ -36,17 +36,19 @@ protected:
 	void load_input() final;
 
 	/**
-	 * @brief Resets the input's contents.
+	 * @brief Reset the input's contents.
 	 */
 	void reset_input() final;
 
 	/**
-	 * @brief Uses this input in a rendering pass.
+	 * @brief Use this input in a rendering pass.
+	 *
+	 * @return OpenGL texture object representing the input
 	 */
 	std::shared_ptr<gl::texture> use_input() final;
 
 	/**
-	 * @brief Initializes a new instance of the image_input class.
+	 * @brief Initialize a new instance of the image_input class.
 	 */
 	image_input();
 };

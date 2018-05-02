@@ -13,6 +13,28 @@ namespace shadertoy
 namespace compiler
 {
 
+/**
+ * @brief Represents a template to build a shader from source parts
+ *
+ * The shader_template class is the basis for building fragment shaders from
+ * partial sources that should be combined together. For example, toy_buffer
+ * instances only specify the `mainImage' entry point, but this should be
+ * completed by the definition of the fragmen entry point, as well as uniform
+ * variables and samplers. This can be done by adding the corresponding parts
+ * to a shader_template.
+ *
+ * A shader_template is made of parts that can either be specified or not.
+ * A specified part is a part which has a name and source code to include in
+ * the result. An unspecified part is a part which has only a name, and is used
+ * as a placeholder.
+ *
+ * In order to generate the sources for a shader, all parts of a
+ * shader_template instance must be specified. This is done through calling the
+ * shader_template#specify method, which returns a copy of the current
+ * shader_template by replacing unspecified parts with the provided arguments.
+ *
+ * Note that part names must be unique within a shader_template.
+ */
 class shadertoy_EXPORT shader_template
 {
 	/// List of parts of this template
@@ -24,12 +46,12 @@ class shadertoy_EXPORT shader_template
 
 public:
 	/**
-	 * @brief Initializes a new empty shader_template
+	 * @brief Initialize a new empty shader_template
 	 */
 	shader_template();
 
 	/**
-	 * @brief Initializes a new shader_template with the given set of parts
+	 * @brief Initialize a new shader_template with the given set of parts
 	 *
 	 * @param parts Initial set of template parts
 	 */
@@ -45,7 +67,7 @@ public:
 	std::vector<std::pair<std::string, std::string>> sources() const;
 
 	/**
-	 * @brief Specifies some parts in this template
+	 * @brief Specify some parts in this template
 	 *
 	 * This methods attempts to replace unspecified parts with parts given as
 	 * arguments to this method, in order to make a more specified template.
@@ -68,7 +90,7 @@ public:
 	void push_back(jbcoe::polymorphic_value<basic_part> part);
 
 	/**
-	 * @brief Replaces a part from this template
+	 * @brief Replace a part from this template
 	 *
 	 * @param name Name of the part to replace
 	 * @param part Part to add to this template
@@ -105,9 +127,9 @@ public:
 	void insert_after(const std::string &target, jbcoe::polymorphic_value<basic_part> part);
 
 	/**
-	 * @brief Removes a part from this template
+	 * @brief Remove a part from this template
 	 *
-	 * @param target Name of the part to remove
+	 * @param name Name of the part to remove
 	 *
 	 * @return true if the part was removed, false if no such part was found
 	 */

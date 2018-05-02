@@ -17,7 +17,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Initializes a new instance of the null_shader_error class.
+		 * @brief Initialize a new instance of the null_shader_error class.
 		 */
 		explicit null_shader_error();
 	};
@@ -29,7 +29,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Initializes a new instance of the ShaderCompilationError class.
+		 * @brief Initialize a new instance of the ShaderCompilationError class.
 		 *
 		 * @param  shaderId Id of the shader that triggered the error
 		 * @param  log      Contents of the shader compilation log
@@ -37,7 +37,7 @@ namespace gl
 		explicit shader_compilation_error(GLuint shaderId, const std::string &log);
 
 		/**
-		 * @brief Gets the id of the shader that triggered the error.
+		 * @brief Get the id of the shader that triggered the error.
 		 *
 		 * @return Id of the shader that triggered the error
 		 */
@@ -45,7 +45,7 @@ namespace gl
 		{ return shader_id_; }
 
 		/**
-		 * @brief Gets the compilation log for this error.
+		 * @brief Get the compilation log for this error.
 		 *
 		 * @return Compilation log as a string.
 		 */
@@ -77,7 +77,7 @@ namespace gl
 		GLuint create(GLenum shaderType);
 
 		/**
-		 * @brief Deletes the given shader.
+		 * @brief Delete the given shader.
 		 * @param resource Id of the shader to delete.
 		 *
 		 * @throws opengl_error
@@ -92,7 +92,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Creates a new shader of the given type.
+		 * @brief Create a new shader of the given type.
 		 *
 		 * @param shaderType Type of the new shader
 		 *

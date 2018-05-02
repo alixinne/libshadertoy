@@ -45,7 +45,7 @@ protected:
 
 public:
 	/**
-	 * @brief Renders this member
+	 * @brief Render this member
 	 *
 	 * @param chain   Current swap_chain being rendered
 	 * @param context Context to use for rendering
@@ -69,7 +69,7 @@ public:
 	void allocate(const swap_chain &chain, const render_context &context);
 
 	/**
-	 * @brief Obtains the output of this member
+	 * @brief Obtain the output of this member
 	 *
 	 * @return Output of this member, or null if this member has no output
 	 */

@@ -15,7 +15,7 @@ namespace gl
 
 	/// De-allocation function that frees a single object
 	typedef void (*single_resource_deleter)(GLuint);
-	//// De-allocation function that frees multiple objects
+	/// De-allocation function that frees multiple objects
 	typedef void (*multi_resource_deleter)(GLsizei, const GLuint*);
 
 	/**
@@ -26,7 +26,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Creates the associated resource.
+		 * @brief Create the associated resource.
 		 * @return The id of the created resource
 		 * @throws OpenGLError
 		 */
@@ -34,7 +34,7 @@ namespace gl
 		{ return gl_call(*CreateFunction); }
 
 		/**
-		 * @brief Deletes the given resource.
+		 * @brief Delete the given resource.
 		 * @param resource Resource to delete
 		 * @throws OpenGLError
 		 */
@@ -50,7 +50,7 @@ namespace gl
 	{
 	public:
 		/**
-		 * @brief Creates the associated resource.
+		 * @brief Create the associated resource.
 		 * @return The id of the created resource
 		 * @throws OpenGLError
 		 */
@@ -62,7 +62,7 @@ namespace gl
 		}
 
 		/**
-		 * @brief Deletes the given resource.
+		 * @brief Delete the given resource.
 		 * @param resource Resource to delete
 		 * @throws OpenGLError
 		 */
@@ -87,7 +87,7 @@ namespace gl
 		typedef Final resource_type;
 
 		/**
-		 * @brief Creates a resource using the given allocator.
+		 * @brief Create a resource using the given allocator.
 		 *
 		 * @throws opengl_error
 		 */
@@ -98,7 +98,7 @@ namespace gl
 		}
 
 		/**
-		 * @brief Destroys the object referenced by this resource.
+		 * @brief Destroy the object referenced by this resource.
 		 *
 		 * @throws opengl_error
 		 */
@@ -108,7 +108,7 @@ namespace gl
 		}
 
 		/**
-		 * @brief Returns true if this resource object holds a reference to a resource.
+		 * @brief Return true if this resource object holds a reference to a resource.
 		 *
 		 * @return true if this resource object holds a reference to a resource,
 		 *         false otherwise.
@@ -117,7 +117,7 @@ namespace gl
 		{ return has_res_; }
 
 		/**
-		 * @brief Returns the underlying texture identifier referenced by this texture
+		 * @brief Return the underlying texture identifier referenced by this texture
 		 * object. Throws an exception if this object does not hold a reference.
 		 *
 		 * @throws error_type
@@ -155,6 +155,8 @@ namespace gl
 		 * @brief Move operator
 		 * @param other Instance to move
 		 *
+		 * @return Assigned resource
+		 *
 		 * @throws OpenGLError
 		 */
 		resource_type &operator=(resource_type &&other)
@@ -174,9 +176,9 @@ namespace gl
 
 	protected:
 		/**
-		 * @brief Creates a new resource object from an existing resourceID.
+		 * @brief Create a new resource object from an existing resourceID.
 		 *
-		 * @param  texId Resource id to reference
+		 * @param resId Resource id to reference
 		 */
 		explicit resource(GLuint resId)
 			: has_res_(true),
@@ -185,7 +187,7 @@ namespace gl
 
 	private:
 		/**
-		 * @brief Destroys the object referenced by this resource.
+		 * @brief Destroy the object referenced by this resource.
 		 *
 		 * @throws OpenGLError
 		 */
