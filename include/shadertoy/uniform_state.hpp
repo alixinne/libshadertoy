@@ -26,6 +26,7 @@ typedef std::tuple<std::string, std::string> glsl_type_info;
  */
 struct shadertoy_EXPORT dynamic_shader_inputs_glsl_type_visitor : public boost::static_visitor<glsl_type_info>
 {
+	/** @cond NODOC */
 	inline glsl_type_info operator()(int) const { return std::make_tuple("int", ""); }
 	inline glsl_type_info operator()(glm::ivec2) const { return std::make_tuple("ivec2", ""); }
 	inline glsl_type_info operator()(glm::ivec3) const { return std::make_tuple("ivec3", ""); }
@@ -47,6 +48,7 @@ struct shadertoy_EXPORT dynamic_shader_inputs_glsl_type_visitor : public boost::
 			std::string("[") + std::string(N) + std::string("]") +
 			std::get<1>((*this)(T())));
 	}
+	/** @endcond */
 };
 
 /**

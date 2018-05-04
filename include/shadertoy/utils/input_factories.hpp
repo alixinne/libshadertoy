@@ -10,6 +10,8 @@ namespace shadertoy
 namespace utils
 {
 
+/** @cond INTERNAL */
+
 class soil_input_factory : public input_factory
 {
 	const std::string type_name_;

@@ -54,15 +54,11 @@ protected:
 	 */
 	void render_member(const swap_chain &chain, const render_context &context) override;
 
-	/**
-	 * @brief unused
-	 */
+	/** @cond UNUSED */
 	void init_member(const swap_chain &chain, const render_context &context) override;
 
-	/**
-	 * @brief unused
-	 */
 	void allocate_member(const swap_chain &chain, const render_context &context) override;
+	/** @endcond */
 
 	/**
 	 * @brief Return the associated output or the latest output in the swap chain

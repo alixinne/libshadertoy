@@ -127,7 +127,10 @@ public:
 };
 
 /**
- * @param args Arguments to size_ref_interface_ref#size_ref_interface_ref
+ * @brief Constructs a reference to a size_ref_interface&lt;T&gt;
+ *
+ * @param int_ref Reference to a size_ref_interface&lt;T&gt;
+ *
  * @see size_ref_interface_ref#size_ref_interface_ref
  *
  * @return Pointer to the constructed size_ref_interface_ref
