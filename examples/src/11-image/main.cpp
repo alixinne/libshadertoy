@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 	}
 
 	// Initialize window
-	int width = 640, height = 480;
+	int width = 7 * 64, height = 7 * 64;
 	GLFWwindow *window = glfwCreateWindow(width, height, "libshadertoy example 11-image", nullptr, nullptr);
 
 	if (!window)
@@ -44,6 +44,11 @@ int main(int argc, char *argv[])
 			context.state().get<shadertoy::iTimeDelta>() = 1.0 / 60.0;
 			context.state().get<shadertoy::iFrameRate>() = 60.0;
 
+			// Create an auxiliary buffer that renders a gradient
+			auto gradientBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("gradient"));
+			gradientBuffer->source_files().push_back("../shaders/shader-gradient.glsl");
+			auto buffer_input(std::make_shared<shadertoy::inputs::buffer_input>(chain.emplace_back(gradientBuffer, shadertoy::make_size(shadertoy::rsize(16, 16)))));
+
 			// Create the image buffer
 			auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image"));
 			imageBuffer->source_files().push_back("../shaders/shader-image.glsl");
@@ -53,7 +58,10 @@ int main(int argc, char *argv[])
 			imageBuffer->inputs().emplace_back(loader.create("file:../images/vase_rect.exr")); // implicit iChannel0
 			imageBuffer->inputs().emplace_back(loader.create("file:../images/vase_rect.png")); // implicit iChannel1
 			imageBuffer->inputs().emplace_back(loader.create("file:../images/vase_rect.jpg")); // implicit iChannel2
-			imageBuffer->inputs().emplace_back("noiseChannel", loader.create("noise:?width=50&height=50"));
+			imageBuffer->inputs().emplace_back("noiseChannel", loader.create("noise:?width=64&height=64"));
+			imageBuffer->inputs().emplace_back("checkerChannel", loader.create("checker:?width=64&height=64&size=4"));
+			imageBuffer->inputs().emplace_back("errorChannel", context.error_input());
+			imageBuffer->inputs().emplace_back("bufferChannel", buffer_input);
 
 			for (auto &program_input : imageBuffer->inputs())
 			{
@@ -61,6 +69,8 @@ int main(int argc, char *argv[])
 				program_input.input()->min_filter(GL_LINEAR_MIPMAP_LINEAR);
 				program_input.input()->wrap(GL_REPEAT);
 			}
+
+			imageBuffer->inputs().back().input()->sampler().parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 			// Add the image buffer to the swap chain
 			chain.emplace_back(imageBuffer, shadertoy::make_size_ref(ctx.render_size));

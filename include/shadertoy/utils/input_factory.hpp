@@ -3,7 +3,9 @@
 
 #include "shadertoy/pre.hpp"
 
+#include <map>
 #include <memory>
+#include <string>
 
 namespace shadertoy
 {
@@ -30,7 +32,7 @@ public:
 	 *
 	 * @return true if this specification is supported, false otherwise
 	 */
-	virtual bool supported(const std::string &spec) const = 0;
+	virtual bool supported(const std::map<std::string, std::string> &spec) const = 0;
 
 	/**
 	 * @brief Actually creates the input based on its specification
@@ -39,7 +41,7 @@ public:
 	 *
 	 * @return Pointer to the constructed input
 	 */
-	virtual std::shared_ptr<inputs::basic_input> create(const std::string &spec) const = 0;
+	virtual std::shared_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const = 0;
 
 	/**
 	 * @brief Get the type string for this factory

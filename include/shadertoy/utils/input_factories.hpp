@@ -17,9 +17,9 @@ class soil_input_factory : public input_factory
 public:
 	inline int priority() const override { return 10; }
 
-	bool supported(const std::string &spec) const override;
+	bool supported(const std::map<std::string, std::string> &spec) const override;
 
-	std::shared_ptr<inputs::basic_input> create(const std::string &spec) const override;
+	std::shared_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const override;
 
 	inline const std::string &type_name() const override { return type_name_; }
 
@@ -33,9 +33,9 @@ class jpeg_input_factory : public input_factory
 public:
 	inline int priority() const override { return 45; }
 
-	bool supported(const std::string &spec) const override;
+	bool supported(const std::map<std::string, std::string> &spec) const override;
 
-	std::shared_ptr<inputs::basic_input> create(const std::string &spec) const override;
+	std::shared_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const override;
 
 	inline const std::string &type_name() const override { return type_name_; }
 
@@ -49,9 +49,9 @@ class exr_input_factory : public input_factory
 public:
 	inline int priority() const override { return 50; }
 
-	bool supported(const std::string &spec) const override;
+	bool supported(const std::map<std::string, std::string> &spec) const override;
 
-	std::shared_ptr<inputs::basic_input> create(const std::string &spec) const override;
+	std::shared_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const override;
 
 	inline const std::string &type_name() const override { return type_name_; }
 
@@ -65,14 +65,32 @@ class noise_input_factory : public input_factory
 public:
 	inline int priority() const override { return 50; }
 
-	inline bool supported(const std::string &spec) const override { return true; }
+	inline bool supported(const std::map<std::string, std::string> &spec) const override { return true; }
 
-	std::shared_ptr<inputs::basic_input> create(const std::string &spec) const override;
+	std::shared_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const override;
 
 	inline const std::string &type_name() const override { return type_name_; }
 
 	noise_input_factory();
 };
+
+class checker_input_factory : public input_factory
+{
+	const std::string type_name_;
+
+public:
+	inline int priority() const override { return 50; }
+
+	inline bool supported(const std::map<std::string, std::string> &spec) const override { return true; }
+
+	std::shared_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const override;
+
+	inline const std::string &type_name() const override { return type_name_; }
+
+	checker_input_factory();
+};
+
+/** @endcond */
 }
 }
 
