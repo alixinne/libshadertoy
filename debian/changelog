@@ -1,6 +1,9 @@
 libshadertoy (1.0.0~rc3) UNRELEASED; urgency=medium
 
   * Fix toy_buffer program reloading and shader object usage
+  * Fix documentation errors
+  * Add parameters to noise texture input factory
+  * Add checker texture input factory
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Fri, 27 Apr 2018 14:09:51 +0200
 
