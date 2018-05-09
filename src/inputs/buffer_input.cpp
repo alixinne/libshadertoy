@@ -33,6 +33,18 @@ std::shared_ptr<gl::texture> buffer_input::use_input()
 	return {};
 }
 
-buffer_input::buffer_input() : member_() {}
+buffer_input::buffer_input()
+	: member_()
+{
+	// Default to GL_NEAREST for buffers (mipmap is expensive, and linear adds bias without texelFetch)
+	min_filter(GL_NEAREST);
+	mag_filter(GL_NEAREST);
+}
 
-buffer_input::buffer_input(std::shared_ptr<members::basic_member> member) : member_(member) {}
+buffer_input::buffer_input(std::shared_ptr<members::basic_member> member)
+	: member_(member)
+{
+	// See above
+	min_filter(GL_NEAREST);
+	mag_filter(GL_NEAREST);
+}
