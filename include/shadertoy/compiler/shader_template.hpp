@@ -67,6 +67,17 @@ public:
 	std::vector<std::pair<std::string, std::string>> sources() const;
 
 	/**
+	 * @brief Find a template part by its name
+	 *
+	 * @param name Name of the template part to find
+	 *
+	 * @return Reference to the matching template part
+	 *
+	 * @throws template_error When the requested part could not be found
+	 */
+	jbcoe::polymorphic_value<basic_part> &find(const std::string &name);
+
+	/**
 	 * @brief Specify some parts in this template
 	 *
 	 * This methods attempts to replace unspecified parts with parts given as

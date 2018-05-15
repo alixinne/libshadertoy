@@ -5,6 +5,7 @@ libshadertoy (1.0.0~rc3) UNRELEASED; urgency=medium
   * Add parameters to noise texture input factory
   * Add checker texture input factory
   * Default input filters to GL_NEAREST
+  * Add "#define LIBSHADERTOY 1" to generated shaders
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Fri, 27 Apr 2018 14:09:51 +0200
 

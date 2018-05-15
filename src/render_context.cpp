@@ -45,6 +45,9 @@ render_context::render_context()
 	},
 	error_input_(std::make_shared<inputs::error_input>())
 {
+	// Add LIBSHADERTOY definition
+	static_cast<compiler::define_part*>(&buffer_template_.find("glsl:defines").value())->definitions()->definitions().insert(std::make_pair<std::string, std::string>("LIBSHADERTOY", "1"));
+
 	// Prepare screen quad geometry
 	GLfloat coords[] = {
 		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,

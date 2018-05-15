@@ -50,6 +50,19 @@ std::vector<std::pair<std::string, std::string>> shader_template::sources() cons
 	return result;
 }
 
+jbcoe::polymorphic_value<basic_part> &shader_template::find(const std::string &name)
+{
+	for (auto &part : parts_)
+	{
+		if (part->name() == name)
+		{
+			return part;
+		}
+	}
+
+	throw template_error(std::string("A part named ") + name + std::string(" could not be found"));
+}
+
 shader_template shader_template::specify(std::initializer_list<jbcoe::polymorphic_value<basic_part>> parts) const
 {
 	// Create a map of new parts
