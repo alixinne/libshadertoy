@@ -74,6 +74,8 @@ std::shared_ptr<gl::texture> basic_input::bind(GLuint unit)
 {
 	sampler_.bind(unit);
 	auto tex(use());
+	// Check that we have a texture object
+	assert(tex);
 	tex->bind_unit(unit);
 	return tex;
 }
