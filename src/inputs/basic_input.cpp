@@ -39,7 +39,7 @@ std::shared_ptr<gl::texture> basic_input::use()
 	return use_input();
 }
 
-GLint basic_input::min_filter()
+GLint basic_input::min_filter() const
 {
 	GLint mf;
 	sampler_.get_parameter(GL_TEXTURE_MIN_FILTER, &mf);
@@ -49,6 +49,13 @@ GLint basic_input::min_filter()
 void basic_input::min_filter(GLint new_min_filter)
 {
 	sampler_.parameter(GL_TEXTURE_MIN_FILTER, new_min_filter);
+}
+
+GLint basic_input::mag_filter() const
+{
+	GLint mf;
+	sampler_.get_parameter(GL_TEXTURE_MAG_FILTER, &mf);
+	return mf;
 }
 
 void basic_input::mag_filter(GLint new_mag_filter)

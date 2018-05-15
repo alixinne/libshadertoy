@@ -94,7 +94,7 @@ public:
 	 *
 	 * @return Current value of the GL_MIN_FILTER parameter
 	 */
-	GLint min_filter();
+	GLint min_filter() const;
 
 	/**
 	 * @brief Set the minification filter of this input's sampler
@@ -102,6 +102,13 @@ public:
 	 * @param new_min_filter New minification filter
 	 */
 	void min_filter(GLint new_min_filter);
+
+	/**
+	 * @brief Get the magnification filter of this input's sampler
+	 *
+	 * @return Current value of the GL_MAG_FILTER parameter
+	 */
+	GLint mag_filter() const;
 
 	/**
 	 * @brief Set the magnification filter of this input's sampler
