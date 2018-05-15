@@ -13,9 +13,9 @@ namespace inputs
 /**
  * @brief Represents an input that uses a swap chain output as its source.
  *
- * Note that for performance reasons, the min_filter and mag_filter properties
- * are set by default to `GL_NEAREST`. Mipmaps are supported but have a strong
- * performance impact.
+ * Note that setting min_filter to GL_*_MIPMAP_* will trigger automatic
+ * generation of mipmaps on every update to the source member of this input,
+ * which can impact performance of the resulting chain.
  */
 class shadertoy_EXPORT buffer_input : public basic_input
 {

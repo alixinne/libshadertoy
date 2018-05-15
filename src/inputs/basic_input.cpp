@@ -7,7 +7,11 @@
 using namespace shadertoy;
 using namespace shadertoy::inputs;
 
-basic_input::basic_input() : loaded_(false) {}
+basic_input::basic_input() : loaded_(false)
+{
+	min_filter(GL_NEAREST);
+	mag_filter(GL_NEAREST);
+}
 
 void basic_input::load()
 {

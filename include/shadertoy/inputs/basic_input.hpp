@@ -12,6 +12,8 @@ namespace inputs
 
 /**
  * @brief Represents a texture input to a buffer
+ *
+ * The default minification (resp. magnification) filter parameters default to GL_NEAREST.
  */
 class shadertoy_EXPORT basic_input
 {

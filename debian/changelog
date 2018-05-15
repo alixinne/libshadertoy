@@ -4,7 +4,7 @@ libshadertoy (1.0.0~rc3) UNRELEASED; urgency=medium
   * Fix documentation errors
   * Add parameters to noise texture input factory
   * Add checker texture input factory
-  * Default buffer_input to GL_NEAREST
+  * Default input filters to GL_NEAREST
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Fri, 27 Apr 2018 14:09:51 +0200
 
