@@ -1,4 +1,4 @@
-libshadertoy (1.0.0~rc3) UNRELEASED; urgency=medium
+libshadertoy (1.0.0~rc3) unstable; urgency=medium
 
   * Fix toy_buffer program reloading and shader object usage
   * Fix documentation errors
