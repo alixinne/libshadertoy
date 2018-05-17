@@ -12,7 +12,7 @@ namespace utils
 {
 
 /// Logging utility class for shadertoy
-class log
+class shadertoy_EXPORT log
 {
 	static bool initialized_;
 

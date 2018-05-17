@@ -14,7 +14,7 @@ namespace shadertoy
  * @brief This class represents a swap chain. A swap chain specifies how
  * buffers are rendered to obtain the final result.
  */
-class swap_chain
+class shadertoy_EXPORT swap_chain
 {
 	/// Ordered list of swap chain elements
 	std::deque<std::shared_ptr<members::basic_member>> members_;

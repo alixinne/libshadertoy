@@ -3,6 +3,7 @@
 
 #include "shadertoy/pre.hpp"
 
+#include <array>
 #include <map>
 #include <sstream>
 #include <string>

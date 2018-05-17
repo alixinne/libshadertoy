@@ -27,6 +27,9 @@ public:
 	 */
 	input_loader();
 
+	input_loader(const input_loader &) = delete;
+	input_loader &operator=(const input_loader &) = delete;
+
 	/**
 	 * @brief Add an input factory
 	 *

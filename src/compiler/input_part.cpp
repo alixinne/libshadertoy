@@ -3,6 +3,7 @@
 
 #include "shadertoy/compiler/input_part.hpp"
 
+using namespace shadertoy;
 using namespace shadertoy::compiler;
 
 input_part::input_part(const std::string &name, const std::deque<program_input> &inputs)

@@ -193,9 +193,12 @@ set_property(TARGET shadertoy-objects PROPERTY POSITION_INDEPENDENT_CODE ON)
 execute_process(COMMAND ${CMAKE_C_COMPILER} ${CMAKE_C_FLAGS} -dumpmachine
 				OUTPUT_VARIABLE COMPILER_ARCH
 				OUTPUT_STRIP_TRAILING_WHITESPACE)
-string(REPLACE "-" ";" COMPILER_ARCH_LIST ${COMPILER_ARCH})
-list(GET COMPILER_ARCH_LIST 0 COMPILER_ARCH_NAME)
-string(REGEX REPLACE "i.86" "x86" UNWIND_ARCH ${COMPILER_ARCH_NAME})
+
+if (COMPILER_ARCH)
+	string(REPLACE "-" ";" COMPILER_ARCH_LIST ${COMPILER_ARCH})
+	list(GET COMPILER_ARCH_LIST 0 COMPILER_ARCH_NAME)
+	string(REGEX REPLACE "i.86" "x86" UNWIND_ARCH ${COMPILER_ARCH_NAME})
+endif()
 
 if (UNWIND_FOUND AND UNWIND_ARCH)
 	message(STATUS "Using unwind for tracing OpenGL calls")
@@ -254,16 +257,13 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 		SOVERSION ${VERSION_MAJOR}
 		VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
-	if(NOT WIN32)
-		set_target_properties(${TARGET_NAME} PROPERTIES
-			OUTPUT_NAME shadertoy)
-	endif()
-
 	# Install target
 	install(TARGETS ${TARGET_NAME}
 			DESTINATION ${CMAKE_INSTALL_LIBDIR}
 			EXPORT shadertoy)
 endforeach()
+
+set_target_properties(shadertoy-shared PROPERTIES OUTPUT_NAME shadertoy)
 
 # Export component
 install(EXPORT shadertoy
@@ -275,6 +275,7 @@ generate_export_header(shadertoy-shared
 	BASE_NAME shadertoy
 	EXPORT_MACRO_NAME shadertoy_EXPORT
 	EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/shadertoy_export.h)
+target_compile_definitions(shadertoy-objects PUBLIC shadertoy_shared_EXPORTS)
 
 # Configure the -config.cmake file
 configure_file(shadertoy-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake @ONLY)
