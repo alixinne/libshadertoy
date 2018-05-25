@@ -103,9 +103,13 @@ find_package(SOIL)
 find_package(JPEG)
 
 # libopenexr
-pkg_search_module(OpenEXR OpenEXR)
-if (OpenEXR_FOUND)
-	link_directories(${OpenEXR_LIBDIR})
+find_package(OpenEXR)
+if (NOT OpenEXR_FOUND OR NOT OPENEXR_LIBRARIES)
+	pkg_search_module(OpenEXR OpenEXR)
+	if (OpenEXR_FOUND)
+		message(STATUS "Found OpenEXR using pkg-config")
+		link_directories(${OpenEXR_LIBDIR})
+	endif()
 endif()
 
 # Copy shaders to source
