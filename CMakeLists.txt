@@ -51,7 +51,7 @@ if (NOT GLM_FOUND)
 		find_path(GLM_INCLUDE_DIRS glm/glm.hpp)
 
 		if (NOT GLM_INCLUDE_DIRS)
-			message(FATAL "Could not find GLM using any of CMake, pkg-config or find_path. Please ensure libglm-dev is installed.")
+			message(FATAL_ERROR "Could not find GLM using any of CMake, pkg-config or find_path. Please ensure libglm-dev is installed.")
 		endif()
 	endif()
 endif()
