@@ -151,37 +151,37 @@ target_include_directories(shadertoy-objects PRIVATE
 	${GLM_INCLUDE_DIRS})
 
 if (SOIL_FOUND)
-	message("-- Building with SOIL support")
+	message(STATUS "Building with SOIL support")
 	target_include_directories(shadertoy-objects PRIVATE
 		${SOIL_INCLUDE_DIRS})
 	target_compile_definitions(shadertoy-objects PRIVATE
 		LIBSHADERTOY_SOIL=1)
 else()
-	message("-- Building without SOIL support")
+	message(STATUS "Building without SOIL support")
 	target_compile_definitions(shadertoy-objects PRIVATE
 		LIBSHADERTOY_SOIL=0)
 endif()
 
 if (JPEG_FOUND)
-	message("-- Building with JPEG support")
+	message(STATUS "Building with JPEG support")
 	target_include_directories(shadertoy-objects PRIVATE
 		${JPEG_INCLUDE_DIRS})
 	target_compile_definitions(shadertoy-objects PRIVATE
 		LIBSHADERTOY_JPEG=1)
 else()
-	message("-- Building without SOIL support")
+	message(STATUS "Building without SOIL support")
 	target_compile_definitions(shadertoy-objects PRIVATE
 		LIBSHADERTOY_JPEG=0)
 endif()
 
 if (OpenEXR_FOUND)
-	message("-- Building with OpenEXR support")
+	message(STATUS "Building with OpenEXR support")
 	target_include_directories(shadertoy-objects PRIVATE
 		${OpenEXR_INCLUDE_DIRS})
 	target_compile_definitions(shadertoy-objects PRIVATE
 		LIBSHADERTOY_OPENEXR=1)
 else()
-	message("-- Building without OpenEXR support")
+	message(STATUS "Building without OpenEXR support")
 	target_compile_definitions(shadertoy-objects PRIVATE
 		LIBSHADERTOY_OPENEXR=0)
 endif()
