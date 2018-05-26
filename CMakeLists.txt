@@ -335,7 +335,7 @@ install(FILES ${POLYMORPHIC_VALUE_DIR}/polymorphic_value.h
 
 # Enable warnings
 if(MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W2 /wd4275 /wd4251")
 else()
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-missing-braces -pedantic")
 endif()
