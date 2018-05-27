@@ -41,30 +41,13 @@ find_package(OpenGL REQUIRED)
 find_package(PkgConfig REQUIRED)
 
 # Find GLM using CMake
-find_package(glm QUIET)
-if (NOT GLM_FOUND)
-	# Find GLM using pkg-config
-	pkg_search_module(GLM glm)
-
-	if (NOT GLM_FOUND)
-		# Find GLM using find_path
-		find_path(GLM_INCLUDE_DIRS glm/glm.hpp)
-
-		if (NOT GLM_INCLUDE_DIRS)
-			message(FATAL_ERROR "Could not find GLM using any of CMake, pkg-config or find_path. Please ensure libglm-dev is installed.")
-		endif()
-	endif()
-endif()
+find_package(glm REQUIRED)
 
 # Find libunwind for printing backtraces on GL errors
-pkg_search_module(UNWIND libunwind)
-if (UNWIND_FOUND)
-	link_directories(${UNWIND_LIBDIR})
-endif()
+find_package(Unwind QUIET)
 
 # libepoxy extension loader
-pkg_search_module(EPOXY REQUIRED epoxy)
-link_directories(${EPOXY_LIBDIR})
+find_package(Epoxy REQUIRED)
 
 # Use bundled spdlog
 set(SPDLOG_BUILD_EXAMPLES OFF)
@@ -97,20 +80,13 @@ add_custom_command(OUTPUT ${URI_LIBRARY_MAIN_INCLUDE}
 				   COMMAND ${CMAKE_COMMAND} -E copy ${URI_LIBRARY_DIR}/uri.hh ${URI_LIBRARY_MAIN_INCLUDE})
 
 # libsoil
-find_package(SOIL)
+find_package(SOIL QUIET)
 
 # libjpeg
-find_package(JPEG)
+find_package(JPEG QUIET)
 
 # libopenexr
-find_package(OpenEXR)
-if (NOT OpenEXR_FOUND OR NOT OPENEXR_LIBRARIES)
-	pkg_search_module(OpenEXR OpenEXR)
-	if (OpenEXR_FOUND)
-		message(STATUS "Found OpenEXR using pkg-config")
-		link_directories(${OpenEXR_LIBDIR})
-	endif()
-endif()
+find_package(OpenEXR QUIET)
 
 # Copy shaders to source
 file(GLOB RESOURCES_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*)
@@ -193,19 +169,8 @@ set_property(TARGET shadertoy-objects PROPERTY CXX_STANDARD 14)
 # -fPIC
 set_property(TARGET shadertoy-objects PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-# Add UNWIND if found
-execute_process(COMMAND ${CMAKE_C_COMPILER} ${CMAKE_C_FLAGS} -dumpmachine
-				ERROR_VARIABLE COMPILER_ARCH_ERROR
-				OUTPUT_VARIABLE COMPILER_ARCH
-				OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-if (COMPILER_ARCH)
-	string(REPLACE "-" ";" COMPILER_ARCH_LIST ${COMPILER_ARCH})
-	list(GET COMPILER_ARCH_LIST 0 COMPILER_ARCH_NAME)
-	string(REGEX REPLACE "i.86" "x86" UNWIND_ARCH ${COMPILER_ARCH_NAME})
-endif()
-
-if (UNWIND_FOUND AND UNWIND_ARCH)
+# Enable Unwind support
+if (UNWIND_FOUND)
 	message(STATUS "Using unwind for tracing OpenGL calls")
 
 	target_include_directories(shadertoy-objects PRIVATE ${UNWIND_INCLUDE_DIRS})
