@@ -44,7 +44,7 @@ find_package(PkgConfig REQUIRED)
 find_package(glm REQUIRED)
 
 # Find libunwind for printing backtraces on GL errors
-find_package(Unwind QUIET)
+find_package(Unwind)
 
 # libepoxy extension loader
 find_package(Epoxy REQUIRED)
@@ -80,10 +80,10 @@ add_custom_command(OUTPUT ${URI_LIBRARY_MAIN_INCLUDE}
 				   COMMAND ${CMAKE_COMMAND} -E copy ${URI_LIBRARY_DIR}/uri.hh ${URI_LIBRARY_MAIN_INCLUDE})
 
 # libsoil
-find_package(SOIL QUIET)
+find_package(SOIL)
 
 # libjpeg
-find_package(JPEG QUIET)
+find_package(JPEG)
 
 # libopenexr
 find_package(OpenEXR)
