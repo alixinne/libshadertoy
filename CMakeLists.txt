@@ -235,7 +235,13 @@ endforeach()
 
 set_target_properties(shadertoy-shared PROPERTIES OUTPUT_NAME shadertoy)
 
-# Export component
+# Export targets
+export(EXPORT shadertoy FILE ${CMAKE_CURRENT_BINARY_DIR}/shadertoy.cmake)
+
+# Export build package
+export(PACKAGE shadertoy)
+
+# Install exports
 install(EXPORT shadertoy
 		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/shadertoy)
@@ -256,7 +262,7 @@ write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config-ve
 
 # Install cmake config files
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake
-			  ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config-version.cmake
+		${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config-version.cmake
 		COMPONENT shadertoy-dev
 		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/shadertoy)
 
