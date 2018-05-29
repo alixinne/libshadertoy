@@ -1,3 +1,9 @@
+libshadertoy (1.0.0~rc4) UNRELEASED; urgency=medium
+
+  * Fix build on Windows
+
+ -- Vincent Tavernier <vince.tavernier@gmail.com>  Tue, 29 May 2018 02:53:04 +0200
+
 libshadertoy (1.0.0~rc3) unstable; urgency=medium
 
   * Fix toy_buffer program reloading and shader object usage
