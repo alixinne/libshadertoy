@@ -14,6 +14,10 @@ Debian packages.
 * [Testing](docs/TESTING.md)
 * [Using the examples](docs/EXAMPLES.md)
 
+## Documentation
+
+Read the [online documentation](https://vtaverni.gitlabpages.inria.fr/libshadertoy/).
+
 ## Usage
 
 This library only uses an existing OpenGL context that must be created and made
