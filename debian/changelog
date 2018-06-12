@@ -1,4 +1,4 @@
-libshadertoy (1.0.0~rc4) UNRELEASED; urgency=medium
+libshadertoy (1.0.0~rc4) unstable; urgency=medium
 
   * Fix build on Windows
 
