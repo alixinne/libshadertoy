@@ -1,0 +1,21 @@
+---
+image: registry.gitlab.inria.fr/vtaverni/libshadertoy/build-debian:latest
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+pages:
+  stage: deploy
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make shadertoy_doc
+    - mv html ../public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+
+# vim: set et:ts=2:sw=2:
