@@ -1,5 +1,5 @@
 ---
-image: registry.gitlab.inria.fr/vtaverni/libshadertoy/build-debian:latest
+image: registry.gitlab.inria.fr/vtaverni/libshadertoy/build-stretch:latest
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
