@@ -36,6 +36,7 @@
 #include "shadertoy/uniform_state_decl.hpp"
 #include "shadertoy/uniform_state_impl.hpp"
 
+#include "shadertoy/buffers/program_buffer.hpp"
 #include "shadertoy/buffers/toy_buffer.hpp"
 
 #include "shadertoy/render_context.hpp"

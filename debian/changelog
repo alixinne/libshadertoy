@@ -1,5 +1,6 @@
 libshadertoy (1.0.0~rc5) UNRELEASED; urgency=medium
 
+  * Split toy_buffer program functionality into the program_buffer class
   * Fix examples using internal log system
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Mon, 25 Jun 2018 11:15:12 +0200

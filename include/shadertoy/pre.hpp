@@ -10,6 +10,7 @@ namespace shadertoy
 	namespace buffers
 	{
 		class basic_buffer;
+		class program_buffer;
 		class toy_buffer;
 	}
 

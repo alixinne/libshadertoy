@@ -15,7 +15,7 @@ namespace shadertoy
  * members of the same swap chain. This includes the screen drawing programs, the fallback error
  * input, the shared uniforms and the buffer template.
  *
- * The buffer template specifies how the sources of a buffers::toy_buffer will be composed with
+ * The buffer template specifies how the sources of a buffers::program_buffer will be composed with
  * the default sources to make a full fragment shader.
  *
  * The default parts of the buffer template are as follows:
@@ -162,7 +162,7 @@ public:
 	 * @param buffer Buffer being compiled
 	 * @param fs     Fragment shader object to compile to.
 	 */
-	void build_buffer_shader(const buffers::toy_buffer &buffer, gl::shader &fs) const;
+	void build_buffer_shader(const buffers::program_buffer &buffer, gl::shader &fs) const;
 
 	/**
 	 * @brief  Get a reference to the uniform state container

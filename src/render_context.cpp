@@ -5,7 +5,7 @@
 
 #include "resources.h"
 #include "shadertoy/uniform_state.hpp"
-#include "shadertoy/buffers/toy_buffer.hpp"
+#include "shadertoy/buffers/program_buffer.hpp"
 #include "shadertoy/shader_compiler.hpp"
 #include "shadertoy/render_context.hpp"
 
@@ -131,7 +131,7 @@ std::shared_ptr<members::basic_member> render_context::render(swap_chain &chain)
 	return chain.render(*this);
 }
 
-void render_context::build_buffer_shader(const buffers::toy_buffer &buffer, gl::shader &fs) const
+void render_context::build_buffer_shader(const buffers::program_buffer &buffer, gl::shader &fs) const
 {
 	// Load all source parts
 	auto fs_template(buffer_template_.specify({
