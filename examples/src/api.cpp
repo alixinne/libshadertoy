@@ -8,6 +8,8 @@
 
 #include "api.hpp"
 
+#include <shadertoy/utils/log.hpp>
+
 namespace u = shadertoy::utils;
 namespace fs = boost::filesystem;
 

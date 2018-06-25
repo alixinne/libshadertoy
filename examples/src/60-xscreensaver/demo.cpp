@@ -11,6 +11,8 @@
 #include "api.hpp"
 #include "demo.h"
 
+#include <shadertoy/utils/log.hpp>
+
 #define TEST_NO_GLFW
 #include "test.hpp"
 

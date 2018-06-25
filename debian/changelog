@@ -1,3 +1,9 @@
+libshadertoy (1.0.0~rc5) UNRELEASED; urgency=medium
+
+  * Fix examples using internal log system
+
+ -- Vincent Tavernier <vince.tavernier@gmail.com>  Mon, 25 Jun 2018 11:15:12 +0200
+
 libshadertoy (1.0.0~rc4) unstable; urgency=medium
 
   * Fix build on Windows

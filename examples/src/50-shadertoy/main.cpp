@@ -13,6 +13,8 @@
 #include "api.hpp"
 #include "test.hpp"
 
+#include <shadertoy/utils/log.hpp>
+
 using namespace std;
 using shadertoy::gl::gl_call;
 
