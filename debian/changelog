@@ -1,5 +1,6 @@
 libshadertoy (1.0.0~rc5) UNRELEASED; urgency=medium
 
+  * Migrate to GitLab CI
   * Split toy_buffer program functionality into the program_buffer class
   * Fix examples using internal log system
 

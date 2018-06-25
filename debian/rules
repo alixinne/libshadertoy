@@ -16,12 +16,17 @@
 %:
 	dh $@ --buildsystem=cmake --parallel
 
+ifeq ($(DEB_BUILD_ARCH),amd64)
+BUILD_DOCUMENTATION=ON
+else
+BUILD_DOCUMENTATION=OFF
+endif
 
 # dh_make generated override targets
 # This is example for Cmake (See https://bugs.debian.org/641051 )
 override_dh_auto_configure:
 	dh_auto_configure -- -DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH) \
-		-DLIBSHADERTOY_BUILD_DOCUMENTATION=ON
+		-DLIBSHADERTOY_BUILD_DOCUMENTATION=$(BUILD_DOCUMENTATION)
 
 override_dh_auto_clean:
 	rm -rf obj-$(DEB_HOST_MULTIARCH)/*

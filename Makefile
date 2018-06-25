@@ -17,6 +17,7 @@ SKIP_TESTS?=
 VERS=$(shell head -n 1 debian/changelog | awk '{gsub("[()]","",$$2);print $$2}')
 OS_DIST=$(shell . /etc/os-release && test -n "$$VERSION_CODENAME" && echo -n "$$VERSION_CODENAME" || \
 	   echo -n "$$VERSION" | cut -d' ' -f2 | sed 's/[()]//g')
+export OS_DIST
 CI_BUILD_TYPE?=ci-src
 
 GIT_PREFIX=$(shell git rev-parse --short HEAD)
@@ -40,6 +41,10 @@ ci-src:
 # ci-pkg builds packages for the current distribution, on supported hosts
 ci-pkg: $(patsubst %,$(OS_DIST)-%,$(PKG_TYPES))
 	tar -cjvf libshadertoy-$(VERS)-$(OS_DIST)-$(GIT_PREFIX).tar.bz2 ../libshadertoy-$(VERS)-$(OS_DIST)-$(GIT_PREFIX)
+
+gl:
+	./buildpackage.sh $@
+	mv ../libshadertoy-$(VERS)-$(OS_DIST)-$(GIT_PREFIX)/*.deb .
 
 .PHONY: all ci-src ci-pkg $(ALL_DISTS) $(ALL_PKGS)
 

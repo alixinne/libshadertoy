@@ -41,12 +41,12 @@ build_pkg () {
 		exit 2
 	fi
 
-	echo "[==== BUILDING $DISTRIBUTION-$ARCH ====]" >&2
-	if [ "$ARCH" = "amd64" ]; then
-		ARCHALL_ARG='--arch-all'
-	elif [ "$ARCH" = "i386" ]; then
-		ARCHALL_ARG='--no-arch-all'
+	FAKEROOT_ARG=-rfakeroot
+	if [ "$EUID" = "0" ]; then
+		FAKEROOT_ARG=""
 	fi
+
+	echo "[==== BUILDING $DISTRIBUTION-$ARCH ====]" >&2
 
 	DIR_ARCHSUFFIX="-$DISTRIBUTION"
 	TARGET_DIRECTORY=$LIBDIRECTORY/../libshadertoy-$LIBVERSION$DIR_ARCHSUFFIX
@@ -57,12 +57,30 @@ build_pkg () {
 	mkdir -p $TARGET_DIRECTORY
 
 	if [ "$ARCH" != "source" ]; then
-		(cd libshadertoy && sbuild --no-apt-update --no-apt-upgrade \
-			--no-apt-clean --resolve-alternatives \
-			-d $DISTRIBUTION \
-			--arch $ARCH \
-			$ARCHALL_ARG \
-			--verbose)
+		if [ "x$NO_SBUILD" = "x" ]; then
+			if [ "$ARCH" = "amd64" ]; then
+				ARCHALL_ARG='--arch-all'
+			elif [ "$ARCH" = "i386" ]; then
+				ARCHALL_ARG='--no-arch-all'
+			fi
+
+			(cd libshadertoy && sbuild --no-apt-update --no-apt-upgrade \
+				--no-apt-clean --resolve-alternatives \
+				-d $DISTRIBUTION \
+				--arch $ARCH \
+				$ARCHALL_ARG \
+				--verbose)
+		else
+			if [ "$ARCH" = "amd64" ]; then
+				ARCHALL_ARG='-b'
+			elif [ "$ARCH" = "i386" ]; then
+				ARCHALL_ARG='-B'
+			fi
+
+			(cd libshadertoy && dpkg-buildpackage -uc $ARCHALL_ARG \
+				$FAKEROOT_ARG -j$PROC_ARG \
+				-a $ARCH)
+		fi
 
 		RESULT="$?"
 		if [ "$RESULT" -ne "0" ]; then
@@ -92,7 +110,7 @@ build_pkg () {
 			fi
 		fi
 	else
-		(cd libshadertoy && dpkg-buildpackage -S -uc -us -rfakeroot -d \
+		(cd libshadertoy && dpkg-buildpackage -S -uc -us $FAKEROOT_ARG -d \
 			--changes-option=-DDistribution=$DISTRIBUTION
 		)
 
@@ -167,8 +185,18 @@ build_src () {
 	fi
 }
 
+PROC_ARG=$(nproc)
+
 if [ "$1" = "ci-src" ]; then
 	build_src
+elif [ "$1" = "gl" ]; then
+	# Set build parameters for GitLab CI build
+	eval $(dpkg-architecture)
+	SKIP_TESTS=1
+	NO_SBUILD=1
+	PROC_ARG=2
+
+	build_pkg "${OS_DIST}-${DEB_BUILD_ARCH}"
 else
 	build_pkg "$@"
 fi

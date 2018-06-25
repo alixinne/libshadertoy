@@ -1,11 +1,163 @@
 ---
-image: registry.gitlab.inria.fr/vtaverni/libshadertoy/build-stretch:latest
-
 variables:
-  GIT_SUBMODULE_STRATEGY: recursive
+  STRETCH_AMD64_TEST_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/amd64/build-stretch:$CI_COMMIT_REF_SLUG
+  STRETCH_AMD64_RELEASE_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/amd64/build-stretch:latest
+  STRETCH_I386_TEST_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/i386/build-stretch:$CI_COMMIT_REF_SLUG
+  STRETCH_I386_RELEASE_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/i386/build-stretch:latest
+  XENIAL_AMD64_TEST_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/amd64/build-xenial:$CI_COMMIT_REF_SLUG
+  XENIAL_AMD64_RELEASE_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/amd64/build-xenial:latest
+  XENIAL_I386_TEST_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/i386/build-xenial:$CI_COMMIT_REF_SLUG
+  XENIAL_I386_RELEASE_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/i386/build-xenial:latest
+
+stages:
+  - build_images
+  - build
+  - deploy
+  - release
+
+.fetch_submodules: &fetch_submodules
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+
+.docker_op: &docker_op
+  image: docker:stable
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.inria.fr
+  tags:
+    - linux
+
+.build_image: &build_image
+  <<: *docker_op
+  stage: build_images
+
+.build_pkg: &build_pkg
+  <<: *fetch_submodules
+  stage: build
+  script:
+    - make gl
+  tags:
+    - linux
+
+.release_img: &release_img
+  <<: *docker_op
+  stage: release
+
+xenial_amd64_image:
+  <<: *build_image
+  script:
+    - docker pull $XENIAL_AMD64_TEST_IMAGE
+    - docker build --pull -t $XENIAL_AMD64_TEST_IMAGE --cache-from $XENIAL_AMD64_TEST_IMAGE -f docker/Dockerfile.xenial-amd64 docker
+    - docker push $XENIAL_AMD64_TEST_IMAGE
+
+xenial_i386_image:
+  <<: *build_image
+  script:
+    - docker pull $XENIAL_I386_TEST_IMAGE
+    - docker build --pull -t $XENIAL_I386_TEST_IMAGE --cache-from $XENIAL_I386_TEST_IMAGE -f docker/Dockerfile.xenial-i386 docker
+    - docker push $XENIAL_I386_TEST_IMAGE
+
+xenial_amd64_pkg:
+  <<: *build_pkg
+  image: $XENIAL_AMD64_TEST_IMAGE
+  artifacts:
+    name: 'libshadertoy-xenial-amd64-$CI_COMMIT_REF_SLUG'
+    paths:
+      - '*.deb'
+
+xenial_i386_pkg:
+  <<: *build_pkg
+  image: $XENIAL_I386_TEST_IMAGE
+  artifacts:
+    name: 'libshadertoy-xenial-i386-$CI_COMMIT_REF_SLUG'
+    paths:
+      - '*.deb'
+
+release_xenial_amd64_image:
+  <<: *release_img
+  script:
+    - docker pull $XENIAL_AMD64_TEST_IMAGE
+    - docker tag $XENIAL_AMD64_TEST_IMAGE $XENIAL_AMD64_RELEASE_IMAGE
+    - docker push $XENIAL_AMD64_RELEASE_IMAGE
+  only:
+    - master
+
+release_xenial_i386_image:
+  <<: *release_img
+  script:
+    - docker pull $XENIAL_I386_TEST_IMAGE
+    - docker tag $XENIAL_I386_TEST_IMAGE $XENIAL_I386_RELEASE_IMAGE
+    - docker push $XENIAL_I386_RELEASE_IMAGE
+  only:
+    - master
+
+stretch_amd64_image:
+  <<: *build_image
+  script:
+    - docker pull $STRETCH_AMD64_TEST_IMAGE
+    - docker build --pull -t $STRETCH_AMD64_TEST_IMAGE --cache-from $STRETCH_AMD64_TEST_IMAGE -f docker/Dockerfile.stretch-amd64 docker
+    - docker push $STRETCH_AMD64_TEST_IMAGE
+
+stretch_i386_image:
+  <<: *build_image
+  script:
+    - docker pull $STRETCH_I386_TEST_IMAGE
+    - docker build --pull -t $STRETCH_I386_TEST_IMAGE --cache-from $STRETCH_I386_TEST_IMAGE -f docker/Dockerfile.stretch-i386 docker
+    - docker push $STRETCH_I386_TEST_IMAGE
+
+stretch_amd64_pkg:
+  <<: *build_pkg
+  image: $STRETCH_AMD64_TEST_IMAGE
+  artifacts:
+    name: 'libshadertoy-stretch-amd64-$CI_COMMIT_REF_SLUG'
+    paths:
+      - '*.deb'
+
+stretch_i386_pkg:
+  <<: *build_pkg
+  image: $STRETCH_I386_TEST_IMAGE
+  artifacts:
+    name: 'libshadertoy-stretch-i386-$CI_COMMIT_REF_SLUG'
+    paths:
+      - '*.deb'
+
+win10_amd64_pkg:
+  stage: build
+  script:
+    - mkdir build
+    - cd build
+    - cmake -DCMAKE_TOOLCHAIN_FILE=E:\vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 15 2017 Win64" ..
+    - cmake --build . --config Release -- /m
+    - cmake --build . --config Release --target PACKAGE -- /m
+    - move libshadertoy-*.7z ..
+  artifacts:
+    name: 'libshadertoy-win10-amd64-%CI_COMMIT_REF_SLUG%'
+    paths:
+      - '*.7z'
+  tags:
+    - windows
+
+release_stretch_amd64_image:
+  <<: *release_img
+  script:
+    - docker pull $STRETCH_AMD64_TEST_IMAGE
+    - docker tag $STRETCH_AMD64_TEST_IMAGE $STRETCH_AMD64_RELEASE_IMAGE
+    - docker push $STRETCH_AMD64_RELEASE_IMAGE
+  only:
+    - master
+
+release_stretch_i386_image:
+  <<: *release_img
+  script:
+    - docker pull $STRETCH_I386_TEST_IMAGE
+    - docker tag $STRETCH_I386_TEST_IMAGE $STRETCH_I386_RELEASE_IMAGE
+    - docker push $STRETCH_I386_RELEASE_IMAGE
+  only:
+    - master
 
 pages:
+  <<: *fetch_submodules
   stage: deploy
+  image: $STRETCH_AMD64_TEST_IMAGE
   script:
     - mkdir build
     - cd build
@@ -17,5 +169,7 @@ pages:
       - public
   only:
     - master
+  tags:
+    - linux
 
 # vim: set et:ts=2:sw=2:
