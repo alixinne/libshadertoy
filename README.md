@@ -1,7 +1,5 @@
 # libshadertoy
 
-[![Build Status](https://ci.inria.fr/libshadertoy/buildStatus/icon?job=libshadertoy)](https://ci.inria.fr/libshadertoy/job/libshadertoy/)
-
 *libshadertoy* is a C++ library for rendering multipass programs using OpenGL
 desktop. Its defaults allow running programs written for the
 [shadertoy](https://www.shadertoy.com) website, but it can be easily extended.
