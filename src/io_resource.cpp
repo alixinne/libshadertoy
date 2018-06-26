@@ -24,9 +24,10 @@ void io_resource::init_render_texture(rsize size, std::shared_ptr<gl::texture> &
 	texptr->clear_tex_image(0, GL_BGRA, GL_UNSIGNED_BYTE, black);
 }
 
-io_resource::io_resource(rsize_ref &&render_size, GLint internal_format)
+io_resource::io_resource(rsize_ref &&render_size, GLint internal_format, member_swap_policy swap_policy)
 	: render_size_(std::move(render_size)),
 	internal_format_(internal_format),
+	swap_policy_(swap_policy),
 	source_tex_(),
 	target_tex_()
 {}
@@ -40,6 +41,7 @@ void io_resource::allocate()
 	// Current texture settings
 	rsize current_size;
 	GLint current_format(0);
+	member_swap_policy current_policy(member_swap_policy::double_buffer);
 
 	// If the textures exist, read their parameters
 	if (source_tex_)
@@ -51,10 +53,14 @@ void io_resource::allocate()
 		current_size = rsize(width, height);
 	}	
 
-	if (current_size != size || current_format != internal_format_)
+	if (current_size != size || current_format != internal_format_ || current_policy != swap_policy_)
 	{
 		init_render_texture(size, source_tex_);
-		init_render_texture(size, target_tex_);
+
+		if (swap_policy_ == member_swap_policy::double_buffer)
+			init_render_texture(size, target_tex_);
+		else if (swap_policy_ == member_swap_policy::single_buffer)
+			target_tex_.reset();
 	}
 }
 
@@ -76,5 +82,8 @@ void io_resource::swap()
 			log::shadertoy()->warn("IO resource object {} render size and allocated sizes and/or formats mismatch", (void*)this);
 	}
 
-	std::swap(source_tex_, target_tex_);
+	if (target_tex_)
+	{
+		std::swap(source_tex_, target_tex_);
+	}
 }

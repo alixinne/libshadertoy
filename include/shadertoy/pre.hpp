@@ -84,5 +84,6 @@ namespace shadertoy
 // Include template and utilities everywhere
 #include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/size.hpp"
+#include "shadertoy/member_swap_policy.hpp"
 
 #endif /* _SHADERTOY_PRE_HPP_ */

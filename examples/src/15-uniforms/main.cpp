@@ -80,6 +80,7 @@ int main(int argc, char *argv[])
 
 			// Set the internal format of the chain
 			chain.internal_format(GL_RGB8);
+			chain.swap_policy(shadertoy::member_swap_policy::single_buffer);
 
 			// Set the context parameters (render size and some uniforms)
 			ctx.render_size = shadertoy::rsize(width, height);

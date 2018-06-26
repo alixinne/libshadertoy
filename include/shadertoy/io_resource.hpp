@@ -17,6 +17,9 @@ class io_resource
 	/// Texture format
 	GLint internal_format_;
 
+	/// Swapping policy
+	member_swap_policy swap_policy_;
+
 	/// Source texture
 	std::shared_ptr<gl::texture> source_tex_;
 
@@ -32,8 +35,9 @@ public:
 	 *
 	 * @param render_size     Initial size
 	 * @param internal_format Internal format, as defined by https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml
+	 * @param swap_policy     Texture swapping policy, controls how many textures are allocated
 	 */
-	io_resource(rsize_ref &&render_size, GLint internal_format = GL_RGBA32F);
+	io_resource(rsize_ref &&render_size, GLint internal_format = GL_RGBA32F, member_swap_policy swap_policy = member_swap_policy::double_buffer);
 
 	/**
 	 * @brief      Allocate the textures in this IO object
@@ -82,6 +86,24 @@ public:
 	{ internal_format_ = new_format; }
 
 	/**
+	 * @brief      Get the swapping policy for this IO object
+	 *
+	 * @return     Swapping policy of this IO object
+	 */
+	inline member_swap_policy swap_policy() const { return swap_policy_; }
+
+	/**
+	 * @brief      Set the swapping policy for this IO object
+	 *
+	 * This method does not reset the allocated textures. The allocate method
+	 * should be called after.
+	 *
+	 * @param new_policy New swapping policy
+	 */
+	inline void swap_policy(member_swap_policy new_policy)
+	{ swap_policy_ = new_policy; }
+
+	/**
 	 * @brief      Get a reference to the source texture for this buffer
 	 *
 	 * @return     Source texture for this buffer.
@@ -95,7 +117,7 @@ public:
 	 * @return     Target (current) texture for this buffer.
 	 */
 	inline const std::shared_ptr<gl::texture> &target_texture() const
-	{ return target_tex_; }
+	{ if (target_tex_) return target_tex_; return source_tex_; }
 
 };
 }

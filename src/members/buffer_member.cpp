@@ -36,9 +36,9 @@ void buffer_member::allocate_member(const swap_chain &chain, const render_contex
 	buffer_->allocate_textures(context, io_);
 }
 
-buffer_member::buffer_member(std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format)
+buffer_member::buffer_member(std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format, member_swap_policy swap_policy)
 	: buffer_(buffer),
-	io_(std::forward<rsize_ref&&>(render_size), internal_format)
+	io_(std::forward<rsize_ref&&>(render_size), internal_format, swap_policy)
 {
 }
 
@@ -49,10 +49,15 @@ std::shared_ptr<gl::texture> buffer_member::output()
 
 std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size)
 {
-	return make_buffer(buffer, std::forward<rsize_ref&&>(render_size), chain.internal_format());
+	return make_buffer(buffer, std::forward<rsize_ref&&>(render_size), chain.internal_format(), chain.swap_policy());
 }
 
 std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format)
 {
-	return make_buffer(buffer, std::forward<rsize_ref&&>(render_size), internal_format);
+	return make_buffer(buffer, std::forward<rsize_ref&&>(render_size), internal_format, chain.swap_policy());
+}
+
+std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format, member_swap_policy swap_policy)
+{
+	return make_buffer(buffer, std::forward<rsize_ref&&>(render_size), internal_format, swap_policy);
 }

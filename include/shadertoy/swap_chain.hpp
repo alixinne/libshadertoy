@@ -28,19 +28,30 @@ class shadertoy_EXPORT swap_chain
 	/// Default internal format for members constructed for this chain
 	GLint internal_format_;
 
+	/// Default swap policy for members constructed for this chain
+	member_swap_policy swap_policy_;
+
 public:
 	/**
 	 * @brief Initialize a new instance of the swap_chain class. The internal format will
-	 *        default to \c GL_RGBA32F.
+	 *        default to \c GL_RGBA32F and the swap policy will be \c double_buffer.
 	 */
 	swap_chain();
 
 	/**
-	 * @brief Initialize a new instance of the swap_chain class with the specified internal format
+	 * @brief Initialize a new instance of the swap_chain class with the specified internal format and the default \c double_buffer swap policy.
 	 *
 	 * @param internal_format Internal format for members of this swap chain
 	 */
 	swap_chain(GLint internal_format);
+
+	/**
+	 * @brief Initialize a new instance of the swap_chain class with the specified internal format and swap policy.
+	 *
+	 * @param internal_format Internal format for members of this swap chain
+	 * @param swap_policy     Swap policy for members of this swap chain
+	 */
+	swap_chain(GLint internal_format, member_swap_policy swap_policy);
 
 	/**
 	 * @brief Obtain the list of members of this swap_chain
@@ -74,6 +85,23 @@ public:
 	 */
 	inline void internal_format(GLint new_format)
 	{ internal_format_ = new_format; }
+
+	/**
+	 * @brief Obtain the current swap policy for member construction
+	 *
+	 * @return Swap policy used for member construction
+	 */
+	inline member_swap_policy swap_policy() const { return swap_policy_; }
+
+	/**
+	 * @brief Sets the swap policy for member construction.
+	 *        Note that this will only affect following calls to emplace_back
+	 *        and will not change already allocated members.
+	 *
+	 * @param new_policy New swap policy
+	 */
+	inline void swap_policy(member_swap_policy new_policy)
+	{ swap_policy_ = new_policy; }
 
 	/**
 	 * @brief Obtain the member that occurs before \p member

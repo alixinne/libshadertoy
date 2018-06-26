@@ -13,7 +13,8 @@ swap_chain::swap_chain()
 	: members_(),
 	members_set_(),
 	current_(),
-	internal_format_(GL_RGBA32F)
+	internal_format_(GL_RGBA32F),
+	swap_policy_(member_swap_policy::double_buffer)
 {
 }
 
@@ -21,7 +22,17 @@ swap_chain::swap_chain(GLint internal_format)
 	: members_(),
 	members_set_(),
 	current_(),
-	internal_format_(internal_format)
+	internal_format_(internal_format),
+	swap_policy_(member_swap_policy::double_buffer)
+{
+}
+
+swap_chain::swap_chain(GLint internal_format, member_swap_policy swap_policy)
+	: members_(),
+	members_set_(),
+	current_(),
+	internal_format_(internal_format),
+	swap_policy_(swap_policy)
 {
 }
 
