@@ -253,7 +253,7 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 				load_nonbuffer_input(buffer->inputs()[channel_id].input(), input, curl, tmpdir, i);
 			}
 
-			auto member(shadertoy::members::make_buffer(buffer, shadertoy::make_size_ref(size)));
+			auto member(shadertoy::members::make_buffer(buffer, shadertoy::make_size_ref(size), chain.internal_format()));
 			known_buffers.emplace(name, member);
 
 			if (name != "image")

@@ -25,11 +25,22 @@ class shadertoy_EXPORT swap_chain
 	/// Last member that has been rendered in this swap chain
 	std::shared_ptr<members::basic_member> current_;
 
+	/// Default internal format for members constructed for this chain
+	GLint internal_format_;
+
 public:
 	/**
-	 * @brief Initialize a new instance of the swap_chain class.
+	 * @brief Initialize a new instance of the swap_chain class. The internal format will
+	 *        default to \c GL_RGBA32F.
 	 */
 	swap_chain();
+
+	/**
+	 * @brief Initialize a new instance of the swap_chain class with the specified internal format
+	 *
+	 * @param internal_format Internal format for members of this swap chain
+	 */
+	swap_chain(GLint internal_format);
 
 	/**
 	 * @brief Obtain the list of members of this swap_chain
@@ -46,6 +57,23 @@ public:
 	 */
 	inline const std::shared_ptr<members::basic_member> &current() const
 	{ return current_; }
+
+	/**
+	 * @brief Obtain the current internal format for member construction
+	 *
+	 * @return Internal format used for member construction
+	 */
+	inline GLint internal_format() const { return internal_format_; }
+
+	/**
+	 * @brief Sets the internal format for member construction.
+	 *        Note that this will only affect following calls to emplace_back
+	 *        and will not change already allocated members.
+	 *
+	 * @param new_format New internal format
+	 */
+	inline void internal_format(GLint new_format)
+	{ internal_format_ = new_format; }
 
 	/**
 	 * @brief Obtain the member that occurs before \p member
@@ -74,7 +102,7 @@ public:
 	template<typename... Args>
 	auto emplace_back(Args&&... args)
 	{
-		auto member(members::make_member(std::forward<Args>(args)...));
+		auto member(members::make_member(std::forward<const swap_chain&>(*this), std::forward<Args>(args)...));
 		push_back(member);
 		return member;
 	}

@@ -47,6 +47,11 @@ void texture::parameter(GLenum pname, GLfloat param) const
     gl_call(glTextureParameterf, GLuint(*this), pname, param);
 }
 
+void texture::get_parameter(GLint level, GLenum pname, GLint *params) const
+{
+	gl_call(glGetTextureLevelParameteriv, GLuint(*this), level, pname, params);
+}
+
 void texture::get_parameter(GLint level, GLenum pname, GLfloat *params) const
 {
 	gl_call(glGetTextureLevelParameterfv, GLuint(*this), level, pname, params);

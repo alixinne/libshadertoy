@@ -62,7 +62,7 @@ void program_buffer::init_contents(const render_context &context, const io_resou
 void program_buffer::render_gl_contents(const render_context &context, const io_resource &io)
 {
 	// Compute the rendering size
-	rsize size(io.size());
+	rsize size(io.render_size()->resolve());
 
 	// Set viewport
 	gl_call(glViewport, 0, 0, size.width, size.height);

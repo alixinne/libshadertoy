@@ -10,6 +10,8 @@
 
 #include "shadertoy/members/buffer_member.hpp"
 
+#include "shadertoy/swap_chain.hpp"
+
 using namespace shadertoy;
 using namespace shadertoy::members;
 
@@ -34,13 +36,23 @@ void buffer_member::allocate_member(const swap_chain &chain, const render_contex
 	buffer_->allocate_textures(context, io_);
 }
 
-buffer_member::buffer_member(std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size)
+buffer_member::buffer_member(std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format)
 	: buffer_(buffer),
-	io_(std::forward<rsize_ref&&>(render_size))
+	io_(std::forward<rsize_ref&&>(render_size), internal_format)
 {
 }
 
 std::shared_ptr<gl::texture> buffer_member::output()
 {
 	return io_.source_texture();
+}
+
+std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size)
+{
+	return make_buffer(buffer, std::forward<rsize_ref&&>(render_size), chain.internal_format());
+}
+
+std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format)
+{
+	return make_buffer(buffer, std::forward<rsize_ref&&>(render_size), internal_format);
 }

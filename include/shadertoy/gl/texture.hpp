@@ -106,6 +106,18 @@ namespace gl
 		void parameter(GLenum pname, GLfloat param) const;
 
 		/**
+		 * @brief glGetTextureLevelParameteriv
+		 *
+		 * @param level  Level
+		 * @param pname  Parameter name
+		 * @param params Parameters
+		 *
+		 * @throws opengl_error
+		 * @throws null_texture_error
+		 */
+		void get_parameter(GLint level, GLenum pname, GLint *params) const;
+
+		/**
 		 * @brief glGetTextureLevelParameterfv
 		 *
 		 * @param level  Level

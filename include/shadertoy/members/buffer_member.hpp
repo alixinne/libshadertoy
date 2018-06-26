@@ -52,10 +52,11 @@ public:
 	/**
 	 * @brief Initialize a new buffer swap chain member
 	 *
-	 * @param buffer      Associated buffer
-	 * @param render_size Initial render size
+	 * @param buffer          Associated buffer
+	 * @param render_size     Initial render size
+	 * @param internal_format Internal format of the rendering textures
 	 */
-	buffer_member(std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size);
+	buffer_member(std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format);
 
 	/**
 	 * @brief Get the buffer associated with this member
@@ -99,17 +100,31 @@ std::shared_ptr<buffer_member> make_buffer(Args&&... args)
 /**
  * @brief Construct a pointer to a buffer_member
  *
- * @param buffer      Buffer to add to the swap chain
- * @param render_size Size to render the buffer at when integrated in the swap chain
+ * @param chain           Swap chain this member is being constructed from. The
+ *                        non-specified parameters will get their defaults from this chain.
+ * @param buffer          Buffer to add to the swap chain
+ * @param render_size     Size to render the buffer at when integrated in the swap chain
  *
  * @return Pointer to the constructed buffer_member
  *
  * @see buffer_member#buffer_member(std::shared_ptr<buffers::basic_buffer>, rsize_ref &&)
  */
-inline std::shared_ptr<buffer_member> make_member(std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size)
-{
-	return make_buffer(buffer, std::forward<rsize_ref&&>(render_size));
-}
+std::shared_ptr<buffer_member> make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size);
+
+/**
+ * @brief Construct a pointer to a buffer_member
+ *
+ * @param chain           Swap chain this member is being constructed from. The
+ *                        non-specified parameters will get their defaults from this chain.
+ * @param buffer          Buffer to add to the swap chain
+ * @param render_size     Size to render the buffer at when integrated in the swap chain
+ * @param internal_format Internal format of the rendering textures for this member
+ *
+ * @return Pointer to the constructed buffer_member
+ *
+ * @see buffer_member#buffer_member(std::shared_ptr<buffers::basic_buffer>, rsize_ref &&)
+ */
+std::shared_ptr<buffer_member> make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format);
 }
 }
 

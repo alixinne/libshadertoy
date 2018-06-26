@@ -14,8 +14,8 @@ class io_resource
 	/// Size of the rendering resources in this object
 	rsize_ref render_size_;
 
-	/// Current allocated size
-	rsize current_size_;
+	/// Texture format
+	GLint internal_format_;
 
 	/// Source texture
 	std::shared_ptr<gl::texture> source_tex_;
@@ -28,11 +28,12 @@ class io_resource
 
 public:
 	/**
-	 * @brief Create a new io_resource of the given size
+	 * @brief Create a new io_resource of the given size and format.
 	 *
-	 * @param render_size Initial size
+	 * @param render_size     Initial size
+	 * @param internal_format Internal format, as defined by https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml
 	 */
-	io_resource(rsize_ref &&render_size);
+	io_resource(rsize_ref &&render_size, GLint internal_format = GL_RGBA32F);
 
 	/**
 	 * @brief      Allocate the textures in this IO object
@@ -63,11 +64,22 @@ public:
 	{ render_size_ = std::move(new_size); }
 
 	/**
-	 * @brief      Get the size of the currently allocated resources
+	 * @brief      Get the rendering format for this IO object
 	 *
-	 * @return     Rendering size object
+	 * @return     Internal format of the rendering texture
 	 */
-	inline const rsize size() const { return current_size_; }
+	inline GLint internal_format() const { return internal_format_; }
+
+	/**
+	 * @brief      Set the rendering format for this IO object
+	 *
+	 * This method does not reset the allocated textures. The allocate method
+	 * should be called after.
+	 *
+	 * @param new_format New internal format for the rendering textures
+	 */
+	inline void internal_format(GLint new_format)
+	{ internal_format_ = new_format; }
 
 	/**
 	 * @brief      Get a reference to the source texture for this buffer

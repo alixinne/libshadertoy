@@ -1,5 +1,7 @@
 #include <cassert>
 
+#include <epoxy/gl.h>
+
 #include "shadertoy/members/basic_member.hpp"
 #include "shadertoy/members/buffer_member.hpp"
 
@@ -10,7 +12,16 @@ using namespace shadertoy;
 swap_chain::swap_chain()
 	: members_(),
 	members_set_(),
-	current_()
+	current_(),
+	internal_format_(GL_RGBA32F)
+{
+}
+
+swap_chain::swap_chain(GLint internal_format)
+	: members_(),
+	members_set_(),
+	current_(),
+	internal_format_(internal_format)
 {
 }
 

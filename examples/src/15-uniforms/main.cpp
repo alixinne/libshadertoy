@@ -78,6 +78,9 @@ int main(int argc, char *argv[])
 			auto &context(ctx.context);
 			auto &chain(ctx.chain);
 
+			// Set the internal format of the chain
+			chain.internal_format(GL_RGB8);
+
 			// Set the context parameters (render size and some uniforms)
 			ctx.render_size = shadertoy::rsize(width, height);
 			context.state().get<shadertoy::iTimeDelta>() = 1.0 / 60.0;
