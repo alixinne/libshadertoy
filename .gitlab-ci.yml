@@ -45,14 +45,14 @@ stages:
 xenial_amd64_image:
   <<: *build_image
   script:
-    - docker pull $XENIAL_AMD64_TEST_IMAGE
+    - docker pull $XENIAL_AMD64_TEST_IMAGE || true
     - docker build --pull -t $XENIAL_AMD64_TEST_IMAGE --cache-from $XENIAL_AMD64_TEST_IMAGE -f docker/Dockerfile.xenial-amd64 docker
     - docker push $XENIAL_AMD64_TEST_IMAGE
 
 xenial_i386_image:
   <<: *build_image
   script:
-    - docker pull $XENIAL_I386_TEST_IMAGE
+    - docker pull $XENIAL_I386_TEST_IMAGE || true
     - docker build --pull -t $XENIAL_I386_TEST_IMAGE --cache-from $XENIAL_I386_TEST_IMAGE -f docker/Dockerfile.xenial-i386 docker
     - docker push $XENIAL_I386_TEST_IMAGE
 
@@ -75,7 +75,7 @@ xenial_i386_pkg:
 release_xenial_amd64_image:
   <<: *release_img
   script:
-    - docker pull $XENIAL_AMD64_TEST_IMAGE
+    - docker pull $XENIAL_AMD64_TEST_IMAGE || true
     - docker tag $XENIAL_AMD64_TEST_IMAGE $XENIAL_AMD64_RELEASE_IMAGE
     - docker push $XENIAL_AMD64_RELEASE_IMAGE
   only:
@@ -84,7 +84,7 @@ release_xenial_amd64_image:
 release_xenial_i386_image:
   <<: *release_img
   script:
-    - docker pull $XENIAL_I386_TEST_IMAGE
+    - docker pull $XENIAL_I386_TEST_IMAGE || true
     - docker tag $XENIAL_I386_TEST_IMAGE $XENIAL_I386_RELEASE_IMAGE
     - docker push $XENIAL_I386_RELEASE_IMAGE
   only:
@@ -93,14 +93,14 @@ release_xenial_i386_image:
 stretch_amd64_image:
   <<: *build_image
   script:
-    - docker pull $STRETCH_AMD64_TEST_IMAGE
+    - docker pull $STRETCH_AMD64_TEST_IMAGE || true
     - docker build --pull -t $STRETCH_AMD64_TEST_IMAGE --cache-from $STRETCH_AMD64_TEST_IMAGE -f docker/Dockerfile.stretch-amd64 docker
     - docker push $STRETCH_AMD64_TEST_IMAGE
 
 stretch_i386_image:
   <<: *build_image
   script:
-    - docker pull $STRETCH_I386_TEST_IMAGE
+    - docker pull $STRETCH_I386_TEST_IMAGE || true
     - docker build --pull -t $STRETCH_I386_TEST_IMAGE --cache-from $STRETCH_I386_TEST_IMAGE -f docker/Dockerfile.stretch-i386 docker
     - docker push $STRETCH_I386_TEST_IMAGE
 
