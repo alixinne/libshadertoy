@@ -2,8 +2,8 @@
 # Creates C resources file from files in given directory
 function(create_resources dir output output_h h_id)
 	# Create empty output file
-	file(WRITE ${output} "#include <stddef.h>\n")
-	file(WRITE ${output_h} "#ifndef ${h_id}\n#define ${h_id}\nextern \"C\" {\n")
+	file(WRITE ${output} "#include <stddef.h>\n#include \"${output_h}\"\n\n")
+	file(WRITE ${output_h} "#ifndef ${h_id}\n#define ${h_id}\nnamespace shadertoy {\n")
 	# Collect input files
 	file(GLOB bins ${dir}/*)
 	# Iterate through input files
@@ -17,10 +17,11 @@ function(create_resources dir output output_h h_id)
 		# Convert hex data for C compatibility
 		string(REGEX REPLACE "([0-9a-f][0-9a-f])" "0x\\1," filedata ${filedata})
 		# Append data to output file
-		file(APPEND ${output} "const char ${filename}[] = {${filedata}};\nconst size_t ${filename}_size = sizeof(${filename});\n")
+		file(APPEND ${output} "const char shadertoy::${filename}[] = {${filedata}};\nconst size_t shadertoy::${filename}_size = sizeof(shadertoy::${filename});\n")
 		file(APPEND ${output_h} "extern const char ${filename}[];\nextern const size_t ${filename}_size;\n")
 	endforeach()
 	# Complete .h
+	file(APPEND ${output} "\n")
 	file(APPEND ${output_h} "\n}\n#endif /* ${h_id} */\n")
 endfunction()
 

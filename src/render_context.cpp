@@ -3,7 +3,7 @@
 #include "shadertoy/gl.hpp"
 #include "shadertoy/utils/log.hpp"
 
-#include "resources.h"
+#include "resources.hpp"
 #include "shadertoy/uniform_state.hpp"
 #include "shadertoy/buffers/program_buffer.hpp"
 #include "shadertoy/shader_compiler.hpp"
