@@ -80,6 +80,10 @@ void io_resource::swap()
 		rsize current_size(width, height);
 		if (current_size != render_size_->resolve() || current_format != internal_format_)
 			log::shadertoy()->warn("IO resource object {} render size and allocated sizes and/or formats mismatch", (void*)this);
+
+		if ((target_tex_ && swap_policy_ == member_swap_policy::single_buffer) ||
+			(!target_tex_ && swap_policy_ == member_swap_policy::double_buffer))
+			log::shadertoy()->warn("IO resource object {} swap policy doesn't match the current state", (void*)this);
 	}
 
 	if (target_tex_)
