@@ -17,7 +17,7 @@ namespace compiler
 /**
  * @brief Represents a shader template part based on a list of inputs to a toy_buffer
  */
-class shadertoy_EXPORT input_part : public basic_part
+class shadertoy_EXPORT input_part : public cloneable_part<input_part>
 {
 	/// Referenced input list
 	const std::deque<program_input> &inputs_;

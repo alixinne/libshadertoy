@@ -5,6 +5,7 @@ libshadertoy (1.0.0~rc5) UNRELEASED; urgency=medium
   * Fix examples using internal log system
   * Add texture internal format parameter to swap chain members
   * Add swapping policy parameter to swap chain members
+  * Remove dependency on polymorphic_value
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Mon, 25 Jun 2018 11:15:12 +0200
 

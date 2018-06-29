@@ -34,7 +34,7 @@ void render_context::bind_inputs(std::vector<std::shared_ptr<bound_inputs_base>>
 render_context::render_context()
 	: screen_vs_(GL_VERTEX_SHADER),
 	screen_fs_(GL_FRAGMENT_SHADER),
-	buffer_template_{
+	buffer_template_(
 		compiler::template_part("glsl:header", std::string(glsl_header_frag, glsl_header_frag + glsl_header_frag_size)),
 		compiler::define_part("glsl:defines"),
 		compiler::template_part("shadertoy:header", std::string(shadertoy_header_frag, shadertoy_header_frag + shadertoy_header_frag_size)),
@@ -42,11 +42,11 @@ render_context::render_context()
 		compiler::template_part("buffer:inputs"),
 		compiler::template_part("buffer:sources"),
 		compiler::template_part("shadertoy:footer", std::string(shadertoy_footer_frag, shadertoy_footer_frag + shadertoy_footer_frag_size))
-	},
+	),
 	error_input_(std::make_shared<inputs::error_input>())
 {
 	// Add LIBSHADERTOY definition
-	static_cast<compiler::define_part*>(&buffer_template_.find("glsl:defines").value())->definitions()->definitions().insert(std::make_pair<std::string, std::string>("LIBSHADERTOY", "1"));
+	static_cast<compiler::define_part*>(buffer_template_.find("glsl:defines").get())->definitions()->definitions().insert(std::make_pair<std::string, std::string>("LIBSHADERTOY", "1"));
 
 	// Prepare screen quad geometry
 	GLfloat coords[] = {
@@ -134,10 +134,10 @@ std::shared_ptr<members::basic_member> render_context::render(swap_chain &chain)
 void render_context::build_buffer_shader(const buffers::program_buffer &buffer, gl::shader &fs) const
 {
 	// Load all source parts
-	auto fs_template(buffer_template_.specify({
+	auto fs_template(buffer_template_.specify(
 		compiler::input_part("buffer:inputs", buffer.inputs()),
-		compiler::template_part::from_files("buffer:sources", buffer.source_files()),
-	}));
+		compiler::template_part::from_files("buffer:sources", buffer.source_files())
+	));
 
 	// Load callback sources
     load_buffer_sources(fs_template);

@@ -34,13 +34,13 @@ const std::string &preprocessor_defines::source()
 }
 
 define_part::define_part(const std::string &name)
-	: basic_part(name),
+	: cloneable_part(name),
 	definitions_(std::make_shared<preprocessor_defines>())
 {
 }
 
 define_part::define_part(const std::string &name, std::shared_ptr<preprocessor_defines> defines)
-	: basic_part(name),
+	: cloneable_part(name),
 	definitions_(defines)
 {
 	assert(defines);

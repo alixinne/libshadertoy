@@ -10,21 +10,21 @@ using namespace shadertoy::compiler;
 using namespace shadertoy::utils;
 
 template_part::template_part(const std::string &name)
-	: basic_part(name),
+	: cloneable_part(name),
 	sources_(),
 	has_sources_(false)
 {
 }
 
 template_part::template_part(const std::string &name, const std::string &source)
-	: basic_part(name),
+	: cloneable_part(name),
 	sources_{ std::make_pair(name, source) },
 	has_sources_(true)
 {
 }
 
 template_part::template_part(const std::string &name, const std::vector<std::pair<std::string, std::string>> &sources)
-	: basic_part(name),
+	: cloneable_part(name),
 	sources_(sources),
 	has_sources_(true)
 {

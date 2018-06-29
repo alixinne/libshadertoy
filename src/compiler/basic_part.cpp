@@ -10,3 +10,6 @@ basic_part::basic_part(const std::string &name)
 	assert(!name.empty());
 }
 
+basic_part::~basic_part()
+{
+}

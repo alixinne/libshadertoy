@@ -64,7 +64,7 @@ public:
 /**
  * @brief Represents a shader template part that defines preprocessor variables
  */
-class shadertoy_EXPORT define_part : public basic_part
+class shadertoy_EXPORT define_part : public cloneable_part<define_part>
 {
 	/// Preprocessor defines block
 	std::shared_ptr<preprocessor_defines> definitions_;

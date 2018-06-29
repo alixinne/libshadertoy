@@ -7,7 +7,12 @@
 
 using namespace shadertoy::compiler;
 
-void shader_template::check_unique(jbcoe::polymorphic_value<basic_part> part)
+shader_template::shader_template(std::deque<std::unique_ptr<basic_part>> parts)
+	: parts_(std::move(parts))
+{
+}
+
+void shader_template::check_unique(const std::unique_ptr<basic_part> &part)
 {
 	auto it = std::find_if(parts_.begin(), parts_.end(),
 						   [&part](const auto &item)
@@ -19,21 +24,23 @@ void shader_template::check_unique(jbcoe::polymorphic_value<basic_part> part)
 	}
 }
 
-shader_template::shader_template(std::deque<jbcoe::polymorphic_value<basic_part>> parts)
-	: parts_(parts)
-{
-}
-
 shader_template::shader_template()
 	: parts_()
 {
 }
 
-shader_template::shader_template(std::initializer_list<jbcoe::polymorphic_value<basic_part>> parts)
-	: parts_()
+shader_template::shader_template(shader_template &&other)
+	: parts_(std::move(other.parts_))
 {
-	for (const auto &part : parts)
-		push_back(part);
+}
+
+shader_template &shader_template::operator=(shader_template &&rhs)
+{
+	if (this != &rhs)
+	{
+		parts_ = std::move(rhs.parts_);
+	}
+	return (*this);
 }
 
 std::vector<std::pair<std::string, std::string>> shader_template::sources() const
@@ -50,7 +57,7 @@ std::vector<std::pair<std::string, std::string>> shader_template::sources() cons
 	return result;
 }
 
-jbcoe::polymorphic_value<basic_part> &shader_template::find(const std::string &name)
+std::unique_ptr<basic_part> &shader_template::find(const std::string &name)
 {
 	for (auto &part : parts_)
 	{
@@ -63,15 +70,15 @@ jbcoe::polymorphic_value<basic_part> &shader_template::find(const std::string &n
 	throw template_error(std::string("A part named ") + name + std::string(" could not be found"));
 }
 
-shader_template shader_template::specify(std::initializer_list<jbcoe::polymorphic_value<basic_part>> parts) const
+shader_template shader_template::specify(std::vector<std::unique_ptr<basic_part>> parts) const
 {
 	// Create a map of new parts
-	std::map<std::string, jbcoe::polymorphic_value<basic_part>> new_parts;
-	for (const auto &part : parts)
-		new_parts.emplace(part->name(), part);
+	std::map<std::string, std::unique_ptr<basic_part>*> new_parts;
+	for (auto &part : parts)
+		new_parts.emplace(part->name(), &part);
 
 	// New list of parts
-	std::deque<jbcoe::polymorphic_value<basic_part>> specified_parts;
+	std::deque<std::unique_ptr<basic_part>> specified_parts;
 
 	for (auto &current_part : parts_)
 	{
@@ -83,31 +90,31 @@ shader_template shader_template::specify(std::initializer_list<jbcoe::polymorphi
 			if (new_part_it != new_parts.end())
 			{
 				// We have a specification for this part
-				specified_parts.push_back(new_part_it->second);
+				specified_parts.emplace_back(std::move(*new_part_it->second));
 			}
 			else
 			{
 				// Keep the unspecified part
-				specified_parts.push_back(current_part);
+				specified_parts.emplace_back(current_part->clone());
 			}
 		}
 		else
 		{
 			// This part has been specified already
-			specified_parts.push_back(current_part);
+			specified_parts.emplace_back(current_part->clone());
 		}
 	}
 
-	return shader_template(specified_parts);
+	return shader_template(std::move(specified_parts));
 }
 
-void shader_template::push_back(jbcoe::polymorphic_value<basic_part> part)
+void shader_template::push_back(std::unique_ptr<basic_part> part)
 {
 	check_unique(part);
-	parts_.push_back(part);
+	parts_.emplace_back(std::move(part));
 }
 
-void shader_template::replace(const std::string &name, jbcoe::polymorphic_value<basic_part> part)
+void shader_template::replace(const std::string &name, std::unique_ptr<basic_part> part)
 {
 	auto target_it = std::find_if(parts_.begin(), parts_.end(), [&name](const auto &item)
 								  { return item->name() == name; });
@@ -125,10 +132,10 @@ void shader_template::replace(const std::string &name, jbcoe::polymorphic_value<
 		throw template_error(std::string("A part named ") + part->name() + std::string(" already exists"));
 	}
 
-	*target_it = part;
+	*target_it = std::move(part);
 }
 
-void shader_template::insert_before(const std::string &target, jbcoe::polymorphic_value<basic_part> part)
+void shader_template::insert_before(const std::string &target, std::unique_ptr<basic_part> part)
 {
 	check_unique(part);
 
@@ -143,10 +150,10 @@ void shader_template::insert_before(const std::string &target, jbcoe::polymorphi
 		throw template_error(ss.str());
 	}
 
-	parts_.insert(it, part);
+	parts_.insert(it, std::move(part));
 }
 
-void shader_template::insert_after(const std::string &target, jbcoe::polymorphic_value<basic_part> part)
+void shader_template::insert_after(const std::string &target, std::unique_ptr<basic_part> part)
 {
 	check_unique(part);
 
@@ -161,7 +168,7 @@ void shader_template::insert_after(const std::string &target, jbcoe::polymorphic
 		throw template_error(ss.str());
 	}
 
-	parts_.insert(++it, part);
+	parts_.insert(++it, std::move(part));
 }
 
 bool shader_template::erase(const std::string &name)

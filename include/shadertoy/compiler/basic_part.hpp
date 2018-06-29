@@ -29,6 +29,8 @@ protected:
 	basic_part(const std::string &name);
 
 public:
+	virtual ~basic_part();
+
 	/**
 	 * @brief Obtain this template part's name
 	 *
@@ -62,6 +64,42 @@ public:
 	 * @throws template_error If this template's source is not defined
 	 */
 	virtual std::vector<std::pair<std::string, std::string>> sources() const = 0;
+
+	/**
+	 * @brief Clones this part for use in a new shader template
+	 *
+	 * @return Clone of the current instance
+	 */
+	virtual basic_part *clone() const = 0;
+};
+
+/**
+ * @brief Implements clone functionality for template parts
+ */
+template<typename defined_part>
+class cloneable_part : public basic_part
+{
+protected:
+	cloneable_part(const std::string &name)
+		: basic_part(name)
+	{
+	}
+
+public:
+	virtual basic_part *clone() const
+	{
+		return new defined_part(static_cast<const defined_part &>(*this));
+	}
+
+	/**
+	 * @brief Clones the current part into a unique_ptr
+	 *
+	 * @return unique_ptr pointing to the cloned instance
+	 */
+	operator std::unique_ptr<basic_part>() const
+	{
+		return std::unique_ptr<basic_part>(clone());
+	}
 };
 }
 }

@@ -5,7 +5,6 @@
 
 #include "shadertoy/compiler/basic_part.hpp"
 
-#include "shadertoy/polymorphic_value.h"
 #include <deque>
 
 namespace shadertoy
@@ -38,11 +37,11 @@ namespace compiler
 class shadertoy_EXPORT shader_template
 {
 	/// List of parts of this template
-	std::deque<jbcoe::polymorphic_value<basic_part>> parts_;
+	std::deque<std::unique_ptr<basic_part>> parts_;
 
-	explicit shader_template(std::deque<jbcoe::polymorphic_value<basic_part>> parts);
+	explicit shader_template(std::deque<std::unique_ptr<basic_part>> parts);
 
-	void check_unique(jbcoe::polymorphic_value<basic_part> part);
+	void check_unique(const std::unique_ptr<basic_part> &part);
 
 public:
 	/**
@@ -55,8 +54,19 @@ public:
 	 *
 	 * @param parts Initial set of template parts
 	 */
-	shader_template(std::initializer_list<jbcoe::polymorphic_value<basic_part>> parts);
+	template<typename... Args>
+	explicit shader_template(Args&&... args)
+		: parts_()
+	{
+		int _[] = { (push_back(std::unique_ptr<basic_part>(args.clone())), 0)... };
+		(void)_;
+	}
 
+	shader_template(const shader_template &) = delete;
+	shader_template &operator=(const shader_template &rhs) = delete;
+
+	shader_template(shader_template &&other);
+	shader_template &operator=(shader_template &&rhs);
 	/**
 	 * @brief Obtain a list of sources from this template
 	 *
@@ -75,7 +85,7 @@ public:
 	 *
 	 * @throws template_error When the requested part could not be found
 	 */
-	jbcoe::polymorphic_value<basic_part> &find(const std::string &name);
+	std::unique_ptr<basic_part> &find(const std::string &name);
 
 	/**
 	 * @brief Specify some parts in this template
@@ -87,18 +97,40 @@ public:
 	 *
 	 * @return Copy of this template with unspecified replaced with specified parts from \p parts
 	 */
-	shader_template specify(std::initializer_list<jbcoe::polymorphic_value<basic_part>> parts) const;
+	shader_template specify(std::vector<std::unique_ptr<basic_part>> parts) const;
+
+	/**
+	 * @brief Specify some parts in this template
+	 *
+	 * This methods attempts to replace unspecified parts with parts given as
+	 * arguments to this method, in order to make a more specified template.
+	 *
+	 * @param  parts List of parts to define
+	 * @tparam Parts Type of parts to define
+	 *
+	 * @return Copy of this template with unspecified replaced with specified parts from \p parts
+	 */
+	template<typename... Parts>
+	shader_template specify(Parts&&... parts) const
+	{
+		std::vector<std::unique_ptr<basic_part>> ptrs;
+		ptrs.reserve(sizeof...(Parts));
+		int _[] = {(ptrs.emplace_back(parts.clone()), 0)...};
+		(void)_;
+		return specify(std::move(ptrs));
+	}
 
 	/**
 	 * @brief Add a part to this template
 	 *
-	 * The part will be added to the end of this template.
+	 * The part will be added to the end of this template. This method takes
+	 * ownership of the provided part.
 	 *
 	 * @param part Part to add to this template
 	 *
 	 * @throws template_error When a part with the same name as \p part already exists
 	 */
-	void push_back(jbcoe::polymorphic_value<basic_part> part);
+	void push_back(std::unique_ptr<basic_part> part);
 
 	/**
 	 * @brief Replace a part from this template
@@ -109,7 +141,7 @@ public:
 	 * @throws template_error When a part with the name \p name does not exist
 	 * @throws template_error When a part with the same name as \p part already exists
 	 */
-	void replace(const std::string &name, jbcoe::polymorphic_value<basic_part> part);
+	void replace(const std::string &name, std::unique_ptr<basic_part> part);
 
 	/**
 	 * @brief Add a part to this template, before another template part
@@ -122,7 +154,7 @@ public:
 	 * @throws template_error When a part with the same name as \p part already exists
 	 * @throws template_error When a part with the \p target name could not be found
 	 */
-	void insert_before(const std::string &target, jbcoe::polymorphic_value<basic_part> part);
+	void insert_before(const std::string &target, std::unique_ptr<basic_part> part);
 
 	/**
 	 * @brief Add a part to this template, before another template part
@@ -135,7 +167,7 @@ public:
 	 * @throws template_error When a part with the same name as \p part already exists
 	 * @throws template_error When a part with the \p target name could not be found
 	 */
-	void insert_after(const std::string &target, jbcoe::polymorphic_value<basic_part> part);
+	void insert_after(const std::string &target, std::unique_ptr<basic_part> part);
 
 	/**
 	 * @brief Remove a part from this template

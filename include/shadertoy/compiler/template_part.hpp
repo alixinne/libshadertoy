@@ -13,7 +13,7 @@ namespace compiler
 /**
  * @brief Represents a part of a shader template.
  */
-class shadertoy_EXPORT template_part : public basic_part
+class shadertoy_EXPORT template_part : public cloneable_part<template_part>
 {
 	/// Sources for this template part, with their names
 	std::vector<std::pair<std::string, std::string>> sources_;

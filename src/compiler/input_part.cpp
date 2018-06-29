@@ -7,7 +7,7 @@ using namespace shadertoy;
 using namespace shadertoy::compiler;
 
 input_part::input_part(const std::string &name, const std::deque<program_input> &inputs)
-	: basic_part(name),
+	: cloneable_part(name),
 	inputs_(inputs)
 {
 }
