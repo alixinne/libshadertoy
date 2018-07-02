@@ -80,9 +80,6 @@ class shadertoy_EXPORT render_context
 	/// Vertex shader for screen quad
 	gl::shader screen_vs_;
 
-	/// Fragment shader for screen quad
-	gl::shader screen_fs_;
-
 	/// Vertex buffer for screen quad
 	gl::buffer screen_quad_corners_;
 	/// Index buffer for screen quad

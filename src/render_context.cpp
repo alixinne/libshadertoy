@@ -33,7 +33,6 @@ void render_context::bind_inputs(std::vector<std::unique_ptr<bound_inputs_base>>
 
 render_context::render_context()
 	: screen_vs_(GL_VERTEX_SHADER),
-	screen_fs_(GL_FRAGMENT_SHADER),
 	buffer_template_(
 		compiler::template_part("glsl:header", std::string(glsl_header_frag, glsl_header_frag + glsl_header_frag_size)),
 		compiler::define_part("glsl:defines"),
@@ -74,12 +73,13 @@ render_context::render_context()
 	screen_vs_.compile();
 
 	// Compile screen quad fragment shader
-	screen_fs_.source(std::string(screenQuad_fsh, screenQuad_fsh + screenQuad_fsh_size));
-	screen_fs_.compile();
+	gl::shader screen_fs(GL_FRAGMENT_SHADER);
+	screen_fs.source(std::string(screenQuad_fsh, screenQuad_fsh + screenQuad_fsh_size));
+	screen_fs.compile();
 
 	// Prepare screen quad program
 	screen_prog_.attach_shader(screen_vs_);
-	screen_prog_.attach_shader(screen_fs_);
+	screen_prog_.attach_shader(screen_fs);
 
 	// Compile screen program
 	screen_prog_.link();
