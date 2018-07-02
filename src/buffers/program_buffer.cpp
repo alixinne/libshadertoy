@@ -105,11 +105,6 @@ void program_buffer::render_gl_contents(const render_context &context, const io_
 		}
 		else
 		{
-			log::shadertoy()->warn("Failed to bind input '{}' to unit {} on buffer {} ({})",
-								   it->definition_string(),
-								   current_unit,
-								   id(),
-								   (void*)this);
 			context.error_input()->bind(current_unit);
 		}
 

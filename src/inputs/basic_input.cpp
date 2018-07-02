@@ -4,12 +4,13 @@
 
 #include "shadertoy/inputs/basic_input.hpp"
 
-#include "shadertoy/utils/log.hpp"
+#include "shadertoy/utils/assert.hpp"
 
 using namespace shadertoy;
 using namespace shadertoy::inputs;
 
 using shadertoy::utils::log;
+using shadertoy::utils::error_assert;
 
 basic_input::basic_input() : loaded_(false)
 {
@@ -82,8 +83,12 @@ gl::texture *basic_input::bind(GLuint unit)
 {
 	sampler_.bind(unit);
 	auto tex(use());
+
 	// Check that we have a texture object
-	assert(tex);
+	error_assert(tex != nullptr, "Failed to get texture to bind to unit {} for input {}",
+				 unit,
+				 (void*)this);
+
 	tex->bind_unit(unit);
 	return tex;
 }
