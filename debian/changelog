@@ -6,6 +6,7 @@ libshadertoy (1.0.0~rc5) UNRELEASED; urgency=medium
   * Add texture internal format parameter to swap chain members
   * Add swapping policy parameter to swap chain members
   * Remove dependency on polymorphic_value
+  * Use weak_ptr in buffer_member to prevent cyclic references
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Mon, 25 Jun 2018 11:15:12 +0200
 

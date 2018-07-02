@@ -16,9 +16,9 @@ void buffer_input::reset_input() {}
 
 std::shared_ptr<gl::texture> buffer_input::use_input()
 {
-	if (member_)
+	if (auto member = member_.lock())
 	{
-		auto tex(member_->output());
+		auto tex(member->output());
 
 		// TODO: a member not currently in use in a swap chain
 		// might not need updating its mipmaps
@@ -37,6 +37,6 @@ buffer_input::buffer_input()
 	: member_()
 {}
 
-buffer_input::buffer_input(std::shared_ptr<members::basic_member> member)
+buffer_input::buffer_input(std::weak_ptr<members::basic_member> member)
 	: member_(member)
 {}

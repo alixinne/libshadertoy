@@ -16,11 +16,15 @@ namespace inputs
  * Note that setting min_filter to GL_*_MIPMAP_* will trigger automatic
  * generation of mipmaps on every update to the source member of this input,
  * which can impact performance of the resulting chain.
+ *
+ * This class only holds a \c weak_ptr to the referenced input to prevent
+ * cyclic references. This means the target member must be owned by another
+ * object for as long as this input object exists.
  */
 class shadertoy_EXPORT buffer_input : public basic_input
 {
 	/// Reference to the member for this input
-	std::shared_ptr<members::basic_member> member_;
+	std::weak_ptr<members::basic_member> member_;
 
 protected:
 	/// unused
@@ -55,14 +59,14 @@ public:
 	 *
 	 * @param member Buffer to use as a source
 	 */
-	buffer_input(std::shared_ptr<members::basic_member> member);
+	buffer_input(std::weak_ptr<members::basic_member> member);
 
 	/**
 	 * @brief Obtain the source member for this input
 	 *
 	 * @return Pointer to the source member for this input
 	 */
-	inline const std::shared_ptr<members::basic_member> &member() const { return member_; }
+	inline const std::weak_ptr<members::basic_member> &member() const { return member_; }
 
 	/**
 	 * @brief Set the source member for this input
@@ -72,7 +76,7 @@ public:
 	 *
 	 * @param new_member New source member
 	 */
-	inline void member(std::shared_ptr<members::basic_member> new_member) { member_ = new_member; }
+	inline void member(std::weak_ptr<members::basic_member> new_member) { member_ = new_member; }
 };
 }
 }
