@@ -134,6 +134,21 @@ std::shared_ptr<buffer_member> make_member(const swap_chain &chain, std::shared_
  *                        non-specified parameters will get their defaults from this chain.
  * @param buffer          Buffer to add to the swap chain
  * @param render_size     Size to render the buffer at when integrated in the swap chain
+ * @param swap_policy     Texture swapping policy for this member
+ *
+ * @return Pointer to the constructed buffer_member
+ *
+ * @see buffer_member#buffer_member(std::shared_ptr<buffers::basic_buffer>, rsize_ref &&, GLint, member_swap_policy)
+ */
+std::shared_ptr<buffer_member> make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, member_swap_policy swap_policy);
+
+/**
+ * @brief Construct a pointer to a buffer_member
+ *
+ * @param chain           Swap chain this member is being constructed from. The
+ *                        non-specified parameters will get their defaults from this chain.
+ * @param buffer          Buffer to add to the swap chain
+ * @param render_size     Size to render the buffer at when integrated in the swap chain
  * @param internal_format Internal format of the rendering textures for this member
  * @param swap_policy     Texture swapping policy for this member
  *

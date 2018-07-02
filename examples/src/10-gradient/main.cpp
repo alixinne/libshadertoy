@@ -52,10 +52,11 @@ int main(int argc, char *argv[])
 			imageBuffer->source_files().push_back("../shaders/shader-gradient.glsl");
 
 			// Add the image buffer to the swap chain, at the given size
-			chain.emplace_back(imageBuffer, shadertoy::make_size_ref(ctx.render_size));
-
-			// Create a swap chain member that renders to the screen
-			chain.emplace_back<shadertoy::members::screen_member>(shadertoy::make_size_ref(ctx.render_size));
+			// The default_framebuffer policy makes this buffer draw directly to
+			// the window instead of using a texture that is then copied to the
+			// screen.
+			chain.emplace_back(imageBuffer, shadertoy::make_size_ref(ctx.render_size),
+							   shadertoy::member_swap_policy::default_framebuffer);
 
 			try
 			{
@@ -93,6 +94,14 @@ int main(int argc, char *argv[])
 				// Update uniforms
 				context.state().get<shadertoy::iTime>() = t;
 				context.state().get<shadertoy::iFrame>() = frameCount;
+
+				// Set viewport
+				// This is not necessary when the last pass is rendering to a
+				// texture and it is followed by a screen_member, which calls
+				// glViewport. In this example, we render directly to the
+				// default framebuffer, so we need to set the viewport
+				// ourselves.
+				gl_call(glViewport, 0, 0, ctx.render_size.width, ctx.render_size.height);
 
 				// Render the swap chain
 				context.render(chain);

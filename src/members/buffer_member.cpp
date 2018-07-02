@@ -57,6 +57,11 @@ std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std
 	return make_buffer(buffer, std::forward<rsize_ref&&>(render_size), internal_format, chain.swap_policy());
 }
 
+std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, member_swap_policy swap_policy)
+{
+	return make_buffer(buffer, std::forward<rsize_ref&&>(render_size), chain.internal_format(), swap_policy);
+}
+
 std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format, member_swap_policy swap_policy)
 {
 	return make_buffer(buffer, std::forward<rsize_ref&&>(render_size), internal_format, swap_policy);

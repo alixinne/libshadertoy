@@ -11,6 +11,7 @@
 using namespace shadertoy;
 using namespace shadertoy::buffers;
 
+using shadertoy::gl::gl_call;
 using shadertoy::utils::error_assert;
 
 gl_buffer::gl_buffer(const std::string &id)
@@ -42,16 +43,25 @@ void gl_buffer::render_contents(const render_context &context, const io_resource
 {
 	// Update renderbuffer to use the correct target texture and bind as the curren target
 	target_rbo_.bind(GL_RENDERBUFFER);
-	target_fbo_.bind(GL_DRAW_FRAMEBUFFER);
 
-	// Set color attachements
-	auto &texture(io.target_texture());
-	error_assert(texture.get() != nullptr,
-				 "Target render texture for gl_buffer {} ({}) was not allocated before rendering",
-				 id(),
-				 (void*)this);
+	if (io.swap_policy() == member_swap_policy::default_framebuffer)
+	{
+		// Bind default framebuffer, assume viewport has been set correctly
+		gl_call(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
+	}
+	else
+	{
+		target_fbo_.bind(GL_DRAW_FRAMEBUFFER);
 
-	target_fbo_.texture(GL_COLOR_ATTACHMENT0, *texture, 0);
+		// Set color attachements
+		auto &texture(io.target_texture());
+		error_assert(texture.get() != nullptr,
+					 "Target render texture for gl_buffer {} ({}) was not allocated before rendering",
+					 id(),
+					 (void*)this);
+
+		target_fbo_.texture(GL_COLOR_ATTACHMENT0, *texture, 0);
+	}
 
 	// Render the contents of this buffer
 	render_gl_contents(context, io);

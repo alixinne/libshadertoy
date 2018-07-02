@@ -10,6 +10,7 @@ using namespace shadertoy;
 
 using shadertoy::utils::log;
 using shadertoy::utils::warn_assert;
+using shadertoy::utils::error_assert;
 
 void io_resource::init_render_texture(rsize size, std::unique_ptr<gl::texture> &texptr)
 {
@@ -40,13 +41,14 @@ io_resource::io_resource(rsize_ref &&render_size, GLint internal_format, member_
 void io_resource::allocate()
 {
 	rsize size(render_size_->resolve());
-	assert(size.width > 0);
-	assert(size.height > 0);
+	error_assert(size.width > 0 && size.height > 0,
+				 "IO resource object {} size is zero",
+				 (void*)this);
 
 	// Current texture settings
 	rsize current_size;
 	GLint current_format(0);
-	member_swap_policy current_policy(member_swap_policy::double_buffer);
+	member_swap_policy current_policy(member_swap_policy::default_framebuffer);
 
 	// If the textures exist, read their parameters
 	if (source_tex_)
@@ -56,39 +58,64 @@ void io_resource::allocate()
 		source_tex_->get_parameter(0, GL_TEXTURE_HEIGHT, &height);
 		source_tex_->get_parameter(0, GL_TEXTURE_INTERNAL_FORMAT, &current_format);
 		current_size = rsize(width, height);
-	}	
+
+		current_policy = member_swap_policy::single_buffer;
+	}
+
+	// Check for target_tex_ to detect double buffering
+	if (target_tex_)
+	{
+		current_policy = member_swap_policy::double_buffer;
+	}
 
 	if (current_size != size || current_format != internal_format_ || current_policy != swap_policy_)
 	{
-		init_render_texture(size, source_tex_);
-
-		if (swap_policy_ == member_swap_policy::double_buffer)
-			init_render_texture(size, target_tex_);
-		else if (swap_policy_ == member_swap_policy::single_buffer)
-			target_tex_.reset();
+		switch (swap_policy_)
+		{
+			case member_swap_policy::double_buffer:
+				init_render_texture(size, source_tex_);
+				init_render_texture(size, target_tex_);
+				break;
+			case member_swap_policy::single_buffer:
+				init_render_texture(size, source_tex_);
+				target_tex_.reset();
+				break;
+			case member_swap_policy::default_framebuffer:
+				source_tex_.reset();
+				target_tex_.reset();
+				break;
+		}
 	}
 }
 
 void io_resource::swap()
 {
-	if (warn_assert(source_tex_.get() != nullptr, "Swapping unallocated IO resource object {}", (void*)this))
+	if (swap_policy_ != member_swap_policy::default_framebuffer)
 	{
-		GLint width, height, current_format;
-		source_tex_->get_parameter(0, GL_TEXTURE_WIDTH, &width);
-		source_tex_->get_parameter(0, GL_TEXTURE_HEIGHT, &height);
-		source_tex_->get_parameter(0, GL_TEXTURE_INTERNAL_FORMAT, &current_format);
+		if (warn_assert(source_tex_.get() != nullptr, "Swapping unallocated IO resource object {}", (void*)this))
+		{
+			GLint width, height, current_format;
+			source_tex_->get_parameter(0, GL_TEXTURE_WIDTH, &width);
+			source_tex_->get_parameter(0, GL_TEXTURE_HEIGHT, &height);
+			source_tex_->get_parameter(0, GL_TEXTURE_INTERNAL_FORMAT, &current_format);
 
-		rsize current_size(width, height);
-		warn_assert(current_size == render_size_->resolve() && current_format == internal_format_,
-					"IO resource object {} render size and allocated sizes and/or formats mismatch", (void*)this);
+			rsize current_size(width, height);
+			warn_assert(current_size == render_size_->resolve() && current_format == internal_format_,
+						"IO resource object {} render size and allocated sizes and/or formats mismatch", (void*)this);
 
-		warn_assert((target_tex_ && swap_policy_ == member_swap_policy::double_buffer) ||
-					(!target_tex_ && swap_policy_ == member_swap_policy::single_buffer),
-					"IO resource object {} swap policy doesn't match the current state", (void*)this);
+			warn_assert((target_tex_ && swap_policy_ == member_swap_policy::double_buffer) ||
+						(!target_tex_ && swap_policy_ == member_swap_policy::single_buffer),
+						"IO resource object {} swap policy doesn't match the current state", (void*)this);
+		}
+
+		if (target_tex_)
+		{
+			std::swap(source_tex_, target_tex_);
+		}
 	}
-
-	if (target_tex_)
+	else
 	{
-		std::swap(source_tex_, target_tex_);
+		warn_assert(source_tex_.get() == nullptr && target_tex_.get() == nullptr,
+					"IO resource object {} swap policy doesn't match the current state", (void*)this);
 	}
 }

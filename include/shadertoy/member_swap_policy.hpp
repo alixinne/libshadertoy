@@ -26,7 +26,18 @@ enum class member_swap_policy
 	 * if the target pass is on the critical path and pipeline passes are
 	 * required.
 	 */
-	double_buffer
+	double_buffer,
+	/**
+	 * @brief Rendering the target member will render directly to the default framebuffer.
+	 *
+	 * If you do not want to store the results of a member to a texture for
+	 * further usage, you can choose to render directly to the default
+	 * framebuffer. This saves texture allocations, however the member's output
+	 * will not be captured and cannot be used as an input to another member.
+	 *
+	 * This only applies to members that are capable of rendering to a framebuffer.
+	 */
+	default_framebuffer,
 };
 }
 
