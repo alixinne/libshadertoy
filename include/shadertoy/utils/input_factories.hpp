@@ -21,7 +21,7 @@ public:
 
 	bool supported(const std::map<std::string, std::string> &spec) const override;
 
-	std::shared_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const override;
+	std::unique_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const override;
 
 	inline const std::string &type_name() const override { return type_name_; }
 
@@ -37,7 +37,7 @@ public:
 
 	bool supported(const std::map<std::string, std::string> &spec) const override;
 
-	std::shared_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const override;
+	std::unique_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const override;
 
 	inline const std::string &type_name() const override { return type_name_; }
 
@@ -53,7 +53,7 @@ public:
 
 	bool supported(const std::map<std::string, std::string> &spec) const override;
 
-	std::shared_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const override;
+	std::unique_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const override;
 
 	inline const std::string &type_name() const override { return type_name_; }
 
@@ -69,7 +69,7 @@ public:
 
 	inline bool supported(const std::map<std::string, std::string> &spec) const override { return true; }
 
-	std::shared_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const override;
+	std::unique_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const override;
 
 	inline const std::string &type_name() const override { return type_name_; }
 
@@ -85,7 +85,7 @@ public:
 
 	inline bool supported(const std::map<std::string, std::string> &spec) const override { return true; }
 
-	std::shared_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const override;
+	std::unique_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const override;
 
 	inline const std::string &type_name() const override { return type_name_; }
 

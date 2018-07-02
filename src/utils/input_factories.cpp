@@ -33,9 +33,9 @@ bool soil_input_factory::supported(const std::map<std::string, std::string> &spe
 		(ext == ".bmp" || ext == ".png" || ext == ".jpg" || ext == ".tga" || ext == ".dds" || ext == ".psd" || ext == ".hdr");
 }
 
-std::shared_ptr<inputs::basic_input> soil_input_factory::create(const std::map<std::string, std::string> &spec) const
+std::unique_ptr<inputs::basic_input> soil_input_factory::create(const std::map<std::string, std::string> &spec) const
 {
-	return std::make_shared<inputs::soil_input>(spec.at(""));
+	return std::make_unique<inputs::soil_input>(spec.at(""));
 }
 
 soil_input_factory::soil_input_factory()
@@ -49,9 +49,9 @@ bool jpeg_input_factory::supported(const std::map<std::string, std::string> &spe
 		(ext == ".jpg" || ext == ".jpeg");
 }
 
-std::shared_ptr<inputs::basic_input> jpeg_input_factory::create(const std::map<std::string, std::string> &spec) const
+std::unique_ptr<inputs::basic_input> jpeg_input_factory::create(const std::map<std::string, std::string> &spec) const
 {
-	return std::make_shared<inputs::jpeg_input>(spec.at(""));
+	return std::make_unique<inputs::jpeg_input>(spec.at(""));
 }
 
 jpeg_input_factory::jpeg_input_factory()
@@ -64,9 +64,9 @@ bool exr_input_factory::supported(const std::map<std::string, std::string> &spec
 	return inputs::exr_input::supported() && ext == ".exr";
 }
 
-std::shared_ptr<inputs::basic_input> exr_input_factory::create(const std::map<std::string, std::string> &spec) const
+std::unique_ptr<inputs::basic_input> exr_input_factory::create(const std::map<std::string, std::string> &spec) const
 {
-	return std::make_shared<inputs::exr_input>(spec.at(""));
+	return std::make_unique<inputs::exr_input>(spec.at(""));
 }
 
 exr_input_factory::exr_input_factory()
@@ -88,9 +88,9 @@ int get_int(const std::map<std::string, std::string> &spec, const std::string &k
 	return def;
 }
 
-std::shared_ptr<inputs::basic_input> noise_input_factory::create(const std::map<std::string, std::string> &spec) const
+std::unique_ptr<inputs::basic_input> noise_input_factory::create(const std::map<std::string, std::string> &spec) const
 {
-	return std::make_shared<inputs::noise_input>(make_size(rsize(get_int(spec, "width", 128),
+	return std::make_unique<inputs::noise_input>(make_size(rsize(get_int(spec, "width", 128),
 																 get_int(spec, "height", 128))));
 }
 
@@ -98,9 +98,9 @@ noise_input_factory::noise_input_factory()
 	: type_name_("noise")
 {}
 
-std::shared_ptr<inputs::basic_input> checker_input_factory::create(const std::map<std::string, std::string> &spec) const
+std::unique_ptr<inputs::basic_input> checker_input_factory::create(const std::map<std::string, std::string> &spec) const
 {
-	return std::make_shared<inputs::checker_input>(make_size(rsize(get_int(spec, "width", 128),
+	return std::make_unique<inputs::checker_input>(make_size(rsize(get_int(spec, "width", 128),
 																   get_int(spec, "height", 128))),
 												   get_int(spec, "size", 16));
 }

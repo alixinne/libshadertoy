@@ -31,7 +31,7 @@ namespace members
 class shadertoy_EXPORT screen_member : public basic_member
 {
 	/// Member to render the output of
-	std::shared_ptr<basic_member> member_;
+	std::weak_ptr<basic_member> member_;
 
 	/// Sampler object to control how the texture is rendered to the screen
 	gl::sampler sampler_;
@@ -67,7 +67,7 @@ protected:
 	 *
 	 * @return Pointer to the OpenGL texture output object
 	 */
-	std::shared_ptr<gl::texture> output(const swap_chain &chain);
+	gl::texture *output(const swap_chain &chain);
 
 public:
 	/**
@@ -101,7 +101,7 @@ public:
 	 * @param viewport_size Initial viewport size
 	 * @param member        Target member
 	 */
-	screen_member(rsize_ref &&viewport_size, std::shared_ptr<members::basic_member> member);
+	screen_member(rsize_ref &&viewport_size, std::weak_ptr<members::basic_member> member);
 
 
 	/**
@@ -115,7 +115,7 @@ public:
 	 * @param viewport_size Initial viewport size
 	 * @param member        Target member
 	 */
-	screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size, std::shared_ptr<members::basic_member> member);
+	screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size, std::weak_ptr<members::basic_member> member);
 
 	/**
 	 * @brief Return the same output that will be drawn to the screen
@@ -124,9 +124,11 @@ public:
 	 * this method will return null since in the absence of a swap chain, the
 	 * "latest" output is not defined.
 	 *
-	 * @return Pointer to the corresponding OpenGL texture object
+	 * @return Pointer to the corresponding OpenGL texture object. The pointer
+	 * is valid for the lifetime of the basic_member this screen_member is
+	 * rendering to the screen. See basic_member#output for more details.
 	 */
-	std::shared_ptr<gl::texture> output() override;
+	gl::texture *output() override;
 
 	/**
 	 * @brief Obtain a reference to the sampler object of this member

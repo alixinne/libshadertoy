@@ -41,7 +41,7 @@ public:
 	 *
 	 * @return Pointer to the constructed input
 	 */
-	virtual std::shared_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const = 0;
+	virtual std::unique_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const = 0;
 
 	/**
 	 * @brief Get the type string for this factory

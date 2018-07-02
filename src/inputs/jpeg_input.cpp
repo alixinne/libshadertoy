@@ -15,9 +15,9 @@ using namespace shadertoy;
 using namespace shadertoy::inputs;
 using namespace shadertoy::utils;
 
-std::shared_ptr<gl::texture> jpeg_input::load_file(const std::string &filename, bool vflip)
+std::unique_ptr<gl::texture> jpeg_input::load_file(const std::string &filename, bool vflip)
 {
-	std::shared_ptr<gl::texture> texture;
+	std::unique_ptr<gl::texture> texture;
 
 #if LIBSHADERTOY_JPEG
 	// use libjpeg
@@ -67,7 +67,7 @@ std::shared_ptr<gl::texture> jpeg_input::load_file(const std::string &filename, 
 				memcpy(&imgbuf[off * stride], buffer[0], stride);
 			}
 
-			texture = std::make_shared<gl::texture>(GL_TEXTURE_2D);
+			texture = std::make_unique<gl::texture>(GL_TEXTURE_2D);
 			texture->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F, cinfo.output_width, cinfo.output_height,
 							  0, fmt, GL_UNSIGNED_BYTE, imgbuf);
 		}

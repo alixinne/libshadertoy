@@ -48,9 +48,11 @@ protected:
 	 * that an empty pointer can be returned, and will be replaced
 	 * by an error texture for debugging.
 	 *
-	 * @return Pointer to the texture object for this input
+	 * @return Pointer to the texture object for this input. The returned
+	 * pointer must have the same lifetime semantics as required by
+	 * basic_input#use.
 	 */
-	virtual std::shared_ptr<gl::texture> use_input() = 0;
+	virtual gl::texture *use_input() = 0;
 
 	/**
 	 * @brief Initialize a new instance of the basic_input class.
@@ -78,9 +80,12 @@ public:
 	 *
 	 * If the input has not yet been loaded, it will be loaded.
 	 *
-	 * @return Pointer to the texture object for this input.
+	 * @return Pointer to the texture object for this input. The pointer is
+	 * guaranteed to be valid as long as the basic_input instance exists and is
+	 * not altered by any state-changing such as basic_input#reset or
+	 * equivalents in derived classes.
 	 */
-	std::shared_ptr<gl::texture> use();
+	gl::texture *use();
 
 	/**
 	 * @brief Obtain the sampler object for this input
@@ -129,9 +134,9 @@ public:
 	 *
 	 * @param unit Unit to bind to
 	 *
-	 * @return The bound texture
+	 * @return The bound texture. See basic_input#use for details.
 	 */
-	std::shared_ptr<gl::texture> bind(GLuint unit);
+	gl::texture *bind(GLuint unit);
 };
 }
 }

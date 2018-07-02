@@ -80,7 +80,7 @@ public:
 	 *
 	 * @return Texture object representing the output of the buffer
 	 */
-	std::shared_ptr<gl::texture> output() override;
+	gl::texture *output() override;
 };
 
 /**

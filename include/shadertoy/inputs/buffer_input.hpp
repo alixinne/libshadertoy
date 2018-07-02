@@ -45,7 +45,7 @@ protected:
 	 *
 	 * @return Pointer to the texture object for this input
 	 */
-	std::shared_ptr<gl::texture> use_input() override;
+	gl::texture *use_input() override;
 
 public:
 	/**

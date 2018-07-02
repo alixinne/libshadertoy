@@ -41,11 +41,11 @@ void screen_member::allocate_member(const swap_chain &chain, const render_contex
 {
 }
 
-std::shared_ptr<gl::texture> screen_member::output(const swap_chain &chain)
+gl::texture *screen_member::output(const swap_chain &chain)
 {
-	if (member_)
+	if (auto member = member_.lock())
 	{
-		auto out(member_->output());
+		auto out(member->output());
 		assert(out);
 		return out;
 	}
@@ -84,7 +84,7 @@ screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewpor
 	sampler_.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
-screen_member::screen_member(rsize_ref &&viewport_size, std::shared_ptr<members::basic_member> member)
+screen_member::screen_member(rsize_ref &&viewport_size, std::weak_ptr<members::basic_member> member)
 	: member_(member),
 	sampler_(),
 	viewport_x_(0),
@@ -97,7 +97,7 @@ screen_member::screen_member(rsize_ref &&viewport_size, std::shared_ptr<members:
 	sampler_.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
-screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size, std::shared_ptr<members::basic_member> member)
+screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size, std::weak_ptr<members::basic_member> member)
 	: member_(member),
 	sampler_(),
 	viewport_x_(viewport_x),
@@ -110,10 +110,10 @@ screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewpor
 	sampler_.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
-std::shared_ptr<gl::texture> screen_member::output()
+gl::texture *screen_member::output()
 {
-	if (member_)
-		return member_->output();
+	if (auto member = member_.lock())
+		return member->output();
 
-	return {};
+	return nullptr;
 }

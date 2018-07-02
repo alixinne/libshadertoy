@@ -11,7 +11,7 @@ using namespace shadertoy::inputs;
 
 void checker_input::load_input()
 {
-	texture_ = std::make_shared<gl::texture>(GL_TEXTURE_2D);
+	texture_ = std::make_unique<gl::texture>(GL_TEXTURE_2D);
 
 	// Resolve texture size
 	rsize ts(size_->resolve());
@@ -34,7 +34,7 @@ void checker_input::load_input()
 
 void checker_input::reset_input() { texture_.reset(); }
 
-std::shared_ptr<gl::texture> checker_input::use_input() { return texture_; }
+gl::texture *checker_input::use_input() { return texture_.get(); }
 
 checker_input::checker_input(rsize_ref &&size) : basic_input(), size_(std::move(size)), tile_size_(10) {}
 

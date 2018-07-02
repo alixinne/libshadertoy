@@ -18,13 +18,13 @@ extern "C" {
 extern char *result_string_pointer;
 }
 
-std::shared_ptr<gl::texture> soil_input::load_file(const std::string &filename, bool vflip)
+std::unique_ptr<gl::texture> soil_input::load_file(const std::string &filename, bool vflip)
 {
 	// Create a texture object
-	std::shared_ptr<gl::texture> texture;
+	std::unique_ptr<gl::texture> texture;
 	
 #if LIBSHADERTOY_SOIL
-	texture = std::make_shared<gl::texture>(GL_TEXTURE_2D);
+	texture = std::make_unique<gl::texture>(GL_TEXTURE_2D);
 
 	// Load image into texture object using SOIL
 	GLuint texid = SOIL_load_OGL_texture(filename.c_str(), SOIL_LOAD_AUTO, GLuint(*texture),

@@ -17,7 +17,7 @@ namespace inputs
 class shadertoy_EXPORT error_input : public basic_input
 {
 	/// Texture object
-	std::shared_ptr<gl::texture> texture_;
+	std::unique_ptr<gl::texture> texture_;
 
 protected:
 	/**
@@ -35,7 +35,7 @@ protected:
 	 *
 	 * @return OpenGL texture object representing the error texture
 	 */
-	std::shared_ptr<gl::texture> use_input() override;
+	gl::texture *use_input() override;
 
 public:
 	/**

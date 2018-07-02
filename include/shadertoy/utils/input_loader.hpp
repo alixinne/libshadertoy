@@ -58,7 +58,7 @@ public:
 	 *
 	 * @return Created input, or null of no input factory was found
 	 */
-	std::shared_ptr<inputs::basic_input> create(const std::string &input) const;
+	std::unique_ptr<inputs::basic_input> create(const std::string &input) const;
 };
 }
 }

@@ -25,7 +25,7 @@ protected:
 	 *
 	 * @return OpenGL texture representing the image
 	 */
-	std::shared_ptr<gl::texture> load_file(const std::string &filename, bool vflip) override;
+	std::unique_ptr<gl::texture> load_file(const std::string &filename, bool vflip) override;
 
 public:
 	/**

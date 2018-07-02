@@ -98,7 +98,7 @@ public:
 	 * @return true if the uniform was set
 	 */
 	template<class T>
-	inline bool operator()(const std::shared_ptr<T> &ptr) const
+	inline bool operator()(const T *ptr) const
 	{
 		return (*this)(*ptr);
 	}
@@ -316,10 +316,12 @@ public:
  */
 class shadertoy_EXPORT bound_inputs_base
 {
-protected:
+public:
+	/**
+	 * @brief      Base destructor for bound input objects
+	 */
 	virtual ~bound_inputs_base() = default;
 
-public:
 	/**
 	 * @brief      Set the current value of inputs bound to this program
 	 *             instance in the associated shader program.
@@ -635,9 +637,9 @@ public:
 	 * @param program Program to bind to.
 	 * @return
 	 */
-	std::shared_ptr<bound_inputs> bind_inputs(const gl::program &program) const
+	std::unique_ptr<bound_inputs> bind_inputs(const gl::program &program) const
 	{
-		return std::make_shared<bound_inputs>(*this, program, indices());
+		return std::make_unique<bound_inputs>(*this, program, indices());
 	}
 
 	/**

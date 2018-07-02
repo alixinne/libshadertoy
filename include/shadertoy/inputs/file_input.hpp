@@ -30,7 +30,7 @@ protected:
 	 *
 	 * @return OpenGL texture representing the image
 	 */
-	virtual std::shared_ptr<gl::texture> load_file(const std::string &filename, bool vflip) = 0;
+	virtual std::unique_ptr<gl::texture> load_file(const std::string &filename, bool vflip) = 0;
 
 	/**
 	 * @brief Load the decoded image into device memory.
@@ -39,7 +39,7 @@ protected:
 	 *
 	 * @return OpenGL texture representing the image
 	 */
-	std::shared_ptr<gl::texture> load_image() final;
+	std::unique_ptr<gl::texture> load_image() final;
 
 	/**
 	 * @brief Initialize a new instance of the file_input class.

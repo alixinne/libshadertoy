@@ -26,7 +26,7 @@ void render_context::load_buffer_sources(compiler::shader_template &buffer_templ
 {
 }
 
-void render_context::bind_inputs(std::vector<std::shared_ptr<bound_inputs_base>> &inputs,
+void render_context::bind_inputs(std::vector<std::unique_ptr<bound_inputs_base>> &inputs,
                                  const gl::program &program) const
 {
 }
@@ -146,9 +146,9 @@ void render_context::build_buffer_shader(const buffers::program_buffer &buffer, 
 	shader_compiler::compile(fs, fs_template.sources());
 }
 
-std::vector<std::shared_ptr<bound_inputs_base>> render_context::bind_inputs(gl::program &program) const
+std::vector<std::unique_ptr<bound_inputs_base>> render_context::bind_inputs(gl::program &program) const
 {
-	std::vector<std::shared_ptr<bound_inputs_base>> result;
+	std::vector<std::unique_ptr<bound_inputs_base>> result;
 
 	// External inputs
 	bind_inputs(result, program);

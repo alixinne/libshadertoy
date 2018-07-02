@@ -16,7 +16,7 @@ namespace inputs
 class shadertoy_EXPORT checker_input : public basic_input
 {
 	/// Texture object
-	std::shared_ptr<gl::texture> texture_;
+	std::unique_ptr<gl::texture> texture_;
 
 	/// Size of the generated texture
 	rsize_ref size_;
@@ -40,7 +40,7 @@ protected:
 	 *
 	 * @return OpenGL texture object representing the checker texture
 	 */
-	std::shared_ptr<gl::texture> use_input() override;
+	gl::texture *use_input() override;
 
 public:
 	/**

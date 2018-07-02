@@ -71,9 +71,14 @@ public:
 	/**
 	 * @brief Obtain the output of this member
 	 *
-	 * @return Output of this member, or null if this member has no output
+	 * @return Output of this member, or null if this member has no output. The
+	 * returned pointer is guaranteed to be valid as long as the current
+	 * basic_member and the owner of the returned exist. This should be the
+	 * case as long as no calls to state-changing methods such as
+	 * basic_member#allocate and basic_member#init are made, nor renders
+	 * (basic_member#render).
 	 */
-	virtual std::shared_ptr<gl::texture> output() = 0;
+	virtual gl::texture *output() = 0;
 };
 }
 }

@@ -9,11 +9,11 @@
 using namespace shadertoy;
 using namespace shadertoy::utils;
 
-void io_resource::init_render_texture(rsize size, std::shared_ptr<gl::texture> &texptr)
+void io_resource::init_render_texture(rsize size, std::unique_ptr<gl::texture> &texptr)
 {
 	// Only create a texture object if it is necessary
 	if (!texptr)
-		texptr = std::make_shared<gl::texture>(GL_TEXTURE_2D);
+		texptr = std::make_unique<gl::texture>(GL_TEXTURE_2D);
 
 	// Allocate texture storage according to width/height
 	texptr->image_2d(GL_TEXTURE_2D, 0, internal_format_, size.width, size.height, 0, GL_BGRA,

@@ -17,7 +17,7 @@ namespace inputs
 class shadertoy_EXPORT image_input : public basic_input
 {
 	/// Texture object to hold the image data
-	std::shared_ptr<gl::texture> image_texture_;
+	std::unique_ptr<gl::texture> image_texture_;
 
 protected:
 	/**
@@ -25,7 +25,7 @@ protected:
 	 *
 	 * @return OpenGL texture representing the image
 	 */
-	virtual std::shared_ptr<gl::texture> load_image() = 0;
+	virtual std::unique_ptr<gl::texture> load_image() = 0;
 
 	/**
 	 * @brief Load the input's contents.
@@ -45,7 +45,7 @@ protected:
 	 *
 	 * @return OpenGL texture object representing the input
 	 */
-	std::shared_ptr<gl::texture> use_input() final;
+	gl::texture *use_input() final;
 
 	/**
 	 * @brief Initialize a new instance of the image_input class.

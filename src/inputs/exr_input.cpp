@@ -14,9 +14,9 @@ using namespace shadertoy;
 using namespace shadertoy::inputs;
 using namespace shadertoy::utils;
 
-std::shared_ptr<gl::texture> exr_input::load_file(const std::string &filename, bool vflip)
+std::unique_ptr<gl::texture> exr_input::load_file(const std::string &filename, bool vflip)
 {
-	std::shared_ptr<gl::texture> texture;
+	std::unique_ptr<gl::texture> texture;
 
 #if LIBSHADERTOY_OPENEXR
 	Imf::RgbaInputFile in(filename.c_str());
@@ -37,7 +37,7 @@ std::shared_ptr<gl::texture> exr_input::load_file(const std::string &filename, b
 	in.readPixels(win.min.y, win.max.y);
 
 	// Create a texture object
-	texture = std::make_shared<gl::texture>(GL_TEXTURE_2D);
+	texture = std::make_unique<gl::texture>(GL_TEXTURE_2D);
 	texture->image_2d(GL_TEXTURE_2D, 0, GL_RGBA16F, dim.x, dim.y, 0, GL_RGBA, GL_HALF_FLOAT,
 					  pixelBuffer.data());
 #else  /* LIBSHADERTOY_OPENEXR */

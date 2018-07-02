@@ -13,7 +13,7 @@ using namespace shadertoy::utils;
 
 namespace fs = boost::filesystem;
 
-std::shared_ptr<gl::texture> file_input::load_image()
+std::unique_ptr<gl::texture> file_input::load_image()
 {
 	if (!filename_.empty())
 	{

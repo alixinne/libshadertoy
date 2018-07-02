@@ -11,7 +11,7 @@ using namespace shadertoy::inputs;
 
 void error_input::load_input()
 {
-	texture_ = std::make_shared<gl::texture>(GL_TEXTURE_2D);
+	texture_ = std::make_unique<gl::texture>(GL_TEXTURE_2D);
 
 	// Generate the checkerboard
 	int width = 32, height = 32, size = 16;
@@ -34,6 +34,6 @@ void error_input::load_input()
 
 void error_input::reset_input() { texture_.reset(); }
 
-std::shared_ptr<gl::texture> error_input::use_input() { return texture_; }
+gl::texture *error_input::use_input() { return texture_.get(); }
 
 error_input::error_input() : basic_input() {}

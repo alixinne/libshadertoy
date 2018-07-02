@@ -24,7 +24,7 @@ private:
 	gl::program program_;
 
 	/// Bound uniform state
-	std::vector<std::shared_ptr<shadertoy::bound_inputs_base>> bound_inputs_;
+	std::vector<std::unique_ptr<shadertoy::bound_inputs_base>> bound_inputs_;
 
 	/// Inputs for this shader
 	std::deque<program_input> inputs_;

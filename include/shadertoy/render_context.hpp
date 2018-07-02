@@ -116,7 +116,7 @@ protected:
 	 *                      applied to the target program.
 	 * @param      program  Target shader program.
 	 */
-	virtual void bind_inputs(std::vector<std::shared_ptr<bound_inputs_base>> &inputs,
+	virtual void bind_inputs(std::vector<std::unique_ptr<bound_inputs_base>> &inputs,
 							 const gl::program &program) const;
 
 public:
@@ -210,7 +210,7 @@ public:
 	 * @param program Program to bind to
 	 * @return
 	 */
-	std::vector<std::shared_ptr<bound_inputs_base>> bind_inputs(gl::program &program) const;
+	std::vector<std::unique_ptr<bound_inputs_base>> bind_inputs(gl::program &program) const;
 
 	/**
 	 * @brief Render a screen quad using the current context

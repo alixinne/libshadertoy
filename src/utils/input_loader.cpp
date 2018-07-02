@@ -6,6 +6,8 @@
 
 #include "shadertoy/uri.hpp"
 
+#include "shadertoy/inputs/basic_input.hpp"
+
 #include "shadertoy/utils/input_loader.hpp"
 #include "shadertoy/utils/input_factories.hpp"
 
@@ -30,7 +32,7 @@ void input_loader::add(std::unique_ptr<input_factory> &&factory)
 	factories_.emplace(std::move(factory));
 }
 
-std::shared_ptr<inputs::basic_input> input_loader::create(const std::string &input) const
+std::unique_ptr<inputs::basic_input> input_loader::create(const std::string &input) const
 {
 	uri url(input);
 	auto spec(url.get_query_dictionary());

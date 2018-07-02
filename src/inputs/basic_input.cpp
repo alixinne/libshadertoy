@@ -31,7 +31,7 @@ void basic_input::reset()
 	}
 }
 
-std::shared_ptr<gl::texture> basic_input::use()
+gl::texture *basic_input::use()
 {
 	// Load if needed
 	load();
@@ -70,7 +70,7 @@ void basic_input::wrap(GLint new_wrap)
 	sampler_.parameter(GL_TEXTURE_WRAP_R, new_wrap);
 }
 
-std::shared_ptr<gl::texture> basic_input::bind(GLuint unit)
+gl::texture *basic_input::bind(GLuint unit)
 {
 	sampler_.bind(unit);
 	auto tex(use());

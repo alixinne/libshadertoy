@@ -14,7 +14,7 @@ void buffer_input::load_input() {}
 
 void buffer_input::reset_input() {}
 
-std::shared_ptr<gl::texture> buffer_input::use_input()
+gl::texture *buffer_input::use_input()
 {
 	if (auto member = member_.lock())
 	{

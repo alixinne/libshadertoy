@@ -21,13 +21,13 @@ class io_resource
 	member_swap_policy swap_policy_;
 
 	/// Source texture
-	std::shared_ptr<gl::texture> source_tex_;
+	std::unique_ptr<gl::texture> source_tex_;
 
 	/// Target texture
-	std::shared_ptr<gl::texture> target_tex_;
+	std::unique_ptr<gl::texture> target_tex_;
 
 	/// Allocates a texture for this object
-	void init_render_texture(rsize size, std::shared_ptr<gl::texture> &texptr);
+	void init_render_texture(rsize size, std::unique_ptr<gl::texture> &texptr);
 
 public:
 	/**
@@ -108,7 +108,7 @@ public:
 	 *
 	 * @return     Source texture for this buffer.
 	 */
-	inline const std::shared_ptr<gl::texture> &source_texture() const
+	inline const std::unique_ptr<gl::texture> &source_texture() const
 	{ return source_tex_; }
 
 	/**
@@ -116,7 +116,7 @@ public:
 	 *
 	 * @return     Target (current) texture for this buffer.
 	 */
-	inline const std::shared_ptr<gl::texture> &target_texture() const
+	inline const std::unique_ptr<gl::texture> &target_texture() const
 	{ if (target_tex_) return target_tex_; return source_tex_; }
 
 };

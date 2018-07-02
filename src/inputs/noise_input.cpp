@@ -12,7 +12,7 @@ using namespace shadertoy::inputs;
 
 void noise_input::load_input()
 {
-	texture_ = std::make_shared<gl::texture>(GL_TEXTURE_2D);
+	texture_ = std::make_unique<gl::texture>(GL_TEXTURE_2D);
 
 	// Resolve texture size
 	rsize ts(size_->resolve());
@@ -33,6 +33,6 @@ void noise_input::load_input()
 
 void noise_input::reset_input() { texture_.reset(); }
 
-std::shared_ptr<gl::texture> noise_input::use_input() { return texture_; }
+gl::texture *noise_input::use_input() { return texture_.get(); }
 
 noise_input::noise_input(rsize_ref &&size) : basic_input(), size_(std::move(size)) {}
