@@ -9,9 +9,13 @@
 #include "shadertoy/buffers/program_buffer.hpp"
 #include "shadertoy/render_context.hpp"
 
+#include "shadertoy/utils/assert.hpp"
+
 using namespace shadertoy;
 using namespace shadertoy::buffers;
 using shadertoy::gl::gl_call;
+
+using shadertoy::utils::log;
 
 program_buffer::program_buffer(const std::string &id)
 	: gl_buffer(id),
@@ -24,9 +28,11 @@ program_buffer::program_buffer(const std::string &id)
 void program_buffer::init_contents(const render_context &context, const io_resource &io)
 {
 	// Initialize the geometry
+	log::shadertoy()->trace("Loading geometry for {} ({})", id(), (void*)this);
 	init_geometry(context, io);
 
 	// Shader objects
+	log::shadertoy()->trace("Compiling program for {} ({})", id(), (void*)this);
 	const gl::shader &vs(get_vertex_shader(context, io));
 	gl::shader fs(GL_FRAGMENT_SHADER);
 
@@ -99,6 +105,11 @@ void program_buffer::render_gl_contents(const render_context &context, const io_
 		}
 		else
 		{
+			log::shadertoy()->warn("Failed to bind input '{}' to unit {} on buffer {} ({})",
+								   it->definition_string(),
+								   current_unit,
+								   id(),
+								   (void*)this);
 			context.error_input()->bind(current_unit);
 		}
 

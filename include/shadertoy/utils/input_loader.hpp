@@ -54,11 +54,13 @@ public:
 	 * The noise URI scheme creates an inputs::noise_input with the given
 	 * parameters.
 	 *
-	 * @param input URI that represents the input to be created
+	 * @param input            URI that represents the input to be created
+	 * @param throw_on_failure true if the method should throw an exception
+	 *                         instead of returning a null input
 	 *
 	 * @return Created input, or null of no input factory was found
 	 */
-	std::unique_ptr<inputs::basic_input> create(const std::string &input) const;
+	std::unique_ptr<inputs::basic_input> create(const std::string &input, bool throw_on_failure = true) const;
 };
 }
 }

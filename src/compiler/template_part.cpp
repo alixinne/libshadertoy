@@ -57,7 +57,6 @@ template_part template_part::from_file(const std::string &name, const std::strin
 {
 	std::vector<std::pair<std::string, std::string>> sources;
 	sources.emplace_back(filename, read_contents(filename));
-	log::shadertoy()->info("Loaded {}", filename);
 
 	return template_part(name, sources);
 }
@@ -69,7 +68,6 @@ template_part template_part::from_files(const std::string &name, const std::vect
 	for (auto filename : filenames)
 	{
 		sources.emplace_back(filename, read_contents(filename));
-		log::shadertoy()->info("Loaded {}", filename);
 	}
 
 	return template_part(name, sources);

@@ -7,8 +7,13 @@
 
 #include "shadertoy/inputs/noise_input.hpp"
 
+#include "shadertoy/utils/assert.hpp"
+
 using namespace shadertoy;
 using namespace shadertoy::inputs;
+
+using shadertoy::utils::log;
+using shadertoy::utils::error_assert;
 
 void noise_input::load_input()
 {
@@ -16,6 +21,10 @@ void noise_input::load_input()
 
 	// Resolve texture size
 	rsize ts(size_->resolve());
+
+	error_assert(ts.width != 0 && ts.height != 0,
+				 "Noise tile size is zero for input {}",
+				 (void*)this);
 
 	// Create the actual noise
 	std::vector<unsigned char> rnd(ts.width * ts.height);
@@ -29,6 +38,9 @@ void noise_input::load_input()
 	texture_->parameter(GL_TEXTURE_SWIZZLE_G, GL_RED);
 
 	texture_->generate_mipmap();
+
+	log::shadertoy()->info("Generated {}x{} noise texture for {} (GL id {})",
+						   ts.width, ts.height, (void*)this, GLuint(*texture_));
 }
 
 void noise_input::reset_input() { texture_.reset(); }

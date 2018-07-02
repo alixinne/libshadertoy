@@ -4,8 +4,12 @@
 
 #include "shadertoy/inputs/basic_input.hpp"
 
+#include "shadertoy/utils/log.hpp"
+
 using namespace shadertoy;
 using namespace shadertoy::inputs;
+
+using shadertoy::utils::log;
 
 basic_input::basic_input() : loaded_(false)
 {
@@ -17,6 +21,8 @@ void basic_input::load()
 {
 	if (!loaded_)
 	{
+		log::shadertoy()->trace("Loading input {}", (void*)this);
+
 		load_input();
 		loaded_ = true;
 	}
@@ -26,6 +32,8 @@ void basic_input::reset()
 {
 	if (loaded_)
 	{
+		log::shadertoy()->trace("Resetting input {}", (void*)this);
+
 		reset_input();
 		loaded_ = false;
 	}

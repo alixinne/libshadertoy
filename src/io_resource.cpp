@@ -4,10 +4,12 @@
 
 #include "shadertoy/io_resource.hpp"
 
-#include "shadertoy/utils/log.hpp"
+#include "shadertoy/utils/assert.hpp"
 
 using namespace shadertoy;
-using namespace shadertoy::utils;
+
+using shadertoy::utils::log;
+using shadertoy::utils::warn_assert;
 
 void io_resource::init_render_texture(rsize size, std::unique_ptr<gl::texture> &texptr)
 {
@@ -22,6 +24,9 @@ void io_resource::init_render_texture(rsize size, std::unique_ptr<gl::texture> &
 	// Clear the frame accumulator so it doesn't contain garbage
 	unsigned char black[4] = {0};
 	texptr->clear_tex_image(0, GL_BGRA, GL_UNSIGNED_BYTE, black);
+
+	log::shadertoy()->debug("Initialized {}x{} ({}) render texture at {} for {} (GL id {})",
+							size.width, size.height, internal_format_, (void*)texptr.get(), (void*)this, GLuint(*texptr));
 }
 
 io_resource::io_resource(rsize_ref &&render_size, GLint internal_format, member_swap_policy swap_policy)
@@ -66,11 +71,7 @@ void io_resource::allocate()
 
 void io_resource::swap()
 {
-	if (!source_tex_)
-	{
-		log::shadertoy()->warn("Swapping unallocated IO resource object {}", (void*)this);
-	}
-	else
+	if (warn_assert(source_tex_.get() != nullptr, "Swapping unallocated IO resource object {}", (void*)this))
 	{
 		GLint width, height, current_format;
 		source_tex_->get_parameter(0, GL_TEXTURE_WIDTH, &width);
@@ -78,12 +79,12 @@ void io_resource::swap()
 		source_tex_->get_parameter(0, GL_TEXTURE_INTERNAL_FORMAT, &current_format);
 
 		rsize current_size(width, height);
-		if (current_size != render_size_->resolve() || current_format != internal_format_)
-			log::shadertoy()->warn("IO resource object {} render size and allocated sizes and/or formats mismatch", (void*)this);
+		warn_assert(current_size == render_size_->resolve() && current_format == internal_format_,
+					"IO resource object {} render size and allocated sizes and/or formats mismatch", (void*)this);
 
-		if ((target_tex_ && swap_policy_ == member_swap_policy::single_buffer) ||
-			(!target_tex_ && swap_policy_ == member_swap_policy::double_buffer))
-			log::shadertoy()->warn("IO resource object {} swap policy doesn't match the current state", (void*)this);
+		warn_assert((target_tex_ && swap_policy_ == member_swap_policy::double_buffer) ||
+					(!target_tex_ && swap_policy_ == member_swap_policy::single_buffer),
+					"IO resource object {} swap policy doesn't match the current state", (void*)this);
 	}
 
 	if (target_tex_)

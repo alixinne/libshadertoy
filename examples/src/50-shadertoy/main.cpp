@@ -211,6 +211,8 @@ int performRender(bool dumpShaders, Args&&... args)
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
 
+	shadertoy::utils::log::shadertoy()->set_level(spdlog::level::debug);
+
 	{
 		example_ctx ctx;
 		auto &context(ctx.context);

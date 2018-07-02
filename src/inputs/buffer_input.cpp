@@ -7,8 +7,12 @@
 #include "shadertoy/members/buffer_member.hpp"
 #include "shadertoy/inputs/buffer_input.hpp"
 
+#include "shadertoy/utils/log.hpp"
+
 using namespace shadertoy;
 using namespace shadertoy::inputs;
+
+using shadertoy::utils::log;
 
 void buffer_input::load_input() {}
 
@@ -28,6 +32,10 @@ gl::texture *buffer_input::use_input()
 		}
 
 		return tex;
+	}
+	else
+	{
+		log::shadertoy()->warn("Failed to acquire pointer to member from input {}", (void*)this);
 	}
 
 	return {};

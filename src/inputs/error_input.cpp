@@ -6,8 +6,12 @@
 
 #include "shadertoy/inputs/error_input.hpp"
 
+#include "shadertoy/utils/log.hpp"
+
 using namespace shadertoy;
 using namespace shadertoy::inputs;
+
+using shadertoy::utils::log;
 
 void error_input::load_input()
 {
@@ -30,6 +34,8 @@ void error_input::load_input()
 	texture_->parameter(GL_TEXTURE_SWIZZLE_B, GL_RED);
 
 	texture_->generate_mipmap();
+
+	log::shadertoy()->trace("Initialized error input at {} (GL id {})", (void*)this, GLuint(*texture_));
 }
 
 void error_input::reset_input() { texture_.reset(); }

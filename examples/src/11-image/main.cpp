@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <shadertoy.hpp>
+#include <shadertoy/utils/log.hpp>
 
 #include "test.hpp"
 
@@ -34,6 +35,8 @@ int main(int argc, char *argv[])
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(1);
 
+		shadertoy::utils::log::shadertoy()->set_level(spdlog::level::trace);
+
 		{
 			example_ctx ctx;
 			auto &context(ctx.context);
@@ -55,9 +58,9 @@ int main(int argc, char *argv[])
 
 			shadertoy::utils::input_loader loader;
 
-			imageBuffer->inputs().emplace_back(loader.create("file:../images/vase_rect.exr")); // implicit iChannel0
-			imageBuffer->inputs().emplace_back(loader.create("file:../images/vase_rect.png")); // implicit iChannel1
-			imageBuffer->inputs().emplace_back(loader.create("file:../images/vase_rect.jpg")); // implicit iChannel2
+			imageBuffer->inputs().emplace_back(loader.create("file:../images/vase_rect.exr", false)); // implicit iChannel0
+			imageBuffer->inputs().emplace_back(loader.create("file:../images/vase_rect.png", false)); // implicit iChannel1
+			imageBuffer->inputs().emplace_back(loader.create("file:../images/vase_rect.jpg", false)); // implicit iChannel2
 			imageBuffer->inputs().emplace_back("noiseChannel", loader.create("noise:?width=64&height=64"));
 			imageBuffer->inputs().emplace_back("checkerChannel", loader.create("checker:?width=64&height=64&size=4"));
 			imageBuffer->inputs().emplace_back("errorChannel", context.error_input());

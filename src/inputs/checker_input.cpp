@@ -6,8 +6,13 @@
 
 #include "shadertoy/inputs/checker_input.hpp"
 
+#include "shadertoy/utils/assert.hpp"
+
 using namespace shadertoy;
 using namespace shadertoy::inputs;
+
+using shadertoy::utils::error_assert;
+using shadertoy::utils::log;
 
 void checker_input::load_input()
 {
@@ -15,6 +20,10 @@ void checker_input::load_input()
 
 	// Resolve texture size
 	rsize ts(size_->resolve());
+
+	error_assert(ts.width != 0 && ts.height != 0,
+				 "Checkerboard tile size is zero for input {}",
+				 (void*)this);
 
 	// Generate the checkerboard
 	std::vector<unsigned char> chk(ts.width * ts.height);
@@ -30,6 +39,9 @@ void checker_input::load_input()
 	texture_->parameter(GL_TEXTURE_SWIZZLE_G, GL_RED);
 
 	texture_->generate_mipmap();
+
+	log::shadertoy()->info("Generated {}x{} checkerboard texture for {} (GL id {})",
+						   ts.width, ts.height, (void*)this, GLuint(*texture_));
 }
 
 void checker_input::reset_input() { texture_.reset(); }

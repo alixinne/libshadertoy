@@ -5,18 +5,15 @@
 #endif /* LIBSHADERTOY_SOIL */
 
 #include "shadertoy/gl.hpp"
-#include "shadertoy/utils/log.hpp"
+#include "shadertoy/utils/assert.hpp"
 
 #include "shadertoy/inputs/soil_input.hpp"
 
 using namespace shadertoy;
 using namespace shadertoy::inputs;
-using namespace shadertoy::utils;
 
-// Error message from SOIL
-extern "C" {
-extern char *result_string_pointer;
-}
+using shadertoy::utils::log;
+using shadertoy::utils::error_assert;
 
 std::unique_ptr<gl::texture> soil_input::load_file(const std::string &filename, bool vflip)
 {
@@ -24,6 +21,8 @@ std::unique_ptr<gl::texture> soil_input::load_file(const std::string &filename, 
 	std::unique_ptr<gl::texture> texture;
 	
 #if LIBSHADERTOY_SOIL
+	log::shadertoy()->trace("Reading {} for input {}", filename, (void*)this);
+
 	texture = std::make_unique<gl::texture>(GL_TEXTURE_2D);
 
 	// Load image into texture object using SOIL
@@ -32,13 +31,21 @@ std::unique_ptr<gl::texture> soil_input::load_file(const std::string &filename, 
 
 	if (texid == 0)
 	{
-		log::shadertoy()->error("Failed to load {}: {}", filename, result_string_pointer);
-
 		// If loading failed, delete the texture object
 		texture = {};
+		error_assert(false, "Cannot load {} for input {}: {}", filename, (void*)this, SOIL_last_result());	
+	}
+	else
+	{
+		GLint width, height;
+		texture->get_parameter(0, GL_TEXTURE_WIDTH, &width);
+		texture->get_parameter(0, GL_TEXTURE_HEIGHT, &height);
+
+		log::shadertoy()->info("Loaded {}x{} SOIL {} for input {} (GL id {})",
+							   width, height, filename, (void*)this, GLuint(*texture));
 	}
 #else
-	log::shadertoy()->error("Cannot load {}: SOIL support is not enabled", filename);
+	error_assert(false, "Cannot load {} for input {}: SOIL support is disabled", filename, (void*)this);	
 #endif /* LIBSHADERTOY_SOIL */
 
 	return texture;

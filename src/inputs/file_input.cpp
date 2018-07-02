@@ -3,15 +3,16 @@
 #include <epoxy/gl.h>
 
 #include "shadertoy/gl.hpp"
-#include "shadertoy/utils/log.hpp"
+#include "shadertoy/utils/assert.hpp"
 
 #include "shadertoy/inputs/file_input.hpp"
 
 using namespace shadertoy;
 using namespace shadertoy::inputs;
-using namespace shadertoy::utils;
 
 namespace fs = boost::filesystem;
+
+using shadertoy::utils::error_assert;
 
 std::unique_ptr<gl::texture> file_input::load_image()
 {
@@ -19,14 +20,12 @@ std::unique_ptr<gl::texture> file_input::load_image()
 	{
 		fs::path filepath(filename_);
 
-		if (!fs::exists(filepath))
-		{
-			log::shadertoy()->error("{}: file not found", filename_);
-		}
-		else
-		{
-			return load_file(filename_, vflip_);
-		}
+		error_assert(fs::exists(filepath),
+					 "{}: file not found for input {}",
+					 filename_,
+					 (void*)this);
+
+		return load_file(filename_, vflip_);
 	}
 
 	return {};

@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <shadertoy.hpp>
+#include <shadertoy/utils/log.hpp>
 
 #include "test.hpp"
 
@@ -33,6 +34,8 @@ int main(int argc, char *argv[])
 	{
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(1);
+
+		shadertoy::utils::log::shadertoy()->set_level(spdlog::level::trace);
 
 		{
 			example_ctx ctx;

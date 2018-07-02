@@ -67,6 +67,8 @@ render_context::render_context()
 	// Setup indices
 	scren_quad_indices_.data(sizeof(indices), static_cast<const GLvoid *>(&indices[0]), GL_STATIC_DRAW);
 
+	log::shadertoy()->trace("Compiling screen programs for context {}", (void*)this);
+
 	// Compile screen quad vertex shader
 	screen_vs_.source(std::string(screenQuad_vsh, screenQuad_vsh + screenQuad_vsh_size));
 	screen_vs_.compile();
@@ -117,12 +119,15 @@ render_context::render_context()
 
 void render_context::init(swap_chain &chain) const
 {
+	log::shadertoy()->trace("Initializing chain {}", (void*)&chain);
 	chain.init(*this);
-	chain.allocate_textures(*this);
+
+	allocate_textures(chain);
 }
 
 void render_context::allocate_textures(swap_chain &chain) const
 {
+	log::shadertoy()->trace("Allocating chain {}", (void*)&chain);
 	chain.allocate_textures(*this);
 }
 
@@ -139,11 +144,39 @@ void render_context::build_buffer_shader(const buffers::program_buffer &buffer, 
 		compiler::template_part::from_files("buffer:sources", buffer.source_files())
 	));
 
+	// Expensive log operation, only log if level is requiring it
+	if (log::shadertoy()->level() <= spdlog::level::info && !buffer.source_files().empty())
+	{
+		std::stringstream ss;
+		for (auto &file : buffer.source_files())
+			ss << file << ";";
+		auto str(ss.str());
+		log::shadertoy()->info("Loaded {} for {} ({})",
+							   std::string(str.begin(), str.end() - 1),
+							   buffer.id(),
+							   (void*)&buffer);
+	}
+
 	// Load callback sources
     load_buffer_sources(fs_template);
 
+	// Get sources
+	auto sources(fs_template.sources());
+
+	// Expensive log operation, only log if level is requiring it
+	if (log::shadertoy()->level() <= spdlog::level::debug)
+	{
+		std::stringstream ss;
+		for (auto &pair : sources)
+			ss << pair.second;
+		log::shadertoy()->debug("Compiled following code for {} ({}):\n{}",
+								buffer.id(),
+								(void*)&buffer,
+								ss.str());
+	}
+
 	// Load sources into fragment shader and compile
-	shader_compiler::compile(fs, fs_template.sources());
+	shader_compiler::compile(fs, sources);
 }
 
 std::vector<std::unique_ptr<bound_inputs_base>> render_context::bind_inputs(gl::program &program) const

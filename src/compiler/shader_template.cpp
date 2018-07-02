@@ -5,7 +5,11 @@
 #include "shadertoy/compiler/template_error.hpp"
 #include "shadertoy/compiler/shader_template.hpp"
 
+#include "shadertoy/utils/assert.hpp"
+
 using namespace shadertoy::compiler;
+
+using shadertoy::utils::throw_assert;
 
 shader_template::shader_template(std::deque<std::unique_ptr<basic_part>> parts)
 	: parts_(std::move(parts))
@@ -18,10 +22,9 @@ void shader_template::check_unique(const std::unique_ptr<basic_part> &part)
 						   [&part](const auto &item)
 						   { return item->name() == part->name(); });
 
-	if (it != parts_.end())
-	{
-		throw template_error(std::string("A part named ") + part->name() + std::string(" already exists"));
-	}
+	throw_assert<template_error>(it == parts_.end(),
+								 "A part named {} already exists",
+								 part->name());
 }
 
 shader_template::shader_template()
@@ -67,7 +70,7 @@ std::unique_ptr<basic_part> &shader_template::find(const std::string &name)
 		}
 	}
 
-	throw template_error(std::string("A part named ") + name + std::string(" could not be found"));
+	throw template_error(fmt::format("A part named {} could not be found", name));
 }
 
 shader_template shader_template::specify(std::vector<std::unique_ptr<basic_part>> parts) const
@@ -119,18 +122,16 @@ void shader_template::replace(const std::string &name, std::unique_ptr<basic_par
 	auto target_it = std::find_if(parts_.begin(), parts_.end(), [&name](const auto &item)
 								  { return item->name() == name; });
 
-	if (target_it == parts_.end())
-	{
-		throw template_error(std::string("A part named ") + name + std::string(" could not be found for replacement"));
-	}
+	throw_assert<template_error>(target_it != parts_.end(),
+								 "A part named {} could not be found for replacement",
+								 name);
 
 	auto duplicate = std::find_if(parts_.begin(), parts_.end(), [&part](const auto &item)
 								  { return item->name() == part->name(); });
 
-	if (duplicate != parts_.end() && duplicate != target_it)
-	{
-		throw template_error(std::string("A part named ") + part->name() + std::string(" already exists"));
-	}
+	throw_assert<template_error>(duplicate == parts_.end() || duplicate == target_it,
+								 "A part named {} already exists",
+								 part->name());
 
 	*target_it = std::move(part);
 }
@@ -143,12 +144,9 @@ void shader_template::insert_before(const std::string &target, std::unique_ptr<b
 						   [&target](const auto &item)
 						   { return item->name() == target; });
 
-	if (it == parts_.end())
-	{
-		std::stringstream ss;
-		ss << "A part named " << target << " could not be found";
-		throw template_error(ss.str());
-	}
+	throw_assert<template_error>(it != parts_.end(),
+								 "A part named {} could not be found",
+								 target);
 
 	parts_.insert(it, std::move(part));
 }
@@ -161,12 +159,9 @@ void shader_template::insert_after(const std::string &target, std::unique_ptr<ba
 						   [&target](const auto &item)
 						   { return item->name() == target; });
 
-	if (it == parts_.end())
-	{
-		std::stringstream ss;
-		ss << "A part named " << target << " could not be found";
-		throw template_error(ss.str());
-	}
+	throw_assert<template_error>(it != parts_.end(),
+								 "A part named {} could not be found",
+								 target);
 
 	parts_.insert(++it, std::move(part));
 }
