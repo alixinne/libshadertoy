@@ -2,6 +2,8 @@
 
 #include <epoxy/gl.h>
 
+#include "shadertoy/gl/texture.hpp"
+
 #include "shadertoy/members/basic_member.hpp"
 #include "shadertoy/members/buffer_member.hpp"
 
