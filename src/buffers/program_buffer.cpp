@@ -48,7 +48,7 @@ void program_buffer::init_contents(const render_context &context, const io_resou
 	program_.use();
 
 	// bind uniform inputs
-	bound_inputs_ = context.bound_inputs(program_);
+	bound_inputs_ = context.bind_inputs(program_);
 
 	// Set input uniform units
 	size_t current_unit = 0;

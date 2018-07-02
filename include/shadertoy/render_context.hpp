@@ -210,7 +210,7 @@ public:
 	 * @param program Program to bind to
 	 * @return
 	 */
-	std::vector<std::shared_ptr<bound_inputs_base>> bound_inputs(gl::program &program) const;
+	std::vector<std::shared_ptr<bound_inputs_base>> bind_inputs(gl::program &program) const;
 
 	/**
 	 * @brief Render a screen quad using the current context
