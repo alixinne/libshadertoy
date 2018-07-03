@@ -54,7 +54,8 @@ namespace gl
 	class shadertoy_EXPORT texture : public resource<texture, texture_allocator, null_texture_error>
 	{
 	public:
-		using base_resource_type::operator=;
+		texture(resource_type &&other) : resource(std::forward<resource_type &&>(other)) {}
+		resource_type &operator=(resource_type &&other) { return assign_operator(std::forward<resource_type &&>(other)); }
 
 		/**
 		 * @brief Create a new texture for the given target.

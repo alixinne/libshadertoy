@@ -249,7 +249,9 @@ namespace gl
 		null_program_error>
 	{
 	public:
-		using base_resource_type::operator=;
+		program() : resource() {}
+		program(resource_type &&other) : resource(std::forward<resource_type &&>(other)) {}
+		resource_type &operator=(resource_type &&other) { return assign_operator(std::forward<resource_type &&>(other)); }
 
 		/**
 		 * @brief glLinkProgram

@@ -153,6 +153,17 @@ namespace gl
 			other.has_res_ = false;
 		}
 
+	protected:
+		/**
+		 * @brief Create a new resource object from an existing resourceID.
+		 *
+		 * @param resId Resource id to reference
+		 */
+		explicit resource(GLuint resId)
+			: has_res_(true),
+			res_id_(resId)
+		{}
+
 		/**
 		 * @brief Move operator
 		 * @param other Instance to move
@@ -161,7 +172,7 @@ namespace gl
 		 *
 		 * @throws OpenGLError
 		 */
-		resource_type &operator=(resource_type &&other)
+		resource_type &assign_operator(resource_type &&other)
 		{
 			if (this != &other)
 			{
@@ -175,17 +186,6 @@ namespace gl
 
 			return static_cast<resource_type&>(*this);
 		}
-
-	protected:
-		/**
-		 * @brief Create a new resource object from an existing resourceID.
-		 *
-		 * @param resId Resource id to reference
-		 */
-		explicit resource(GLuint resId)
-			: has_res_(true),
-			res_id_(resId)
-		{}
 
 	private:
 		/**

@@ -51,7 +51,8 @@ namespace gl
 	class shadertoy_EXPORT query : public resource<query, query_allocator, null_query_error>
 	{
 	public:
-		using base_resource_type::operator=;
+		query(resource_type &&other) : resource(std::forward<resource_type &&>(other)) {}
+		resource_type &operator=(resource_type &&other) { return assign_operator(std::forward<resource_type &&>(other)); }
 
 		/**
 		 * @brief Create a new query for the given target.

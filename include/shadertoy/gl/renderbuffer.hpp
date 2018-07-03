@@ -25,7 +25,9 @@ namespace gl
 		null_renderbuffer_error>
 	{
 	public:
-		using base_resource_type::operator=;
+		renderbuffer() : resource() {}
+		renderbuffer(resource_type &&other) : resource(std::forward<resource_type &&>(other)) {}
+		resource_type &operator=(resource_type &&other) { return assign_operator(std::forward<resource_type &&>(other)); }
 
 		/**
 		 * @brief glBindRenderbuffer

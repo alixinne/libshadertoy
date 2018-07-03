@@ -28,7 +28,9 @@ namespace gl
 		null_framebuffer_error>
 	{
 	public:
-		using base_resource_type::operator=;
+		framebuffer() : resource() {}
+		framebuffer(resource_type &&other) : resource(std::forward<resource_type &&>(other)) {}
+		resource_type &operator=(resource_type &&other) { return assign_operator(std::forward<resource_type &&>(other)); }
 
 		/**
 		 * @brief glBindFramebuffer
