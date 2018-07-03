@@ -533,7 +533,7 @@ public:
 		template<typename Input, typename = typename std::enable_if<(Input::size == 1)>::type>
 		bool set(const typename Input::value_type& value)
 		{
-			return get_uniform<0, Input, Inputs...>().set_value<typename Input::value_type, Input::size>({value});
+			return get_uniform<0, Input, Inputs...>().template set_value<typename Input::value_type, Input::size>({value});
 		}
 
 		/**
@@ -547,7 +547,7 @@ public:
 		template<typename Input, typename = typename std::enable_if<(Input::size > 1)>::type>
 		bool set(const typename Input::array_type& value)
 		{
-			return get_uniform<0, Input, Inputs...>().set_value<typename Input::value_type, Input::size>(value);
+			return get_uniform<0, Input, Inputs...>().template set_value<typename Input::value_type, Input::size>(value);
 		}
 
 		/**
