@@ -1,9 +1,12 @@
-#include <cassert>
 #include <sstream>
 
 #include "shadertoy/compiler/define_part.hpp"
 
+#include "shadertoy/utils/assert.hpp"
+
 using namespace shadertoy::compiler;
+
+using shadertoy::utils::error_assert;
 
 preprocessor_defines::preprocessor_defines()
 	: generated_source_(),
@@ -43,7 +46,7 @@ define_part::define_part(const std::string &name, std::shared_ptr<preprocessor_d
 	: cloneable_part(name),
 	definitions_(defines)
 {
-	assert(defines);
+	error_assert(defines.get(), "The defines pointer cannot be null");
 }
 
 define_part::operator bool() const

@@ -1,5 +1,3 @@
-#include <cassert>
-
 #include <epoxy/gl.h>
 
 #include "shadertoy/gl/texture.hpp"
@@ -9,7 +7,11 @@
 
 #include "shadertoy/swap_chain.hpp"
 
+#include "shadertoy/utils/assert.hpp"
+
 using namespace shadertoy;
+
+using shadertoy::utils::error_assert;
 
 swap_chain::swap_chain()
 	: members_(),
@@ -59,7 +61,8 @@ std::shared_ptr<members::basic_member> swap_chain::before(members::basic_member 
 
 void swap_chain::push_back(std::shared_ptr<members::basic_member> member)
 {
-	assert(members_set_.count(member) == 0);
+	error_assert(members_set_.count(member) == 0,
+				 "This member is already part of chain {}", (void*)this);
 
 	members_.push_back(member);
 	members_set_.insert(member);
