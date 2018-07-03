@@ -60,13 +60,20 @@ void program_buffer::init_contents(const render_context &context, const io_resou
 	// Compile
 	std::map<GLenum, std::vector<std::unique_ptr<compiler::basic_part>>> parts;
 	parts.emplace(GL_FRAGMENT_SHADER, std::move(fs_template_parts));
-	program_ = context.buffer_template().compile(std::move(parts));
+
+	auto &buffer_template(context.buffer_template());
+	program_ = buffer_template.compile(std::move(parts));
 
 	// Use the program
 	program_.use();
 
 	// bind uniform inputs
-	bound_inputs_ = context.bind_inputs(program_);
+	bound_inputs_ = buffer_template.bind_inputs(program_);
+
+	log::shadertoy()->debug("Bound {} input objects for {} ({})",
+							bound_inputs_.size(),
+							id(),
+							(void*)this);
 
 	// Set input uniform units
 	size_t current_unit = 0;

@@ -36,6 +36,11 @@ class shadertoy_EXPORT program_template
 	 */
 	std::map<GLenum, gl::shader> compiled_shaders_;
 
+	/**
+	 * @brief List of input objects to bind when creating new programs
+	 */
+	std::vector<basic_shader_inputs*> shader_inputs_;
+
 public:
 	/**
 	 * @brief Initialize a new empty program_template
@@ -104,6 +109,37 @@ public:
 	 * @return Compiled program
 	 */
 	gl::program compile(const std::map<GLenum, shader_template> &templates) const;
+
+	/**
+	 * @brief Get the list of supported shader inputs
+	 *
+	 * The raw pointers in this list should remain valid for as long as this object
+	 * is in use to compile programs.
+	 *
+	 * @return Reference to the shader input list
+	 */
+	inline std::vector<basic_shader_inputs*> &shader_inputs()
+	{ return shader_inputs_; }
+
+	/**
+	 * @brief Get the list of supported shader inputs
+	 *
+	 * The raw pointers in this list should remain valid for as long as this object
+	 * is in use to compile programs.
+	 *
+	 * @return Reference to the shader input list
+	 */
+	inline const std::vector<basic_shader_inputs*> &shader_inputs() const
+	{ return shader_inputs_; }
+
+	/**
+	 * @brief Binds the inputs from this template to a given program
+	 *
+	 * @param program Compiled program to bind inputs to
+	 *
+	 * @return List of bound input objects to apply uniform values at runtime
+	 */
+	std::vector<std::unique_ptr<bound_inputs_base>> bind_inputs(const gl::program &program) const;
 };
 }
 }

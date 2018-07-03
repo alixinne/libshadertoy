@@ -46,6 +46,9 @@ render_context::render_context()
 		compiler::template_part("shadertoy:footer", std::string(shadertoy_footer_frag, shadertoy_footer_frag + shadertoy_footer_frag_size))
 	));
 
+	// Register state
+	buffer_template_.shader_inputs().push_back(&state_);
+
 	// Add LIBSHADERTOY definition
 	static_cast<compiler::define_part*>(buffer_template_[GL_FRAGMENT_SHADER].find("glsl:defines").get())
 		->definitions()

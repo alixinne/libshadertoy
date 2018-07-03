@@ -21,35 +21,6 @@ typedef shadertoy::shader_inputs<
 	iDynamicFloats
 > example_inputs_t;
 
-// Create a custom render context that uses the extra input state
-class example_render_context : public shadertoy::render_context {
-	// Declare the variable holding the extra uniform state
-	example_inputs_t extra_inputs_;
-
-	// After compiling a program, bind the inputs from the extra state into the program
-	void bind_inputs(std::vector<std::unique_ptr<shadertoy::bound_inputs_base>> &inputs,
-		const shadertoy::gl::program &program) const override
-	{
-		inputs.push_back(extra_inputs_.bind_inputs(program));
-	}
-
-public:
-	// Extra state accessor
-	example_inputs_t &extra_inputs() { return extra_inputs_; }
-
-	example_render_context() : shadertoy::render_context(), extra_inputs_()
-	{
-		// Add a custom runtime input
-		extra_inputs_.get<iDynamicFloats>().insert<float>("iCustomTime", 0.0f);
-
-		// Update the template
-		buffer_template()[GL_FRAGMENT_SHADER].insert_after("shadertoy:uniforms",
-			shadertoy::compiler::template_part("example:uniforms", extra_inputs_.definitions_string()));
-	}
-};
-
-typedef basic_example_ctx<example_render_context> custom_example_ctx;
-
 int main(int argc, char *argv[])
 {
 	int code = 0;
@@ -77,9 +48,25 @@ int main(int argc, char *argv[])
 		shadertoy::utils::log::shadertoy()->set_level(spdlog::level::trace);
 
 		{
-			custom_example_ctx ctx;
+			example_ctx ctx;
 			auto &context(ctx.context);
 			auto &chain(ctx.chain);
+
+			// Extra uniform inputs storage
+			example_inputs_t extra_inputs;
+
+			// Add a custom runtime input
+			// This needs to happen before compiling shaders relying on these inputs,
+			// otherwise the generated sources will not include the corresponding uniform
+			// definition.
+			extra_inputs.get<iDynamicFloats>().insert<float>("iCustomTime", 0.0f);
+
+			// Update the template to include the inputs when binding new programs
+			context.buffer_template().shader_inputs().push_back(&extra_inputs);
+
+			// Update the template to include the generated sources for the extra uniforms
+			context.buffer_template()[GL_FRAGMENT_SHADER].insert_after("shadertoy:uniforms",
+				shadertoy::compiler::template_part("example:uniforms", extra_inputs.definitions_string()));
 
 			// Set the internal format of the chain
 			chain.internal_format(GL_RGB8);
@@ -126,7 +113,7 @@ int main(int argc, char *argv[])
 
 			// Set the resize callback
 			glfwSetWindowUserPointer(window, &ctx);
-			glfwSetFramebufferSizeCallback(window, example_set_framebuffer_size<custom_example_ctx>);
+			glfwSetFramebufferSizeCallback(window, example_set_framebuffer_size<example_ctx>);
 
 			while (!glfwWindowShouldClose(window))
 			{
@@ -138,7 +125,7 @@ int main(int argc, char *argv[])
 				context.state().get<shadertoy::iFrame>() = frameCount;
 
 				// Update custom uniform
-				context.extra_inputs().get<iDynamicFloats>().get<float>("iCustomTime") = (int(t) % 2) == 0 ? 1.0f : 0.0f;
+				extra_inputs.get<iDynamicFloats>().get<float>("iCustomTime") = (int(t) % 2) == 0 ? 1.0f : 0.0f;
 
 				// Render the swap chain
 				context.render(chain);

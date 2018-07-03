@@ -330,12 +330,29 @@ public:
 };
 
 /**
+ * @brief Base class for all uniform shader inputs classes
+ */
+class shadertoy_EXPORT basic_shader_inputs
+{
+public:
+	/**
+	 * @brief Bind  uniform inputs to a specific program, and return the associated handle object.
+	 *
+	 * @param program Program to bind to
+	 *
+	 * @return Pointer to the bound_inputs object. The actual type is defined by the derived
+	 *         implementation of this method.
+	 */
+	virtual std::unique_ptr<bound_inputs_base> bind_inputs(const gl::program &program) const = 0;
+};
+
+/**
  * @brief      A collection of named inputs, to be bound to actual programs.
  *
  * @tparam Inputs ShaderInput definitions
  */
 template<class ...Inputs>
-class shadertoy_EXPORT shader_inputs
+class shadertoy_EXPORT shader_inputs : public basic_shader_inputs
 {
 public:
 	/// Templated shader input type itself
@@ -637,7 +654,7 @@ public:
 	 * @param program Program to bind to.
 	 * @return
 	 */
-	std::unique_ptr<bound_inputs> bind_inputs(const gl::program &program) const
+	std::unique_ptr<bound_inputs_base> bind_inputs(const gl::program &program) const final
 	{
 		return std::make_unique<bound_inputs>(*this, program, indices());
 	}

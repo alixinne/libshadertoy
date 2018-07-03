@@ -74,6 +74,9 @@ namespace shadertoy
 		class screen_member;
 	}
 
+	class basic_shader_inputs;
+	class bound_inputs_base;
+
 	class swap_chain;
 
 	class render_context;

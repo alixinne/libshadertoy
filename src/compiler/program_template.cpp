@@ -7,6 +7,7 @@
 #include "shadertoy/compiler/program_template.hpp"
 
 #include "shadertoy/shader_compiler.hpp"
+#include "shadertoy/uniform_state.hpp"
 
 #include "shadertoy/utils/assert.hpp"
 
@@ -225,4 +226,14 @@ gl::program program_template::compile(const std::map<GLenum, shader_template> &t
 	}
 
 	return program;
+}
+
+std::vector<std::unique_ptr<bound_inputs_base>> program_template::bind_inputs(const gl::program &program) const
+{
+	std::vector<std::unique_ptr<bound_inputs_base>> bound_inputs;
+
+	for (auto input_object : shader_inputs_)
+		bound_inputs.push_back(input_object->bind_inputs(program));
+
+	return bound_inputs;
 }
