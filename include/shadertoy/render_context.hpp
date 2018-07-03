@@ -91,19 +91,6 @@ class shadertoy_EXPORT render_context
 	/// Default error input
 	std::shared_ptr<inputs::error_input> error_input_;
 
-	// Callbacks
-protected:
-	/**
-	 * @brief      When implemented in a dervied class, provides a callback for
-	 *             adding supplementary inputs to be bound to a given program.
-	 *
-	 * @param      inputs   List which should hold the bound inputs to be
-	 *                      applied to the target program.
-	 * @param      program  Target shader program.
-	 */
-	virtual void bind_inputs(std::vector<std::unique_ptr<bound_inputs_base>> &inputs,
-							 const gl::program &program) const;
-
 public:
 	/**
 	 * @brief      Create a new render context.
@@ -180,14 +167,6 @@ public:
 	 */
 	inline const std::shared_ptr<inputs::error_input> &error_input() const
 	{ return error_input_; }
-
-	/**
-	 * @brief Bind uniforms to an actual program, returning the handle object to these bound uniforms.
-	 *
-	 * @param program Program to bind to
-	 * @return
-	 */
-	std::vector<std::unique_ptr<bound_inputs_base>> bind_inputs(gl::program &program) const;
 
 	/**
 	 * @brief Render a screen quad using the current context

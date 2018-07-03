@@ -22,11 +22,6 @@ using namespace shadertoy;
 using namespace shadertoy::utils;
 using shadertoy::gl::gl_call;
 
-void render_context::bind_inputs(std::vector<std::unique_ptr<bound_inputs_base>> &inputs,
-                                 const gl::program &program) const
-{
-}
-
 render_context::render_context()
 	: state_(),
 	buffer_template_(),
@@ -135,19 +130,6 @@ void render_context::allocate_textures(swap_chain &chain) const
 std::shared_ptr<members::basic_member> render_context::render(swap_chain &chain) const
 {
 	return chain.render(*this);
-}
-
-std::vector<std::unique_ptr<bound_inputs_base>> render_context::bind_inputs(gl::program &program) const
-{
-	std::vector<std::unique_ptr<bound_inputs_base>> result;
-
-	// External inputs
-	bind_inputs(result, program);
-
-	// Default inputs
-	result.insert(result.begin(), state_.bind_inputs(program));
-
-	return result;
 }
 
 void render_context::render_screen_quad() const
