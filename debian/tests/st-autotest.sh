@@ -63,7 +63,7 @@ cmake $CMAKE_EXTRA_OPTS .. || exit 1
 # Build
 make -j$(( $(nproc) + 1 )) VERBOSE=1 example$TEST_NAME || exit 1
 
-./src/$TEST_NAME/example$TEST_NAME $TEST_ARGS
+$ST_AUTOTEST_LAUNCH_ARGS ./src/$TEST_NAME/example$TEST_NAME $TEST_ARGS
 RESULT="$?"
 
 if [ "$RESULT" -eq 2 ]; then
