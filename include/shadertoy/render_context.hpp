@@ -85,11 +85,11 @@ class shadertoy_EXPORT render_context
 	/// Index buffer for screen quad
 	gl::buffer scren_quad_indices_;
 
-	/// Buffer source template
-	compiler::shader_template buffer_template_;
-
 	/// Uniform state
 	shader_inputs_t state_;
+
+	/// Buffer source template
+	compiler::shader_template buffer_template_;
 
 	/// Default error input
 	std::shared_ptr<inputs::error_input> error_input_;
