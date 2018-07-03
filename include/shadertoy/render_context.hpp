@@ -21,7 +21,7 @@ namespace shadertoy
  * The default parts of the buffer template are as follows:
  *   * `glsl:header`: Fragment shader header
  * ```
- * #version 330
+ * #version 420
  * ```
  *   * `glsl:defines`: List of pre-processor defines
  * ```

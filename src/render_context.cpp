@@ -85,7 +85,6 @@ render_context::render_context()
 
 	// Setup screen textures
 	screen_prog_.use();
-	screen_prog_.get_uniform_location("screenTexture").set_value(0);
 
 	// Setup position and texCoord attributes for shaders
 	screen_quad_corners_.bind(GL_ARRAY_BUFFER);

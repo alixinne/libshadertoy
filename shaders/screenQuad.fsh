@@ -1,4 +1,4 @@
-#version 330
+#version 420
 
 precision highp float;
 precision highp int;
@@ -10,7 +10,7 @@ in vec2 vtexCoord;
 out vec4 fragColor;
 
 // Screen texture sampler
-uniform sampler2D screenTexture;
+layout(binding = 0) uniform sampler2D screenTexture;
 
 void main(void) {
 	fragColor = texture2D(screenTexture, vtexCoord);
