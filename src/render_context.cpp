@@ -22,7 +22,7 @@ using namespace shadertoy;
 using namespace shadertoy::utils;
 using shadertoy::gl::gl_call;
 
-void render_context::load_buffer_sources(compiler::shader_template &buffer_template) const
+void render_context::load_buffer_sources(std::vector<std::unique_ptr<compiler::basic_part>> &buffer_template_parts) const
 {
 }
 
@@ -32,8 +32,15 @@ void render_context::bind_inputs(std::vector<std::unique_ptr<bound_inputs_base>>
 }
 
 render_context::render_context()
-	: screen_vs_(GL_VERTEX_SHADER),
-	buffer_template_(
+	: state_(),
+	buffer_template_(),
+	error_input_(std::make_shared<inputs::error_input>())
+{
+	buffer_template_.emplace_back(GL_VERTEX_SHADER, compiler::shader_template(
+		compiler::template_part("shadertoy:screenquad", std::string(screenQuad_vsh, screenQuad_vsh + screenQuad_vsh_size))
+	));
+
+	buffer_template_.emplace_back(GL_FRAGMENT_SHADER, compiler::shader_template(
 		compiler::template_part("glsl:header", std::string(glsl_header_frag, glsl_header_frag + glsl_header_frag_size)),
 		compiler::define_part("glsl:defines"),
 		compiler::template_part("shadertoy:header", std::string(shadertoy_header_frag, shadertoy_header_frag + shadertoy_header_frag_size)),
@@ -41,11 +48,13 @@ render_context::render_context()
 		compiler::template_part("buffer:inputs"),
 		compiler::template_part("buffer:sources"),
 		compiler::template_part("shadertoy:footer", std::string(shadertoy_footer_frag, shadertoy_footer_frag + shadertoy_footer_frag_size))
-	),
-	error_input_(std::make_shared<inputs::error_input>())
-{
+	));
+
 	// Add LIBSHADERTOY definition
-	static_cast<compiler::define_part*>(buffer_template_.find("glsl:defines").get())->definitions()->definitions().insert(std::make_pair<std::string, std::string>("LIBSHADERTOY", "1"));
+	static_cast<compiler::define_part*>(buffer_template_[GL_FRAGMENT_SHADER].find("glsl:defines").get())
+		->definitions()
+		->definitions()
+		.insert(std::make_pair<std::string, std::string>("LIBSHADERTOY", "1"));
 
 	// Prepare screen quad geometry
 	GLfloat coords[] = {
@@ -69,20 +78,14 @@ render_context::render_context()
 	log::shadertoy()->trace("Compiling screen programs for context {}", (void*)this);
 
 	// Compile screen quad vertex shader
-	screen_vs_.source(std::string(screenQuad_vsh, screenQuad_vsh + screenQuad_vsh_size));
-	screen_vs_.compile();
-
-	// Compile screen quad fragment shader
-	gl::shader screen_fs(GL_FRAGMENT_SHADER);
-	screen_fs.source(std::string(screenQuad_fsh, screenQuad_fsh + screenQuad_fsh_size));
-	screen_fs.compile();
-
-	// Prepare screen quad program
-	screen_prog_.attach_shader(screen_vs_);
-	screen_prog_.attach_shader(screen_fs);
+	buffer_template_.compile(GL_VERTEX_SHADER);
 
 	// Compile screen program
-	screen_prog_.link();
+	std::map<GLenum, compiler::shader_template> overrides;
+	overrides.emplace(GL_FRAGMENT_SHADER, compiler::shader_template(
+		compiler::template_part("shadertoy:screenquad", std::string(screenQuad_fsh, screenQuad_fsh + screenQuad_fsh_size)
+	)));
+	screen_prog_ = buffer_template_.compile(overrides);
 
 	// Setup screen textures
 	screen_prog_.use();
@@ -136,13 +139,13 @@ std::shared_ptr<members::basic_member> render_context::render(swap_chain &chain)
 	return chain.render(*this);
 }
 
-void render_context::build_buffer_shader(const buffers::program_buffer &buffer, gl::shader &fs) const
+gl::program render_context::build_buffer_program(const buffers::program_buffer &buffer) const
 {
 	// Load all source parts
-	auto fs_template(buffer_template_.specify(
-		compiler::input_part("buffer:inputs", buffer.inputs()),
-		compiler::template_part::from_files("buffer:sources", buffer.source_files())
-	));
+	std::vector<std::unique_ptr<compiler::basic_part>> fs_template_parts;
+
+	fs_template_parts.emplace_back(std::make_unique<compiler::input_part>("buffer:inputs", buffer.inputs()));
+	fs_template_parts.emplace_back(std::make_unique<compiler::template_part>(compiler::template_part::from_files("buffer:sources", buffer.source_files())));
 
 	// Expensive log operation, only log if level is requiring it
 	if (log::shadertoy()->level() <= spdlog::level::info && !buffer.source_files().empty())
@@ -158,25 +161,12 @@ void render_context::build_buffer_shader(const buffers::program_buffer &buffer, 
 	}
 
 	// Load callback sources
-    load_buffer_sources(fs_template);
+	load_buffer_sources(fs_template_parts);
 
-	// Get sources
-	auto sources(fs_template.sources());
-
-	// Expensive log operation, only log if level is requiring it
-	if (log::shadertoy()->level() <= spdlog::level::debug)
-	{
-		std::stringstream ss;
-		for (auto &pair : sources)
-			ss << pair.second;
-		log::shadertoy()->debug("Compiled following code for {} ({}):\n{}",
-								buffer.id(),
-								(void*)&buffer,
-								ss.str());
-	}
-
-	// Load sources into fragment shader and compile
-	shader_compiler::compile(fs, sources);
+	// Compile
+	std::map<GLenum, std::vector<std::unique_ptr<compiler::basic_part>>> parts;
+	parts.emplace(GL_FRAGMENT_SHADER, std::move(fs_template_parts));
+	return buffer_template_.compile(std::move(parts));
 }
 
 std::vector<std::unique_ptr<bound_inputs_base>> render_context::bind_inputs(gl::program &program) const
@@ -208,3 +198,5 @@ void render_context::render_screen_quad(const gl::query &timerQuery) const
 
 	timerQuery.end(GL_TIME_ELAPSED);
 }
+
+// vim: cino=

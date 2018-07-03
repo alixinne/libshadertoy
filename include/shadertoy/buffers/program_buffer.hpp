@@ -34,18 +34,6 @@ private:
 
 protected:
 	/**
-	 * @brief      Return a reference to the vertex shader object.
-	 *             The derived class must ensure the given reference is valid until
-	 *             the end of the init_contents method call. The return value will
-	 *             be used as the vertex pass of the final program.
-	 *
-	 * @param[in]  context Rendering context to use for shared objects
-	 * @param[in]  io      IO resource object
-	 * @return     Reference to a vertex shader object to use for rendering
-	 */
-	virtual const gl::shader &get_vertex_shader(const render_context &context, const io_resource &io) = 0;
-
-	/**
 	 * @brief      Initialize the geometry to use for this buffer
 	 *
 	 * @param[in]  context Rendering context to use for shared objects

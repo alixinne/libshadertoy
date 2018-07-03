@@ -16,6 +16,8 @@
 #include "shadertoy/compiler/template_error.hpp"
 #include "shadertoy/compiler/template_part.hpp"
 
+#include "shadertoy/compiler/program_template.hpp"
+
 #include "shadertoy/inputs/basic_input.hpp"
 #include "shadertoy/inputs/buffer_input.hpp"
 #include "shadertoy/inputs/checker_input.hpp"

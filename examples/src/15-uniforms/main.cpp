@@ -43,7 +43,7 @@ public:
 		extra_inputs_.get<iDynamicFloats>().insert<float>("iCustomTime", 0.0f);
 
 		// Update the template
-		buffer_template().insert_after("shadertoy:uniforms",
+		buffer_template()[GL_FRAGMENT_SHADER].insert_after("shadertoy:uniforms",
 			shadertoy::compiler::template_part("example:uniforms", extra_inputs_.definitions_string()));
 	}
 };

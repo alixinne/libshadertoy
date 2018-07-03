@@ -20,8 +20,6 @@ namespace buffers
 class shadertoy_EXPORT toy_buffer : public program_buffer
 {
 protected:
-	const gl::shader &get_vertex_shader(const render_context &context, const io_resource &io) override;
-
 	void init_geometry(const render_context &context, const io_resource &io) override;
 
 	void render_geometry(const render_context &context, const io_resource &io) override;

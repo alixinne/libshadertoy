@@ -18,11 +18,6 @@ toy_buffer::toy_buffer(const std::string &id)
 {
 }
 
-const gl::shader &toy_buffer::get_vertex_shader(const render_context &context, const io_resource &io)
-{
-	return context.screen_quad_vertex_shader();
-}
-
 void toy_buffer::init_geometry(const render_context &context, const io_resource &io)
 {
 	// Nothing to do, the geometry is managed by context

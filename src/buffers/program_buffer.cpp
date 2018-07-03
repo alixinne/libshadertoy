@@ -33,22 +33,9 @@ void program_buffer::init_contents(const render_context &context, const io_resou
 
 	// Shader objects
 	log::shadertoy()->trace("Compiling program for {} ({})", id(), (void*)this);
-	const gl::shader &vs(get_vertex_shader(context, io));
-	gl::shader fs(GL_FRAGMENT_SHADER);
 
 	// Load the fragment shader for this buffer
-	context.build_buffer_shader(*this, fs);
-
-	// Attach the shaders
-	program_.attach_shader(vs);
-	program_.attach_shader(fs);
-
-	// Link the program
-	program_.link();
-
-	// Detach the shaders
-	program_.detach_shader(vs);
-	program_.detach_shader(fs);
+	program_ = context.build_buffer_program(*this);
 
 	// Use the program
 	program_.use();

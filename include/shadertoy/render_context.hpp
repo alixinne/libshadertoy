@@ -3,7 +3,7 @@
 
 #include "shadertoy/pre.hpp"
 
-#include "shadertoy/compiler/shader_template.hpp"
+#include "shadertoy/compiler/program_template.hpp"
 
 namespace shadertoy
 {
@@ -77,9 +77,6 @@ class shadertoy_EXPORT render_context
 	/// Program for screen quad
 	gl::program screen_prog_;
 
-	/// Vertex shader for screen quad
-	gl::shader screen_vs_;
-
 	/// Vertex buffer for screen quad
 	gl::buffer screen_quad_corners_;
 	/// Index buffer for screen quad
@@ -89,7 +86,7 @@ class shadertoy_EXPORT render_context
 	shader_inputs_t state_;
 
 	/// Buffer source template
-	compiler::shader_template buffer_template_;
+	compiler::program_template buffer_template_;
 
 	/// Default error input
 	std::shared_ptr<inputs::error_input> error_input_;
@@ -101,9 +98,9 @@ protected:
 	 *             providing supplementary sources to add in the current template
 	 *             insert in individual buffer fragment shaders.
 	 *
-	 * @param      buffer_template  Shader template object to add sources to
+	 * @param      buffer_template  Shader template parts to add to
 	 */
-	virtual void load_buffer_sources(compiler::shader_template &buffer_template) const;
+	virtual void load_buffer_sources(std::vector<std::unique_ptr<compiler::basic_part>> &buffer_template_parts) const;
 
 	/**
 	 * @brief      When implemented in a dervied class, provides a callback for
@@ -154,12 +151,13 @@ public:
 	std::shared_ptr<members::basic_member> render(swap_chain &chain) const;
 
 	/**
-	 * @brief      Compile a fragment shader for use in a ToyBuffer.
+	 * @brief      Compile the program of a program_buffer according to the context template
 	 *
 	 * @param buffer Buffer being compiled
-	 * @param fs     Fragment shader object to compile to.
+	 *
+	 * @return Compiled program
 	 */
-	void build_buffer_shader(const buffers::program_buffer &buffer, gl::shader &fs) const;
+	gl::program build_buffer_program(const buffers::program_buffer &buffer) const;
 
 	/**
 	 * @brief  Get a reference to the uniform state container
@@ -182,7 +180,7 @@ public:
 	 *
 	 * @return Reference to the shader_template in use by this context
 	 */
-	inline const compiler::shader_template &buffer_template() const
+	inline const compiler::program_template &buffer_template() const
 	{ return buffer_template_; }
 
 	/**
@@ -190,7 +188,7 @@ public:
 	 *
 	 * @return Reference to the shader_template in use by this context
 	 */
-	inline compiler::shader_template &buffer_template()
+	inline compiler::program_template &buffer_template()
 	{ return buffer_template_; }
 
 	/**
@@ -221,14 +219,6 @@ public:
 	 *                   draw call.
 	 */
 	void render_screen_quad(const gl::query &timerQuery) const;
-
-	/**
-	 * @brief  Get the default screen quad vertex shader
-	 *
-	 * @return Reference to the screen quad vertex shader object
-	 */
-	inline const gl::shader &screen_quad_vertex_shader() const
-	{ return screen_vs_; }
 };
 
 }
