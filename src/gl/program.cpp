@@ -13,9 +13,8 @@ null_program_error::null_program_error()
 {
 }
 
-attrib_location::attrib_location(const program &program, GLint location)
-	: program_(GLuint(program)),
-	location_(location)
+attrib_location::attrib_location(GLint location)
+	: location_(location)
 {
 }
 
@@ -202,7 +201,7 @@ uniform_location program::get_uniform_location(const GLchar *name) const
 attrib_location program::get_attrib_location(const GLchar *name) const
 {
 	GLint location = gl_call(glGetAttribLocation, GLuint(*this), name);
-	return attrib_location(*this, location);
+	return attrib_location(location);
 }
 
 void program::attach_shader(const shader &shader) const

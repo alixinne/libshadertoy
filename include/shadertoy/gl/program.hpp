@@ -24,7 +24,7 @@ namespace gl
 	};
 
 	/**
-	 * @brief Represents the location of an attribute in a program.
+	 * @brief Represents the location of an attribute.
 	 */
 	class shadertoy_EXPORT attrib_location
 	{
@@ -32,10 +32,9 @@ namespace gl
 		/**
 		 * @brief Initialize a new instance of the attrib_location class.
 		 *
-		 * @param program  Program this location is defined in
 		 * @param location Location of the attrib
 		 */
-		attrib_location(const program &program, GLint location);
+		attrib_location(GLint location);
 
 		/**
 		 * @brief glVertexAttribPointer
@@ -54,8 +53,6 @@ namespace gl
 		void enable_vertex_array() const;
 
 	private:
-		/// Program id
-		const GLuint program_;
 		/// Attrib location
 		const GLint location_;
 	};
