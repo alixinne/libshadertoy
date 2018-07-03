@@ -51,6 +51,8 @@ namespace gl
 	class shadertoy_EXPORT query : public resource<query, query_allocator, null_query_error>
 	{
 	public:
+		using base_resource_type::operator=;
+
 		/**
 		 * @brief Create a new query for the given target.
 		 *

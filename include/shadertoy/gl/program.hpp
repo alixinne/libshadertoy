@@ -249,6 +249,8 @@ namespace gl
 		null_program_error>
 	{
 	public:
+		using base_resource_type::operator=;
+
 		/**
 		 * @brief glLinkProgram
 		 *

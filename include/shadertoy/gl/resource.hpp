@@ -85,6 +85,8 @@ namespace gl
 		typedef Error error_type;
 		/// Type of the subclassed resource type
 		typedef Final resource_type;
+		/// Type of self
+		typedef resource<Final, Allocator, Error> base_resource_type;
 
 		/**
 		 * @brief Create a resource using the given allocator.
@@ -165,13 +167,13 @@ namespace gl
 			{
 				this->free();
 
-				this->has_res_ = other.hasRes;
-				this->res_id_ = other.resId;
+				this->has_res_ = other.has_res_;
+				this->res_id_ = other.res_id_;
 
-				other.hasRes = false;
+				other.has_res_ = false;
 			}
 
-			return (*this);
+			return static_cast<resource_type&>(*this);
 		}
 
 	protected:

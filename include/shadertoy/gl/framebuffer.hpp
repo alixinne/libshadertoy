@@ -28,6 +28,8 @@ namespace gl
 		null_framebuffer_error>
 	{
 	public:
+		using base_resource_type::operator=;
+
 		/**
 		 * @brief glBindFramebuffer
 		 *

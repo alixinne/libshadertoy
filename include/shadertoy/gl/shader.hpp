@@ -91,6 +91,8 @@ namespace gl
 	class shadertoy_EXPORT shader : public resource<shader, shader_allocator, null_shader_error>
 	{
 	public:
+		using base_resource_type::operator=;
+
 		/**
 		 * @brief Create a new shader of the given type.
 		 *

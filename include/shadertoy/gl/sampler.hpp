@@ -28,6 +28,8 @@ namespace gl
 		null_sampler_error>
 	{
 	public:
+		using base_resource_type::operator=;
+
 		/**
 		 * @brief glBindSampler
 		 *

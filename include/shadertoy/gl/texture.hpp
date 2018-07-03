@@ -54,6 +54,8 @@ namespace gl
 	class shadertoy_EXPORT texture : public resource<texture, texture_allocator, null_texture_error>
 	{
 	public:
+		using base_resource_type::operator=;
+
 		/**
 		 * @brief Create a new texture for the given target.
 		 *
