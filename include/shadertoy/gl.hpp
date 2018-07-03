@@ -14,5 +14,6 @@
 #include "shadertoy/gl/sampler.hpp"
 #include "shadertoy/gl/shader.hpp"
 #include "shadertoy/gl/texture.hpp"
+#include "shadertoy/gl/vertex_array.hpp"
 
 #endif /* _SHADERTOY_GL_HPP_ */

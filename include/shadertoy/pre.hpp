@@ -49,6 +49,9 @@ namespace shadertoy
 		class null_texture_error;
 		class texture_allocator;
 		class texture;
+
+		class null_vertex_array_error;
+		class vertex_array;
 	}
 
 	/// Buffer input class definitions
