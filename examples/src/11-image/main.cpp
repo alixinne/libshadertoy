@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
 
 		shadertoy::utils::log::shadertoy()->set_level(spdlog::level::trace);
 
+		try
 		{
 			example_ctx ctx;
 			auto &context(ctx.context);
@@ -81,25 +82,9 @@ int main(int argc, char *argv[])
 			// Create a swap chain member that renders to the screen
 			chain.emplace_back<shadertoy::members::screen_member>(shadertoy::make_size_ref(ctx.render_size));
 
-			try
-			{
-				// Initialize context
-				context.init(chain);
-				std::cout << "Initialized swap chain" << std::endl;
-			}
-			catch (shadertoy::gl::shader_compilation_error &sce)
-			{
-				std::cerr << "Failed to compile shader: " << sce.log();
-				code = 2;
-			}
-			catch (shadertoy::shadertoy_error &err)
-			{
-				std::cerr << "Error: " << err.what();
-				code = 2;
-			}
-
-			if (code)
-				exit(code);
+			// Initialize context
+			context.init(chain);
+			std::cout << "Initialized swap chain" << std::endl;
 
 			// Now render for 5s
 			int frameCount = 0;
@@ -131,6 +116,16 @@ int main(int argc, char *argv[])
 				if (libshadertoy_test_exit())
 					glfwSetWindowShouldClose(window, true);
 			}
+		}
+		catch (shadertoy::gl::shader_compilation_error &sce)
+		{
+			std::cerr << "Failed to compile shader: " << sce.log();
+			code = 2;
+		}
+		catch (shadertoy::shadertoy_error &err)
+		{
+			std::cerr << "Error: " << err.what();
+			code = 2;
 		}
 
 		glfwDestroyWindow(window);
