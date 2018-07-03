@@ -55,6 +55,9 @@ public:
 	 */
 	program_template(std::map<GLenum, shader_template> shader_templates);
 
+	program_template(const program_template &) = delete;
+	program_template &operator=(const program_template &) = delete;
+
 	/**
 	 * @brief Add new shader_template in place
 	 *
