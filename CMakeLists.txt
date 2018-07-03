@@ -335,6 +335,10 @@ if(SHADERTOY_BUILD_DOCUMENTATION)
 	endif()
 endif()
 
+if(SHADERTOY_BUILD_EXAMPLES)
+	add_subdirectory(examples)
+endif()
+
 # Package building
 set(CPACK_GENERATOR "7Z")
 execute_process(COMMAND git rev-parse --short HEAD

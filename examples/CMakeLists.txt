@@ -6,12 +6,24 @@ include(FindPkgConfig)
 # OpenGL libraries
 find_package(OpenGL REQUIRED)
 
-pkg_search_module(EPOXY REQUIRED epoxy)
-link_directories(${EPOXY_LIBDIR})
+if (NOT EPOXY_FOUND)
+	pkg_search_module(EPOXY REQUIRED epoxy)
+	link_directories(${EPOXY_LIBDIR})
+endif()
 
-pkg_search_module(GLFW3 glfw3)
-if (GLFW3_FOUND)
-	link_directories(${GLFW3_LIBDIR})
+if (NOT GLFW3_FOUND)
+	find_package(GLFW3)
+
+	if (NOT GLFW3_FOUND)
+		pkg_search_module(GLFW3 glfw3)
+		if (GLFW3_FOUND)
+			link_directories(${GLFW3_LIBDIR})
+		endif()
+	endif()
+
+	if (GLFW3_FOUND AND NOT GLFW3_LIBRARIES)
+		set(GLFW3_LIBRARIES glfw)
+	endif()
 endif()
 
 # Extra libraries for shadertoy API examples
@@ -28,7 +40,9 @@ endif()
 find_package(X11)
 
 # libshadertoy
-find_package(shadertoy 1.0.0 REQUIRED)
+if (NOT TARGET shadertoy-static)
+	find_package(shadertoy 1.0.0 REQUIRED)
+endif()
 
 # Directories
 set(INCLUDE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/include)
