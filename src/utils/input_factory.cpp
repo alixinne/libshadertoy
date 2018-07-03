@@ -8,6 +8,8 @@ bool input_factory::operator<(const input_factory &rhs)
 		return false;
 	if (rhs.priority() < priority())
 		return true;
+	if (rhs.priority() > priority())
+		return false;
 	return type_name() < rhs.type_name();
 }
 
