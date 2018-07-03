@@ -67,6 +67,14 @@ public:
 
 	shader_template(shader_template &&other);
 	shader_template &operator=(shader_template &&rhs);
+
+	/**
+	 * @brief Checks if this template is fully specified
+	 *
+	 * @return true if the template is fully specified, false otherwise
+	 */
+	bool is_specified() const;
+
 	/**
 	 * @brief Obtain a list of sources from this template
 	 *

@@ -32,11 +32,11 @@ render_context::render_context()
 	buffer_template_(),
 	error_input_(std::make_shared<inputs::error_input>())
 {
-	buffer_template_.emplace_back(GL_VERTEX_SHADER, compiler::shader_template(
+	buffer_template_.emplace(GL_VERTEX_SHADER, compiler::shader_template(
 		compiler::template_part("shadertoy:screenquad", std::string(screenQuad_vsh, screenQuad_vsh + screenQuad_vsh_size))
 	));
 
-	buffer_template_.emplace_back(GL_FRAGMENT_SHADER, compiler::shader_template(
+	buffer_template_.emplace(GL_FRAGMENT_SHADER, compiler::shader_template(
 		compiler::template_part("glsl:header", std::string(glsl_header_frag, glsl_header_frag + glsl_header_frag_size)),
 		compiler::define_part("glsl:defines"),
 		compiler::template_part("shadertoy:header", std::string(shadertoy_header_frag, shadertoy_header_frag + shadertoy_header_frag_size)),

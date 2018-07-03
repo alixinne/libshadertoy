@@ -44,7 +44,7 @@ public:
 	 *
 	 * @return true if the template_part is specified, false otherwise
 	 */
-	inline bool specified() const
+	inline bool is_specified() const
 	{ return static_cast<bool>(*this); }
 
 	/**

@@ -46,6 +46,12 @@ shader_template &shader_template::operator=(shader_template &&rhs)
 	return (*this);
 }
 
+bool shader_template::is_specified() const
+{
+	return std::all_of(parts_.begin(), parts_.end(),
+					   [](const auto &part_ptr) { return part_ptr->is_specified(); });
+}
+
 std::vector<std::pair<std::string, std::string>> shader_template::sources() const
 {
 	std::vector<std::pair<std::string, std::string>> result;
@@ -85,7 +91,7 @@ shader_template shader_template::specify(std::vector<std::unique_ptr<basic_part>
 
 	for (auto &current_part : parts_)
 	{
-		if (!current_part->specified())
+		if (!current_part->is_specified())
 		{
 			// current_part is not specified yet
 			auto new_part_it = new_parts.find(current_part->name());

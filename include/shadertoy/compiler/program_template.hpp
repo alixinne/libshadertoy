@@ -56,7 +56,7 @@ public:
 	 * @param type            Type of the shader template
 	 * @param shader_template Shader template to add
 	 */
-	void emplace_back(GLenum type, shader_template &&shader_template);
+	bool emplace(GLenum type, shader_template &&shader_template);
 
 	/**
 	 * @brief Get a template of the given type.

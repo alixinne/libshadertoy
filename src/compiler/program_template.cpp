@@ -27,9 +27,9 @@ program_template::program_template(std::map<GLenum, shader_template> shader_temp
 {
 }
 
-void program_template::emplace_back(GLenum type, shader_template &&shader_template)
+bool program_template::emplace(GLenum type, shader_template &&shader_template)
 {
-	shader_templates_.emplace(type, std::move(shader_template));
+	return shader_templates_.emplace(type, std::move(shader_template)).second;
 }
 
 void program_template::compile(GLenum type)
