@@ -110,7 +110,7 @@ std::shared_ptr<buffer_member> make_buffer(Args&&... args)
  *
  * @see buffer_member#buffer_member(std::shared_ptr<buffers::basic_buffer>, rsize_ref &&, GLint, member_swap_policy)
  */
-std::shared_ptr<buffer_member> make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size);
+std::shared_ptr<buffer_member> shadertoy_EXPORT make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size);
 
 /**
  * @brief Construct a pointer to a buffer_member
@@ -125,7 +125,7 @@ std::shared_ptr<buffer_member> make_member(const swap_chain &chain, std::shared_
  *
  * @see buffer_member#buffer_member(std::shared_ptr<buffers::basic_buffer>, rsize_ref &&, GLint, member_swap_policy)
  */
-std::shared_ptr<buffer_member> make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format);
+std::shared_ptr<buffer_member> shadertoy_EXPORT make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format);
 
 /**
  * @brief Construct a pointer to a buffer_member
@@ -140,7 +140,7 @@ std::shared_ptr<buffer_member> make_member(const swap_chain &chain, std::shared_
  *
  * @see buffer_member#buffer_member(std::shared_ptr<buffers::basic_buffer>, rsize_ref &&, GLint, member_swap_policy)
  */
-std::shared_ptr<buffer_member> make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, member_swap_policy swap_policy);
+std::shared_ptr<buffer_member> shadertoy_EXPORT make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, member_swap_policy swap_policy);
 
 /**
  * @brief Construct a pointer to a buffer_member
@@ -156,7 +156,7 @@ std::shared_ptr<buffer_member> make_member(const swap_chain &chain, std::shared_
  *
  * @see buffer_member#buffer_member(std::shared_ptr<buffers::basic_buffer>, rsize_ref &&, GLint, member_swap_policy)
  */
-std::shared_ptr<buffer_member> make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format, member_swap_policy swap_policy);
+std::shared_ptr<buffer_member> shadertoy_EXPORT make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format, member_swap_policy swap_policy);
 }
 }
 

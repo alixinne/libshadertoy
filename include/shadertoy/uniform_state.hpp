@@ -46,7 +46,7 @@ struct shadertoy_EXPORT dynamic_shader_inputs_glsl_type_visitor : public boost::
 	template<class T, std::size_t N>
 	glsl_type_info operator()(const std::array<T, N> &) const {
 		return std::make_tuple(std::get<0>((*this)(T())),
-			std::string("[") + std::string(N) + std::string("]") +
+			std::string("[") + std::to_string(N) + std::string("]") +
 			std::get<1>((*this)(T())));
 	}
 	/** @endcond */
@@ -123,7 +123,7 @@ public:
  */
 template<const char *UniformName, const char *UniformType, typename TUniform,
 	size_t Size = 1, typename = typename std::enable_if<(Size >= 1)>::type>
-struct shadertoy_EXPORT shader_input
+struct shader_input
 {
 	/// Name of the uniform in GLSL
 	static constexpr const char *name = UniformName;
@@ -193,7 +193,7 @@ public:
  *                          this dynamic uniform block.
  */
 template<const char *DynamicInputName, class GLSLTypeVisitor, class ...Types>
-struct shadertoy_EXPORT dynamic_shader_inputs
+struct dynamic_shader_inputs
 {
 	/// Name of the input block
 	static constexpr const char *name = DynamicInputName;
@@ -352,7 +352,7 @@ public:
  * @tparam Inputs ShaderInput definitions
  */
 template<class ...Inputs>
-class shadertoy_EXPORT shader_inputs : public basic_shader_inputs
+class shader_inputs : public basic_shader_inputs
 {
 public:
 	/// Templated shader input type itself
@@ -692,7 +692,7 @@ namespace shadertoy
 {
 
 /// Default program state typedef
-typedef shader_inputs<
+typedef shadertoy_EXPORT shader_inputs<
 	iResolution,
 	iTime,
 	iTimeDelta,
