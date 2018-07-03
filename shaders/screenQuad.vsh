@@ -1,13 +1,13 @@
-#version 420
+#version 440
 
 precision highp float;
 precision highp int;
 precision highp sampler2D;
 
-// Vertex position
-in vec3 position;
-// Vertex texture coordinate
-in vec2 texCoord;
+// Vertex attributes
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec2 texCoord;
+
 // Texture coord for fragment
 out vec2 vtexCoord;
 

@@ -77,10 +77,12 @@ class shadertoy_EXPORT render_context
 	/// Program for screen quad
 	gl::program screen_prog_;
 
+	/// Vertex array object
+	gl::vertex_array screen_quad_array_;
 	/// Vertex buffer for screen quad
 	gl::buffer screen_quad_corners_;
 	/// Index buffer for screen quad
-	gl::buffer scren_quad_indices_;
+	gl::buffer screen_quad_indices_;
 
 	/// Uniform state
 	shader_inputs_t state_;

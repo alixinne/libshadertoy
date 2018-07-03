@@ -50,6 +50,27 @@ render_context::render_context()
 		->definitions()
 		.insert(std::make_pair<std::string, std::string>("LIBSHADERTOY", "1"));
 
+	log::shadertoy()->trace("Compiling screen programs for context {}", (void*)this);
+
+	// Compile screen quad vertex shader
+	buffer_template_.compile(GL_VERTEX_SHADER);
+
+	// Compile screen program
+	std::map<GLenum, compiler::shader_template> overrides;
+	overrides.emplace(GL_FRAGMENT_SHADER, compiler::shader_template(
+		compiler::template_part("shadertoy:screenquad", std::string(screenQuad_fsh, screenQuad_fsh + screenQuad_fsh_size)
+	)));
+	screen_prog_ = buffer_template_.compile(overrides);
+
+	// Set uniform texture units
+	state_.get<iChannel0>() = 0;
+	state_.get<iChannel1>() = 1;
+	state_.get<iChannel2>() = 2;
+	state_.get<iChannel3>() = 3;
+
+	state_.get<iChannelTime>() = { 0.f, 0.f, 0.f, 0.f };
+	state_.get<iSampleRate>() = 48000.f;
+
 	// Prepare screen quad geometry
 	GLfloat coords[] = {
 		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
@@ -63,54 +84,33 @@ render_context::render_context()
 		0, 2, 3
 	};
 
+	// Bind VAO
+	screen_quad_array_.bind();
+
 	// Setup coords
 	screen_quad_corners_.data(sizeof(coords), static_cast<const GLvoid *>(&coords[0]), GL_STATIC_DRAW);
 
 	// Setup indices
-	scren_quad_indices_.data(sizeof(indices), static_cast<const GLvoid *>(&indices[0]), GL_STATIC_DRAW);
-
-	log::shadertoy()->trace("Compiling screen programs for context {}", (void*)this);
-
-	// Compile screen quad vertex shader
-	buffer_template_.compile(GL_VERTEX_SHADER);
-
-	// Compile screen program
-	std::map<GLenum, compiler::shader_template> overrides;
-	overrides.emplace(GL_FRAGMENT_SHADER, compiler::shader_template(
-		compiler::template_part("shadertoy:screenquad", std::string(screenQuad_fsh, screenQuad_fsh + screenQuad_fsh_size)
-	)));
-	screen_prog_ = buffer_template_.compile(overrides);
-
-	// Setup screen textures
-	screen_prog_.use();
+	screen_quad_indices_.data(sizeof(indices), static_cast<const GLvoid *>(&indices[0]), GL_STATIC_DRAW);
 
 	// Setup position and texCoord attributes for shaders
 	screen_quad_corners_.bind(GL_ARRAY_BUFFER);
-	scren_quad_indices_.bind(GL_ELEMENT_ARRAY_BUFFER);
+	screen_quad_indices_.bind(GL_ELEMENT_ARRAY_BUFFER);
 
-	std::vector<gl::program *> programs{ &screen_prog_ };
+	// bind input "position" to vertex locations (3 floats)
+	gl::attrib_location position(0);
+	position.vertex_pointer(3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)0);
+	position.enable_vertex_array();
 
-	for (auto it = programs.begin(); it != programs.end(); ++it)
-	{
-		// bind input "position" to vertex locations (3 floats)
-		auto position = (*it)->get_attrib_location("position");
-		position.vertex_pointer(3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)0);
-		position.enable_vertex_array();
+	// bind input "texCoord" to vertex texture coordinates (2 floats)
+	gl::attrib_location texCoord(1);
+	texCoord.vertex_pointer(2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat)));
+	texCoord.enable_vertex_array();
 
-		// bind input "texCoord" to vertex texture coordinates (2 floats)
-		auto texCoord = (*it)->get_attrib_location("texCoord");
-		texCoord.vertex_pointer(2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat)));
-		texCoord.enable_vertex_array();
-	}
-
-	// Set uniform texture units
-	state_.get<iChannel0>() = 0;
-	state_.get<iChannel1>() = 1;
-	state_.get<iChannel2>() = 2;
-	state_.get<iChannel3>() = 3;
-
-	state_.get<iChannelTime>() = { 0.f, 0.f, 0.f, 0.f };
-	state_.get<iSampleRate>() = 48000.f;
+	// Unbind
+	screen_quad_array_.unbind();
+	screen_quad_indices_.unbind(GL_ELEMENT_ARRAY_BUFFER);
+	screen_quad_corners_.unbind(GL_ARRAY_BUFFER);
 }
 
 void render_context::init(swap_chain &chain) const
@@ -134,13 +134,16 @@ std::shared_ptr<members::basic_member> render_context::render(swap_chain &chain)
 
 void render_context::render_screen_quad() const
 {
-	screen_quad_corners_.bind(GL_ARRAY_BUFFER);
+	// Bind VAO
+	auto sqa_bind(gl::get_bind_guard(screen_quad_array_));
+
 	gl_call(glDrawElements, GL_TRIANGLES, 3 * 2, GL_UNSIGNED_INT, nullptr);
 }
 
 void render_context::render_screen_quad(const gl::query &timerQuery) const
 {
-	screen_quad_corners_.bind(GL_ARRAY_BUFFER);
+	// Bind VAO
+	auto sqa_bind(gl::get_bind_guard(screen_quad_array_));
 
 	timerQuery.begin(GL_TIME_ELAPSED);
 
