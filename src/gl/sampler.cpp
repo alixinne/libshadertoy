@@ -15,6 +15,11 @@ void sampler::bind(GLuint unit) const
 	gl_call(glBindSampler, unit, GLuint(*this));
 }
 
+void sampler::unbind(GLuint unit) const
+{
+	gl_call(glBindSampler, unit, 0);
+}
+
 void sampler::parameter(GLenum pname, GLint param) const
 {
 	gl_call(glSamplerParameteri, GLuint(*this), pname, param);

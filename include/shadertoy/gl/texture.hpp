@@ -77,6 +77,17 @@ namespace gl
 		void bind(GLenum target) const;
 
 		/**
+		 * @brief glBindTexture
+		 *
+		 * Unbinds the current texture for the given \p target.
+		 *
+		 * @param target Target to unbind from
+		 *
+		 * @throws opengl_error
+		 */
+		void unbind(GLenum target) const;
+
+		/**
 		 * @brief glBindTextureUnit
 		 *
 		 * @param unit Unit to bind the texture to

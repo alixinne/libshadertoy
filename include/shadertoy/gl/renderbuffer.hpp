@@ -39,7 +39,17 @@ namespace gl
 		 */
 		void bind(GLenum target) const;
 
-		// glNamedRenderbufferStorage
+		/**
+		 * @brief glBindRenderbuffer
+		 *
+		 * Unbinds the current renderbuffer.
+		 *
+		 * @param target Target to unbind the current renderbuffer from
+		 *
+		 * @throws opengl_error
+		 */
+		void unbind(GLenum target) const;
+
 		/**
 		 * @brief glNamedRenderbufferStorage
 		 *

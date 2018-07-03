@@ -15,6 +15,11 @@ void renderbuffer::bind(GLenum target) const
 	gl_call(glBindRenderbuffer, target, GLuint(*this));
 }
 
+void renderbuffer::unbind(GLenum target) const
+{
+	gl_call(glBindRenderbuffer, target, 0);
+}
+
 void renderbuffer::storage(GLenum internalFormat, GLsizei width, GLsizei height) const
 {
 	gl_call(glNamedRenderbufferStorage, GLuint(*this), internalFormat, width, height);

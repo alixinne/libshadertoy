@@ -32,6 +32,11 @@ void texture::bind(GLenum target) const
     gl_call(glBindTexture, target, GLuint(*this));
 }
 
+void texture::unbind(GLenum target) const
+{
+	gl_call(glBindTexture, target, 0);
+}
+
 void texture::bind_unit(GLuint unit) const
 {
 	gl_call(glBindTextureUnit, unit, GLuint(*this));

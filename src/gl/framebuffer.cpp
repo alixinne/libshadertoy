@@ -16,6 +16,11 @@ void framebuffer::bind(GLenum target) const
 	gl_call(glBindFramebuffer, target, GLuint(*this));
 }
 
+void framebuffer::unbind(GLenum target) const
+{
+	gl_call(glBindFramebuffer, target, 0);
+}
+
 void framebuffer::texture(GLenum attachment, shadertoy::gl::texture &texture, GLint level) const
 {
 	gl_call(glNamedFramebufferTexture, GLuint(*this), attachment, GLuint(texture), level);

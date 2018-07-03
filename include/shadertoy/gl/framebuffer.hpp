@@ -10,7 +10,7 @@ namespace gl
 	/**
 	 * @brief Error thrown when an attempt is made to dereference a null framebuffer.
 	 */
-		class shadertoy_EXPORT null_framebuffer_error : public shadertoy::shadertoy_error
+	class shadertoy_EXPORT null_framebuffer_error : public shadertoy::shadertoy_error
 	{
 	public:
 		/**
@@ -38,8 +38,20 @@ namespace gl
 		 * @param target Target to bind this framebuffer to
 		 *
 		 * @throws opengl_error
+		 * @throws null_framebuffer_error
 		 */
 		void bind(GLenum target) const;
+
+		/**
+		 * @brief glBindFramebuffer
+		 *
+		 * Unbinds the current framebuffer.
+		 *
+		 * @param target Target to unbind the current framebuffer from
+		 *
+		 * @throws opengl_error
+		 */
+		void unbind(GLenum target) const;
 
 		/**
 		 * @brief glNamedFramebufferTexture

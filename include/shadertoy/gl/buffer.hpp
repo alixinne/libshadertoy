@@ -43,6 +43,17 @@ namespace gl
 		void bind(GLenum target) const;
 
 		/**
+		 * @brief glBindBuffer
+		 *
+		 * Unbinds the current buffer.
+		 *
+		 * @param target Target to unbind the current buffer frmo
+		 *
+		 * @throws opengl_error
+		 */
+		void unbind(GLenum target) const;
+
+		/**
 		 * @brief glNamedBufferData
 		 * @param size  size of the data to send to the buffer
 		 * @param data  pointer to the data to send to the buffer

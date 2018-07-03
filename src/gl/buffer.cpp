@@ -15,6 +15,11 @@ void buffer::bind(GLenum target) const
 	gl_call(glBindBuffer, target, GLuint(*this));
 }
 
+void buffer::unbind(GLenum target) const
+{
+	gl_call(glBindBuffer, target, 0);
+}
+
 void buffer::data(GLsizei size, const void *data, GLenum usage) const
 {
 	gl_call(glNamedBufferData, GLuint(*this), size, data, usage);

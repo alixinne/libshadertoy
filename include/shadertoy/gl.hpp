@@ -3,6 +3,7 @@
 
 #include "shadertoy/gl/caller.hpp"
 
+#include "shadertoy/gl/bind_guard.hpp"
 #include "shadertoy/gl/resource.hpp"
 
 #include "shadertoy/gl/buffer.hpp"

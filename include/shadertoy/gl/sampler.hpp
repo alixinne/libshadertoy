@@ -43,6 +43,17 @@ namespace gl
 		void bind(GLuint unit) const;
 
 		/**
+		 * @brief glBindSampler
+		 *
+		 * Unbinds the current sampler for the unit \p unit.
+		 *
+		 * @param unit  Index of the texture unit to unbind the sampler from
+		 *
+		 * @throws opengl_error
+		 */
+		void unbind(GLuint unit) const;
+
+		/**
 		 * @brief glSamplerParameteri
 		 *
 		 * @param pname Parameter name to set
