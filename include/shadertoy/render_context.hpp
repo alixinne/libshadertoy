@@ -94,15 +94,6 @@ class shadertoy_EXPORT render_context
 	// Callbacks
 protected:
 	/**
-	 * @brief      When implemented in a derived class, provides a callback for
-	 *             providing supplementary sources to add in the current template
-	 *             insert in individual buffer fragment shaders.
-	 *
-	 * @param      buffer_template  Shader template parts to add to
-	 */
-	virtual void load_buffer_sources(std::vector<std::unique_ptr<compiler::basic_part>> &buffer_template_parts) const;
-
-	/**
 	 * @brief      When implemented in a dervied class, provides a callback for
 	 *             adding supplementary inputs to be bound to a given program.
 	 *
@@ -149,15 +140,6 @@ public:
 	 * @return     Result of chain#render
 	 */
 	std::shared_ptr<members::basic_member> render(swap_chain &chain) const;
-
-	/**
-	 * @brief      Compile the program of a program_buffer according to the context template
-	 *
-	 * @param buffer Buffer being compiled
-	 *
-	 * @return Compiled program
-	 */
-	gl::program build_buffer_program(const buffers::program_buffer &buffer) const;
 
 	/**
 	 * @brief  Get a reference to the uniform state container

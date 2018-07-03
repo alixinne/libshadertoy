@@ -22,10 +22,6 @@ using namespace shadertoy;
 using namespace shadertoy::utils;
 using shadertoy::gl::gl_call;
 
-void render_context::load_buffer_sources(std::vector<std::unique_ptr<compiler::basic_part>> &buffer_template_parts) const
-{
-}
-
 void render_context::bind_inputs(std::vector<std::unique_ptr<bound_inputs_base>> &inputs,
                                  const gl::program &program) const
 {
@@ -137,36 +133,6 @@ void render_context::allocate_textures(swap_chain &chain) const
 std::shared_ptr<members::basic_member> render_context::render(swap_chain &chain) const
 {
 	return chain.render(*this);
-}
-
-gl::program render_context::build_buffer_program(const buffers::program_buffer &buffer) const
-{
-	// Load all source parts
-	std::vector<std::unique_ptr<compiler::basic_part>> fs_template_parts;
-
-	fs_template_parts.emplace_back(std::make_unique<compiler::input_part>("buffer:inputs", buffer.inputs()));
-	fs_template_parts.emplace_back(std::make_unique<compiler::template_part>(compiler::template_part::from_files("buffer:sources", buffer.source_files())));
-
-	// Expensive log operation, only log if level is requiring it
-	if (log::shadertoy()->level() <= spdlog::level::info && !buffer.source_files().empty())
-	{
-		std::stringstream ss;
-		for (auto &file : buffer.source_files())
-			ss << file << ";";
-		auto str(ss.str());
-		log::shadertoy()->info("Loaded {} for {} ({})",
-							   std::string(str.begin(), str.end() - 1),
-							   buffer.id(),
-							   (void*)&buffer);
-	}
-
-	// Load callback sources
-	load_buffer_sources(fs_template_parts);
-
-	// Compile
-	std::map<GLenum, std::vector<std::unique_ptr<compiler::basic_part>>> parts;
-	parts.emplace(GL_FRAGMENT_SHADER, std::move(fs_template_parts));
-	return buffer_template_.compile(std::move(parts));
 }
 
 std::vector<std::unique_ptr<bound_inputs_base>> render_context::bind_inputs(gl::program &program) const

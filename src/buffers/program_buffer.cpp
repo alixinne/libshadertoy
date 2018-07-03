@@ -9,6 +9,9 @@
 #include "shadertoy/buffers/program_buffer.hpp"
 #include "shadertoy/render_context.hpp"
 
+#include "shadertoy/compiler/input_part.hpp"
+#include "shadertoy/compiler/template_part.hpp"
+
 #include "shadertoy/utils/assert.hpp"
 
 using namespace shadertoy;
@@ -35,7 +38,29 @@ void program_buffer::init_contents(const render_context &context, const io_resou
 	log::shadertoy()->trace("Compiling program for {} ({})", id(), (void*)this);
 
 	// Load the fragment shader for this buffer
-	program_ = context.build_buffer_program(*this);
+	std::vector<std::unique_ptr<compiler::basic_part>> fs_template_parts;
+
+	// Add the uniform inputs for this buffer
+	fs_template_parts.emplace_back(std::make_unique<compiler::input_part>("buffer:inputs", inputs_));
+	fs_template_parts.emplace_back(std::make_unique<compiler::template_part>(compiler::template_part::from_files("buffer:sources", source_files_)));
+
+	// Expensive log operation, only log if level is requiring it
+	if (log::shadertoy()->level() <= spdlog::level::info && !source_files_.empty())
+	{
+		std::stringstream ss;
+		for (auto &file : source_files_)
+			ss << file << ";";
+		auto str(ss.str());
+		log::shadertoy()->info("Loaded {} for {} ({})",
+							   std::string(str.begin(), str.end() - 1),
+							   id(),
+							   (void*)this);
+	}
+
+	// Compile
+	std::map<GLenum, std::vector<std::unique_ptr<compiler::basic_part>>> parts;
+	parts.emplace(GL_FRAGMENT_SHADER, std::move(fs_template_parts));
+	program_ = context.buffer_template().compile(std::move(parts));
 
 	// Use the program
 	program_.use();
