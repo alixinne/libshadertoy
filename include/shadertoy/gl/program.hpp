@@ -6,6 +6,15 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+#include <glm/mat2x2.hpp>
+#include <glm/mat3x3.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/mat2x3.hpp>
+#include <glm/mat3x2.hpp>
+#include <glm/mat2x4.hpp>
+#include <glm/mat4x2.hpp>
+#include <glm/mat3x4.hpp>
+#include <glm/mat4x3.hpp>
 
 namespace shadertoy
 {
@@ -62,6 +71,30 @@ namespace gl
 	 */
 	class shadertoy_EXPORT uniform_location
 	{
+		template<typename Base, typename Ptr>
+		inline bool set_program_value(void (*SetterFunction)(GLuint, GLint, GLsizei, const Base *), size_t count, const Ptr *v) const
+		{
+			if (is_active())
+			{
+				gl_call(SetterFunction, program_, location_, count, reinterpret_cast<const Base *>(v));
+				return true;
+			}
+
+			return false;
+		}
+
+		template<typename Base, typename Ptr>
+		inline bool set_program_matrix(void (*SetterFunction)(GLuint, GLint, GLsizei, GLboolean, const Base *), size_t count, const Ptr *v) const
+		{
+			if (is_active())
+			{
+				gl_call(SetterFunction, program_, location_, count, GL_FALSE, reinterpret_cast<const Base *>(v));
+				return true;
+			}
+
+			return false;
+		}
+
 	public:
 		/**
 		 * @brief Initialize a new instance of the UniformLocation class.
@@ -80,40 +113,18 @@ namespace gl
 		bool is_active() const;
 
 		/**
-		 * @brief glProgramUniform1i
+		 * @brief glProgramUniformNT
 		 *
-		 * @param  v0 v0
-		 * @return    true if the value was set, false otherwise
-		 */
-		bool set_value(const GLint &v0) const;
-		/**
-		 * @brief glProgramUniform1f
+		 * Implements glProgramUniform for the generic type T with N components
 		 *
-		 * @param  v0 v0
-		 * @return    true if the value was set, false otherwise
+		 * @param  v Value to set
+		 * @return true if the value was set, false otherwise
 		 */
-		bool set_value(const GLfloat &v0) const;
-		/**
-		 * @brief glProgramUniform2f
-		 *
-		 * @param  v  v0 and v1 as a vec2
-		 * @return    true if the value was set, false otherwise
-		 */
-		bool set_value(const glm::vec2 &v) const;
-		/**
-		 * @brief glProgramUniform3f
-		 *
-		 * @param  v  v0 to v2 as a vec3
-		 * @return    true if the value was set, false otherwise
-		 */
-		bool set_value(const glm::vec3 &v) const;
-		/**
-		 * @brief glProgramUniform4f
-		 *
-		 * @param  v  v0 to v4 as a vec4
-		 * @return    true if the value was set, false otherwise
-		 */
-		bool set_value(const glm::vec4 &v) const;
+		template<typename T>
+		bool set_value(const T &v) const
+		{
+			return set_value(1, &v);
+		}
 
 		/**
 		 * @brief glProgramUniform1iv
@@ -122,7 +133,39 @@ namespace gl
 		 * @param  v0    v0
 		 * @return       true if the value was set, false otherwise
 		 */
-		bool set_value(size_t count, const GLint *v0) const;
+		inline bool set_value(size_t count, const GLint *v0) const
+		{ return set_program_value(glProgramUniform1iv, count, v0); }
+
+		/**
+		 * @brief glProgramUniform2iv
+		 *
+		 * @param  count count
+		 * @param  v     v
+		 * @return       true if the value was set, false otherwise
+		 */
+		inline bool set_value(size_t count, const glm::ivec2 *v) const
+		{ return set_program_value(glProgramUniform2iv, count, v); }
+
+		/**
+		 * @brief glProgramUniform3iv
+		 *
+		 * @param  count count
+		 * @param  v     v
+		 * @return       true if the value was set, false otherwise
+		 */
+		inline bool set_value(size_t count, const glm::ivec3 *v) const
+		{ return set_program_value(glProgramUniform3iv, count, v); }
+
+		/**
+		 * @brief glProgramUniform4iv
+		 *
+		 * @param  count count
+		 * @param  v     v
+		 * @return       true if the value was set, false otherwise
+		 */
+		inline bool set_value(size_t count, const glm::ivec4 *v) const
+		{ return set_program_value(glProgramUniform4iv, count, v); }
+
 		/**
 		 * @brief glProgramUniform1fv
 		 *
@@ -130,31 +173,178 @@ namespace gl
 		 * @param  v0    v0
 		 * @return       true if the value was set, false otherwise
 		 */
-		bool set_value(size_t count, const GLfloat *v0) const;
+		inline bool set_value(size_t count, const GLfloat *v0) const
+		{ return set_program_value(glProgramUniform1fv, count, v0); }
+
 		/**
 		 * @brief glProgramUniform2fv
 		 *
 		 * @param  count count
-		 * @param  v     v0, v1
+		 * @param  v     v
 		 * @return       true if the value was set, false otherwise
 		 */
-		bool set_value(size_t count, const glm::vec2 *v) const;
+		inline bool set_value(size_t count, const glm::vec2 *v) const
+		{ return set_program_value(glProgramUniform2fv, count, v); }
+
 		/**
 		 * @brief glProgramUniform3fv
 		 *
 		 * @param  count count
-		 * @param  v     v0, v1, v2
+		 * @param  v     v
 		 * @return       true if the value was set, false otherwise
 		 */
-		bool set_value(size_t count, const glm::vec3 *v) const;
+		inline bool set_value(size_t count, const glm::vec3 *v) const
+		{ return set_program_value(glProgramUniform3fv, count, v); }
+
 		/**
 		 * @brief glProgramUniform4fv
 		 *
 		 * @param  count count
-		 * @param  v     v0, v1, v2, v3
+		 * @param  v     v
 		 * @return       true if the value was set, false otherwise
 		 */
-		bool set_value(size_t count, const glm::vec4 *v) const;
+		inline bool set_value(size_t count, const glm::vec4 *v) const
+		{ return set_program_value(glProgramUniform4fv, count, v); }
+
+		/**
+		 * @brief glProgramUniform1uiv
+		 *
+		 * @param  count count
+		 * @param  v0    v0
+		 * @return       true if the value was set, false otherwise
+		 */
+		inline bool set_value(size_t count, const GLuint *v0) const
+		{ return set_program_value(glProgramUniform1uiv, count, v0); }
+
+		/**
+		 * @brief glProgramUniform2uiv
+		 *
+		 * @param  count count
+		 * @param  v     v
+		 * @return       true if the value was set, false otherwise
+		 */
+		inline bool set_value(size_t count, const glm::uvec2 *v) const
+		{ return set_program_value(glProgramUniform2uiv, count, v); }
+
+		/**
+		 * @brief glProgramUniform3uiv
+		 *
+		 * @param  count count
+		 * @param  v     v
+		 * @return       true if the value was set, false otherwise
+		 */
+		inline bool set_value(size_t count, const glm::uvec3 *v) const
+		{ return set_program_value(glProgramUniform3uiv, count, v); }
+
+		/**
+		 * @brief glProgramUniform4uiv
+		 *
+		 * @param  count count
+		 * @param  v     v
+		 * @return       true if the value was set, false otherwise
+		 */
+		inline bool set_value(size_t count, const glm::uvec4 *v) const
+		{ return set_program_value(glProgramUniform4uiv, count, v); }
+
+		/**
+		 * @brief glProgramUniformMatrix2fv
+		 *
+		 * @param count count
+		 * @param v     v
+		 * @return      true if the value was set, false otherwise
+		 */
+		inline bool set_value(size_t count, const glm::mat2 *v) const
+		{ return set_program_matrix(glProgramUniformMatrix2fv, count, v); }
+
+		/**
+		 * @brief glProgramUniformMatrix3fv
+		 *
+		 * @param count count
+		 * @param v     v
+		 * @return      true if the value was set, false otherwise
+		 */
+		inline bool set_value(size_t count, const glm::mat3 *v) const
+		{ return set_program_matrix(glProgramUniformMatrix3fv, count, v); }
+
+		/**
+		 * @brief glProgramUniformMatrix4fv
+		 *
+		 * @param count count
+		 * @param v     v
+		 * @return      true if the value was set, false otherwise
+		 */
+		inline bool set_value(size_t count, const glm::mat4 *v) const
+		{ return set_program_matrix(glProgramUniformMatrix4fv, count, v); }
+
+		/**
+		 * @brief glProgramUniformMatrix2x3fv
+		 *
+		 * @param count count
+		 * @param v     v
+		 * @return      true if the value was set, false otherwise
+		 */
+		inline bool set_value(size_t count, const glm::mat2x3 *v) const
+		{ return set_program_matrix(glProgramUniformMatrix2x3fv, count, v); }
+
+		/**
+		 * @brief glProgramUniformMatrix3x2fv
+		 *
+		 * @param count count
+		 *
+		 * @param v     v
+		 * @return      true if the value was set, false otherwise
+		 *
+		 */
+		inline bool set_value(size_t count, const glm::mat3x2 *v) const
+		{ return set_program_matrix(glProgramUniformMatrix3x2fv, count, v); }
+
+		/**
+		 * @brief glProgramUniformMatrix2x4fv
+		 *
+		 * @param count count
+		 *
+		 * @param v     v
+		 * @return      true if the value was set, false otherwise
+		 *
+		 */
+		inline bool set_value(size_t count, const glm::mat2x4 *v) const
+		{ return set_program_matrix(glProgramUniformMatrix2x4fv, count, v); }
+
+		/**
+		 * @brief glProgramUniformMatrix4x2fv
+		 *
+		 * @param count count
+		 *
+		 * @param v     v
+		 * @return      true if the value was set, false otherwise
+		 *
+		 */
+		inline bool set_value(size_t count, const glm::mat4x2 *v) const
+		{ return set_program_matrix(glProgramUniformMatrix4x2fv, count, v); }
+
+		/**
+		 * @brief glProgramUniformMatrix3x4fv
+		 *
+		 * @param count count
+		 *
+		 * @param v     v
+		 * @return      true if the value was set, false otherwise
+		 *
+		 */
+		inline bool set_value(size_t count, const glm::mat3x4 *v) const
+		{ return set_program_matrix(glProgramUniformMatrix3x4fv, count, v); }
+
+		/**
+		 * @brief glProgramUniformMatrix4x3fv
+		 *
+		 * @param count count
+		 *
+		 * @param v     v
+		 * @return      true if the value was set, false otherwise
+		 *
+		 */
+		inline bool set_value(size_t count, const glm::mat4x3 *v) const
+		{ return set_program_matrix(glProgramUniformMatrix4x3fv, count, v); }
 
 	private:
 		/// Program id

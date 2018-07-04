@@ -28,6 +28,11 @@ typedef std::tuple<std::string, std::string> glsl_type_info;
 struct shadertoy_EXPORT dynamic_shader_inputs_glsl_type_visitor : public boost::static_visitor<glsl_type_info>
 {
 	/** @cond NODOC */
+	inline glsl_type_info operator()(bool) const { return std::make_tuple("bool", ""); }
+	inline glsl_type_info operator()(glm::bvec2) const { return std::make_tuple("bvec2", ""); }
+	inline glsl_type_info operator()(glm::bvec3) const { return std::make_tuple("bvec3", ""); }
+	inline glsl_type_info operator()(glm::bvec4) const { return std::make_tuple("bvec4", ""); }
+
 	inline glsl_type_info operator()(int) const { return std::make_tuple("int", ""); }
 	inline glsl_type_info operator()(glm::ivec2) const { return std::make_tuple("ivec2", ""); }
 	inline glsl_type_info operator()(glm::ivec3) const { return std::make_tuple("ivec3", ""); }
@@ -42,6 +47,16 @@ struct shadertoy_EXPORT dynamic_shader_inputs_glsl_type_visitor : public boost::
 	inline glsl_type_info operator()(glm::uvec2) const { return std::make_tuple("uvec2", ""); }
 	inline glsl_type_info operator()(glm::uvec3) const { return std::make_tuple("uvec3", ""); }
 	inline glsl_type_info operator()(glm::uvec4) const { return std::make_tuple("uvec4", ""); }
+
+	inline glsl_type_info operator()(glm::mat2) const { return std::make_tuple("mat2", ""); }
+	inline glsl_type_info operator()(glm::mat3) const { return std::make_tuple("mat3", ""); }
+	inline glsl_type_info operator()(glm::mat4) const { return std::make_tuple("mat4", ""); }
+	inline glsl_type_info operator()(glm::mat2x3) const { return std::make_tuple("mat2x3", ""); }
+	inline glsl_type_info operator()(glm::mat3x2) const { return std::make_tuple("mat3x2", ""); }
+	inline glsl_type_info operator()(glm::mat2x4) const { return std::make_tuple("mat2x4", ""); }
+	inline glsl_type_info operator()(glm::mat4x2) const { return std::make_tuple("mat4x2", ""); }
+	inline glsl_type_info operator()(glm::mat3x4) const { return std::make_tuple("mat3x4", ""); }
+	inline glsl_type_info operator()(glm::mat4x3) const { return std::make_tuple("mat4x3", ""); }
 
 	template<class T, std::size_t N>
 	glsl_type_info operator()(const std::array<T, N> &) const {
