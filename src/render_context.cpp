@@ -111,27 +111,4 @@ std::shared_ptr<members::basic_member> render_context::render(swap_chain &chain)
 	return chain.render(*this);
 }
 
-void render_context::render_screen_quad() const
-{
-	// Bind VAO
-	const auto &quad(screen_quad());
-	const auto &vao(quad.vertex_array());
-	auto sqa_bind(gl::get_bind_guard(vao));
-	quad.draw();
-}
-
-void render_context::render_screen_quad(const gl::query &timerQuery) const
-{
-	// Bind VAO
-	const auto &quad(screen_quad());
-	const auto &vao(quad.vertex_array());
-	auto sqa_bind(gl::get_bind_guard(vao));
-
-	timerQuery.begin(GL_TIME_ELAPSED);
-
-	quad.draw();
-
-	timerQuery.end(GL_TIME_ELAPSED);
-}
-
 // vim: cino=

@@ -20,12 +20,13 @@ toy_buffer::toy_buffer(const std::string &id)
 
 void toy_buffer::init_geometry(const render_context &context, const io_resource &io)
 {
-	// Nothing to do, the geometry is managed by context
+	// Just access the quad geometry so it is loaded now instead of during rendering
+	context.screen_quad();
 }
 
 void toy_buffer::render_geometry(const render_context &context, const io_resource &io)
 {
 	// Render the program on a quad
-	context.render_screen_quad(time_delta_query());
+	context.screen_quad().render(time_delta_query());
 }
 

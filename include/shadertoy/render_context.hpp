@@ -173,19 +173,6 @@ public:
 	 */
 	inline const std::shared_ptr<inputs::error_input> &error_input() const
 	{ return error_input_; }
-
-	/**
-	 * @brief Render a screen quad using the current context
-	 */
-	void render_screen_quad() const;
-
-	/**
-	 * @brief Render a screen quad using the current context
-	 *
-	 * @param timerQuery Query object to use for measuring the runtime of the
-	 *                   draw call.
-	 */
-	void render_screen_quad(const gl::query &timerQuery) const;
 };
 
 }

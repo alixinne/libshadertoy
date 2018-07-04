@@ -30,7 +30,7 @@ void screen_member::render_member(const swap_chain &chain, const render_context 
 	texptr->bind_unit(0);
 	sampler_.bind(0);
 
-	context.render_screen_quad();
+	context.screen_quad().render();
 }
 
 void screen_member::init_member(const swap_chain &chain, const render_context &context)

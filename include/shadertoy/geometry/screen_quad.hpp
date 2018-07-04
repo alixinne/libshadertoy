@@ -3,6 +3,8 @@
 
 #include "shadertoy/pre.hpp"
 
+#include "shadertoy/geometry/basic_geometry.hpp"
+
 namespace shadertoy
 {
 namespace geometry
@@ -11,7 +13,7 @@ namespace geometry
 /**
  * @brief Represents the geometry and bindings for a screen quad
  */
-class shadertoy_EXPORT screen_quad
+class shadertoy_EXPORT screen_quad : public basic_geometry
 {
 	/// Vertex array object
 	gl::vertex_array quad_array_;
@@ -26,19 +28,10 @@ public:
 	 */
 	screen_quad();
 
-	/**
-	 * @brief Get the VAO to bind for rendering the geometry
-	 *
-	 * @return Reference to the VAO to bind to
-	 */
-	inline const gl::vertex_array &vertex_array() const
+	inline const gl::vertex_array &vertex_array() const final
 	{ return quad_array_; }
 
-	/**
-	 * @brief Renders the geometry assuming the VAO returned by screen_quad#vertex_array
-	 *        is currently bound.
-	 */
-	void draw() const;
+	void draw() const final;
 };
 }
 }
