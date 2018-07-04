@@ -61,6 +61,7 @@ void program_template::compile(GLenum type)
 	shader_compiler::compile(so, sources);
 
 	// Compilation succeeded, add to cache
+	compiled_shaders_.erase(type);
 	compiled_shaders_.emplace(type, std::move(so));
 }
 
