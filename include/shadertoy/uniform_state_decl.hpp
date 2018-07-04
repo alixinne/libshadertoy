@@ -5,13 +5,13 @@
  */
 #define DECLARE_UNIFORM(type, name, glsl) shadertoy_EXPORT extern const char name ## _name []; \
 										  shadertoy_EXPORT extern const char name ## _glsl_type_name []; \
-										  typedef shader_input<name ## _name, name ## _glsl_type_name, type> name
+										  typedef shadertoy::shader_input<name ## _name, name ## _glsl_type_name, type> name
 /**
  * @brief          Helper macro to declare a uniform instance as an array
  */
 #define DECLARE_UNIFORM_N(type, name, n, glsl) shadertoy_EXPORT extern const char name ## _name []; \
 											   shadertoy_EXPORT extern const char name ## _glsl_type_name []; \
-											   typedef shader_input<name ## _name, name ## _glsl_type_name, type, n> name
+											   typedef shadertoy::shader_input<name ## _name, name ## _glsl_type_name, type, n> name
 
 /**
  * @brief          Helper macro to declare a dynamic uniform block
