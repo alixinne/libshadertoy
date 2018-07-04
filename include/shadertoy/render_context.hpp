@@ -77,10 +77,10 @@ namespace shadertoy
 class shadertoy_EXPORT render_context
 {
 	/// Program for screen quad
-	gl::program screen_prog_;
+	mutable std::unique_ptr<gl::program> screen_prog_;
 
 	/// Screen quad geometry
-	geometry::screen_quad screen_quad_;
+	mutable std::unique_ptr<geometry::screen_quad> screen_quad_;
 
 	/// Uniform state
 	shader_inputs_t state_;
@@ -102,8 +102,14 @@ public:
 	 *
 	 * @return     Reference to the screen program object
 	 */
-	inline const gl::program &screen_prog() const
-	{ return screen_prog_; }
+	const gl::program &screen_prog() const;
+
+	/**
+	 * @brief      Get the screen quad object
+	 *
+	 * @return     Reference to the screen quad object
+	 */
+	const geometry::screen_quad &screen_quad() const;
 
 	/**
 	 * @brief        Initialize the given swap chain

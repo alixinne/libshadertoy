@@ -50,17 +50,8 @@ render_context::render_context()
 		->definitions()
 		.insert(std::make_pair<std::string, std::string>("LIBSHADERTOY", "1"));
 
-	log::shadertoy()->trace("Compiling screen programs for context {}", (void*)this);
-
 	// Compile screen quad vertex shader
 	buffer_template_.compile(GL_VERTEX_SHADER);
-
-	// Compile screen program
-	std::map<GLenum, compiler::shader_template> overrides;
-	overrides.emplace(GL_FRAGMENT_SHADER, compiler::shader_template(
-		compiler::template_part("shadertoy:screenquad", std::string(screenQuad_fsh, screenQuad_fsh + screenQuad_fsh_size)
-	)));
-	screen_prog_ = buffer_template_.compile(overrides);
 
 	// Set uniform texture units
 	state_.get<iChannel0>() = 0;
@@ -70,6 +61,35 @@ render_context::render_context()
 
 	state_.get<iChannelTime>() = { 0.f, 0.f, 0.f, 0.f };
 	state_.get<iSampleRate>() = 48000.f;
+}
+
+const gl::program &render_context::screen_prog() const
+{
+	if (!screen_prog_)
+	{
+		log::shadertoy()->trace("Compiling screen programs for context {}", (void*)this);
+
+		// Compile screen program
+		std::map<GLenum, compiler::shader_template> overrides;
+		overrides.emplace(GL_FRAGMENT_SHADER, compiler::shader_template(
+			compiler::template_part("shadertoy:screenquad", std::string(screenQuad_fsh, screenQuad_fsh + screenQuad_fsh_size)
+		)));
+
+		screen_prog_ = std::make_unique<gl::program>(buffer_template_.compile(overrides));
+	}
+
+	return *screen_prog_;
+}
+
+const geometry::screen_quad &render_context::screen_quad() const
+{
+	if (!screen_quad_)
+	{
+		log::shadertoy()->trace("Initializing screen quad geometry for {}", (void*)this);
+		screen_quad_ = std::make_unique<geometry::screen_quad>();
+	}
+
+	return *screen_quad_;
 }
 
 void render_context::init(swap_chain &chain) const
@@ -94,20 +114,22 @@ std::shared_ptr<members::basic_member> render_context::render(swap_chain &chain)
 void render_context::render_screen_quad() const
 {
 	// Bind VAO
-	const auto &vao(screen_quad_.vertex_array());
+	const auto &quad(screen_quad());
+	const auto &vao(quad.vertex_array());
 	auto sqa_bind(gl::get_bind_guard(vao));
-	screen_quad_.draw();
+	quad.draw();
 }
 
 void render_context::render_screen_quad(const gl::query &timerQuery) const
 {
 	// Bind VAO
-	const auto &vao(screen_quad_.vertex_array());
+	const auto &quad(screen_quad());
+	const auto &vao(quad.vertex_array());
 	auto sqa_bind(gl::get_bind_guard(vao));
 
 	timerQuery.begin(GL_TIME_ELAPSED);
 
-	screen_quad_.draw();
+	quad.draw();
 
 	timerQuery.end(GL_TIME_ELAPSED);
 }
