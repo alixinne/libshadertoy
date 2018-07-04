@@ -1,6 +1,8 @@
 #ifndef _SHADERTOY_GL_BIND_GUARD_HPP_
 #define _SHADERTOY_GL_BIND_GUARD_HPP_
 
+#include <tuple>
+
 namespace shadertoy
 {
 namespace gl
