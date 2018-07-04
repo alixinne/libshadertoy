@@ -12,7 +12,7 @@ if (NOT EPOXY_FOUND)
 endif()
 
 if (NOT GLFW3_FOUND)
-	find_package(GLFW3)
+	find_package(GLFW3 QUIET)
 
 	if (NOT GLFW3_FOUND)
 		pkg_search_module(GLFW3 glfw3)
