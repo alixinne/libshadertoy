@@ -23,6 +23,12 @@ namespace shadertoy
 		class program_template;
 	}
 
+	namespace geometry
+	{
+		class basic_geometry;
+		class screen_quad;
+	}
+
 	/// OpenGL wrapper helpers
 	namespace gl
 	{

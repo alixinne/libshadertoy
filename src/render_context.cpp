@@ -18,6 +18,8 @@
 #include "shadertoy/members/buffer_member.hpp"
 #include "shadertoy/swap_chain.hpp"
 
+#include "shadertoy/geometry/screen_quad.hpp"
+
 using namespace shadertoy;
 using namespace shadertoy::utils;
 using shadertoy::gl::gl_call;

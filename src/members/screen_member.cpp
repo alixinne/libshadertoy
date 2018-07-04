@@ -10,6 +10,8 @@
 #include "shadertoy/swap_chain.hpp"
 #include "shadertoy/render_context.hpp"
 
+#include "shadertoy/geometry/screen_quad.hpp"
+
 using namespace shadertoy;
 using namespace shadertoy::members;
 

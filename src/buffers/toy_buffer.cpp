@@ -9,6 +9,8 @@
 #include "shadertoy/buffers/toy_buffer.hpp"
 #include "shadertoy/render_context.hpp"
 
+#include "shadertoy/geometry/screen_quad.hpp"
+
 using namespace shadertoy;
 using namespace shadertoy::buffers;
 using shadertoy::gl::gl_call;
