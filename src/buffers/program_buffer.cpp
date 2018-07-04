@@ -86,22 +86,17 @@ void program_buffer::init_contents(const render_context &context, const io_resou
 
 void program_buffer::render_gl_contents(const render_context &context, const io_resource &io)
 {
-	// Compute the rendering size
-	rsize size(io.render_size()->resolve());
-
-	// Set viewport
-	gl_call(glViewport, 0, 0, size.width, size.height);
-
-	// Prepare the render target
-	gl_call(glClearColor, 0.f, 0.f, 0.f, 1.f);
-	gl_call(glClear, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// Compute the rendering size from the current viewport
+	GLint viewport[4]; // x, y, width, height
+	gl_call(glGetIntegerv, GL_VIEWPORT, &viewport[0]);
+	rsize size(viewport[2], viewport[3]);
 
 	// Setup program and its uniforms
 	program_.use();
 
 	// Apply context-level uniforms
 	for (auto &inputs : bound_inputs_)
-        inputs->apply();
+		inputs->apply();
 
 	// Override values in bound inputs 0 (ShaderToy inputs)
 	auto &state(*static_cast<shader_inputs_t::bound_inputs*>(bound_inputs_[0].get()));
