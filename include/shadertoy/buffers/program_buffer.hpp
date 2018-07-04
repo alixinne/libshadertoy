@@ -29,6 +29,9 @@ private:
 	/// Inputs for this shader
 	std::deque<program_input> inputs_;
 
+	/// Alternative template to use when generating the program for this buffer
+	std::shared_ptr<compiler::program_template> override_program_;
+
 	/// Template part that this buffer should provide to the shader template
 	std::unique_ptr<compiler::basic_part> source_;
 
@@ -97,6 +100,23 @@ public:
 	 */
 	inline std::deque<program_input> &inputs()
 	{ return inputs_; }
+
+	/**
+	 * @brief      Get the current override program template for this buffer
+	 *
+	 * @return     Pointer to the override program, or null if this buffer is using the default program template
+	 */
+	inline const std::shared_ptr<compiler::program_template> &override_program() const
+	{ return override_program_; }
+
+	/**
+	 * @brief      Set the current override program template for this buffer
+	 *
+	 * @param new_program Pointer to the override program template, or null if
+	 *                    this buffer should use the default program template
+	 */
+	inline void override_program(std::shared_ptr<compiler::program_template> new_program)
+	{ override_program_ = new_program; }
 
 	/**
 	 * @brief       Get a reference to the current source part for this buffer

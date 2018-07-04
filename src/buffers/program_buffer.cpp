@@ -49,7 +49,7 @@ void program_buffer::init_contents(const render_context &context, const io_resou
 	std::map<GLenum, std::vector<std::unique_ptr<compiler::basic_part>>> parts;
 	parts.emplace(GL_FRAGMENT_SHADER, std::move(fs_template_parts));
 
-	auto &buffer_template(context.buffer_template());
+	const auto &buffer_template(override_program_ ? *override_program_ : context.buffer_template());
 	program_ = buffer_template.compile(std::move(parts));
 
 	// Use the program

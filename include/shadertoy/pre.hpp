@@ -19,6 +19,8 @@ namespace shadertoy
 		class basic_part;
 		class template_part;
 		class file_part;
+
+		class program_template;
 	}
 
 	/// OpenGL wrapper helpers
