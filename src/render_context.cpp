@@ -70,47 +70,6 @@ render_context::render_context()
 
 	state_.get<iChannelTime>() = { 0.f, 0.f, 0.f, 0.f };
 	state_.get<iSampleRate>() = 48000.f;
-
-	// Prepare screen quad geometry
-	GLfloat coords[] = {
-		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-		1.0f, -1.0f, 0.0f, 1.0f, 0.0f
-	};
-
-	GLuint indices[] = {
-		0, 1, 2,
-		0, 2, 3
-	};
-
-	// Bind VAO
-	screen_quad_array_.bind();
-
-	// Setup coords
-	screen_quad_corners_.data(sizeof(coords), static_cast<const GLvoid *>(&coords[0]), GL_STATIC_DRAW);
-
-	// Setup indices
-	screen_quad_indices_.data(sizeof(indices), static_cast<const GLvoid *>(&indices[0]), GL_STATIC_DRAW);
-
-	// Setup position and texCoord attributes for shaders
-	screen_quad_corners_.bind(GL_ARRAY_BUFFER);
-	screen_quad_indices_.bind(GL_ELEMENT_ARRAY_BUFFER);
-
-	// bind input "position" to vertex locations (3 floats)
-	gl::attrib_location position(0);
-	position.vertex_pointer(3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)0);
-	position.enable_vertex_array();
-
-	// bind input "texCoord" to vertex texture coordinates (2 floats)
-	gl::attrib_location texCoord(1);
-	texCoord.vertex_pointer(2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat)));
-	texCoord.enable_vertex_array();
-
-	// Unbind
-	screen_quad_array_.unbind();
-	screen_quad_indices_.unbind(GL_ELEMENT_ARRAY_BUFFER);
-	screen_quad_corners_.unbind(GL_ARRAY_BUFFER);
 }
 
 void render_context::init(swap_chain &chain) const
@@ -135,19 +94,20 @@ std::shared_ptr<members::basic_member> render_context::render(swap_chain &chain)
 void render_context::render_screen_quad() const
 {
 	// Bind VAO
-	auto sqa_bind(gl::get_bind_guard(screen_quad_array_));
-
-	gl_call(glDrawElements, GL_TRIANGLES, 3 * 2, GL_UNSIGNED_INT, nullptr);
+	const auto &vao(screen_quad_.vertex_array());
+	auto sqa_bind(gl::get_bind_guard(vao));
+	screen_quad_.draw();
 }
 
 void render_context::render_screen_quad(const gl::query &timerQuery) const
 {
 	// Bind VAO
-	auto sqa_bind(gl::get_bind_guard(screen_quad_array_));
+	const auto &vao(screen_quad_.vertex_array());
+	auto sqa_bind(gl::get_bind_guard(vao));
 
 	timerQuery.begin(GL_TIME_ELAPSED);
 
-	gl_call(glDrawElements, GL_TRIANGLES, 3 * 2, GL_UNSIGNED_INT, nullptr);
+	screen_quad_.draw();
 
 	timerQuery.end(GL_TIME_ELAPSED);
 }
