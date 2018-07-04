@@ -45,6 +45,7 @@
 
 #include "shadertoy/buffers/program_buffer.hpp"
 #include "shadertoy/buffers/toy_buffer.hpp"
+#include "shadertoy/buffers/geometry_buffer.hpp"
 
 #include "shadertoy/render_context.hpp"
 #include "shadertoy/shader_compiler.hpp"
