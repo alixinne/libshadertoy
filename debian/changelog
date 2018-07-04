@@ -10,6 +10,7 @@ libshadertoy (1.0.0~rc5) UNRELEASED; urgency=medium
   * Added more usage checks
   * Added more logging
   * Add option for rendering directly to the default framebuffer
+  * Refactor public API to be more independent from Shadertoy-like buffers
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Mon, 25 Jun 2018 11:15:12 +0200
 
