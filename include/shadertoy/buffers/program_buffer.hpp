@@ -29,8 +29,8 @@ private:
 	/// Inputs for this shader
 	std::deque<program_input> inputs_;
 
-	/// List of source files
-	std::vector<std::string> source_files_;
+	/// Template part that this buffer should provide to the shader template
+	std::unique_ptr<compiler::basic_part> source_;
 
 protected:
 	/**
@@ -99,20 +99,37 @@ public:
 	{ return inputs_; }
 
 	/**
-	 * @brief     Get a reference to the source file list for this buffer
+	 * @brief       Get a reference to the current source part for this buffer
 	 *
-	 * @return    Reference to the source file for this buffer
+	 * @return      Pointer to the source part
 	 */
-	inline const std::vector<std::string> &source_files() const
-	{ return source_files_; }
+	inline const std::unique_ptr<compiler::basic_part> &source() const
+	{ return source_; }
 
 	/**
-	 * @brief     Get a reference to the source file list for this buffer
+	 * @brief       Set the sources for this buffer to the given part
 	 *
-	 * @return    Reference to the source file for this buffer
+	 * @param new_part New part to use as sources for this buffer
 	 */
-	inline std::vector<std::string> &source_files()
-	{ return source_files_; }
+	inline void source(std::unique_ptr<compiler::basic_part> new_part)
+	{ source_ = std::move(new_part); }
+
+	/**
+	 * @brief       Set the sources for this buffer from the given part
+	 *
+	 * @param new_source New source string to use for compiling this buffer
+	 */
+	void source(const std::string &new_source);
+
+	/**
+	 * @brief       Set the sources for this buffer from the given part from a file
+	 *
+	 * The target file will be read everytime this buffer is being compiled. Use
+	 * program_buffer#source if you want to cache the file's contents.
+	 *
+	 * @param new_file New file to load the sources from
+	 */
+	void source_file(const std::string &new_file);
 };
 }
 }

@@ -60,13 +60,13 @@ Json::Value json_get(CURL *curl, const std::string &url)
 	return result;
 }
 
-std::string to_buffer_name(const Json::Value &pass)
+std::string to_buffer_name(const std::string &shaderId, const Json::Value &pass)
 {
 	auto name(pass["name"].asString());
 	if (name.empty())
 		name = pass["type"].asString();
 	std::transform(name.begin(), name.end(), name.begin(), ::tolower);
-	return name;
+	return shaderId + "-" + name;
 }
 
 void apply_sampler_options(std::shared_ptr<shadertoy::inputs::basic_input> &buffer_input, const Json::Value &sampler)
@@ -145,7 +145,7 @@ void load_nonbuffer_input(std::shared_ptr<shadertoy::inputs::basic_input> &buffe
 }
 
 void load_buffer_input(std::shared_ptr<shadertoy::inputs::basic_input> &buffer_input, const Json::Value &input,
-					   std::map<std::string, std::shared_ptr<shadertoy::members::buffer_member>> known_buffers, int i)
+					   std::map<std::string, std::shared_ptr<shadertoy::members::buffer_member>> known_buffers, int i, const std::string &shaderId)
 {
 	auto &sampler(input["sampler"]);
 
@@ -154,6 +154,8 @@ void load_buffer_input(std::shared_ptr<shadertoy::inputs::basic_input> &buffer_i
 		std::string source = "Buf A";
 		source.back() = 'A' + (input["id"].asInt() - 257);
 		std::transform(source.begin(), source.end(), source.begin(), ::tolower);
+
+		source = shaderId + source;
 
 		u::log::shadertoy()->info("Pass {}, input {}: binding {} buffer", i, input["channel"].asInt(), source);
 
@@ -209,12 +211,13 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 		std::map<std::string, std::shared_ptr<shadertoy::members::buffer_member>> known_buffers;
 
 		// Create buffer configs for each render pass
+		auto imageBufferName(shaderId + "-image");
 		for (int i = 0; i < shaderSpec["Shader"]["renderpass"].size(); ++i)
 		{
 			auto &pass(shaderSpec["Shader"]["renderpass"][i]);
 
 			// Find buffer name
-			auto name(to_buffer_name(pass));
+			auto name(to_buffer_name(shaderId, pass));
 
 			// Skip if sound buffer
 			if (pass["type"].asString() == "sound")
@@ -231,18 +234,7 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 				buffer->inputs().emplace_back();
 
 			// Load code
-			std::stringstream sspath;
-			sspath << shaderId << "-" << i << ".glsl";
-			fs::path p(tmpdir / sspath.str());
-
-			if (!fs::exists(p))
-			{
-				std::ofstream ofs(p.string());
-				ofs << pass["code"].asString();
-				ofs.close();
-			}
-
-			buffer->source_files().push_back(p.string());
+			buffer->source(pass["code"].asString());
 
 			// Load inputs
 			for (int j = 0; j < pass["inputs"].size(); ++j)
@@ -256,7 +248,7 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 			auto member(shadertoy::members::make_buffer(buffer, shadertoy::make_size_ref(size), chain.internal_format(), chain.swap_policy()));
 			known_buffers.emplace(name, member);
 
-			if (name != "image")
+			if (name != imageBufferName)
 			{
 				// Add to chain
 				chain.push_back(member);
@@ -269,7 +261,7 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 			auto &pass(shaderSpec["Shader"]["renderpass"][i]);
 
 			// Find buffer name
-			auto name(to_buffer_name(pass));
+			auto name(to_buffer_name(shaderId, pass));
 
 			// Skip if sound buffer
 			if (pass["type"].asString() == "sound")
@@ -285,12 +277,12 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 				auto &input(pass["inputs"][j]);
 				auto channel_id(input["channel"].asInt());
 
-				load_buffer_input(buffer->inputs()[channel_id].input(), input, known_buffers, i);
+				load_buffer_input(buffer->inputs()[channel_id].input(), input, known_buffers, i, shaderId);
 			}
 		}
 
 		// Add the image buffer last
-		chain.push_back(known_buffers["image"]);
+		chain.push_back(known_buffers[imageBufferName]);
 	}
 	catch (std::exception &ex)
 	{

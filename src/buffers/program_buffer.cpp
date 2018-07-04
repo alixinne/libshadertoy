@@ -9,6 +9,7 @@
 #include "shadertoy/buffers/program_buffer.hpp"
 #include "shadertoy/render_context.hpp"
 
+#include "shadertoy/compiler/file_part.hpp"
 #include "shadertoy/compiler/input_part.hpp"
 #include "shadertoy/compiler/template_part.hpp"
 
@@ -23,8 +24,7 @@ using shadertoy::utils::log;
 program_buffer::program_buffer(const std::string &id)
 	: gl_buffer(id),
 	  bound_inputs_(),
-	  inputs_(),
-	  source_files_()
+	  inputs_()
 {
 }
 
@@ -42,20 +42,8 @@ void program_buffer::init_contents(const render_context &context, const io_resou
 
 	// Add the uniform inputs for this buffer
 	fs_template_parts.emplace_back(std::make_unique<compiler::input_part>("buffer:inputs", inputs_));
-	fs_template_parts.emplace_back(std::make_unique<compiler::template_part>(compiler::template_part::from_files("buffer:sources", source_files_)));
-
-	// Expensive log operation, only log if level is requiring it
-	if (log::shadertoy()->level() <= spdlog::level::info && !source_files_.empty())
-	{
-		std::stringstream ss;
-		for (auto &file : source_files_)
-			ss << file << ";";
-		auto str(ss.str());
-		log::shadertoy()->info("Loaded {} for {} ({})",
-							   std::string(str.begin(), str.end() - 1),
-							   id(),
-							   (void*)this);
-	}
+	if (source_)
+		fs_template_parts.emplace_back(source_->clone());
 
 	// Compile
 	std::map<GLenum, std::vector<std::unique_ptr<compiler::basic_part>>> parts;
@@ -146,3 +134,12 @@ void program_buffer::render_gl_contents(const render_context &context, const io_
 	render_geometry(context, io);
 }
 
+void program_buffer::source(const std::string &new_source)
+{
+	source_ = std::unique_ptr<compiler::basic_part>(std::make_unique<compiler::template_part>("buffer:sources", new_source));
+}
+
+void program_buffer::source_file(const std::string &new_file)
+{
+	source_ = std::unique_ptr<compiler::basic_part>(std::make_unique<compiler::file_part>("buffer:sources", new_file));
+}

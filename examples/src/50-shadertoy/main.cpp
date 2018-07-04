@@ -88,9 +88,7 @@ int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 				if (auto buffer_member = std::dynamic_pointer_cast<shadertoy::members::buffer_member>(member))
 				{
 					auto buffer(std::static_pointer_cast<shadertoy::buffers::toy_buffer>(buffer_member->buffer()));
-
-					auto &firstPath(buffer->source_files().front());
-					auto dumpPath(firstPath + std::string(".dump"));
+					auto dumpPath(buffer->id() + std::string(".dump"));
 
 					u::log::shadertoy()->info("Dumping {} to {}", buffer->id(), dumpPath);
 

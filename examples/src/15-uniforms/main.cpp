@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 
 			// Create the image buffer
 			auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image"));
-			imageBuffer->source_files().push_back("../shaders/shader-gradient-uniform.glsl");
+			imageBuffer->source_file("../shaders/shader-gradient-uniform.glsl");
 
 			// Add the image buffer to the swap chain
 			chain.emplace_back(imageBuffer, shadertoy::make_size_ref(ctx.render_size));

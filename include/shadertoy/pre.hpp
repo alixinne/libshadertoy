@@ -14,6 +14,13 @@ namespace shadertoy
 		class toy_buffer;
 	}
 
+	namespace compiler
+	{
+		class basic_part;
+		class template_part;
+		class file_part;
+	}
+
 	/// OpenGL wrapper helpers
 	namespace gl
 	{
