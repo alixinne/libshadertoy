@@ -295,7 +295,7 @@ install(DIRECTORY ${SPDLOG_DIR}/include/spdlog
 if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W2 /wd4275 /wd4251")
 else()
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-missing-braces -pedantic")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-missing-braces -Wno-attributes -pedantic")
 endif()
 
 # Documentation
