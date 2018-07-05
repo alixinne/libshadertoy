@@ -10,13 +10,13 @@ all its features:
 
 ```bash
 # Get repository GPG key
-wget -qO- https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master/pubkey.asc | sudo apt-key add -
+sudo apt-key adv --recv-keys --keyserver pool.sks-keyservers.net --recv 0xF35C413E
 
 # Add repository to apt config
 #  Debian Stretch
-sudo sh -c 'echo "deb https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master stretch/ main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
+sudo sh -c 'echo "deb https://dl.bintray.com/vtavernier/libshadertoy stretch main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
 #  Ubuntu Xenial (16.04)
-sudo sh -c 'echo "deb https://gitlab.inria.fr/vtaverni/libshadertoy-apt/raw/master xenial/ main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
+sudo sh -c 'echo "deb https://dl.bintray.com/vtavernier/libshadertoy xenial main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
 
 # Update and install
 sudo apt update
