@@ -47,14 +47,16 @@ endif()
 # Directories
 set(INCLUDE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SRC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(SHADERS_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/shaders)
 
 if (OpenGL_FOUND AND EPOXY_FOUND AND GLFW3_FOUND)
 	add_subdirectory(src/00-build)
 	add_subdirectory(src/10-gradient)
 	add_subdirectory(src/11-image)
 	add_subdirectory(src/15-uniforms)
+	add_subdirectory(src/20-geometry)
 else()
-	message(STATUS "Not building examples 00-build, 10-gradient, 11-image and 15-uniforms")
+	message(STATUS "Not building examples 00-build, 10-gradient, 11-image, 15-uniforms and 20-geometry")
 	message(STATUS "You might want to install libgl-mesa-dev, libepoxy-dev and libglfw-dev")
 endif()
 
