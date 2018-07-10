@@ -24,8 +24,23 @@ list(GET ST_VERSION_LIST 2 VERSION_PATCH)
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 mark_as_advanced(VERSION_MAJOR VERSION_MINOR VERSION_PATCH VERSION)
 
+# Check if we are running in standalone build or in-source
+if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
+	option(SHADERTOY_STANDALONE "Set to ON when libshadertoy is being built from source instead of in a project" ON)
+else()
+	option(SHADERTOY_STANDALONE "Set to ON when libshadertoy is being built from source instead of in a project" OFF)
+endif()
+
+if (SHADERTOY_STANDALONE)
+	set(SHADERTOY_VERSION_STANDALONE "Standalone build")
+	set(SHADERTOY_DEFAULT_TARGET_ARG "")
+else()
+	set(SHADERTOY_VERSION_STANDALONE "In-source build")
+	set(SHADERTOY_DEFAULT_TARGET_ARG EXCLUDE_FROM_ALL)
+endif()
+
 # Print a message with the version number
-message(STATUS "shadertoy v${ST_VERSION_FULL}")
+message(STATUS "shadertoy v${ST_VERSION_FULL} (${SHADERTOY_VERSION_STANDALONE})")
 
 # Project directories
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -100,7 +115,7 @@ set(shadertoy_INCLUDE_DIRS
 file(GLOB_RECURSE SHADERTOY_LIBRARY_HEADERS ${INCLUDE_DIR}/*.hpp)
 file(GLOB_RECURSE SHADERTOY_LIBRARY_SOURCES ${SRC_DIR}/*.cpp)
 
-add_library(shadertoy-objects OBJECT
+add_library(shadertoy-objects OBJECT EXCLUDE_FROM_ALL
 	${SHADERTOY_LIBRARY_HEADERS}
 	${SHADERTOY_LIBRARY_SOURCES}
 
@@ -108,6 +123,13 @@ add_library(shadertoy-objects OBJECT
 	${POLYMORPHIC_VALUE_INCLUDE}
 	${SPDLOG_MAIN_INCLUDE}
 	${URI_LIBRARY_MAIN_INCLUDE})
+
+# Enable warnings
+if(MSVC)
+	target_compile_options(shadertoy-objects PRIVATE /W2 /wd4275 /wd4251)
+else()
+	target_compile_options(shadertoy-objects PRIVATE -Wall -Wno-missing-braces -Wno-attributes -pedantic)
+endif()
 
 # Include directories
 target_include_directories(shadertoy-objects PRIVATE
@@ -179,7 +201,7 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 	message(STATUS "Creating target ${TARGET_NAME}")
 
 	# Main libshadertoy
-	add_library(${TARGET_NAME} ${LIBRARY_TYPE}
+	add_library(${TARGET_NAME} ${LIBRARY_TYPE} ${SHADERTOY_DEFAULT_TARGET_ARG}
 		$<TARGET_OBJECTS:shadertoy-objects>)
 
 	# Add UNWIND if found
@@ -218,84 +240,81 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 		SOVERSION ${VERSION_MAJOR}
 		VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
-	# Install target
-	install(TARGETS ${TARGET_NAME}
-			DESTINATION ${CMAKE_INSTALL_LIBDIR}
-			EXPORT shadertoy)
+	if (SHADERTOY_STANDALONE)
+		# Install target
+		install(TARGETS ${TARGET_NAME}
+				DESTINATION ${CMAKE_INSTALL_LIBDIR}
+				EXPORT shadertoy)
+	endif()
 endforeach()
 
 set_target_properties(shadertoy-shared PROPERTIES OUTPUT_NAME shadertoy)
 
-# Export targets
-export(EXPORT shadertoy FILE ${CMAKE_CURRENT_BINARY_DIR}/shadertoy.cmake)
+if (SHADERTOY_STANDALONE)
+	# Export targets
+	export(EXPORT shadertoy FILE ${CMAKE_CURRENT_BINARY_DIR}/shadertoy.cmake)
 
-# Export build package
-export(PACKAGE shadertoy)
+	# Export build package
+	export(PACKAGE shadertoy)
 
-# Install exports
-install(EXPORT shadertoy
-		COMPONENT shadertoy-dev
-		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/shadertoy)
+	# Install exports
+	install(EXPORT shadertoy
+			COMPONENT shadertoy-dev
+			DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/shadertoy)
 
-# Export header for shared
-generate_export_header(shadertoy-shared
-	BASE_NAME shadertoy
-	EXPORT_MACRO_NAME shadertoy_EXPORT
-	EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/shadertoy_export.h)
-target_compile_definitions(shadertoy-objects PUBLIC shadertoy_shared_EXPORTS)
+	# Export header for shared
+	generate_export_header(shadertoy-shared
+		BASE_NAME shadertoy
+		EXPORT_MACRO_NAME shadertoy_EXPORT
+		EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/shadertoy_export.h)
+	target_compile_definitions(shadertoy-objects PUBLIC shadertoy_shared_EXPORTS)
 
-# Configure the -config.cmake file
-configure_file(shadertoy-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake @ONLY)
-# Configure -version.cmake file
-write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config-version.cmake
-	VERSION ${VERSION}
-	COMPATIBILITY SameMajorVersion)
+	# Configure the -config.cmake file
+	configure_file(shadertoy-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake @ONLY)
+	# Configure -version.cmake file
+	write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config-version.cmake
+		VERSION ${VERSION}
+		COMPATIBILITY SameMajorVersion)
 
-# Install cmake config files
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake
-		${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config-version.cmake
-		COMPONENT shadertoy-dev
-		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/shadertoy)
+	# Install cmake config files
+	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake
+			${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config-version.cmake
+			COMPONENT shadertoy-dev
+			DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/shadertoy)
 
-# Install the examples
-install(DIRECTORY examples
-		COMPONENT shadertoy-examples
-		DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy
-		PATTERN ".idea" EXCLUDE
-		PATTERN "build" EXCLUDE
-		PATTERN "*.dump" EXCLUDE)
+	# Install the examples
+	install(DIRECTORY examples
+			COMPONENT shadertoy-examples
+			DESTINATION ${CMAKE_INSTALL_DATADIR}/shadertoy
+			PATTERN ".idea" EXCLUDE
+			PATTERN "build" EXCLUDE
+			PATTERN "*.dump" EXCLUDE)
 
-# Install headers
-install(FILES ${INCLUDE_DIR}/shadertoy.hpp
-		COMPONENT shadertoy-dev
-		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+	# Install headers
+	install(FILES ${INCLUDE_DIR}/shadertoy.hpp
+			COMPONENT shadertoy-dev
+			DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-file(GLOB SHADERTOY_HEADERS ${INCLUDE_DIR}/shadertoy/*.hpp)
-list(APPEND SHADERTOY_HEADERS
-		${CMAKE_CURRENT_BINARY_DIR}/shadertoy/shadertoy_export.h)
-install(FILES ${SHADERTOY_HEADERS}
-		COMPONENT shadertoy-dev
-		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
+	file(GLOB SHADERTOY_HEADERS ${INCLUDE_DIR}/shadertoy/*.hpp)
+	list(APPEND SHADERTOY_HEADERS
+			${CMAKE_CURRENT_BINARY_DIR}/shadertoy/shadertoy_export.h)
+	install(FILES ${SHADERTOY_HEADERS}
+			COMPONENT shadertoy-dev
+			DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
 
-file(GLOB SHADERTOY_HEADERS_DIRS RELATIVE ${INCLUDE_DIR}/shadertoy ${INCLUDE_DIR}/shadertoy/*)
-foreach(SHADERTOY_HEADERS_ITEM ${SHADERTOY_HEADERS_DIRS})
-	if(IS_DIRECTORY ${INCLUDE_DIR}/shadertoy/${SHADERTOY_HEADERS_ITEM})
-		file(GLOB SHADERTOY_HEADER_FILES ${INCLUDE_DIR}/shadertoy/${SHADERTOY_HEADERS_ITEM}/*.hpp)
-		install(FILES ${SHADERTOY_HEADER_FILES}
-			    COMPONENT shadertoy-dev
-				DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy/${SHADERTOY_HEADERS_ITEM})
-	endif()
-endforeach()
+	file(GLOB SHADERTOY_HEADERS_DIRS RELATIVE ${INCLUDE_DIR}/shadertoy ${INCLUDE_DIR}/shadertoy/*)
+	foreach(SHADERTOY_HEADERS_ITEM ${SHADERTOY_HEADERS_DIRS})
+		if(IS_DIRECTORY ${INCLUDE_DIR}/shadertoy/${SHADERTOY_HEADERS_ITEM})
+			file(GLOB SHADERTOY_HEADER_FILES ${INCLUDE_DIR}/shadertoy/${SHADERTOY_HEADERS_ITEM}/*.hpp)
+			install(FILES ${SHADERTOY_HEADER_FILES}
+				    COMPONENT shadertoy-dev
+					DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy/${SHADERTOY_HEADERS_ITEM})
+		endif()
+	endforeach()
 
-install(DIRECTORY ${SPDLOG_DIR}/include/spdlog
-		COMPONENT shadertoy-dev
-		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
-
-# Enable warnings
-if(MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W2 /wd4275 /wd4251")
-else()
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-missing-braces -Wno-attributes -pedantic")
+	install(DIRECTORY ${SPDLOG_DIR}/include/spdlog
+			COMPONENT shadertoy-dev
+			DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
 endif()
 
 # Documentation
