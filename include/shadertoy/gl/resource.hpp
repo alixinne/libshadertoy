@@ -124,7 +124,7 @@ namespace gl
 		 *
 		 * @throws error_type
 		 */
-		operator GLuint() const throw(error_type)
+		operator GLuint() const
 		{
 			if (!has_res_)
 			{
