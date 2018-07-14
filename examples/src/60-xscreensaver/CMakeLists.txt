@@ -7,6 +7,7 @@ add_executable(example60-xscreensaver
 	${SRC_ROOT}/test.cpp)
 
 target_include_directories(example60-xscreensaver PRIVATE
+	${ST_INC_DIR}
 	${INCLUDE_ROOT}/60-xscreensaver
 	${INCLUDE_ROOT}
 	${OPENGL_INCLUDE_DIRS}

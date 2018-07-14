@@ -5,6 +5,7 @@ add_executable(example11-image
 	${SRC_ROOT}/test.cpp)
 
 target_include_directories(example11-image PRIVATE
+	${ST_INC_DIR}
 	${INCLUDE_ROOT}
 	${OPENGL_INCLUDE_DIRS}
 	${EPOXY_INCLUDE_DIRS}

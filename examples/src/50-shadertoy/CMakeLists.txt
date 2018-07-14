@@ -6,6 +6,7 @@ add_executable(example50-shadertoy
 	${SRC_ROOT}/test.cpp)
 
 target_include_directories(example50-shadertoy PRIVATE
+	${ST_INC_DIR}
 	${INCLUDE_ROOT}
 	${OPENGL_INCLUDE_DIRS}
 	${EPOXY_INCLUDE_DIRS}

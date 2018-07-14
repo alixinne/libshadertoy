@@ -49,6 +49,16 @@ set(INCLUDE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SRC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(SHADERS_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/shaders)
 
+# Configure examples
+set(ST_INC_DIR ${CMAKE_CURRENT_BINARY_DIR})
+
+function(convert_to_cstring_literal var value)
+	string(REGEX REPLACE "([\\\$\"])" "\\\\\\1" escaped "${value}")
+	set("${var}" "\"${escaped}\"" PARENT_SCOPE)
+endfunction()
+convert_to_cstring_literal(ST_BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+configure_file(${INCLUDE_ROOT}/test_config.hpp.in ${ST_INC_DIR}/test_config.hpp)
+
 if (OpenGL_FOUND AND EPOXY_FOUND AND GLFW3_FOUND)
 	add_subdirectory(src/00-build)
 	add_subdirectory(src/10-gradient)

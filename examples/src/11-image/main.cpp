@@ -50,18 +50,18 @@ int main(int argc, char *argv[])
 
 			// Create an auxiliary buffer that renders a gradient
 			auto gradientBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("gradient"));
-			gradientBuffer->source_file("../shaders/shader-gradient.glsl");
+			gradientBuffer->source_file(ST_BASE_DIR "/shaders/shader-gradient.glsl");
 			auto buffer_input(std::make_shared<shadertoy::inputs::buffer_input>(chain.emplace_back(gradientBuffer, shadertoy::make_size(shadertoy::rsize(16, 16)), GL_R8)));
 
 			// Create the image buffer
 			auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image"));
-			imageBuffer->source_file("../shaders/shader-image.glsl");
+			imageBuffer->source_file(ST_BASE_DIR "/shaders/shader-image.glsl");
 
 			shadertoy::utils::input_loader loader;
 
-			imageBuffer->inputs().emplace_back(loader.create("file:../images/vase_rect.exr", false)); // implicit iChannel0
-			imageBuffer->inputs().emplace_back(loader.create("file:../images/vase_rect.png", false)); // implicit iChannel1
-			imageBuffer->inputs().emplace_back(loader.create("file:../images/vase_rect.jpg", false)); // implicit iChannel2
+			imageBuffer->inputs().emplace_back(loader.create("file:///" ST_BASE_DIR "/images/vase_rect.exr", false)); // implicit iChannel0
+			imageBuffer->inputs().emplace_back(loader.create("file:///" ST_BASE_DIR "/images/vase_rect.png", false)); // implicit iChannel1
+			imageBuffer->inputs().emplace_back(loader.create("file:///" ST_BASE_DIR "/images/vase_rect.jpg", false)); // implicit iChannel2
 			imageBuffer->inputs().emplace_back("noiseChannel", loader.create("noise:?width=64&height=64"));
 			imageBuffer->inputs().emplace_back("checkerChannel", loader.create("checker:?width=64&height=64&size=4"));
 			imageBuffer->inputs().emplace_back("errorChannel", context.error_input());

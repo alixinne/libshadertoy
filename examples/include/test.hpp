@@ -1,6 +1,8 @@
 #ifndef _TEST_HPP_
 #define _TEST_HPP_
 
+#include "test_config.hpp"
+
 bool libshadertoy_test_exit();
 
 template<typename Context>

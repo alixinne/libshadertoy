@@ -149,14 +149,14 @@ int main(int argc, char *argv[])
 
 			// The default vertex shader is not sufficient, we replace it with our own
 			context.buffer_template()[GL_VERTEX_SHADER] = compiler::shader_template(
-				compiler::template_part::from_file("vertex:geometry", "../shaders/20_vertex.glsl")
+				compiler::template_part::from_file("vertex:geometry", ST_BASE_DIR "/shaders/20_vertex.glsl")
 			);
 
 			// Force compilation of new template
 			context.buffer_template().compile(GL_VERTEX_SHADER);
 
 			// Load geometry
-			auto geometry(std::make_shared<tiny_geometry>("../shaders/bunny.obj"));
+			auto geometry(std::make_shared<tiny_geometry>(ST_BASE_DIR "/shaders/bunny.obj"));
 
 			// Set the context parameters (render size and some uniforms)
 			ctx.render_size = rsize(width, height);

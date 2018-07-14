@@ -20,6 +20,7 @@ add_executable(example20-geometry
 	${SRC_ROOT}/test.cpp)
 
 target_include_directories(example20-geometry PRIVATE
+	${ST_INC_DIR}
 	${INCLUDE_ROOT}
 	${INCLUDE_ROOT}/20-geometry
 	${OPENGL_INCLUDE_DIRS}

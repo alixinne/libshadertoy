@@ -6,6 +6,7 @@ add_executable(example15-uniforms
 	${SRC_ROOT}/test.cpp)
 
 target_include_directories(example15-uniforms PRIVATE
+	${ST_INC_DIR}
 	${INCLUDE_ROOT}
 	${INCLUDE_ROOT}/15-uniforms
 	${OPENGL_INCLUDE_DIRS}

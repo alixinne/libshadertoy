@@ -4,6 +4,7 @@ add_executable(example00-build
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
 target_include_directories(example00-build PRIVATE
+	${ST_INC_DIR}
 	${OPENGL_INCLUDE_DIRS}
 	${EPOXY_INCLUDE_DIRS}
 	${GLFW3_INCLUDE_DIRS})
