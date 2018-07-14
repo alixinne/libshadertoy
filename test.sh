@@ -31,7 +31,7 @@ for TEST_FILE in ${@:-$DEFAULT_TESTS}; do
 
 		# Setup special vars
 		export LIBSHADERTOY_DIR=$(pwd)/build/install/usr/local/share/shadertoy
-		export CMAKE_EXTRA_OPTS="-DCMAKE_PREFIX_PATH=$(pwd)/build/install/usr/local -DCMAKE_MODULE_PATH=$(pwd)/modules -DCMAKE_BUILD_TYPE=RelWithDebInfo"
+		export CMAKE_EXTRA_OPTS="-DCMAKE_PREFIX_PATH=$(pwd)/build/install/usr/local -DCMAKE_MODULE_PATH=$(pwd)/modules -DCMAKE_BUILD_TYPE=Debug"
 
 		# Execute test
 		"$TEST_FILE"
