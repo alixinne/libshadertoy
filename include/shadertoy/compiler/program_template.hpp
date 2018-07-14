@@ -47,6 +47,10 @@ class shadertoy_EXPORT program_template
 	 */
 	std::map<std::string, std::shared_ptr<preprocessor_defines>> shader_defines_;
 
+	shader_template specify_template_parts(const shader_template &source_template) const;
+
+	shader_template specify_template_parts(std::vector<std::unique_ptr<basic_part>> parts, const shader_template &source_template) const;
+
 public:
 	/**
 	 * @brief Initialize a new empty program_template

@@ -17,6 +17,68 @@ using namespace shadertoy::compiler;
 using shadertoy::utils::throw_assert;
 using shadertoy::utils::log;
 
+shader_template program_template::specify_template_parts(const shader_template &source_template) const
+{
+	std::vector<std::unique_ptr<basic_part>> parts;
+	return specify_template_parts(std::move(parts), source_template);
+}
+
+shader_template program_template::specify_template_parts(std::vector<std::unique_ptr<basic_part>> parts, const shader_template &source_template) const
+{
+	return source_template.specify_parts(std::move(parts), [&](const std::string &part_name)
+			-> std::vector<std::unique_ptr<compiler::basic_part>> {
+		auto sep = part_name.find(":");
+		std::vector<std::unique_ptr<compiler::basic_part>> result;
+
+		if (sep != std::string::npos)
+		{
+			std::string type_name(part_name.begin() + sep + 1, part_name.end());
+			std::string subpart_name(part_name.begin(), part_name.begin() + sep);
+
+			if (type_name == "uniforms")
+			{
+				if (subpart_name == "*")
+				{
+					std::transform(shader_inputs_.begin(), shader_inputs_.end(),
+								   std::back_inserter(result), [](const auto &pair) {
+									   return std::make_unique<compiler::template_part>(
+									   pair.first, pair.second->definitions_string());
+								   });
+				}
+				else
+				{
+					auto it(shader_inputs_.find(subpart_name));
+					if (it != shader_inputs_.end())
+					{
+						result.emplace_back(std::make_unique<compiler::template_part>(part_name, it->second->definitions_string()));
+					}
+				}
+			}
+			else if (type_name == "defines")
+			{
+				if (subpart_name == "*")
+				{
+					std::transform(shader_defines_.begin(), shader_defines_.end(),
+								   std::back_inserter(result), [](const auto &pair) {
+									   return std::make_unique<compiler::define_part>(pair.first,
+																					  pair.second);
+								   });
+				}
+				else
+				{
+					auto it(shader_defines_.find(subpart_name));
+					if (it != shader_defines_.end())
+					{
+						result.emplace_back(std::make_unique<compiler::define_part>(part_name, it->second));
+					}
+				}
+			}
+		}
+
+		return result;
+	});
+}
+
 program_template::program_template()
 	: shader_templates_(),
 	compiled_shaders_()
@@ -46,7 +108,7 @@ void program_template::compile(GLenum type)
 	gl::shader so(type);
 
 	// Get sources
-	auto sources(it->second.sources());
+	auto sources(specify_template_parts(it->second).sources());
 	
 	if (log::shadertoy()->level() <= spdlog::level::debug)
 	{
@@ -89,58 +151,7 @@ gl::program program_template::compile(std::map<GLenum, std::vector<std::unique_p
 		// Get sources
 		if (it != parts.end())
 		{
-			sources = specified_template.specify_parts(std::move(it->second), [&](const std::string &part_name)
-				-> std::vector<std::unique_ptr<compiler::basic_part>> {
-				auto sep = part_name.find(":");
-				std::vector<std::unique_ptr<compiler::basic_part>> result;
-
-				if (sep != std::string::npos)
-				{
-					std::string type_name(part_name.begin() + sep + 1, part_name.end());
-					std::string subpart_name(part_name.begin(), part_name.begin() + sep);
-
-					if (type_name == "uniforms")
-					{
-						if (subpart_name == "*")
-						{
-							std::transform(shader_inputs_.begin(), shader_inputs_.end(),
-										   std::back_inserter(result), [](const auto &pair) {
-											   return std::make_unique<compiler::template_part>(
-											   pair.first, pair.second->definitions_string());
-										   });
-						}
-						else
-						{
-							auto it(shader_inputs_.find(subpart_name));
-							if (it != shader_inputs_.end())
-							{
-								result.emplace_back(std::make_unique<compiler::template_part>(part_name, it->second->definitions_string()));
-							}
-						}
-					}
-					else if (type_name == "defines")
-					{
-						if (subpart_name == "*")
-						{
-							std::transform(shader_defines_.begin(), shader_defines_.end(),
-										   std::back_inserter(result), [](const auto &pair) {
-											   return std::make_unique<compiler::define_part>(pair.first,
-																							  pair.second);
-										   });
-						}
-						else
-						{
-							auto it(shader_defines_.find(subpart_name));
-							if (it != shader_defines_.end())
-							{
-								result.emplace_back(std::make_unique<compiler::define_part>(part_name, it->second));
-							}
-						}
-					}
-				}
-
-				return result;
-			}).sources();
+			sources = specify_template_parts(std::move(it->second), specified_template).sources();
 		}
 		else
 		{
