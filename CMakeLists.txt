@@ -229,6 +229,10 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 		target_link_libraries(${TARGET_NAME} PUBLIC ${OpenEXR_LIBRARIES})
 	endif()
 
+	if (NOT MSVC)
+		target_compile_options(${TARGET_NAME} PUBLIC -Wno-attributes)
+	endif()
+
 	# Include directories for install
 	target_include_directories(${TARGET_NAME} INTERFACE
 		${shadertoy_INCLUDE_DIRS}
