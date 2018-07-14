@@ -155,7 +155,7 @@ void load_buffer_input(std::shared_ptr<shadertoy::inputs::basic_input> &buffer_i
 		source.back() = 'A' + (input["id"].asInt() - 257);
 		std::transform(source.begin(), source.end(), source.begin(), ::tolower);
 
-		source = shaderId + source;
+		source = shaderId + "-" + source;
 
 		u::log::shadertoy()->info("Pass {}, input {}: binding {} buffer", i, input["channel"].asInt(), source);
 
