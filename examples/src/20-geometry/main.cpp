@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
 
 			// Create the image buffer
 			auto imageBuffer(std::make_shared<buffers::geometry_buffer>("image"));
-			imageBuffer->source_file("../shaders/shader-gradient.glsl");
+			imageBuffer->source_file(ST_BASE_DIR "/shaders/shader-gradient.glsl");
 			imageBuffer->geometry(geometry);
 
 			// Without a background, the buffer should also clear the previous contents

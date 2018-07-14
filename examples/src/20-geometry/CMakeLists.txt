@@ -8,10 +8,16 @@ file(DOWNLOAD https://raw.githubusercontent.com/syoyo/tinyobjloader/v1.0.6/tiny_
 	${CMAKE_CURRENT_SOURCE_DIR}/tiny_obj_loader.cc
 	EXPECTED_HASH SHA256=b27322737fbd97b615412efd404d20d4a9b0a6556cada15ca4b77c7447b38bd2)
 
-# Download the stanford bunny
-file(DOWNLOAD https://graphics.stanford.edu/~mdfisher/Data/Meshes/bunny.obj
-	${SHADERS_ROOT}/bunny.obj
-	EXPECTED_HASH SHA256=e4bfe098950c61c42190fefe8f23ad7b469da8d5d488c8f8e28a0e0b00c4c88c)
+# Download the stanford bunny (with normals)
+file(DOWNLOAD https://casual-effects.com/g3d/data10/research/model/bunny/bunny.zip
+	${CMAKE_CURRENT_BINARY_DIR}/bunny.zip
+	EXPECTED_HASH SHA256=7082df1052c2a13263e5e83aee2b12af2345e2849592a69bfeebd0dc8cb46ef6)
+
+# Extract model
+execute_process(COMMAND ${CMAKE_COMMAND} -E tar xf ${CMAKE_CURRENT_BINARY_DIR}/bunny.zip
+	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_BINARY_DIR}/bunny.obj
+	DESTINATION ${SHADERS_ROOT})
 
 add_executable(example20-geometry
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp

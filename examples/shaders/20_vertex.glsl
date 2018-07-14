@@ -4,8 +4,7 @@ precision highp float;
 precision highp int;
 precision highp sampler2D;
 
-// MVP matrix
-uniform mat4 eMVP;
+#pragma shadertoy part geometry:uniforms
 
 // Vertex attributes
 layout(location = 0) in vec3 position;
