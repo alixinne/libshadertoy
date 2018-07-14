@@ -102,10 +102,14 @@ public:
 	 * arguments to this method, in order to make a more specified template.
 	 *
 	 * @param parts List of parts to define
+	 * @param pc    Callback to invoke to fetch extra parts to include in the specified template
+	 *
+	 * @tparam PartCallback Type of the part callback
 	 *
 	 * @return Copy of this template with unspecified replaced with specified parts from \p parts
 	 */
-	shader_template specify(std::vector<std::unique_ptr<basic_part>> parts) const;
+	template <typename PartCallback>
+	shader_template specify_parts(std::vector<std::unique_ptr<basic_part>> parts, PartCallback pc) const;
 
 	/**
 	 * @brief Specify some parts in this template
@@ -114,18 +118,21 @@ public:
 	 * arguments to this method, in order to make a more specified template.
 	 *
 	 * @param  parts List of parts to define
-	 * @tparam Parts Type of parts to define
+	 * @param  pc    Callback to invoke to fetch extra parts to include in the specified template
+	 *
+	 * @tparam PartCallback Type of the part callback
+	 * @tparam Parts        Type of parts to define
 	 *
 	 * @return Copy of this template with unspecified replaced with specified parts from \p parts
 	 */
-	template<typename... Parts>
-	shader_template specify(Parts&&... parts) const
+	template <typename PartCallback, typename... Parts>
+	shader_template specify(PartCallback pc, Parts &&... parts) const
 	{
 		std::vector<std::unique_ptr<basic_part>> ptrs;
 		ptrs.reserve(sizeof...(Parts));
 		int _[] = {(ptrs.emplace_back(parts.clone()), 0)...};
 		(void)_;
-		return specify(std::move(ptrs));
+		return specify_parts(std::move(ptrs), pc);
 	}
 
 	/**
@@ -185,8 +192,45 @@ public:
 	 * @return true if the part was removed, false if no such part was found
 	 */
 	bool erase(const std::string &name);
+
+	/**
+	 * @brief Parses a string into a shader_template
+	 *
+	 * @param source Source for the template
+	 * @param name   Name to use for anonymous template parts
+	 *
+	 * @return Parsed shader_template
+	 *
+	 * @throws template_error When the template syntax is invalid
+	 */
+	static shader_template parse(const std::string &source, const std::string &name);
+
+	/**
+	 * @brief Parses an input stream into a shader_template
+	 *
+	 * @param is Input stream that contains the source for the template
+	 * @param name   Name to use for anonymous template parts
+	 *
+	 * @return Parsed shader_template
+	 *
+	 * @throws template_error When the template syntax is invalid
+	 */
+	static shader_template parse(std::istream &is, const std::string &name);
+
+	/**
+	 * @brief Parses a file into a shader_template
+	 *
+	 * @param filename Path to the file to parse
+	 *
+	 * @return Parsed shader_template
+	 *
+	 * @throws template_error When the template syntax is invalid
+	 */
+	static shader_template parse_file(const std::string &filename);
 };
 }
 }
+
+#include "shadertoy/compiler/shader_template.ipp"
 
 #endif /* _SHADERTOY_COMPILER_SHADER_TEMPLATE_HPP_ */

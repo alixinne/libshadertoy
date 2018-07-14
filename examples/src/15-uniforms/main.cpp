@@ -63,11 +63,7 @@ int main(int argc, char *argv[])
 			extra_inputs.get<iDynamicFloats>().insert<float>("iCustomTime", 0.0f);
 
 			// Update the template to include the inputs when binding new programs
-			context.buffer_template().shader_inputs().push_back(&extra_inputs);
-
-			// Update the template to include the generated sources for the extra uniforms
-			context.buffer_template()[GL_FRAGMENT_SHADER].insert_after("shadertoy:uniforms",
-				shadertoy::compiler::template_part("example:uniforms", extra_inputs.definitions_string()));
+			context.buffer_template().shader_inputs().emplace("example", &extra_inputs);
 
 			// Set the internal format of the chain
 			chain.internal_format(GL_RGB8);

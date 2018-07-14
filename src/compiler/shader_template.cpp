@@ -1,9 +1,13 @@
 #include <algorithm>
+#include <fstream>
+#include <iomanip>
 #include <map>
+#include <regex>
 #include <sstream>
 
-#include "shadertoy/compiler/template_error.hpp"
 #include "shadertoy/compiler/shader_template.hpp"
+#include "shadertoy/compiler/template_error.hpp"
+#include "shadertoy/compiler/template_part.hpp"
 
 #include "shadertoy/utils/assert.hpp"
 
@@ -79,44 +83,6 @@ std::unique_ptr<basic_part> &shader_template::find(const std::string &name)
 	throw template_error(fmt::format("A part named {} could not be found", name));
 }
 
-shader_template shader_template::specify(std::vector<std::unique_ptr<basic_part>> parts) const
-{
-	// Create a map of new parts
-	std::map<std::string, std::unique_ptr<basic_part>*> new_parts;
-	for (auto &part : parts)
-		new_parts.emplace(part->name(), &part);
-
-	// New list of parts
-	std::deque<std::unique_ptr<basic_part>> specified_parts;
-
-	for (auto &current_part : parts_)
-	{
-		if (!current_part->is_specified())
-		{
-			// current_part is not specified yet
-			auto new_part_it = new_parts.find(current_part->name());
-
-			if (new_part_it != new_parts.end())
-			{
-				// We have a specification for this part
-				specified_parts.emplace_back(std::move(*new_part_it->second));
-			}
-			else
-			{
-				// Keep the unspecified part
-				specified_parts.emplace_back(current_part->clone());
-			}
-		}
-		else
-		{
-			// This part has been specified already
-			specified_parts.emplace_back(current_part->clone());
-		}
-	}
-
-	return shader_template(std::move(specified_parts));
-}
-
 void shader_template::push_back(std::unique_ptr<basic_part> part)
 {
 	check_unique(part);
@@ -184,4 +150,143 @@ bool shader_template::erase(const std::string &name)
 	}
 
 	return false;
+}
+
+shader_template shader_template::parse(const std::string &source, const std::string &name)
+{
+	std::istringstream iss(source);
+	return parse(iss, name);
+}
+
+static void emit_part(shader_template &st, std::string &name, std::ostringstream &ss)
+{
+	st.push_back(std::make_unique<template_part>(name, ss.str()));
+	ss = std::ostringstream();
+	name = std::string();
+}
+
+static void emit_part(shader_template &st, const std::string &name)
+{
+	st.push_back(std::make_unique<template_part>(name));
+}
+
+static void emit_part(shader_template &st, const std::string &name_prefix, int &name, std::ostringstream &ss)
+{
+	auto contents(ss.str());
+	if (!contents.empty())
+	{
+		st.push_back(std::make_unique<template_part>(name_prefix + "-" + std::to_string(name++), contents));
+		ss = std::ostringstream();
+	}
+}
+
+shader_template shader_template::parse(std::istream &is, const std::string &name_prefix)
+{
+	const std::regex cmd_regex("^\\s*#pragma\\s+shadertoy\\s+part\\s+(?:((?:\\*|[a-zA-Z_][a-zA-Z\\-_0-9]*):[a-zA-Z_][a-zA-Z\\-_0-9]*)(?:\\s+(begin))?|(end))\\s*$");
+
+	enum
+	{
+		TP_GLSL_SOURCE,
+		TP_TEMPLATE_SOURCE,
+	} t_state = TP_GLSL_SOURCE;
+
+	std::string line;
+	std::ostringstream ss_current;
+	std::string template_name;
+	int part_number = 0;
+	int line_num = 1;
+	shader_template st;
+
+	for (; std::getline(is, line); line_num++)
+	{
+		std::smatch match;
+
+		if (std::regex_match(line, match, cmd_regex))
+		{
+			auto name = match[1].str();
+			if (match[2].length() == 0)
+			{
+				// part name, no begin, or end
+				if (match[3].str() == "end")
+				{
+					switch (t_state)
+					{
+					case TP_GLSL_SOURCE:
+					{
+						std::ostringstream ss;
+						ss << line_num << ": unmatched end";
+						throw template_error(ss.str());
+					}
+					break;
+					case TP_TEMPLATE_SOURCE:
+						emit_part(st, template_name, ss_current);
+						t_state = TP_GLSL_SOURCE;
+						break;
+					}
+				}
+				else
+				{
+					std::string contents;
+					switch (t_state)
+					{
+					case TP_GLSL_SOURCE:
+						emit_part(st, name_prefix, part_number, ss_current);
+						emit_part(st, name);
+						break;
+					case TP_TEMPLATE_SOURCE:
+					{
+						std::ostringstream ss;
+						ss << line_num << ": unexpected template slot " << std::quoted(name);
+						throw template_error(ss.str());
+					}
+					break;
+					}
+				}
+			}
+			else
+			{
+				switch (t_state)
+				{
+				case TP_GLSL_SOURCE:
+					emit_part(st, name_prefix, part_number, ss_current);
+					template_name = name;
+					t_state = TP_TEMPLATE_SOURCE;
+					break;
+				case TP_TEMPLATE_SOURCE:
+				{
+					std::ostringstream ss;
+					ss << line_num << ": unexpected template begin for " << std::quoted(name);
+					throw template_error(ss.str());
+				}
+				break;
+				}
+			}
+		}
+		else
+		{
+			ss_current << line << std::endl;
+		}
+	}
+
+	switch (t_state)
+	{
+	case TP_GLSL_SOURCE:
+		emit_part(st, name_prefix, part_number, ss_current);
+		break;
+	case TP_TEMPLATE_SOURCE:
+	{
+		std::ostringstream ss;
+		ss << line_num << ": unexpected end of file while looking for end part " << std::quoted(template_name);
+		throw template_error(ss.str());
+	}
+	break;
+	}
+
+	return st;
+}
+
+shader_template shader_template::parse_file(const std::string &filename)
+{
+	std::ifstream ifs(filename);
+	return parse(ifs, filename);
 }

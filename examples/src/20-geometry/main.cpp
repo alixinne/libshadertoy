@@ -145,12 +145,10 @@ int main(int argc, char *argv[])
 			geometry_inputs_t extra_inputs;
 
 			// Register the custom inputs with the buffer template
-			context.buffer_template().shader_inputs().push_back(&extra_inputs);
+			context.buffer_template().shader_inputs().emplace("geometry", &extra_inputs);
 
 			// The default vertex shader is not sufficient, we replace it with our own
-			context.buffer_template()[GL_VERTEX_SHADER] = compiler::shader_template(
-				compiler::template_part::from_file("vertex:geometry", ST_BASE_DIR "/shaders/20_vertex.glsl")
-			);
+			context.buffer_template()[GL_VERTEX_SHADER] = compiler::shader_template::parse_file(ST_BASE_DIR "/shaders/20_vertex.glsl");
 
 			// Force compilation of new template
 			context.buffer_template().compile(GL_VERTEX_SHADER);

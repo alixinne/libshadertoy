@@ -20,29 +20,43 @@ namespace shadertoy
  * The buffer template specifies how the sources of a buffers::program_buffer will be composed with
  * the default sources to make a full fragment shader.
  *
- * The default parts of the buffer template are as follows:
- *   * `glsl:header`: Fragment shader header
+ * The default fragment shader template is as follows:
  * ```
+ * #pragma shadertoy part glsl:header begin
  * #version 440
+ * #pragma shadertoy part end
+ *
+ * precision highp float;
+ * precision highp int;
+ * precision highp sampler2D;
+ *
+ * in vec2 vtexCoord;
+ * out vec4 fragColor;
+ *
+ * #pragma shadertoy part *:defines
+ *
+ * #pragma shadertoy part *:uniforms
+ *
+ * #pragma shadertoy part buffer:inputs
+ * #pragma shadertoy part buffer:sources
+ *
+ * void main(void) {
+ *     fragColor = vec4(0., 0., 0., 1.);
+ *     mainImage(fragColor, vtexCoord.xy * iResolution.xy);
+ * }
  * ```
- *   * `glsl:defines`: List of pre-processor defines
+ *
+ * The default parts of the buffer template are as follows:
+ *   * `glsl:header`: Fragment shader header. Defaults to the parts contents but
+ *   can be overriden to change the GLSL version in use.
+ *   * `*:defines`: List of pre-processor defines registered in render_context#program_buffer().
  * ```
  * // Generated on the fly depending on its value
  * // Example:
  * #define MY_VALUE 10
  * ```
- *   * `shadertoy:header`: Header for Shadertoy compatibility
- * ```
- * precision highp float;
- * precision highp int;
- * precision highp sampler2D;
- *
- * // Input texture coordinate
- * in vec2 vtexCoord;
- * // Output fragment color
- * out vec4 fragColor;
- * ```
- *   * `shadertoy:uniforms`: Uniform variables defined by the render context
+ *   * `*:uniforms`: Uniform variables defined by the render context and other
+ *   uniform objects registered in render_context#program_buffer().
  * ```
  * // Generated on the fly from the definitions in uniform_state.hpp
  * uniform vec3 iResolution;
@@ -60,19 +74,11 @@ namespace shadertoy
  * // Should define mainImage, as in a Shadertoy
  * void mainImage(out vec4 O, in vec2 U) { O = vec4(1.); }
  * ```
- *   * `shadertoy:footer`: Footer for Shadertoy compatibility
- * ```
- * // GLSL entry point
- * void main(void) {
- *     fragColor = vec4(0.,0.,0.,1.);
- *     mainImage(fragColor, vtexCoord.xy * iResolution.xy);
- * }
- * ```
  *
  * These parts may be overriden in order to fully control how the resulting shaders are built.
- * Note that the `buffer:*` parts are filled in by render_context#build_buffer_shader from the
- * properties of the current buffer, so they should be present in any template used with the context.
- * Other parts are not mandatory and can be removed.
+ * Note that the `buffer:*` parts are filled in by program_buffer#init_contents() from the
+ * properties of the current buffer, so they should be present in any template used with the
+ * context.
  */
 class shadertoy_EXPORT render_context
 {

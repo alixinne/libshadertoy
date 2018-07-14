@@ -359,6 +359,14 @@ public:
 	 *         implementation of this method.
 	 */
 	virtual std::unique_ptr<bound_inputs_base> bind_inputs(const gl::program &program) const = 0;
+
+	/**
+	 * @brief      Get the GLSL code for defining the uniforms part of this
+	 *             template instance.
+	 *
+	 * @return     GLSL code to include in the shader compilation stage.
+	 */
+	virtual std::string definitions_string() const = 0;
 };
 
 /**
@@ -595,8 +603,8 @@ public:
 	/**
 	 * @brief Internal implementation of AppendDefinition using index_sequence.
 	 */
-	template<size_t... Indices>
-	void append_definitions(std::ostream &os, std::index_sequence<Indices...>)
+	template <size_t... Indices>
+	void append_definitions(std::ostream &os, std::index_sequence<Indices...>) const
 	{
 		int _[] = {(std::get<Indices>(all_inputs_).append_definition(os), 0)...};
 		(void) _;
@@ -674,13 +682,7 @@ public:
 		return std::make_unique<bound_inputs>(*this, program, indices());
 	}
 
-	/**
-	 * @brief      Get the GLSL code for defining the uniforms part of this
-	 *             template instance.
-	 *
-	 * @return     GLSL code to include in the shader compilation stage.
-	 */
-	std::string definitions_string()
+	std::string definitions_string() const final
 	{
 		std::stringstream ss;
 

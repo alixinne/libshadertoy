@@ -29,28 +29,21 @@ render_context::render_context()
 	buffer_template_(),
 	error_input_(std::make_shared<inputs::error_input>())
 {
-	buffer_template_.emplace(GL_VERTEX_SHADER, compiler::shader_template(
-		compiler::template_part("shadertoy:screenquad", std::string(screenQuad_vsh, screenQuad_vsh + screenQuad_vsh_size))
-	));
-
-	buffer_template_.emplace(GL_FRAGMENT_SHADER, compiler::shader_template(
-		compiler::template_part("glsl:header", std::string(glsl_header_frag, glsl_header_frag + glsl_header_frag_size)),
-		compiler::define_part("glsl:defines"),
-		compiler::template_part("shadertoy:header", std::string(shadertoy_header_frag, shadertoy_header_frag + shadertoy_header_frag_size)),
-		compiler::template_part("shadertoy:uniforms", state_.definitions_string()),
-		compiler::template_part("buffer:inputs"),
-		compiler::template_part("buffer:sources"),
-		compiler::template_part("shadertoy:footer", std::string(shadertoy_footer_frag, shadertoy_footer_frag + shadertoy_footer_frag_size))
-	));
-
-	// Register state
-	buffer_template_.shader_inputs().push_back(&state_);
+	auto preprocessor_defines(std::make_shared<compiler::preprocessor_defines>());
 
 	// Add LIBSHADERTOY definition
-	static_cast<compiler::define_part*>(buffer_template_[GL_FRAGMENT_SHADER].find("glsl:defines").get())
-		->definitions()
-		->definitions()
-		.insert(std::make_pair<std::string, std::string>("LIBSHADERTOY", "1"));
+	preprocessor_defines->definitions().emplace("LIBSHADERTOY", "1");
+
+	buffer_template_.shader_defines().emplace("glsl", preprocessor_defines);
+	buffer_template_.shader_inputs().emplace("shadertoy", &state_);
+
+	buffer_template_.emplace(GL_VERTEX_SHADER,
+		compiler::shader_template::parse(std::string(screenQuad_vsh, screenQuad_vsh + screenQuad_vsh_size), "libshadertoy/shaders/screenQuad.vsh")
+	);
+
+	buffer_template_.emplace(GL_FRAGMENT_SHADER,
+		compiler::shader_template::parse(std::string(shadertoy_frag_glsl, shadertoy_frag_glsl + shadertoy_frag_glsl_size), "libshadertoy/shaders/shadertoy_frag.glsl")
+	);
 
 	// Compile screen quad vertex shader
 	buffer_template_.compile(GL_VERTEX_SHADER);

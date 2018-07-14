@@ -3,6 +3,7 @@
 
 #include "shadertoy/pre.hpp"
 
+#include "shadertoy/compiler/define_part.hpp"
 #include "shadertoy/compiler/shader_template.hpp"
 
 #include <map>
@@ -39,7 +40,12 @@ class shadertoy_EXPORT program_template
 	/**
 	 * @brief List of input objects to bind when creating new programs
 	 */
-	std::vector<basic_shader_inputs*> shader_inputs_;
+	std::map<std::string, basic_shader_inputs *> shader_inputs_;
+
+	/**
+	 * @brief List of preprocessor definition objects
+	 */
+	std::map<std::string, std::shared_ptr<preprocessor_defines>> shader_defines_;
 
 public:
 	/**
@@ -121,7 +127,7 @@ public:
 	 *
 	 * @return Reference to the shader input list
 	 */
-	inline std::vector<basic_shader_inputs*> &shader_inputs()
+	inline std::map<std::string, basic_shader_inputs*> &shader_inputs()
 	{ return shader_inputs_; }
 
 	/**
@@ -132,8 +138,24 @@ public:
 	 *
 	 * @return Reference to the shader input list
 	 */
-	inline const std::vector<basic_shader_inputs*> &shader_inputs() const
+	inline const std::map<std::string, basic_shader_inputs *> &shader_inputs() const
 	{ return shader_inputs_; }
+
+	/**
+	 * @brief Get the list of supported shader define objects
+	 *
+	 * @return Reference to the definition objects
+	 */
+	inline std::map<std::string, std::shared_ptr<preprocessor_defines>> &shader_defines()
+	{ return shader_defines_; }
+
+	/**
+	 * @brief Get the list of supported shader define objects
+	 *
+	 * @return Reference to the definition objects
+	 */
+	inline const std::map<std::string, std::shared_ptr<preprocessor_defines>> &shader_defines() const
+	{ return shader_defines_; }
 
 	/**
 	 * @brief Binds the inputs from this template to a given program
