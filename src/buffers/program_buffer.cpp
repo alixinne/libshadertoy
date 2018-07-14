@@ -87,7 +87,14 @@ void program_buffer::render_gl_contents(const render_context &context, const io_
 		inputs->apply();
 
 	// Override values in bound inputs 0 (ShaderToy inputs)
-	auto &state(*static_cast<shader_inputs_t::bound_inputs*>(bound_inputs_[0].get()));
+	shader_inputs_t::bound_inputs *state_ptr = nullptr;
+	for (auto &bound_input : bound_inputs_)
+	{
+		if ((state_ptr = dynamic_cast<shader_inputs_t::bound_inputs*>(bound_input.get())))
+			break;
+	}
+
+	auto &state(*state_ptr);
 	std::array<glm::vec3, SHADERTOY_ICHANNEL_COUNT> resolutions(state.get<iChannelResolution>());
 
 	// Setup the texture targets
