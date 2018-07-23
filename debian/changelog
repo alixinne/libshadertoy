@@ -1,4 +1,4 @@
-libshadertoy (1.0.0~rc5) UNRELEASED; urgency=medium
+libshadertoy (1.0.0~rc5) unstable; urgency=medium
 
   * Migrate to GitLab CI
   * Split toy_buffer program functionality into the program_buffer class
@@ -16,7 +16,7 @@ libshadertoy (1.0.0~rc5) UNRELEASED; urgency=medium
   * Add example 20-geometry to demonstrate the use of geometry_buffer
   * Simplify shader template specification
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Mon, 25 Jun 2018 11:15:12 +0200
+ -- Vincent Tavernier <vince.tavernier@gmail.com>  Mon, 23 Jul 2018 20:04:41 +0200
 
 libshadertoy (1.0.0~rc4) unstable; urgency=medium
 
