@@ -109,9 +109,11 @@ public:
 	 *                       compiling. Pre-compiled shaders are used as-is and cannot
 	 *                       be overwritten.
 	 *
+	 * @param[out] compiled_source Optional. Return value for the compiled sources of the program.
+	 *
 	 * @return Compiled program
 	 */
-	gl::program compile(std::map<GLenum, std::vector<std::unique_ptr<basic_part>>> parts) const;
+	gl::program compile(std::map<GLenum, std::vector<std::unique_ptr<basic_part>>> parts, std::map<GLenum, std::string> *compiled_sources = nullptr) const;
 
 	/**
 	 * @brief Compile the given fully specified templates into a GL program.
@@ -119,9 +121,11 @@ public:
 	 * @param templates Map of fully specified templates. Entries from this map will
 	 *                  be used instead of the precompiled shaders if there is a conflict.
 	 *
+	 * @param[out] compiled_source Optional. Return value for the compiled sources of the program.
+	 *
 	 * @return Compiled program
 	 */
-	gl::program compile(const std::map<GLenum, shader_template> &templates) const;
+	gl::program compile(const std::map<GLenum, shader_template> &templates, std::map<GLenum, std::string> *compiled_sources = nullptr) const;
 
 	/**
 	 * @brief Get the list of supported shader inputs

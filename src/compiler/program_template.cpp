@@ -128,7 +128,7 @@ void program_template::compile(GLenum type)
 	compiled_shaders_.emplace(type, std::move(so));
 }
 
-gl::program program_template::compile(std::map<GLenum, std::vector<std::unique_ptr<basic_part>>> parts) const
+gl::program program_template::compile(std::map<GLenum, std::vector<std::unique_ptr<basic_part>>> parts, std::map<GLenum, std::string> *compiled_sources) const
 {
 	gl::program program;
 
@@ -158,14 +158,20 @@ gl::program program_template::compile(std::map<GLenum, std::vector<std::unique_p
 			sources = specified_template.sources();
 		}
 
-		if (log::shadertoy()->level() <= spdlog::level::debug)
+		if (log::shadertoy()->level() <= spdlog::level::debug || compiled_sources != nullptr)
 		{
 			std::stringstream ss;
 			for (auto &pair : sources)
 				ss << pair.second;
+
+			auto result(ss.str());
+
+			if (compiled_sources != nullptr)
+				compiled_sources->emplace(pair.first, result);
+
 			log::shadertoy()->debug("Compiled following code for {}:\n{}",
 									(void*)this,
-									ss.str());
+									result);
 		}
 
 		// Compile shader
@@ -215,7 +221,7 @@ gl::program program_template::compile(std::map<GLenum, std::vector<std::unique_p
 	return program;
 }
 
-gl::program program_template::compile(const std::map<GLenum, shader_template> &templates) const
+gl::program program_template::compile(const std::map<GLenum, shader_template> &templates, std::map<GLenum, std::string> *compiled_sources) const
 {
 	gl::program program;
 
@@ -227,14 +233,20 @@ gl::program program_template::compile(const std::map<GLenum, shader_template> &t
 		// Compile sources
 		auto sources(pair.second.sources());
 
-		if (log::shadertoy()->level() <= spdlog::level::debug)
+		if (log::shadertoy()->level() <= spdlog::level::debug || compiled_sources != nullptr)
 		{
 			std::stringstream ss;
 			for (auto &pair : sources)
 				ss << pair.second;
+
+			auto result(ss.str());
+
+			if (compiled_sources != nullptr)
+				compiled_sources->emplace(pair.first, result);
+
 			log::shadertoy()->debug("Compiled following code for {}:\n{}",
 									(void*)this,
-									ss.str());
+									result);
 		}
 
 		// Compile shader

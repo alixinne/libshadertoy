@@ -1,3 +1,9 @@
+libshadertoy (1.0.0~rc6) UNRELEASED; urgency=medium
+
+  * Add ability to get the compiled sources of a program
+
+ -- Vincent Tavernier <vince.tavernier@gmail.com>  Tue, 21 Aug 2018 16:30:57 +0200
+
 libshadertoy (1.0.0~rc5) unstable; urgency=medium
 
   * Migrate to GitLab CI
