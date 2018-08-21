@@ -35,6 +35,9 @@ private:
 	/// Template part that this buffer should provide to the shader template
 	std::unique_ptr<compiler::basic_part> source_;
 
+	/// Pointer to the map to store compiled sources
+	std::map<GLenum, std::string> *source_map_;
+
 protected:
 	/**
 	 * @brief      Initialize the geometry to use for this buffer
@@ -150,6 +153,25 @@ public:
 	 * @param new_file New file to load the sources from
 	 */
 	void source_file(const std::string &new_file);
+
+	/**
+	 * @brief         Get the current source map pointer
+	 *
+	 * @return        Current source map pointer
+	 */
+	inline std::map<GLenum, std::string> *source_map() const
+	{ return source_map_; }
+
+	/**
+	 * @brief         Set the source map pointer for the compiled sources
+	 *
+	 * The pointer must either be null or remain valid until the sources for this
+	 * buffer have been compiled.
+	 *
+	 * @param new_map New source map pointer
+	 */
+	inline void source_map(std::map<GLenum, std::string> *new_map)
+	{ source_map_ = new_map; }
 };
 }
 }

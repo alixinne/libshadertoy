@@ -24,7 +24,8 @@ using shadertoy::utils::log;
 program_buffer::program_buffer(const std::string &id)
 	: gl_buffer(id),
 	  bound_inputs_(),
-	  inputs_()
+	  inputs_(),
+	  source_map_(nullptr)
 {
 }
 
@@ -50,7 +51,7 @@ void program_buffer::init_contents(const render_context &context, const io_resou
 	parts.emplace(GL_FRAGMENT_SHADER, std::move(fs_template_parts));
 
 	const auto &buffer_template(override_program_ ? *override_program_ : context.buffer_template());
-	program_ = buffer_template.compile(std::move(parts));
+	program_ = buffer_template.compile(std::move(parts), source_map_);
 
 	// Use the program
 	program_.use();
