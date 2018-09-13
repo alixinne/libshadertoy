@@ -254,6 +254,13 @@ endforeach()
 
 set_target_properties(shadertoy-shared PROPERTIES OUTPUT_NAME shadertoy)
 
+# Export header for shared
+generate_export_header(shadertoy-shared
+	BASE_NAME shadertoy
+	EXPORT_MACRO_NAME shadertoy_EXPORT
+	EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/shadertoy_export.h)
+target_compile_definitions(shadertoy-objects PUBLIC shadertoy_shared_EXPORTS)
+
 if (SHADERTOY_STANDALONE)
 	# Export targets
 	export(EXPORT shadertoy FILE ${CMAKE_CURRENT_BINARY_DIR}/shadertoy.cmake)
@@ -266,12 +273,6 @@ if (SHADERTOY_STANDALONE)
 			COMPONENT shadertoy-dev
 			DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/shadertoy)
 
-	# Export header for shared
-	generate_export_header(shadertoy-shared
-		BASE_NAME shadertoy
-		EXPORT_MACRO_NAME shadertoy_EXPORT
-		EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/shadertoy_export.h)
-	target_compile_definitions(shadertoy-objects PUBLIC shadertoy_shared_EXPORTS)
 
 	# Configure the -config.cmake file
 	configure_file(shadertoy-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake @ONLY)
