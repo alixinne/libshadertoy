@@ -92,7 +92,7 @@ find_package(SOIL)
 find_package(JPEG)
 
 # libopenexr
-find_package(OpenEXR)
+find_package(OpenEXR QUIET)
 
 # Copy shaders to source
 file(GLOB RESOURCES_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*)
@@ -158,7 +158,7 @@ if (JPEG_FOUND)
 	target_compile_definitions(shadertoy-objects PRIVATE
 		LIBSHADERTOY_JPEG=1)
 else()
-	message(STATUS "Building without SOIL support")
+	message(STATUS "Building without JPEG support")
 	target_compile_definitions(shadertoy-objects PRIVATE
 		LIBSHADERTOY_JPEG=0)
 endif()
