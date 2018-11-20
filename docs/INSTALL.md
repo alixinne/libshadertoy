@@ -4,8 +4,8 @@ There are several options for installing libshadertoy.
 
 ## Install the Debian/Ubuntu packages
 
-A package repository is maintained for Debian Stretch (9) and Ubuntu Xenial
-(16.04 LTS). It can be used to install a pre-built version of the library with
+A package repository is maintained for Debian Stretch (9) and Ubuntu Bionic
+(18.04 LTS). It can be used to install a pre-built version of the library with
 all its features:
 
 ```bash
@@ -15,8 +15,8 @@ sudo apt-key adv --recv-keys --keyserver pool.sks-keyservers.net --recv 0xF35C41
 # Add repository to apt config
 #  Debian Stretch
 sudo sh -c 'echo "deb https://dl.bintray.com/vtavernier/libshadertoy stretch main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
-#  Ubuntu Xenial (16.04)
-sudo sh -c 'echo "deb https://dl.bintray.com/vtavernier/libshadertoy xenial main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
+#  Ubuntu Bionic (18.04)
+sudo sh -c 'echo "deb https://dl.bintray.com/vtavernier/libshadertoy bionic main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
 
 # Update and install
 sudo apt update
@@ -36,20 +36,20 @@ In order to compile the project, the following tools and libraries are required:
 
 * OpenGL 4.5
 * C++14-enabled compiler (GCC 5 or Clang 3.4)
-* [CMake 3.1+](https://launchpad.net/ubuntu/xenial/+source/cmake)
-* [Boost 1.54+](https://launchpad.net/ubuntu/xenial/+package/libboost-all-dev)
-* [libepoxy 1.3+](https://launchpad.net/ubuntu/xenial/+source/libepoxy)
+* [CMake 3.1+](https://launchpad.net/ubuntu/bionic/+source/cmake)
+* [Boost 1.54+](https://launchpad.net/ubuntu/bionic/+package/libboost-all-dev)
+* [libepoxy 1.3+](https://launchpad.net/ubuntu/bionic/+source/libepoxy)
 
 These additional dependencies can be installed to support loading images as inputs:
 
-* BMP, PNG, JPG, TGA, DDS, PSD, HDR: [libsoil-dev](https://launchpad.net/ubuntu/xenial/+package/libsoil-dev)
-* JPG (including progressive): [libjpeg-dev](https://launchpad.net/ubuntu/xenial/+package/libjpeg-dev)
-* OpenEXR (half precision): [libopenexr-dev](https://launchpad.net/ubuntu/xenial/+package/libopenexr-dev)
+* BMP, PNG, JPG, TGA, DDS, PSD, HDR: [libsoil-dev](https://launchpad.net/ubuntu/bionic/+package/libsoil-dev)
+* JPG (including progressive): [libjpeg-dev](https://launchpad.net/ubuntu/bionic/+package/libjpeg-dev)
+* OpenEXR (half precision): [libopenexr-dev](https://launchpad.net/ubuntu/bionic/+package/libopenexr-dev)
 
 If you want the OpenGL exceptions to include the backtrace, the following
 dependencies are also required:
 
-* [libunwind-dev](https://launchpad.net/ubuntu/xenial/+package/libunwind8-dev)
+* [libunwind-dev](https://launchpad.net/ubuntu/bionic/+package/libunwind8-dev)
 
 You can then compile and install the library using CMake:
 
@@ -73,7 +73,7 @@ To build the library on the development machine (needed for running tests) the
 provided `Makefile` should be used. See `debian/control` for the up-to-date list
 of build dependencies.
 
-The packages for Ubuntu Xenial and Debian Stretch can be built using
+The packages for Ubuntu Bionic and Debian Stretch can be built using
 [sbuild](https://wiki.debian.org/sbuild) and a suitably setup
 [schroot](https://wiki.debian.org/Schroot). Here is a reminder on how to setup
 such an environment (Debian Stretch instructions, based on provided links).
@@ -84,15 +84,15 @@ such an environment (Debian Stretch instructions, based on provided links).
 # Debian Stretch amd64
 sudo sbuild-createchroot --include=eatmydata,ccache,gnupg stretch /disc/schroot/stretch-amd64-sbuild http://deb.debian.org/debian
 
-# Ubuntu Xenial amd64
-sudo sbuild-createchroot --include=eatmydata,ccache,gnupg xenial /disc/schroot/xenial-amd64-sbuild http://archive.ubuntu.com/ubuntu/
+# Ubuntu Bionic amd64
+sudo sbuild-createchroot --include=eatmydata,ccache,gnupg bionic /disc/schroot/bionic-amd64-sbuild http://archive.ubuntu.com/ubuntu/
 ```
 
 Once the sbuild environment is setup, the Makefile can be used as follows.
 
 ```bash
-# Build all Xenial packages (amd64, i386, source)
-make xenial
+# Build all Bionic packages (amd64, i386, source)
+make bionic
 
 # Build Debian Stretch amd64
 make stretch-amd64

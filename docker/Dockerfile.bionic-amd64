@@ -1,0 +1,26 @@
+FROM amd64/ubuntu:bionic
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update -qq && \
+	apt-get install --no-install-recommends -y \
+		git \
+		build-essential \
+		debhelper \
+		libboost-filesystem-dev \
+		libboost-date-time-dev \
+		libc6-dev \
+		libstdc++-5-dev \
+		libsoil-dev \
+		libjpeg-dev \
+		libepoxy-dev \
+		libgl1-mesa-dev \
+		libglm-dev \
+		libopenexr-dev \
+		libunwind-dev \
+		doxygen \
+		doxygen-latex \
+		graphviz \
+		pkg-config \
+		cmake && \
+	apt-get clean
+
+# vim: ft=dockerfile
