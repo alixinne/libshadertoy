@@ -8,6 +8,11 @@ variables:
   XENIAL_AMD64_RELEASE_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/amd64/build-xenial:latest
   XENIAL_I386_TEST_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/i386/build-xenial:$CI_COMMIT_REF_SLUG
   XENIAL_I386_RELEASE_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/i386/build-xenial:latest
+  BIONIC_AMD64_TEST_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/amd64/build-bionic:$CI_COMMIT_REF_SLUG
+  BIONIC_AMD64_RELEASE_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/amd64/build-bionic:latest
+  BIONIC_I386_TEST_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/i386/build-bionic:$CI_COMMIT_REF_SLUG
+  BIONIC_I386_RELEASE_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/i386/build-bionic:latest
+
 
 stages:
   - build_images
@@ -87,6 +92,54 @@ release_xenial_i386_image:
     - docker pull $XENIAL_I386_TEST_IMAGE || true
     - docker tag $XENIAL_I386_TEST_IMAGE $XENIAL_I386_RELEASE_IMAGE
     - docker push $XENIAL_I386_RELEASE_IMAGE
+  only:
+    - master
+
+bionic_amd64_image:
+  <<: *build_image
+  script:
+    - docker pull $BIONIC_AMD64_TEST_IMAGE || true
+    - docker build --pull -t $BIONIC_AMD64_TEST_IMAGE --cache-from $BIONIC_AMD64_TEST_IMAGE -f docker/Dockerfile.bionic-amd64 docker
+    - docker push $BIONIC_AMD64_TEST_IMAGE
+
+bionic_i386_image:
+  <<: *build_image
+  script:
+    - docker pull $BIONIC_I386_TEST_IMAGE || true
+    - docker build --pull -t $BIONIC_I386_TEST_IMAGE --cache-from $BIONIC_I386_TEST_IMAGE -f docker/Dockerfile.bionic-i386 docker
+    - docker push $BIONIC_I386_TEST_IMAGE
+
+bionic_amd64_pkg:
+  <<: *build_pkg
+  image: $BIONIC_AMD64_TEST_IMAGE
+  artifacts:
+    name: 'libshadertoy-bionic-amd64-$CI_COMMIT_REF_SLUG'
+    paths:
+      - '*.deb'
+
+bionic_i386_pkg:
+  <<: *build_pkg
+  image: $BIONIC_I386_TEST_IMAGE
+  artifacts:
+    name: 'libshadertoy-bionic-i386-$CI_COMMIT_REF_SLUG'
+    paths:
+      - '*.deb'
+
+release_bionic_amd64_image:
+  <<: *release_img
+  script:
+    - docker pull $BIONIC_AMD64_TEST_IMAGE || true
+    - docker tag $BIONIC_AMD64_TEST_IMAGE $BIONIC_AMD64_RELEASE_IMAGE
+    - docker push $BIONIC_AMD64_RELEASE_IMAGE
+  only:
+    - master
+
+release_bionic_i386_image:
+  <<: *release_img
+  script:
+    - docker pull $BIONIC_I386_TEST_IMAGE || true
+    - docker tag $BIONIC_I386_TEST_IMAGE $BIONIC_I386_RELEASE_IMAGE
+    - docker push $BIONIC_I386_RELEASE_IMAGE
   only:
     - master
 
