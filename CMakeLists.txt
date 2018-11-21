@@ -136,7 +136,7 @@ target_include_directories(shadertoy-objects PRIVATE
 	${shadertoy_INCLUDE_DIRS}
 	${Boost_INCLUDE_DIR}
 	${OPENGL_INCLUDE_DIRS}
-	${EPOXY_INCLUDE_DIRS}
+	${Epoxy_INCLUDE_DIRS}
 	${GLM_INCLUDE_DIRS})
 
 if (SOIL_FOUND)
@@ -213,7 +213,7 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 	target_link_libraries(${TARGET_NAME} PUBLIC
 		${Boost_LIBRARIES}
 		${OPENGL_LIBRARY}
-		${EPOXY_LIBRARIES}
+		${Epoxy_LIBRARIES}
 		${JPEG_LIBRARIES}
 		${SOIL_LIBRARIES})
 
