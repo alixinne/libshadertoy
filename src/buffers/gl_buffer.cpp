@@ -66,7 +66,7 @@ void gl_buffer::render_contents(const render_context &context, const io_resource
 					 id(),
 					 (void*)this);
 
-		target_fbo_.texture(GL_COLOR_ATTACHMENT0, *texture, 0);
+		attach_framebuffer_outputs(fbo_bind, *texture);
 
 		// Set the viewport
 		auto size(io.render_size()->resolve());
@@ -90,3 +90,8 @@ void gl_buffer::render_contents(const render_context &context, const io_resource
 	render_gl_contents(context, io);
 }
 
+void gl_buffer::attach_framebuffer_outputs(const gl::bound_ops<gl::framebuffer> &target_fbo,
+										   const gl::texture &texture)
+{
+	target_fbo.resource().texture(GL_COLOR_ATTACHMENT0, texture, 0);
+}

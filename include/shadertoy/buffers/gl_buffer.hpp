@@ -78,6 +78,18 @@ protected:
 	 */
 	virtual void render_gl_contents(const render_context &context, const io_resource &io) = 0;
 
+	/**
+	 * @brief     Binds the given texture to the target framebuffer object
+	 *            for rendering. This method may be overridden by derived classes
+	 *            in order to control the binding process. The default behavior is
+	 *            to bind the first layer of the texture object to the first color attachment.
+	 *
+	 * @param[in]  target_fbo Target framebuffer bound object
+	 * @param[in]  texture    Target texture object to bind
+	 */
+	virtual void attach_framebuffer_outputs(const gl::bound_ops<gl::framebuffer> &target_fbo,
+											const gl::texture &texture);
+
 public:
 	/**
 	 * @brief Obtain this buffer's GL framebuffer object
