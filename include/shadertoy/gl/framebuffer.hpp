@@ -3,6 +3,8 @@
 
 #include "shadertoy/gl/resource.hpp"
 
+#include "shadertoy/gl/bind_guard.hpp"
+
 namespace shadertoy
 {
 namespace gl
@@ -63,7 +65,21 @@ namespace gl
 		 * @throws opengl_error
 		 * @throws null_texture_error
 		 */
-		void texture(GLenum attachment, texture &texture, GLint level) const;
+		void texture(GLenum attachment, const texture &texture, GLint level) const;
+	};
+
+	template<>
+	class bound_ops<framebuffer> : public bound_ops_base<framebuffer>
+	{
+	protected:
+		bound_ops(const framebuffer &resource);
+
+	public:
+		const bound_ops<framebuffer> &texture_2d(GLenum target,
+												 GLenum attachment,
+												 GLenum texture_target,
+												 const texture &texture,
+												 GLint level) const;
 	};
 }
 }

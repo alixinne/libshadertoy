@@ -21,7 +21,27 @@ void framebuffer::unbind(GLenum target) const
 	gl_call(glBindFramebuffer, target, 0);
 }
 
-void framebuffer::texture(GLenum attachment, shadertoy::gl::texture &texture, GLint level) const
+void framebuffer::texture(GLenum attachment, const shadertoy::gl::texture &texture, GLint level) const
 {
 	gl_call(glNamedFramebufferTexture, GLuint(*this), attachment, GLuint(texture), level);
+}
+
+bound_ops<framebuffer>::bound_ops(const framebuffer &resource)
+	: bound_ops_base<framebuffer>(resource)
+{}
+
+const bound_ops<framebuffer> &bound_ops<framebuffer>::texture_2d(GLenum target,
+																 GLenum attachment,
+																 GLenum texture_target,
+																 const texture &texture,
+																 GLint level) const
+{
+	gl_call(glFramebufferTexture2D,
+			target,
+			attachment,
+			texture_target,
+			GLuint(texture),
+			level);
+	
+	return (*this);
 }

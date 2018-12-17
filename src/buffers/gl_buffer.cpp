@@ -57,7 +57,7 @@ void gl_buffer::render_contents(const render_context &context, const io_resource
 	}
 	else
 	{
-		target_fbo_.bind(GL_DRAW_FRAMEBUFFER);
+		auto fbo_bind(gl::get_bind_guard(target_fbo_, GL_DRAW_FRAMEBUFFER));
 
 		// Set color attachements
 		auto &texture(io.target_texture());
@@ -71,6 +71,9 @@ void gl_buffer::render_contents(const render_context &context, const io_resource
 		// Set the viewport
 		auto size(io.render_size()->resolve());
 		gl_call(glViewport, 0, 0, size.width, size.height);
+
+		// Drop the bind guard to leave the framebuffer bound
+		gl::drop_bind_guard(std::move(fbo_bind));
 	}
 
 	// Clear buffers as requested
