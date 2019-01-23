@@ -30,7 +30,7 @@ void gl_buffer::init_contents(const render_context &context, const io_resource &
 void gl_buffer::allocate_contents(const render_context &context, const io_resource &io)
 {
 	// Setup render buffers
-	target_rbo_.bind(GL_RENDERBUFFER);
+	target_fbo_.framebuffer_renderbuffer(GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, target_rbo_);
 
 	// Resolve size
 	rsize size(io.render_size()->resolve());

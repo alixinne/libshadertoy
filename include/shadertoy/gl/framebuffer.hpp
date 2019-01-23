@@ -66,6 +66,15 @@ namespace gl
 		 * @throws null_texture_error
 		 */
 		void texture(GLenum attachment, const texture &texture, GLint level) const;
+
+		/**
+		 * @brief glNamedFramebufferRenderbuffer
+		 *
+		 * @param attachment         Framebuffer attachment
+		 * @param renderbuffertarget Renderbuffer target
+		 * @param renderbuffer       Renderbuffer
+		 */
+		void framebuffer_renderbuffer(GLenum attachment, GLenum renderbuffertarget, const renderbuffer &renderbuffer) const;
 	};
 
 	template<>

@@ -3,6 +3,7 @@
 #include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl/texture.hpp"
 #include "shadertoy/gl/framebuffer.hpp"
+#include "shadertoy/gl/renderbuffer.hpp"
 
 using namespace shadertoy::gl;
 
@@ -24,6 +25,11 @@ void framebuffer::unbind(GLenum target) const
 void framebuffer::texture(GLenum attachment, const shadertoy::gl::texture &texture, GLint level) const
 {
 	gl_call(glNamedFramebufferTexture, GLuint(*this), attachment, GLuint(texture), level);
+}
+
+void framebuffer::framebuffer_renderbuffer(GLenum attachment, GLenum renderbuffertarget, const renderbuffer &renderbuffer) const
+{
+	gl_call(glNamedFramebufferRenderbuffer, GLuint(*this), attachment, renderbuffertarget, GLuint(renderbuffer));
 }
 
 bound_ops<framebuffer>::bound_ops(const framebuffer &resource)
