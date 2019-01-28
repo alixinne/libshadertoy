@@ -15,10 +15,7 @@ using shadertoy::gl::gl_call;
 using shadertoy::utils::error_assert;
 
 gl_buffer::gl_buffer(const std::string &id)
-	: basic_buffer(id),
-	clear_color_{0.f, 0.f, 0.f, 0.f},
-	clear_depth_(0.f),
-	clear_bits_(0)
+	: basic_buffer(id)
 {
 }
 
@@ -42,11 +39,9 @@ void gl_buffer::allocate_contents(const render_context &context, const io_resour
 	target_rbo_.storage(GL_DEPTH_COMPONENT, size.width, size.height);
 }
 
-void gl_buffer::render_contents(const render_context &context, const io_resource &io)
+void gl_buffer::render_contents(const render_context &context, const io_resource &io,
+								const members::buffer_member &member)
 {
-	// Update renderbuffer to use the correct target texture and bind as the current target
-	target_rbo_.bind(GL_RENDERBUFFER);
-
 	if (io.swap_policy() == member_swap_policy::default_framebuffer)
 	{
 		// Bind default framebuffer, assume viewport has been set correctly
@@ -76,15 +71,12 @@ void gl_buffer::render_contents(const render_context &context, const io_resource
 		gl::drop_bind_guard(std::move(fbo_bind));
 	}
 
+	// Apply member state
+	auto &state(member.state());
+	state.apply();
+
 	// Clear buffers as requested
-	if (clear_bits_ & GL_COLOR_BUFFER_BIT)
-		gl_call(glClearColor, clear_color_[0], clear_color_[1], clear_color_[2], clear_color_[3]);
-
-	if (clear_bits_ & GL_DEPTH_BUFFER_BIT)
-		gl_call(glClearDepthf, clear_depth_);
-
-	if (clear_bits_)
-		gl_call(glClear, clear_bits_);
+	state.clear();
 
 	// Render the contents of this buffer
 	render_gl_contents(context, io);

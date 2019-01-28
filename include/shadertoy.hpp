@@ -33,6 +33,8 @@
 #include "shadertoy/inputs/noise_input.hpp"
 #include "shadertoy/inputs/soil_input.hpp"
 
+#include "shadertoy/draw_state.hpp"
+
 #include "shadertoy/io_resource.hpp"
 
 #include "shadertoy/members/basic_member.hpp"

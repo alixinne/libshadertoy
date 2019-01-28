@@ -3,6 +3,8 @@ libshadertoy (1.0.0~rc6) UNRELEASED; urgency=medium
   * Add ability to get the compiled sources of a program
   * Build process fixes
   * Fix depth pass handling in geometry buffers
+  * Finer control over OpenGL drawing state for buffers
+  * Add support for blending modes
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Tue, 21 Aug 2018 16:30:57 +0200
 

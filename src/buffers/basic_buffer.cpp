@@ -27,10 +27,10 @@ void basic_buffer::allocate_textures(const render_context &context, const io_res
 	allocate_contents(context, io);
 }
 
-void basic_buffer::render(const render_context &context, const io_resource &io)
+void basic_buffer::render(const render_context &context, const io_resource &io, const members::buffer_member &member)
 {
 	// Render the contents of this buffer
-	render_contents(context, io);
+	render_contents(context, io, member);
 }
 
 unsigned long long basic_buffer::elapsed_time()

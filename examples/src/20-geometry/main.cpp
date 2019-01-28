@@ -166,20 +166,21 @@ int main(int argc, char *argv[])
 			imageBuffer->source_file(ST_BASE_DIR "/shaders/shader-gradient.glsl");
 			imageBuffer->geometry(geometry);
 
-			// Without a background, the buffer should also clear the previous contents
-			imageBuffer->clear_color({.5f, .0f, .5f, 1.f});
-			imageBuffer->clear_depth(1.f);
-			imageBuffer->clear_bits(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-			// Also we need depth test
-			gl_call(glEnable, GL_DEPTH_TEST);
-
 			// Add the image buffer to the swap chain, at the given size
 			// The default_framebuffer policy makes this buffer draw directly to
 			// the window instead of using a texture that is then copied to the
 			// screen.
-			chain.emplace_back(imageBuffer, make_size_ref(ctx.render_size),
-							   member_swap_policy::default_framebuffer);
+			auto image_member =
+				chain.emplace_back(imageBuffer, make_size_ref(ctx.render_size),
+								   member_swap_policy::default_framebuffer);
+
+			// Without a background, the buffer should also clear the previous contents
+			image_member->state().clear_color({.5f, .0f, .5f, 1.f});
+			image_member->state().clear_depth(1.f);
+			image_member->state().clear_bits(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			// Also we need depth test
+			image_member->state().enable(GL_DEPTH_TEST);
 
 			// Initialize context
 			context.init(chain);

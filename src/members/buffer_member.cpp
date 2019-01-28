@@ -17,7 +17,7 @@ using namespace shadertoy::members;
 
 void buffer_member::render_member(const swap_chain &chain, const render_context &context)
 {
-	buffer_->render(context, io_);
+	buffer_->render(context, io_, *this);
 
 	// Swap texture object pointers
 	io_.swap();

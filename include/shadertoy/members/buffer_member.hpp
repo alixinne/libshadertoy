@@ -7,6 +7,8 @@
 
 #include "shadertoy/io_resource.hpp"
 
+#include "shadertoy/draw_state.hpp"
+
 namespace shadertoy
 {
 namespace members
@@ -22,6 +24,9 @@ class shadertoy_EXPORT buffer_member : public basic_member
 
 	/// IO resource object that handles texture allocations
 	io_resource io_;
+
+	/// OpenGL drawing state
+	draw_state state_;
 
 protected:
 	/**
@@ -74,6 +79,22 @@ public:
 	 */
 	inline const io_resource &io() const
 	{ return io_; }
+
+	/**
+	 * @brief Get a reference to the OpenGL state
+	 *
+	 * @return Reference to the OpenGL state
+	 */
+	inline const draw_state &state() const
+	{ return state_; }
+
+	/**
+	 * @brief Get a reference to the OpenGL state
+	 *
+	 * @return Reference to the OpenGL state
+	 */
+	inline draw_state &state()
+	{ return state_; }
 
 	/**
 	 * @brief Return the buffer's latest output in the current chain

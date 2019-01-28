@@ -5,6 +5,8 @@
 
 #include "shadertoy/io_resource.hpp"
 
+#include "shadertoy/members/buffer_member.hpp"
+
 namespace shadertoy
 {
 namespace buffers
@@ -63,8 +65,10 @@ protected:
 	 *
 	 * @param[in]  context Rendering context to use for rendering this buffer
 	 * @param[in]  io      IO resource object
+	 * @param[in]  member  Current swap-chain member
 	 */
-	virtual void render_contents(const render_context &context, const io_resource &io) = 0;
+	virtual void render_contents(const render_context &context, const io_resource &io,
+								 const members::buffer_member &member) = 0;
 
 public:
 	/**
@@ -105,8 +109,9 @@ public:
 	 *
 	 * @param[in]  context Context to use for rendering this buffer
 	 * @param[in]  io      IO resource object
+	 * @param[in]  member  Current swap-chain member
 	 */
-	void render(const render_context &context, const io_resource &io);
+	void render(const render_context &context, const io_resource &io, const members::buffer_member &member);
 
 	/**
 	 * @brief      Obtain the duration of the last rendering of this buffer, in

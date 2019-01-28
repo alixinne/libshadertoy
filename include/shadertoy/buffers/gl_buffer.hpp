@@ -24,15 +24,6 @@ class gl_buffer : public basic_buffer
 	/// Target renderbuffer
 	gl::renderbuffer target_rbo_;
 
-	/// Clear color
-	std::array<float, 4> clear_color_;
-
-	/// Clear depth
-	float clear_depth_;
-
-	/// Clear flags
-	GLbitfield clear_bits_;
-
 protected:
 	/**
 	 * @brief     Initialize a new gl_buffer
@@ -65,8 +56,10 @@ protected:
 	 *
 	 * @param[in]  context Rendering context to use for rendering this buffer
 	 * @param[in]  io      IO resource object
+	 * @param[in]  member  Current swap-chain member
 	 */
-	void render_contents(const render_context &context, const io_resource &io) final;
+	void render_contents(const render_context &context, const io_resource &io,
+						 const members::buffer_member &member) final;
 
 	/**
 	 * @brief     Render the contents of this buffer to the currently bound
@@ -106,60 +99,6 @@ public:
 	 */
 	inline const gl::renderbuffer &target_rbo() const
 	{ return target_rbo_; }
-
-	/**
-	 * @brief Get the current clear color for this buffer
-	 *
-	 * The default is (0.f, 0.f, 0.f, 0.f)
-	 *
-	 * @return Clear color RGBA components
-	 */
-	inline const std::array<float, 4> &clear_color() const
-	{ return clear_color_; }
-
-	/**
-	 * @brief Sets the clear color for this buffer
-	 *
-	 * @param new_color New clear color
-	 */
-	inline void clear_color(const std::array<float, 4> &new_color)
-	{ clear_color_ = new_color; }
-
-	/**
-	 * @brief Gets the current clear depth for this buffer
-	 *
-	 * The default is 0.f.
-	 *
-	 * @return Clear depth value
-	 */
-	inline float clear_depth() const
-	{ return clear_depth_; }
-
-	/**
-	 * @brief Sets the new clear depth for this buffer
-	 *
-	 * @param new_depth New clear depth
-	 */
-	inline void clear_depth(float new_depth)
-	{ clear_depth_ = new_depth; }
-
-	/**
-	 * @brief Gets the current clear bits for this buffer
-	 *
-	 * The default is 0.
-	 *
-	 * @return Enable clear bits
-	 */
-	inline GLbitfield clear_bits() const
-	{ return clear_bits_; }
-
-	/**
-	 * @brief Sets the new clear bits for this buffer
-	 *
-	 * @param new_bits New clear bits
-	 */
-	inline void clear_bits(GLbitfield new_bits)
-	{ clear_bits_ = new_bits; }
 };
 }
 }
