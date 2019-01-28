@@ -3,6 +3,8 @@
 
 #include "shadertoy/pre.hpp"
 
+#include <array>
+
 namespace shadertoy
 {
 /**
