@@ -5,6 +5,7 @@ libshadertoy (1.0.0~rc6) UNRELEASED; urgency=medium
   * Fix depth pass handling in geometry buffers
   * Finer control over OpenGL drawing state for buffers
   * Add support for blending modes
+  * Drop support for Ubuntu 16.04
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Tue, 21 Aug 2018 16:30:57 +0200
 

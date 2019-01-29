@@ -26,10 +26,6 @@ version_suffix () {
 		echo -n "debian9"
 	elif [ "$1" = "bionic" ]; then
 		echo -n "ubuntu18"
-	elif [ "$1" = "xenial" ]; then
-		echo -n "ubuntu16"
-	elif [ "$1" = "trusty" ]; then
-		echo -n "ubuntu14"
 	else
 		exit 1
 	fi

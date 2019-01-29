@@ -1,14 +1,13 @@
 # Known build distributions
-ALL_DISTS=bionic xenial stretch
+ALL_DISTS=bionic stretch
 
 # Known package types
 PKG_TYPES=amd64 i386 source
 
 # Possible combinations of distributions-types
 ALL_BIONIC_ARCHS=$(patsubst %,bionic-%,$(PKG_TYPES))
-ALL_XENIAL_ARCHS=$(patsubst %,xenial-%,$(PKG_TYPES))
 ALL_STRETCH_ARCHS=$(patsubst %,stretch-%,$(PKG_TYPES))
-ALL_PKGS=$(ALL_BIONIC_ARCHS) $(ALL_XENIAL_ARCHS) $(ALL_STRETCH_ARCHS)
+ALL_PKGS=$(ALL_BIONIC_ARCHS) $(ALL_STRETCH_ARCHS)
 
 # Test settings
 IGNORE_TEST_FAILURES?=
@@ -27,8 +26,6 @@ export GIT_PREFIX
 all: $(ALL_DISTS)
 
 bionic: $(ALL_BIONIC_ARCHS)
-
-xenial: $(ALL_XENIAL_ARCHS)
 
 stretch: $(ALL_STRETCH_ARCHS)
 

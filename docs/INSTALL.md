@@ -35,10 +35,12 @@ git clone --recursive https://gitlab.inria.fr/vtaverni/libshadertoy.git
 In order to compile the project, the following tools and libraries are required:
 
 * OpenGL 4.5
-* C++14-enabled compiler (GCC 5 or Clang 3.4)
+* C++14-enabled compiler (GCC 6 or Clang 3.4)
 * [CMake 3.1+](https://launchpad.net/ubuntu/bionic/+source/cmake)
 * [Boost 1.54+](https://launchpad.net/ubuntu/bionic/+package/libboost-all-dev)
 * [libepoxy 1.3+](https://launchpad.net/ubuntu/bionic/+source/libepoxy)
+
+*Note: GCC 5 is not supported due to a bug fixed in v6: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67371*
 
 These additional dependencies can be installed to support loading images as inputs:
 
