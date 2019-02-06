@@ -4,6 +4,10 @@ variables:
   STRETCH_AMD64_RELEASE_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/amd64/build-stretch:latest
   STRETCH_I386_TEST_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/i386/build-stretch:$CI_COMMIT_REF_SLUG
   STRETCH_I386_RELEASE_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/i386/build-stretch:latest
+  BUSTER_AMD64_TEST_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/amd64/build-buster:$CI_COMMIT_REF_SLUG
+  BUSTER_AMD64_RELEASE_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/amd64/build-buster:latest
+  BUSTER_I386_TEST_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/i386/build-buster:$CI_COMMIT_REF_SLUG
+  BUSTER_I386_RELEASE_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/i386/build-buster:latest
   BIONIC_AMD64_TEST_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/amd64/build-bionic:$CI_COMMIT_REF_SLUG
   BIONIC_AMD64_RELEASE_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/amd64/build-bionic:latest
   BIONIC_I386_TEST_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/i386/build-bionic:$CI_COMMIT_REF_SLUG
@@ -153,6 +157,54 @@ release_stretch_i386_image:
     - docker pull $STRETCH_I386_TEST_IMAGE
     - docker tag $STRETCH_I386_TEST_IMAGE $STRETCH_I386_RELEASE_IMAGE
     - docker push $STRETCH_I386_RELEASE_IMAGE
+  only:
+    - master
+
+buster_amd64_image:
+  <<: *build_image
+  script:
+    - docker pull $BUSTER_AMD64_TEST_IMAGE || true
+    - docker build --pull -t $BUSTER_AMD64_TEST_IMAGE --cache-from $BUSTER_AMD64_TEST_IMAGE -f docker/Dockerfile.buster-amd64 docker
+    - docker push $BUSTER_AMD64_TEST_IMAGE
+
+buster_i386_image:
+  <<: *build_image
+  script:
+    - docker pull $BUSTER_I386_TEST_IMAGE || true
+    - docker build --pull -t $BUSTER_I386_TEST_IMAGE --cache-from $BUSTER_I386_TEST_IMAGE -f docker/Dockerfile.buster-i386 docker
+    - docker push $BUSTER_I386_TEST_IMAGE
+
+buster_amd64_pkg:
+  <<: *build_pkg
+  image: $BUSTER_AMD64_TEST_IMAGE
+  artifacts:
+    name: 'libshadertoy-buster-amd64-$CI_COMMIT_REF_SLUG'
+    paths:
+      - '*.deb'
+
+buster_i386_pkg:
+  <<: *build_pkg
+  image: $BUSTER_I386_TEST_IMAGE
+  artifacts:
+    name: 'libshadertoy-buster-i386-$CI_COMMIT_REF_SLUG'
+    paths:
+      - '*.deb'
+
+release_buster_amd64_image:
+  <<: *release_img
+  script:
+    - docker pull $BUSTER_AMD64_TEST_IMAGE || true
+    - docker tag $BUSTER_AMD64_TEST_IMAGE $BUSTER_AMD64_RELEASE_IMAGE
+    - docker push $BUSTER_AMD64_RELEASE_IMAGE
+  only:
+    - master
+
+release_buster_i386_image:
+  <<: *release_img
+  script:
+    - docker pull $BUSTER_I386_TEST_IMAGE || true
+    - docker tag $BUSTER_I386_TEST_IMAGE $BUSTER_I386_RELEASE_IMAGE
+    - docker push $BUSTER_I386_RELEASE_IMAGE
   only:
     - master
 
