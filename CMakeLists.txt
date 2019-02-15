@@ -51,15 +51,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Required packages
 find_package(Boost 1.54 REQUIRED COMPONENTS filesystem)
-find_package(OpenGL REQUIRED COMPONENTS OpenGL)
-
-if (TARGET OpenGL::OpenGL)
-	message(STATUS "Using GLVND as OpenGL library")
-	set(OpenGL_LIBRARY OpenGL::OpenGL)
-else()
-	message(STATUS "Using legacy OpenGL library")
-	set(OpenGL_LIBRARY ${OPENGL_LIBRARY})
-endif()
 
 find_package(PkgConfig REQUIRED)
 
@@ -144,7 +135,12 @@ target_include_directories(shadertoy-objects PRIVATE
 	${Epoxy_INCLUDE_DIRS}
 	${GLM_INCLUDE_DIRS})
 
-if (SOIL_FOUND)
+# The vcpkg port of SOIL requires OpenGL to be linked manually
+if (WIN32 AND SOIL_FOUND)
+	find_package(OpenGL QUIET)
+endif()
+
+if (SOIL_FOUND AND (NOT WIN32 OR OpenGL_FOUND))
 	message(STATUS "Building with SOIL support")
 	target_include_directories(shadertoy-objects PRIVATE
 		${SOIL_INCLUDE_DIRS})
@@ -201,13 +197,17 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 	# Link dependencies
 	target_link_libraries(${TARGET_NAME} PUBLIC
 		${Boost_LIBRARIES}
-		${OpenGL_LIBRARY}
 		${Epoxy_LIBRARIES}
 		${JPEG_LIBRARIES}
 		${SOIL_LIBRARIES})
 
-	if (SOIL_FOUND)
+	if (SOIL_FOUND AND (NOT WIN32 OR OpenGL_FOUND))
 		target_link_libraries(${TARGET_NAME} PUBLIC ${SOIL_LIBRARIES})
+
+		# See find_package(SOIL) handling
+		if (WIN32)
+			target_link_libraries(${TARGET_NAME} PUBLIC ${OPENGL_LIBRARY})
+		endif()
 	endif()
 
 	if (JPEG_FOUND)

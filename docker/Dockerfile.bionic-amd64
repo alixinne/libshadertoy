@@ -11,7 +11,6 @@ RUN apt-get update -qq && \
 		libsoil-dev \
 		libjpeg-dev \
 		libepoxy-dev \
-		libgl1-mesa-dev \
 		libglm-dev \
 		libopenexr-dev \
 		doxygen \
