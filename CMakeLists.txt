@@ -97,7 +97,7 @@ find_package(SOIL)
 find_package(JPEG)
 
 # libopenexr
-find_package(OpenEXR QUIET)
+find_package(OpenEXR)
 
 # Copy shaders to source
 file(GLOB RESOURCES_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*)
