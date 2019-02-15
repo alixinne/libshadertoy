@@ -50,7 +50,7 @@ set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Required packages
-find_package(Boost 1.54 REQUIRED COMPONENTS filesystem date_time)
+find_package(Boost 1.54 REQUIRED COMPONENTS filesystem)
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 
 if (TARGET OpenGL::OpenGL)
