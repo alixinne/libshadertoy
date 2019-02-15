@@ -15,7 +15,6 @@ RUN apt-get update -qq && \
 		libgl1-mesa-dev \
 		libglm-dev \
 		libopenexr-dev \
-		libunwind-dev \
 		doxygen \
 		doxygen-latex \
 		graphviz \

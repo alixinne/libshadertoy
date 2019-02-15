@@ -6,10 +6,6 @@
 #include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl/caller.hpp"
 
-#if HAS_UNWIND
-#include <libunwind.h>
-#endif
-
 #define ERROR_PREFIX "OpenGL error: "
 
 using namespace shadertoy::gl;
@@ -72,60 +68,7 @@ namespace gl
 		GLenum error = glGetError();
 		if (error != GL_NO_ERROR)
 		{
-#if HAS_UNWIND
-			std::stringstream ss;
-			bool first = true;
-			char buf[256];
-
-			unw_cursor_t c;
-			unw_context_t ctxt;
-			unw_word_t ip, sp, off;
-			int ret;
-
-			ret = unw_getcontext(&ctxt);
-			if (ret)
-			{
-				// failed to get local context
-				goto unwind_end;
-			}
-
-			ret = unw_init_local(&c, &ctxt);
-			if (ret)
-			{
-				// failed to get cursor on context
-				goto unwind_end;
-			}
-
-			while (unw_step(&c) > 0)
-			{
-				unw_get_reg(&c, UNW_REG_IP, &ip);
-				unw_get_reg(&c, UNW_REG_SP, &sp);
-
-				ret = unw_get_proc_name(&c, &buf[0], sizeof(buf), &off);
-				if (first)
-				{
-					first = false;
-				}
-				else
-				{
-					if (ret != 0 && ret != UNW_ENOMEM)
-					{
-						ss << "Called from ?:" << std::hex << ip << ":?" << std::endl;
-					}
-					else
-					{
-						ss << "Called from " << buf << ":" << std::hex << ip << ":" << std::hex << off << std::endl;
-					}
-				}
-
-				if (strcmp("main", buf) == 0)
-					break;
-			}
-unwind_end:
-			throw opengl_error(error, ss.str());
-#else
 			throw opengl_error(error, std::string());
-#endif
 		}
 	}
 }

@@ -48,11 +48,6 @@ These additional dependencies can be installed to support loading images as inpu
 * JPG (including progressive): [libjpeg-dev](https://launchpad.net/ubuntu/bionic/+package/libjpeg-dev)
 * OpenEXR (half precision): [libopenexr-dev](https://launchpad.net/ubuntu/bionic/+package/libopenexr-dev)
 
-If you want the OpenGL exceptions to include the backtrace, the following
-dependencies are also required:
-
-* [libunwind-dev](https://launchpad.net/ubuntu/bionic/+package/libunwind8-dev)
-
 You can then compile and install the library using CMake:
 
 ```bash
@@ -121,7 +116,7 @@ apt-get install -y nvidia-driver
 # You can also install the build dependencies beforehand to speed up the
 # compilation
 apt-get install -y build-essential libsoil-dev libjpeg-dev libepoxy-dev \
-    libgl1-mesa-dev libglm-dev libopenexr-dev libunwind-dev doxygen doxygen-latex \
+    libgl1-mesa-dev libglm-dev libopenexr-dev doxygen doxygen-latex \
     graphviz pkg-config cmake git ca-certificates
 
 # Leave the chroot

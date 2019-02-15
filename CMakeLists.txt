@@ -58,9 +58,6 @@ find_package(PkgConfig REQUIRED)
 # Find GLM using CMake
 find_package(glm REQUIRED)
 
-# Find libunwind for printing backtraces on GL errors
-find_package(Unwind)
-
 # libepoxy extension loader
 find_package(Epoxy REQUIRED)
 
@@ -182,17 +179,6 @@ set_property(TARGET shadertoy-objects PROPERTY CXX_STANDARD 14)
 # -fPIC
 set_property(TARGET shadertoy-objects PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-# Enable Unwind support
-if (UNWIND_FOUND)
-	message(STATUS "Using unwind for tracing OpenGL calls")
-
-	target_include_directories(shadertoy-objects PRIVATE ${UNWIND_INCLUDE_DIRS})
-	target_compile_definitions(shadertoy-objects PRIVATE HAS_UNWIND=1 UNW_LOCAL_ONLY=1)
-else()
-	message(STATUS "Not using unwind for tracing")
-	target_compile_definitions(shadertoy-objects PRIVATE HAS_UNWIND=0)
-endif()
-
 # Build static and shared libraries
 set(LIBRARY_TYPES "SHARED;STATIC")
 foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
@@ -204,15 +190,10 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 	add_library(${TARGET_NAME} ${LIBRARY_TYPE} ${SHADERTOY_DEFAULT_TARGET_ARG}
 		$<TARGET_OBJECTS:shadertoy-objects>)
 
-	# Add UNWIND if found
-	if (UNWIND_FOUND AND UNWIND_ARCH)
-		target_link_libraries(${TARGET_NAME} PRIVATE ${UNWIND_LIBRARIES} unwind-${UNWIND_ARCH})
-	endif()
-
 	# Link dependencies
 	target_link_libraries(${TARGET_NAME} PUBLIC
 		${Boost_LIBRARIES}
-		${OPENGL_LIBRARY}
+		OpenGL::OpenGL
 		${Epoxy_LIBRARIES}
 		${JPEG_LIBRARIES}
 		${SOIL_LIBRARIES})

@@ -4,7 +4,7 @@ Maintainer: Vincent Tavernier <vince.tavernier@gmail.com>
 Build-Depends: debhelper (>= 9),
  libboost-filesystem-dev (>= 1.54), libboost-date-time-dev (>= 1.54),
  libc6-dev, libstdc++6 (>= 5), libsoil-dev, libjpeg-dev, libepoxy-dev (>= 1.3), libgl1-mesa-dev, libglm-dev,
- libopenexr-dev (>= 2.2), libunwind-dev | libunwind8-dev, doxygen, doxygen-latex, graphviz, pkg-config,
+ libopenexr-dev (>= 2.2), doxygen, doxygen-latex, graphviz, pkg-config,
  cmake (>= 3.1), gcc-6 | gcc-7 | gcc-8
 Standards-Version: 3.9.8
 Section: libs
@@ -19,7 +19,7 @@ Recommends: libshadertoy-doc (= ${binary:Version})
 Depends: libshadertoy1 (= ${binary:Version}), ${misc:Depends},
  libboost-filesystem-dev (>= 1.54), libboost-date-time-dev (>= 1.54),
  libsoil-dev, libjpeg-dev, libepoxy-dev (>= 1.3), libgl1-mesa-dev, libglm-dev, libopenexr-dev (>= 2.2),
- libunwind-dev | libunwind8-dev, gcc-6 | gcc-7 | gcc-8, libstdc++6 (>= 5)
+ gcc-6 | gcc-7 | gcc-8, libstdc++6 (>= 5)
 Description: Development files for libshadertoy
  Development headers and documentation for libshadertoy
 
