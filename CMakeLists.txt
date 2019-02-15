@@ -51,7 +51,15 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Required packages
 find_package(Boost 1.54 REQUIRED COMPONENTS filesystem date_time)
-find_package(OpenGL REQUIRED)
+find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+
+if (TARGET OpenGL::OpenGL)
+	message(STATUS "Using GLVND as OpenGL library")
+	set(OpenGL_LIBRARY OpenGL::OpenGL)
+else()
+	message(STATUS "Using legacy OpenGL library")
+	set(OpenGL_LIBRARY ${OPENGL_LIBRARY})
+endif()
 
 find_package(PkgConfig REQUIRED)
 
@@ -193,7 +201,7 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 	# Link dependencies
 	target_link_libraries(${TARGET_NAME} PUBLIC
 		${Boost_LIBRARIES}
-		OpenGL::OpenGL
+		${OpenGL_LIBRARY}
 		${Epoxy_LIBRARIES}
 		${JPEG_LIBRARIES}
 		${SOIL_LIBRARIES})
