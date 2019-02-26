@@ -84,7 +84,7 @@ release_bionic_amd64_image:
     - docker tag $BIONIC_AMD64_TEST_IMAGE $BIONIC_AMD64_RELEASE_IMAGE
     - docker push $BIONIC_AMD64_RELEASE_IMAGE
   only:
-    - master
+    - tags
 
 release_bionic_i386_image:
   <<: *release_img
@@ -93,7 +93,7 @@ release_bionic_i386_image:
     - docker tag $BIONIC_I386_TEST_IMAGE $BIONIC_I386_RELEASE_IMAGE
     - docker push $BIONIC_I386_RELEASE_IMAGE
   only:
-    - master
+    - tags
 
 stretch_amd64_image:
   <<: *build_image
@@ -149,7 +149,7 @@ release_stretch_amd64_image:
     - docker tag $STRETCH_AMD64_TEST_IMAGE $STRETCH_AMD64_RELEASE_IMAGE
     - docker push $STRETCH_AMD64_RELEASE_IMAGE
   only:
-    - master
+    - tags
 
 release_stretch_i386_image:
   <<: *release_img
@@ -158,7 +158,7 @@ release_stretch_i386_image:
     - docker tag $STRETCH_I386_TEST_IMAGE $STRETCH_I386_RELEASE_IMAGE
     - docker push $STRETCH_I386_RELEASE_IMAGE
   only:
-    - master
+    - tags
 
 buster_amd64_image:
   <<: *build_image
@@ -197,7 +197,7 @@ release_buster_amd64_image:
     - docker tag $BUSTER_AMD64_TEST_IMAGE $BUSTER_AMD64_RELEASE_IMAGE
     - docker push $BUSTER_AMD64_RELEASE_IMAGE
   only:
-    - master
+    - tags
 
 release_buster_i386_image:
   <<: *release_img
@@ -206,7 +206,7 @@ release_buster_i386_image:
     - docker tag $BUSTER_I386_TEST_IMAGE $BUSTER_I386_RELEASE_IMAGE
     - docker push $BUSTER_I386_RELEASE_IMAGE
   only:
-    - master
+    - tags
 
 pages:
   <<: *fetch_submodules
@@ -222,7 +222,7 @@ pages:
     paths:
       - public
   only:
-    - master
+    - tags
   tags:
     - linux
 
