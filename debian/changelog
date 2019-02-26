@@ -1,4 +1,4 @@
-libshadertoy (1.0.0~rc6) UNRELEASED; urgency=medium
+libshadertoy (1.0.0~rc6) unstable; urgency=medium
 
   * Add ability to get the compiled sources of a program
   * Build process fixes
