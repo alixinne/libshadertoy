@@ -16,9 +16,9 @@ SKIP_TESTS?=
 
 # CI settings
 VERS=$(shell head -n 1 debian/changelog | awk '{gsub("[()]","",$$2);print $$2}')
-OS_DIST=$(shell . /etc/os-release && test -n "$$VERSION_CODENAME" && echo -n "$$VERSION_CODENAME" || \
-	   test -n "$$VERSION" && echo -n "$$VERSION" | cut -d' ' -f2 | sed 's/[()]//g' || \
-	   echo -n "$$PRETTY_NAME" | cut -d' ' -f3 | cut -d/ -f1)
+OS_DIST=$(shell . /etc/os-release && (test -n "$$VERSION_CODENAME" && echo -n "$$VERSION_CODENAME") || \
+	   (test -n "$$VERSION" && echo -n "$$VERSION" | cut -d' ' -f2 | sed 's/[()]//g') || \
+	   (echo -n "$$PRETTY_NAME" | cut -d' ' -f3 | cut -d/ -f1))
 export OS_DIST
 CI_BUILD_TYPE?=ci-src
 
