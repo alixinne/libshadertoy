@@ -16,6 +16,9 @@
 #include <glm/mat3x4.hpp>
 #include <glm/mat4x3.hpp>
 
+#include <algorithm>
+#include <vector>
+
 namespace shadertoy
 {
 namespace gl
@@ -165,6 +168,64 @@ namespace gl
 		 */
 		inline bool set_value(size_t count, const glm::ivec4 *v) const
 		{ return set_program_value(glProgramUniform4iv, count, v); }
+
+		/**
+		 * @brief glProgramUniform1iv
+		 *
+		 * @param  count count
+		 * @param  v0    v0
+		 * @return       true if the value was set, false otherwise
+		 */
+		inline bool set_value(size_t count, const bool *v0) const
+		{
+			GLint val(*v0);
+			return set_program_value(glProgramUniform1iv, count, &val);
+		}
+
+		/**
+		 * @brief glProgramUniform2iv
+		 *
+		 * @param  count count
+		 * @param  v     v
+		 * @return       true if the value was set, false otherwise
+		 */
+		inline bool set_value(size_t count, const glm::bvec2 *v) const
+		{
+			std::vector<glm::ivec2> vec;
+			vec.reserve(count);
+			std::transform(v, v + count, std::back_inserter(vec), [](auto &item) { return glm::ivec2(item); });
+			return set_program_value(glProgramUniform2iv, count, vec.data());
+		}
+
+		/**
+		 * @brief glProgramUniform3iv
+		 *
+		 * @param  count count
+		 * @param  v     v
+		 * @return       true if the value was set, false otherwise
+		 */
+		inline bool set_value(size_t count, const glm::bvec3 *v) const
+		{
+			std::vector<glm::ivec3> vec;
+			vec.reserve(count);
+			std::transform(v, v + count, std::back_inserter(vec), [](auto &item) { return glm::ivec3(item); });
+			return set_program_value(glProgramUniform3iv, count, vec.data());
+		}
+
+		/**
+		 * @brief glProgramUniform4iv
+		 *
+		 * @param  count count
+		 * @param  v     v
+		 * @return       true if the value was set, false otherwise
+		 */
+		inline bool set_value(size_t count, const glm::bvec4 *v) const
+		{
+			std::vector<glm::ivec4> vec;
+			vec.reserve(count);
+			std::transform(v, v + count, std::back_inserter(vec), [](auto &item) { return glm::ivec4(item); });
+			return set_program_value(glProgramUniform4iv, count, vec.data());
+		}
 
 		/**
 		 * @brief glProgramUniform1fv
