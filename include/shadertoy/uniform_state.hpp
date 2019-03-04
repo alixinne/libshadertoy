@@ -266,6 +266,31 @@ public:
 	}
 
 	/**
+	 * @brief Try to obtain the value of a dynamic uniform
+	 *
+	 * @param name  Name of the uniform to obtain.
+	 * @param value Reference to the storage for the returned value.
+	 * @tparam T    Type of the uniform to obtain.
+	 * @return true if the uniform exists and could be obtained as an instance of \c T, false otherwise
+	 */
+	template<typename T>
+	bool try_get(const std::string &name, T &value)
+	{
+		// Try to find input variant in input map
+		auto it = input_map.find(name);
+		if (it == input_map.end())
+			return false;
+
+		// Try to get the input value as a T
+		auto ptr = boost::get<T>(&(it->second));
+		if (!ptr) // type unboxing failed
+			return false;
+
+		value = *ptr;
+		return true;
+	}
+
+	/**
 	 * @brief Remove a dynamic uniform.
 	 *
 	 * @param name Name of the uniform to remove from this block.
