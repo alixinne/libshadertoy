@@ -291,6 +291,31 @@ public:
 	}
 
 	/**
+	 * @brief Try to set the value of a dynamic uniform
+	 *
+	 * @param name  Name of the uniform to set.
+	 * @param value New value of the uniform.
+	 * @tparam T    Type of the uniform to set.
+	 * @return true if the uniform exists and could be set from an instance of \c T, false otherwise
+	 */
+	template<typename T>
+	bool try_set(const std::string &name, const T &value)
+	{
+		// Try to find input variant in input map
+		auto it = input_map.find(name);
+		if (it == input_map.end())
+			return false;
+
+		// Try to get the input value as a T
+		auto ptr = boost::get<T>(&(it->second));
+		if (!ptr) // type unboxing failed
+			return false;
+
+		*ptr = value;
+		return true;
+	}
+
+	/**
 	 * @brief Remove a dynamic uniform.
 	 *
 	 * @param name Name of the uniform to remove from this block.

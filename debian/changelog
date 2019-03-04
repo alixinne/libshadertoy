@@ -1,6 +1,6 @@
 libshadertoy (1.0.0~rc7) UNRELEASED; urgency=medium
 
-  * Add try_get method to dynamic uniforms
+  * Add try_get/try_set methods to dynamic uniforms
   * Add support for setting bvec uniforms
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Mon, 04 Mar 2019 14:49:00 +0100
