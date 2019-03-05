@@ -5,6 +5,8 @@
 
 #include "shadertoy/members/basic_member.hpp"
 
+#include "shadertoy/draw_state.hpp"
+
 namespace shadertoy
 {
 namespace members
@@ -26,6 +28,10 @@ namespace members
  * of the specified member independently of the preceding node in the
  * swap_chain.
  *
+ * The screen member also holds a draw_state member which controls how the
+ * final texture is drawn on screen. This allows setting blending options and
+ * clear colors for the rendering target.
+ *
  * Additional parameters are available to change the viewport when rendering.
  */
 class shadertoy_EXPORT screen_member : public basic_member
@@ -44,6 +50,9 @@ class shadertoy_EXPORT screen_member : public basic_member
 
 	/// Size reference for the viewport call
 	rsize_ref viewport_size_;
+
+	/// OpenGL drawing state
+	draw_state state_;
 
 protected:
 	/**
@@ -185,6 +194,22 @@ public:
 	 */
 	inline void viewport_size(rsize_ref &&new_viewport_size)
 	{ viewport_size_ = std::move(new_viewport_size); }
+
+	/**
+	 * @brief Get a reference to the OpenGL state
+	 *
+	 * @return Reference to the OpenGL state
+	 */
+	inline const draw_state &state() const
+	{ return state_; }
+
+	/**
+	 * @brief Get a reference to the OpenGL state
+	 *
+	 * @return Reference to the OpenGL state
+	 */
+	inline draw_state &state()
+	{ return state_; }
 };
 
 /**

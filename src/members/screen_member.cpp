@@ -32,6 +32,12 @@ void screen_member::render_member(const swap_chain &chain, const render_context 
 	texptr->bind_unit(0);
 	sampler_.bind(0);
 
+	// Apply member state
+	state_.apply();
+
+	// Clear buffers as requested
+	state_.clear();
+
 	context.screen_quad().render();
 }
 
