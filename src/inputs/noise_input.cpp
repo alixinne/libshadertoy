@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <random>
 #include <vector>
 
 #include <epoxy/gl.h>
@@ -22,13 +23,16 @@ void noise_input::load_input()
 	// Resolve texture size
 	rsize ts(size_->resolve());
 
-	error_assert(ts.width != 0 && ts.height != 0,
-				 "Noise tile size is zero for input {}",
-				 (void*)this);
+	error_assert(ts.width != 0 && ts.height != 0, "Noise tile size is zero for input {}",
+				 static_cast<const void *>(this));
 
 	// Create the actual noise
+	std::random_device hr;
+	std::minstd_rand r(hr());
+	std::uniform_int_distribution<uint8_t> uniform_dist;
+
 	std::vector<unsigned char> rnd(ts.width * ts.height);
-	std::generate(rnd.begin(), rnd.end(), []() { return rand() % 256; });
+	std::generate(rnd.begin(), rnd.end(), [&]() { return uniform_dist(r); });
 
 	// Load it
 	texture_->image_2d(GL_TEXTURE_2D, 0, GL_RED, ts.width, ts.height, 0, GL_RED,
@@ -39,12 +43,12 @@ void noise_input::load_input()
 
 	texture_->generate_mipmap();
 
-	log::shadertoy()->info("Generated {}x{} noise texture for {} (GL id {})",
-						   ts.width, ts.height, (void*)this, GLuint(*texture_));
+	log::shadertoy()->info("Generated {}x{} noise texture for {} (GL id {})", ts.width, ts.height,
+						   static_cast<const void *>(this), GLuint(*texture_));
 }
 
 void noise_input::reset_input() { texture_.reset(); }
 
 gl::texture *noise_input::use_input() { return texture_.get(); }
 
-noise_input::noise_input(rsize_ref &&size) : basic_input(), size_(std::move(size)) {}
+noise_input::noise_input(rsize_ref &&size) : size_(std::move(size)) {}

@@ -16,18 +16,21 @@ void io_resource::init_render_texture(rsize size, std::unique_ptr<gl::texture> &
 {
 	// Only create a texture object if it is necessary
 	if (!texptr)
+	{
 		texptr = std::make_unique<gl::texture>(GL_TEXTURE_2D);
+	}
 
 	// Allocate texture storage according to width/height
 	texptr->image_2d(GL_TEXTURE_2D, 0, internal_format_, size.width, size.height, 0, GL_BGRA,
 					 GL_UNSIGNED_BYTE, nullptr);
 
 	// Clear the frame accumulator so it doesn't contain garbage
-	unsigned char black[4] = {0};
-	texptr->clear_tex_image(0, GL_BGRA, GL_UNSIGNED_BYTE, black);
+	uint8_t black[4] = { 0 };
+	texptr->clear_tex_image(0, GL_BGRA, GL_UNSIGNED_BYTE, std::begin(black));
 
 	log::shadertoy()->debug("Initialized {}x{} ({}) render texture at {} for {} (GL id {})",
-							size.width, size.height, internal_format_, (void*)texptr.get(), (void*)this, GLuint(*texptr));
+							size.width, size.height, internal_format_, static_cast<const void *>(texptr.get()),
+							static_cast<const void *>(this), GLuint(*texptr));
 }
 
 io_resource::io_resource(rsize_ref &&render_size, GLint internal_format, member_swap_policy swap_policy)
@@ -41,9 +44,8 @@ io_resource::io_resource(rsize_ref &&render_size, GLint internal_format, member_
 void io_resource::allocate()
 {
 	rsize size(render_size_->resolve());
-	error_assert(size.width > 0 && size.height > 0,
-				 "IO resource object {} size is zero",
-				 (void*)this);
+	error_assert(size.width > 0 && size.height > 0, "IO resource object {} size is zero",
+				 static_cast<const void *>(this));
 
 	// Current texture settings
 	rsize current_size;
@@ -92,7 +94,7 @@ void io_resource::swap()
 {
 	if (swap_policy_ != member_swap_policy::default_framebuffer)
 	{
-		if (warn_assert(source_tex_.get() != nullptr, "Swapping unallocated IO resource object {}", (void*)this))
+		if (warn_assert(source_tex_ != nullptr, "Swapping unallocated IO resource object {}", static_cast<const void *>(this)))
 		{
 			GLint width, height, current_format;
 			source_tex_->get_parameter(0, GL_TEXTURE_WIDTH, &width);
@@ -101,11 +103,14 @@ void io_resource::swap()
 
 			rsize current_size(width, height);
 			warn_assert(current_size == render_size_->resolve() && current_format == internal_format_,
-						"IO resource object {} render size and allocated sizes and/or formats mismatch", (void*)this);
+						"IO resource object {} render size and allocated sizes and/or formats "
+						"mismatch",
+						static_cast<const void *>(this));
 
 			warn_assert((target_tex_ && swap_policy_ == member_swap_policy::double_buffer) ||
 						(!target_tex_ && swap_policy_ == member_swap_policy::single_buffer),
-						"IO resource object {} swap policy doesn't match the current state", (void*)this);
+						"IO resource object {} swap policy doesn't match the current state",
+						static_cast<const void *>(this));
 		}
 
 		if (target_tex_)
@@ -115,7 +120,7 @@ void io_resource::swap()
 	}
 	else
 	{
-		warn_assert(source_tex_.get() == nullptr && target_tex_.get() == nullptr,
-					"IO resource object {} swap policy doesn't match the current state", (void*)this);
+		warn_assert(source_tex_ == nullptr && target_tex_ == nullptr,
+					"IO resource object {} swap policy doesn't match the current state", static_cast<const void *>(this));
 	}
 }

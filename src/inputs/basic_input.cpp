@@ -22,7 +22,7 @@ void basic_input::load()
 {
 	if (!loaded_)
 	{
-		log::shadertoy()->trace("Loading input {}", (void*)this);
+		log::shadertoy()->trace("Loading input {}", static_cast<const void *>(this));
 
 		load_input();
 		loaded_ = true;
@@ -33,7 +33,7 @@ void basic_input::reset()
 {
 	if (loaded_)
 	{
-		log::shadertoy()->trace("Resetting input {}", (void*)this);
+		log::shadertoy()->trace("Resetting input {}", static_cast<const void *>(this));
 
 		reset_input();
 		loaded_ = false;
@@ -85,9 +85,8 @@ gl::texture *basic_input::bind(GLuint unit)
 	auto tex(use());
 
 	// Check that we have a texture object
-	error_assert(tex != nullptr, "Failed to get texture to bind to unit {} for input {}",
-				 unit,
-				 (void*)this);
+	error_assert(tex != nullptr, "Failed to get texture to bind to unit {} for input {}", unit,
+				 static_cast<const void *>(this));
 
 	tex->bind_unit(unit);
 	return tex;

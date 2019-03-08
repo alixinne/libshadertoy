@@ -87,7 +87,7 @@ public:
 	 * @param name    Name of this template part
 	 * @param defines Preprocessor definition block
 	 */
-	define_part(const std::string &name, std::shared_ptr<preprocessor_defines> defines);
+	define_part(const std::string &name, const std::shared_ptr<preprocessor_defines> &defines);
 
 	/**
 	 * @brief Obtain the preprocessor definition block

@@ -1,11 +1,12 @@
 #include <algorithm>
+#include <utility>
 #include <vector>
 
 #include <epoxy/gl.h>
 
-#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl/caller.hpp"
 #include "shadertoy/gl/shader.hpp"
+#include "shadertoy/shadertoy_error.hpp"
 
 using namespace shadertoy::gl;
 
@@ -14,10 +15,8 @@ null_shader_error::null_shader_error()
 {
 }
 
-shader_compilation_error::shader_compilation_error(GLuint shaderId, const std::string &log)
-	: shadertoy_error("OpenGL shader compilation error"),
-	shader_id_(shaderId),
-	log_(log)
+shader_compilation_error::shader_compilation_error(GLuint shaderId, std::string log)
+: shadertoy_error("OpenGL shader compilation error"), shader_id_(shaderId), log_(std::move(log))
 {
 }
 
@@ -78,7 +77,9 @@ std::string shader::log() const
 	gl_call(glGetShaderiv, GLuint(*this), GL_INFO_LOG_LENGTH, &infoLogLength);
 
 	if (infoLogLength == 0)
+	{
 		return std::string();
+	}
 
 	// Get log
 	std::vector<GLchar> logStr(infoLogLength);

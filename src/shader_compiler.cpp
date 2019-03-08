@@ -72,7 +72,10 @@ void shader_compiler::compile(gl::shader &shader, const std::vector<std::pair<st
 				{
 					lc = lcn;
 					lcn += lineCounts.at(li);
-					if (lcn > pline) break;
+					if (lcn > pline)
+					{
+						break;
+					}
 				}
 
 				// If li exceeds known programs, an error occurred, pass the

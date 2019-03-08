@@ -1,10 +1,11 @@
 #include <epoxy/gl.h>
 
+#include <utility>
+
 #include "shadertoy/gl.hpp"
 
-#include "shadertoy/uniform_state.hpp"
-
 #include "shadertoy/render_context.hpp"
+#include "shadertoy/uniform_state.hpp"
 
 #include "shadertoy/buffers/basic_buffer.hpp"
 
@@ -36,9 +37,10 @@ void buffer_member::allocate_member(const swap_chain &chain, const render_contex
 	buffer_->allocate_textures(context, io_);
 }
 
-buffer_member::buffer_member(std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format, member_swap_policy swap_policy)
-	: buffer_(buffer),
-	io_(std::forward<rsize_ref&&>(render_size), internal_format, swap_policy)
+buffer_member::buffer_member(std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size,
+							 GLint internal_format, member_swap_policy swap_policy)
+: buffer_(std::move(std::move(buffer))),
+  io_(std::forward<rsize_ref &&>(render_size), internal_format, swap_policy)
 {
 }
 

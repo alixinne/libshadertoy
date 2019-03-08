@@ -24,17 +24,21 @@ std::unique_ptr<gl::texture> jpeg_input::load_file(const std::string &filename, 
 #if LIBSHADERTOY_JPEG
 	// use libjpeg
 	FILE *infile;
-	if ((infile = fopen(filename.c_str(), "rb")) == NULL)
+	if ((infile = fopen(filename.c_str(), "rbe")) == nullptr)
 	{
 		error_assert(false, "Cannot load {} for input {}: failed to open file for reading",
-					 filename, (void*)this);
+					 filename, static_cast<const void *>(this));
 	}
 	else
 	{
-		log::shadertoy()->trace("Reading {} for input {}", filename, (void*)this);
+		log::shadertoy()->trace("Reading {} for input {}", filename, static_cast<const void *>(this));
 
-		struct jpeg_decompress_struct cinfo;
-		struct jpeg_error_mgr jerr;
+		struct jpeg_decompress_struct cinfo
+		{
+		};
+		struct jpeg_error_mgr jerr
+		{
+		};
 		cinfo.err = jpeg_std_error(&jerr);
 
 		jpeg_create_decompress(&cinfo);
@@ -45,9 +49,13 @@ std::unique_ptr<gl::texture> jpeg_input::load_file(const std::string &filename, 
 
 		GLenum fmt = GL_RGB;
 		if (cinfo.output_components == 1)
+		{
 			fmt = GL_RED;
+		}
 		else if (cinfo.output_components == 4)
+		{
 			fmt = GL_RGBA;
+		}
 		else if (cinfo.output_components != 3)
 		{
 			// Don't decode unknown format
@@ -56,11 +64,12 @@ std::unique_ptr<gl::texture> jpeg_input::load_file(const std::string &filename, 
 			fclose(infile);
 
 			error_assert(false, "Cannot load {} for input {}: unsupported component count {}",
-						 filename, (void*)this, cinfo.output_components);
+						 filename, static_cast<const void *>(this), cinfo.output_components);
 		}
 
 		int stride = cinfo.output_width * cinfo.output_components;
-		JSAMPARRAY buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr)&cinfo, JPOOL_IMAGE, stride, 1);
+		JSAMPARRAY buffer =
+		(*cinfo.mem->alloc_sarray)(reinterpret_cast<j_common_ptr>(&cinfo), JPOOL_IMAGE, stride, 1);
 		std::vector<char> imgbuf_vec(cinfo.output_height * stride);
 		char *imgbuf(imgbuf_vec.data());
 
@@ -69,8 +78,10 @@ std::unique_ptr<gl::texture> jpeg_input::load_file(const std::string &filename, 
 			JDIMENSION read_now = jpeg_read_scanlines(&cinfo, buffer, 1);
 			size_t off = cinfo.output_scanline - read_now;
 			if (vflip)
+			{
 				off = cinfo.output_height - off - read_now;
-			memcpy(&imgbuf[off * stride], buffer[0], stride);
+			}
+			memcpy(std::addressof(imgbuf[off * stride]), buffer[0], stride);
 		}
 
 		texture = std::make_unique<gl::texture>(GL_TEXTURE_2D);
@@ -81,17 +92,18 @@ std::unique_ptr<gl::texture> jpeg_input::load_file(const std::string &filename, 
 		jpeg_destroy_decompress(&cinfo);
 		fclose(infile);
 
-		log::shadertoy()->info("Loaded {}x{} JPEG {} for input {} (GL id {})",
-							   cinfo.output_width, cinfo.output_height, filename, (void*)this, GLuint(*texture));
+		log::shadertoy()->info("Loaded {}x{} JPEG {} for input {} (GL id {})", cinfo.output_width,
+							   cinfo.output_height, filename, static_cast<const void *>(this), GLuint(*texture));
 	}
 #else /* LIBSHADERTOY_JPEG */
-	error_assert(false, "Cannot load {} for input {}: JPEG support is disabled", filename, (void*)this);	
+	error_assert(false, "Cannot load {} for input {}: JPEG support is disabled", filename,
+				 static_cast<const void *>(this));
 #endif /* LIBSHADERTOY_JPEG */
 
 	return texture;
 }
 
-jpeg_input::jpeg_input() : file_input() {}
+jpeg_input::jpeg_input() = default;
 
 jpeg_input::jpeg_input(const std::string &filename) : file_input(filename) {}
 

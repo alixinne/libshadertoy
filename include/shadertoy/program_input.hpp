@@ -37,7 +37,7 @@ public:
 	 * 
 	 * @param input Initial input value
 	 */
-	program_input(std::shared_ptr<inputs::basic_input> input);
+	program_input(const std::shared_ptr<inputs::basic_input> &input);
 
 	/**
 	 * @brief Create a new empty input
@@ -56,7 +56,7 @@ public:
 	 * @param sampler_name GLSL name of the sampler
 	 * @param input        Initial value of the input
 	 */
-	program_input(const std::string &sampler_name, std::shared_ptr<inputs::basic_input> input);
+	program_input(const std::string &sampler_name, const std::shared_ptr<inputs::basic_input> &input);
 
 	/**
 	 * @brief Create a new empty input
@@ -64,7 +64,7 @@ public:
 	 * @param sampler_type GLSL type of the sampler
 	 * @param sampler_name GLSL name of the sampler
 	 */
-	program_input(const std::string &sampler_type, const std::string &sampler_name);
+	program_input(std::string sampler_type, std::string sampler_name);
 
 	/**
 	 * @brief Create a new input with a given value
@@ -73,8 +73,8 @@ public:
 	 * @param sampler_name GLSL name of the sampler
 	 * @param input        Initial input value
 	 */
-	program_input(const std::string &sampler_type, const std::string &sampler_name,
-			std::shared_ptr<inputs::basic_input> input);
+	program_input(std::string sampler_type, std::string sampler_name,
+				  const std::shared_ptr<inputs::basic_input> &input);
 
 	/**
 	 * @brief Get the sampler type name

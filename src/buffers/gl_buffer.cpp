@@ -2,7 +2,6 @@
 
 #include "shadertoy/gl.hpp"
 
-#include "shadertoy/uniform_state.hpp"
 #include "shadertoy/buffers/gl_buffer.hpp"
 #include "shadertoy/render_context.hpp"
 
@@ -31,10 +30,8 @@ void gl_buffer::allocate_contents(const render_context &context, const io_resour
 
 	// Resolve size
 	rsize size(io.render_size()->resolve());
-	error_assert(size.width != 0 && size.height != 0,
-				 "Render size for gl_buffer {} ({}) is zero",
-				 id(),
-				 (void*)this);
+	error_assert(size.width != 0 && size.height != 0, "Render size for gl_buffer {} ({}) is zero",
+				 id(), static_cast<const void *>(this));
 
 	target_rbo_.storage(GL_DEPTH_COMPONENT, size.width, size.height);
 }
@@ -56,10 +53,8 @@ void gl_buffer::render_contents(const render_context &context, const io_resource
 
 		// Set color attachements
 		auto &texture(io.target_texture());
-		error_assert(texture.get() != nullptr,
-					 "Target render texture for gl_buffer {} ({}) was not allocated before rendering",
-					 id(),
-					 (void*)this);
+		error_assert(texture != nullptr, "Target render texture for gl_buffer {} ({}) was not allocated before rendering",
+					 id(), static_cast<const void *>(this));
 
 		attach_framebuffer_outputs(fbo_bind, *texture);
 

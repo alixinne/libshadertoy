@@ -21,15 +21,18 @@ void checker_input::load_input()
 	// Resolve texture size
 	rsize ts(size_->resolve());
 
-	error_assert(ts.width != 0 && ts.height != 0,
-				 "Checkerboard tile size is zero for input {}",
-				 (void*)this);
+	error_assert(ts.width != 0 && ts.height != 0, "Checkerboard tile size is zero for input {}",
+				 static_cast<const void *>(this));
 
 	// Generate the checkerboard
 	std::vector<unsigned char> chk(ts.width * ts.height);
 	for (size_t i = 0; i < ts.width; ++i)
+	{
 		for (size_t j = 1; j < ts.height; ++j)
+		{
 			chk[j * ts.height + i] = ((i / tile_size_) % 2 == 0) ^ ((j / tile_size_) % 2 == 0) ? 255 : 0;
+		}
+	}
 
 	// Load it
 	texture_->image_2d(GL_TEXTURE_2D, 0, GL_RED, ts.width, ts.height, 0, GL_RED,
@@ -40,17 +43,17 @@ void checker_input::load_input()
 
 	texture_->generate_mipmap();
 
-	log::shadertoy()->info("Generated {}x{} checkerboard texture for {} (GL id {})",
-						   ts.width, ts.height, (void*)this, GLuint(*texture_));
+	log::shadertoy()->info("Generated {}x{} checkerboard texture for {} (GL id {})", ts.width,
+						   ts.height, static_cast<const void *>(this), GLuint(*texture_));
 }
 
 void checker_input::reset_input() { texture_.reset(); }
 
 gl::texture *checker_input::use_input() { return texture_.get(); }
 
-checker_input::checker_input(rsize_ref &&size) : basic_input(), size_(std::move(size)), tile_size_(10) {}
+checker_input::checker_input(rsize_ref &&size) : size_(std::move(size)), tile_size_(10) {}
 
 checker_input::checker_input(rsize_ref &&size, size_t tile_size)
-: basic_input(), size_(std::move(size)), tile_size_(tile_size)
+: size_(std::move(size)), tile_size_(tile_size)
 {
 }

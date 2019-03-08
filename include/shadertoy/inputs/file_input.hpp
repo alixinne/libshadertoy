@@ -52,9 +52,9 @@ protected:
 	 *
 	 * @param filename Default filename to load the image from
 	 */
-	explicit file_input(const std::string &filename);
+	explicit file_input(std::string filename);
 
-public:
+	public:
 	/**
 	 * @brief Obtain the filename this input will be loaded from.
 	 *

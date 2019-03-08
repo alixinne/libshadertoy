@@ -4,8 +4,8 @@
 #include "shadertoy/pre.hpp"
 
 #include "shadertoy/compiler/program_template.hpp"
-
 #include "shadertoy/geometry/screen_quad.hpp"
+#include "shadertoy/uniform_state.hpp"
 
 namespace shadertoy
 {

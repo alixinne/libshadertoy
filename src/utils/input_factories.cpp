@@ -82,7 +82,9 @@ int get_int(const std::map<std::string, std::string> &spec, const std::string &k
 		int result;
 		iss >> result;
 		if (!iss.fail())
+		{
 			return result;
+		}
 	}
 	
 	return def;

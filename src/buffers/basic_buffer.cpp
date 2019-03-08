@@ -1,17 +1,16 @@
 #include <epoxy/gl.h>
 
+#include <utility>
+
 #include "shadertoy/gl.hpp"
 
-#include "shadertoy/uniform_state.hpp"
 #include "shadertoy/buffers/basic_buffer.hpp"
 #include "shadertoy/render_context.hpp"
 
 using namespace shadertoy;
 using namespace shadertoy::buffers;
 
-basic_buffer::basic_buffer(const std::string &id)
-	: id_(id),
-	  time_delta_query_(GL_TIME_ELAPSED)
+basic_buffer::basic_buffer(std::string id) : id_(std::move(id)), time_delta_query_(GL_TIME_ELAPSED)
 {
 }
 
@@ -33,12 +32,12 @@ void basic_buffer::render(const render_context &context, const io_resource &io, 
 	render_contents(context, io, member);
 }
 
-unsigned long long basic_buffer::elapsed_time()
+uint64_t basic_buffer::elapsed_time()
 {
 	GLint available = 0;
 
 	// Wait for result to be available
-	while (!available)
+	while (available == 0)
 	{
 		time_delta_query_.get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
 	}

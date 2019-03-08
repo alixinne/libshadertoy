@@ -64,6 +64,8 @@ public:
 	 */
 	buffer_member(std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format, member_swap_policy swap_policy);
 
+	virtual ~buffer_member() = default;
+
 	/**
 	 * @brief Get the buffer associated with this member
 	 *

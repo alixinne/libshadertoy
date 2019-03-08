@@ -32,7 +32,7 @@ public:
 	 * @param name        Name of this template part
 	 * @param source_file Source file for this template part
 	 */
-	file_part(const std::string &name, const std::string &source_file);
+	file_part(const std::string &name, std::string source_file);
 
 	/**
 	 * @brief Convert this file_part to a boolean.

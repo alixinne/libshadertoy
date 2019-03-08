@@ -14,6 +14,8 @@ namespace geometry
 class shadertoy_EXPORT basic_geometry
 {
 public:
+	virtual ~basic_geometry() = default;
+
 	/**
 	 * @brief Get the VAO to bind for rendering the geometry
 	 *

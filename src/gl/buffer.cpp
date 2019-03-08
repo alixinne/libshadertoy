@@ -1,7 +1,7 @@
 #include <epoxy/gl.h>
 
-#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl/buffer.hpp"
+#include "shadertoy/shadertoy_error.hpp"
 
 using namespace shadertoy::gl;
 

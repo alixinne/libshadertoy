@@ -9,9 +9,6 @@ using namespace shadertoy::geometry;
 using shadertoy::gl::gl_call;
 
 screen_quad::screen_quad()
-	: quad_array_(),
-	quad_corners_(),
-	quad_indices_()
 {
 	GLfloat coords[] = {
 		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
@@ -40,12 +37,13 @@ screen_quad::screen_quad()
 
 	// bind input "position" to vertex locations (3 floats)
 	gl::attrib_location position(0);
-	position.vertex_pointer(3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)0);
+	position.vertex_pointer(3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), static_cast<const void *>(nullptr));
 	position.enable_vertex_array();
 
 	// bind input "texCoord" to vertex texture coordinates (2 floats)
 	gl::attrib_location texCoord(1);
-	texCoord.vertex_pointer(2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat)));
+	texCoord.vertex_pointer(2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),
+							reinterpret_cast<const void *>(3 * sizeof(GLfloat))); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 	texCoord.enable_vertex_array();
 
 	// Unbind

@@ -15,14 +15,13 @@ using namespace shadertoy::inputs;
 using namespace shadertoy::utils;
 
 using shadertoy::utils::log;
-using shadertoy::utils::error_assert;
 
 std::unique_ptr<gl::texture> exr_input::load_file(const std::string &filename, bool vflip)
 {
 	std::unique_ptr<gl::texture> texture;
 
 #if LIBSHADERTOY_OPENEXR
-	log::shadertoy()->trace("Reading {} for input {}", filename, (void*)this);
+	log::shadertoy()->trace("Reading {} for input {}", filename, static_cast<const void *>(this));
 
 	Imf::RgbaInputFile in(filename.c_str());
 
@@ -34,9 +33,13 @@ std::unique_ptr<gl::texture> exr_input::load_file(const std::string &filename, b
 
 	// Set buffer stride according to reading direction
 	if (vflip)
-		in.setFrameBuffer(pixelBuffer.data() + (dim.y - 1) * dim.x, 1, -dim.x);
+	{
+		in.setFrameBuffer(std::addressof(pixelBuffer[(dim.y - 1) * dim.x]), 1, -dim.x); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	}
 	else
+	{
 		in.setFrameBuffer(pixelBuffer.data(), 1, dim.x);
+	}
 
 	// Read the whole image
 	in.readPixels(win.min.y, win.max.y);
@@ -46,16 +49,17 @@ std::unique_ptr<gl::texture> exr_input::load_file(const std::string &filename, b
 	texture->image_2d(GL_TEXTURE_2D, 0, GL_RGBA16F, dim.x, dim.y, 0, GL_RGBA, GL_HALF_FLOAT,
 					  pixelBuffer.data());
 
-	log::shadertoy()->info("Loaded {}x{} EXR {} for input {} (GL id {})",
-						   dim.x, dim.y, filename, (void*)this, GLuint(*texture));
+	log::shadertoy()->info("Loaded {}x{} EXR {} for input {} (GL id {})", dim.x, dim.y, filename,
+						   static_cast<const void *>(this), GLuint(*texture));
 #else  /* LIBSHADERTOY_OPENEXR */
-	error_assert(false, "Cannot load {} for input {}: OpenEXR support is disabled", filename, (void*)this);	
+	error_assert(false, "Cannot load {} for input {}: OpenEXR support is disabled", filename,
+				 static_cast<const void *>(this));
 #endif /* LIBSHADERTOY_OPENEXR */
 
 	return texture;
 }
 
-exr_input::exr_input() : file_input() {}
+exr_input::exr_input() = default;
 
 exr_input::exr_input(const std::string &filename) : file_input(filename) {}
 

@@ -5,7 +5,6 @@
 #include "shadertoy/inputs/basic_input.hpp"
 #include "shadertoy/inputs/error_input.hpp"
 
-#include "shadertoy/uniform_state.hpp"
 #include "shadertoy/buffers/geometry_buffer.hpp"
 #include "shadertoy/render_context.hpp"
 
@@ -15,7 +14,6 @@
 
 using namespace shadertoy;
 using namespace shadertoy::buffers;
-using shadertoy::gl::gl_call;
 using shadertoy::utils::error_assert;
 
 geometry_buffer::geometry_buffer(const std::string &id)
@@ -32,8 +30,8 @@ void geometry_buffer::render_geometry(const render_context &context, const io_re
 {
 	// Render the geometry
 	auto ptr = geometry_.lock();
-	error_assert(ptr.get(), "Failed to get the geometry to render for geometry_buffer {} ({})",
-				 id(), (void*) this);
+	error_assert(ptr != nullptr, "Failed to get the geometry to render for geometry_buffer {} ({})",
+				 id(), static_cast<const void *>(this));
 
 	ptr->render(time_delta_query());
 }

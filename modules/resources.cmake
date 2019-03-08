@@ -2,8 +2,8 @@
 # Creates C resources file from files in given directory
 function(create_resources dir output output_h h_id)
 	# Create empty output file
-	file(WRITE ${output} "#include <stddef.h>\n#include \"${output_h}\"\n\n")
-	file(WRITE ${output_h} "#ifndef ${h_id}\n#define ${h_id}\nnamespace shadertoy {\n")
+	file(WRITE ${output} "#include \"${output_h}\"\n\n")
+	file(WRITE ${output_h} "#ifndef ${h_id}\n#define ${h_id}\n\n#include <cstddef>\n\nnamespace shadertoy {\n")
 	# Collect input files
 	file(GLOB bins ${dir}/*)
 	# Iterate through input files

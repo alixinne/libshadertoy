@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "shadertoy/compiler/template_error.hpp"
 #include "shadertoy/compiler/file_part.hpp"
 
@@ -8,15 +10,10 @@
 using namespace shadertoy::compiler;
 using namespace shadertoy::utils;
 
-file_part::file_part(const std::string &name)
-	: cloneable_part(name),
-	source_file_()
-{
-}
+file_part::file_part(const std::string &name) : cloneable_part(name) {}
 
-file_part::file_part(const std::string &name, const std::string &source_file)
-	: cloneable_part(name),
-	source_file_(source_file)
+file_part::file_part(const std::string &name, std::string source_file)
+: cloneable_part(name), source_file_(std::move(source_file))
 {
 }
 

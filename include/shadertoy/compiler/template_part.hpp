@@ -43,7 +43,7 @@ public:
 	 * @param name    Name of this template part
 	 * @param sources Sources for this template part
 	 */
-	template_part(const std::string &name, const std::vector<std::pair<std::string, std::string>> &sources);
+	template_part(const std::string &name, std::vector<std::pair<std::string, std::string>> sources);
 
 	/**
 	 * @brief Initialize a new specified template_part

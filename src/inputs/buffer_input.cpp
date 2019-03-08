@@ -1,11 +1,12 @@
 #include <memory>
+#include <utility>
 
 #include <epoxy/gl.h>
 
 #include "shadertoy/gl.hpp"
 
-#include "shadertoy/members/buffer_member.hpp"
 #include "shadertoy/inputs/buffer_input.hpp"
+#include "shadertoy/members/buffer_member.hpp"
 
 #include "shadertoy/utils/log.hpp"
 
@@ -33,18 +34,13 @@ gl::texture *buffer_input::use_input()
 
 		return tex;
 	}
-	else
-	{
-		log::shadertoy()->warn("Failed to acquire pointer to member from input {}", (void*)this);
-	}
 
+	log::shadertoy()->warn("Failed to acquire pointer to member from input {}", static_cast<const void *>(this));
 	return {};
 }
 
-buffer_input::buffer_input()
-	: member_()
-{}
+buffer_input::buffer_input() = default;
 
 buffer_input::buffer_input(std::weak_ptr<members::basic_member> member)
-	: member_(member)
+: member_(std::move(std::move(member)))
 {}

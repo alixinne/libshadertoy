@@ -21,7 +21,7 @@ std::unique_ptr<gl::texture> soil_input::load_file(const std::string &filename, 
 	std::unique_ptr<gl::texture> texture;
 	
 #if LIBSHADERTOY_SOIL
-	log::shadertoy()->trace("Reading {} for input {}", filename, (void*)this);
+	log::shadertoy()->trace("Reading {} for input {}", filename, static_cast<const void *>(this));
 
 	texture = std::make_unique<gl::texture>(GL_TEXTURE_2D);
 
@@ -33,7 +33,8 @@ std::unique_ptr<gl::texture> soil_input::load_file(const std::string &filename, 
 	{
 		// If loading failed, delete the texture object
 		texture = {};
-		error_assert(false, "Cannot load {} for input {}: {}", filename, (void*)this, SOIL_last_result());	
+		error_assert(false, "Cannot load {} for input {}: {}", filename, static_cast<const void *>(this),
+					 SOIL_last_result());
 	}
 	else
 	{
@@ -41,17 +42,18 @@ std::unique_ptr<gl::texture> soil_input::load_file(const std::string &filename, 
 		texture->get_parameter(0, GL_TEXTURE_WIDTH, &width);
 		texture->get_parameter(0, GL_TEXTURE_HEIGHT, &height);
 
-		log::shadertoy()->info("Loaded {}x{} SOIL {} for input {} (GL id {})",
-							   width, height, filename, (void*)this, GLuint(*texture));
+		log::shadertoy()->info("Loaded {}x{} SOIL {} for input {} (GL id {})", width, height,
+							   filename, static_cast<const void *>(this), GLuint(*texture));
 	}
 #else
-	error_assert(false, "Cannot load {} for input {}: SOIL support is disabled", filename, (void*)this);	
+	error_assert(false, "Cannot load {} for input {}: SOIL support is disabled", filename,
+				 static_cast<const void *>(this));
 #endif /* LIBSHADERTOY_SOIL */
 
 	return texture;
 }
 
-soil_input::soil_input() : file_input() {}
+soil_input::soil_input() = default;
 
 soil_input::soil_input(const std::string &filename) : file_input(filename) {}
 

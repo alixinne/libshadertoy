@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "shadertoy/compiler/template_error.hpp"
 #include "shadertoy/compiler/template_part.hpp"
 
@@ -9,9 +11,8 @@ using namespace shadertoy::compiler;
 using namespace shadertoy::utils;
 
 template_part::template_part(const std::string &name)
-	: cloneable_part(name),
-	sources_(),
-	has_sources_(false)
+: cloneable_part(name),
+  has_sources_(false)
 {
 }
 
@@ -22,10 +23,8 @@ template_part::template_part(const std::string &name, const std::string &source)
 {
 }
 
-template_part::template_part(const std::string &name, const std::vector<std::pair<std::string, std::string>> &sources)
-	: cloneable_part(name),
-	sources_(sources),
-	has_sources_(true)
+template_part::template_part(const std::string &name, std::vector<std::pair<std::string, std::string>> sources)
+: cloneable_part(name), sources_(std::move(sources)), has_sources_(true)
 {
 }
 
@@ -41,6 +40,7 @@ template_part template_part::from_files(const std::string &name, const std::vect
 {
 	std::vector<std::pair<std::string, std::string>> sources;
 
+	sources.reserve(filenames.size());
 	for (auto filename : filenames)
 	{
 		sources.emplace_back(filename, read_contents(filename));

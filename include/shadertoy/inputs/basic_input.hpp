@@ -60,6 +60,8 @@ protected:
 	basic_input();
 
 public:
+	virtual ~basic_input() = default;
+
 	/**
 	 * @brief Load this input's contents.
 	 *

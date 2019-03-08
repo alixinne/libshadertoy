@@ -18,6 +18,8 @@ namespace utils
 class shadertoy_EXPORT input_factory
 {
 public:
+	virtual ~input_factory() = default;
+
 	/**
 	 * @brief Priority of this factory. Higher priorities will be used first.
 	 *

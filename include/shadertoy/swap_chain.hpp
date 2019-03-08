@@ -118,7 +118,7 @@ public:
 	 *
 	 * @param member Member to add to the end of this swap chain
 	 */
-	void push_back(std::shared_ptr<members::basic_member> member);
+	void push_back(const std::shared_ptr<members::basic_member> &member);
 
 	/**
 	 * @brief Construct a swap_chain member and adds it to the end of this swap chain
@@ -185,9 +185,9 @@ public:
 	 *
 	 * @return Pointer to the latest rendered member
 	 */
-	std::shared_ptr<members::basic_member> render(const render_context &context,
-												  std::shared_ptr<members::basic_member> target 
-													= std::shared_ptr<members::basic_member>());
+	std::shared_ptr<members::basic_member>
+	render(const render_context &context,
+		   const std::shared_ptr<members::basic_member> &target = std::shared_ptr<members::basic_member>());
 
 	/**
 	 * @brief Initialize the members of this swap chain

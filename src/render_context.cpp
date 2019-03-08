@@ -4,14 +4,13 @@
 #include "shadertoy/utils/log.hpp"
 
 #include "resources.hpp"
-#include "shadertoy/uniform_state.hpp"
 #include "shadertoy/buffers/program_buffer.hpp"
-#include "shadertoy/shader_compiler.hpp"
 #include "shadertoy/render_context.hpp"
+#include "shadertoy/shader_compiler.hpp"
 
-#include "shadertoy/compiler/template_part.hpp"
 #include "shadertoy/compiler/define_part.hpp"
 #include "shadertoy/compiler/input_part.hpp"
+#include "shadertoy/compiler/template_part.hpp"
 
 #include "shadertoy/inputs/error_input.hpp"
 
@@ -22,12 +21,8 @@
 
 using namespace shadertoy;
 using namespace shadertoy::utils;
-using shadertoy::gl::gl_call;
 
-render_context::render_context()
-	: state_(),
-	buffer_template_(),
-	error_input_(std::make_shared<inputs::error_input>())
+render_context::render_context() : error_input_(std::make_shared<inputs::error_input>())
 {
 	auto preprocessor_defines(std::make_shared<compiler::preprocessor_defines>());
 
@@ -38,12 +33,14 @@ render_context::render_context()
 	buffer_template_.shader_inputs().emplace("shadertoy", &state_);
 
 	buffer_template_.emplace(GL_VERTEX_SHADER,
-		compiler::shader_template::parse(std::string(screenQuad_vsh, screenQuad_vsh + screenQuad_vsh_size), "libshadertoy/shaders/screenQuad.vsh")
-	);
+							 compiler::shader_template::parse(
+							 std::string(std::addressof(screenQuad_vsh[0]), screenQuad_vsh_size),
+							 "libshadertoy/shaders/screenQuad.vsh"));
 
 	buffer_template_.emplace(GL_FRAGMENT_SHADER,
-		compiler::shader_template::parse(std::string(shadertoy_frag_glsl, shadertoy_frag_glsl + shadertoy_frag_glsl_size), "libshadertoy/shaders/shadertoy_frag.glsl")
-	);
+							 compiler::shader_template::parse(
+							 std::string(std::addressof(shadertoy_frag_glsl[0]), shadertoy_frag_glsl_size),
+							 "libshadertoy/shaders/shadertoy_frag.glsl"));
 
 	// Compile screen quad vertex shader
 	buffer_template_.compile(GL_VERTEX_SHADER);
@@ -62,13 +59,15 @@ const gl::program &render_context::screen_prog() const
 {
 	if (!screen_prog_)
 	{
-		log::shadertoy()->trace("Compiling screen programs for context {}", (void*)this);
+		log::shadertoy()->trace("Compiling screen programs for context {}", static_cast<const void *>(this));
 
 		// Compile screen program
 		std::map<GLenum, compiler::shader_template> overrides;
-		overrides.emplace(GL_FRAGMENT_SHADER, compiler::shader_template(
-			compiler::template_part("shadertoy:screenquad", std::string(screenQuad_fsh, screenQuad_fsh + screenQuad_fsh_size)
-		)));
+		overrides.emplace(GL_FRAGMENT_SHADER,
+						  compiler::shader_template(
+						  compiler::template_part("shadertoy:screenquad",
+												  std::string(std::addressof(screenQuad_fsh[0]),
+															  screenQuad_fsh_size))));
 
 		screen_prog_ = std::make_unique<gl::program>(buffer_template_.compile(overrides));
 	}
@@ -80,7 +79,7 @@ const geometry::screen_quad &render_context::screen_quad() const
 {
 	if (!screen_quad_)
 	{
-		log::shadertoy()->trace("Initializing screen quad geometry for {}", (void*)this);
+		log::shadertoy()->trace("Initializing screen quad geometry for {}", static_cast<const void *>(this));
 		screen_quad_ = std::make_unique<geometry::screen_quad>();
 	}
 
@@ -89,7 +88,7 @@ const geometry::screen_quad &render_context::screen_quad() const
 
 void render_context::init(swap_chain &chain) const
 {
-	log::shadertoy()->trace("Initializing chain {}", (void*)&chain);
+	log::shadertoy()->trace("Initializing chain {}", static_cast<const void *>(&chain));
 	chain.init(*this);
 
 	allocate_textures(chain);
@@ -97,7 +96,7 @@ void render_context::init(swap_chain &chain) const
 
 void render_context::allocate_textures(swap_chain &chain) const
 {
-	log::shadertoy()->trace("Allocating chain {}", (void*)&chain);
+	log::shadertoy()->trace("Allocating chain {}", static_cast<const void *>(&chain));
 	chain.allocate_textures(*this);
 }
 

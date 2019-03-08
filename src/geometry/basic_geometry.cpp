@@ -28,5 +28,5 @@ void basic_geometry::render(const gl::query &timer_query) const
 	// Draw geometry
 	draw();
 
-	timer_query.end(GL_TIME_ELAPSED);
+	gl::query::end(GL_TIME_ELAPSED);
 }

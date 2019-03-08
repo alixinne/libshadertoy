@@ -65,8 +65,8 @@ public:
 	shader_template(const shader_template &) = delete;
 	shader_template &operator=(const shader_template &rhs) = delete;
 
-	shader_template(shader_template &&other);
-	shader_template &operator=(shader_template &&rhs);
+	shader_template(shader_template &&other) noexcept;
+	shader_template &operator=(shader_template &&rhs) noexcept;
 
 	/**
 	 * @brief Checks if this template is fully specified

@@ -1,0 +1,5 @@
+---
+Checks:          'clang-diagnostic-*,clang-analyzer-*,*,-google-build-using-namespace,-fuchsia-*,-google-runtime-references,-google-readability-todo,-misc-unused-parameters,-abseil-*,-cppcoreguidelines-pro-type-union-access'
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+AnalyzeTemporaryDtors: false

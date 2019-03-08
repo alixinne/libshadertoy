@@ -23,7 +23,9 @@ std::string read_contents(const std::string &filename)
 						 std::istreambuf_iterator<char>());
 
 	if (loaded_source.empty() || loaded_source.back() != '\n')
+	{
 		loaded_source += "\n";
+	}
 
 	src.close();
 	

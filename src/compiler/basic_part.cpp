@@ -12,6 +12,4 @@ basic_part::basic_part(const std::string &name)
 	error_assert(!name.empty(), "The name of a template part cannot be empty");
 }
 
-basic_part::~basic_part()
-{
-}
+basic_part::~basic_part() = default;

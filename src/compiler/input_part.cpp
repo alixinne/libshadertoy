@@ -21,7 +21,9 @@ std::vector<std::pair<std::string, std::string>> input_part::sources() const
 	std::stringstream ss;
 
 	for (auto &input : inputs_)
+	{
 		ss << input.definition_string() << std::endl;
+	}
 
 	return { std::make_pair(name(), ss.str()) };
 }

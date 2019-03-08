@@ -1,5 +1,5 @@
-#include <sstream>
 #include <epoxy/gl.h>
+#include <sstream>
 
 #include "shadertoy/gl.hpp"
 
@@ -8,7 +8,6 @@
 #include "shadertoy/compiler/template_part.hpp"
 
 #include "shadertoy/shader_compiler.hpp"
-#include "shadertoy/uniform_state.hpp"
 
 #include "shadertoy/utils/assert.hpp"
 
@@ -25,9 +24,9 @@ shader_template program_template::specify_template_parts(const shader_template &
 
 shader_template program_template::specify_template_parts(std::vector<std::unique_ptr<basic_part>> parts, const shader_template &source_template) const
 {
-	return source_template.specify_parts(std::move(parts), [&](const std::string &part_name)
-			-> std::vector<std::unique_ptr<compiler::basic_part>> {
-		auto sep = part_name.find(":");
+	return source_template.specify_parts(
+	std::move(parts), [&](const std::string &part_name) -> std::vector<std::unique_ptr<compiler::basic_part>> {
+		auto sep = part_name.find(':');
 		std::vector<std::unique_ptr<compiler::basic_part>> result;
 
 		if (sep != std::string::npos)
@@ -79,15 +78,10 @@ shader_template program_template::specify_template_parts(std::vector<std::unique
 	});
 }
 
-program_template::program_template()
-	: shader_templates_(),
-	compiled_shaders_()
-{
-}
+program_template::program_template() = default;
 
 program_template::program_template(std::map<GLenum, shader_template> shader_templates)
-	: shader_templates_(std::move(shader_templates)),
-	compiled_shaders_()
+: shader_templates_(std::move(shader_templates))
 {
 }
 
@@ -99,10 +93,9 @@ bool program_template::emplace(GLenum type, shader_template &&shader_template)
 void program_template::compile(GLenum type)
 {
 	auto it = shader_templates_.find(type);
-	
-	throw_assert<template_error>(it != shader_templates_.end(),
-								 "Shader type {} not found in program_template {}",
-								 type, (void*)this);
+
+	throw_assert<template_error>(it != shader_templates_.end(), "Shader type {} not found in program_template {}",
+								 type, static_cast<const void *>(this));
 
 	// Create shader object
 	gl::shader so(type);
@@ -114,10 +107,10 @@ void program_template::compile(GLenum type)
 	{
 		std::stringstream ss;
 		for (auto &pair : sources)
+		{
 			ss << pair.second;
-		log::shadertoy()->debug("Compiled following code for {}:\n{}",
-								(void*)this,
-								ss.str());
+		}
+		log::shadertoy()->debug("Compiled following code for {}:\n{}", static_cast<const void *>(this), ss.str());
 	}
 
 	// Compile shader
@@ -139,7 +132,9 @@ gl::program program_template::compile(std::map<GLenum, std::vector<std::unique_p
 	{
 		// Do not try to recompile precompiled shaders
 		if (compiled_shaders_.find(pair.first) != compiled_shaders_.end())
+		{
 			continue;
+		}
 
 		// Compile sources
 		std::vector<std::pair<std::string, std::string>> sources;
@@ -162,16 +157,18 @@ gl::program program_template::compile(std::map<GLenum, std::vector<std::unique_p
 		{
 			std::stringstream ss;
 			for (auto &pair : sources)
+			{
 				ss << pair.second;
+			}
 
 			auto result(ss.str());
 
 			if (compiled_sources != nullptr)
+			{
 				compiled_sources->emplace(pair.first, result);
+			}
 
-			log::shadertoy()->debug("Compiled following code for {}:\n{}",
-									(void*)this,
-									result);
+			log::shadertoy()->debug("Compiled following code for {}:\n{}", static_cast<const void *>(this), result);
 		}
 
 		// Compile shader
@@ -203,20 +200,28 @@ gl::program program_template::compile(std::map<GLenum, std::vector<std::unique_p
 	{
 		// Detach shaders
 		for (const auto &s : attached_shaders)
+		{
 			program.detach_shader(s);
+		}
 
 		for (const auto &pair : compiled_shaders_)
+		{
 			program.detach_shader(pair.second);
+		}
 
 		throw;
 	}
 
 	// Detach shaders
 	for (const auto &s : attached_shaders)
+	{
 		program.detach_shader(s);
+	}
 
 	for (const auto &pair : compiled_shaders_)
+	{
 		program.detach_shader(pair.second);
+	}
 
 	return program;
 }
@@ -237,12 +242,16 @@ gl::program program_template::compile(const std::map<GLenum, shader_template> &t
 		{
 			std::stringstream ss;
 			for (auto &pair : sources)
+			{
 				ss << pair.second;
+			}
 
 			auto result(ss.str());
 
 			if (compiled_sources != nullptr)
+			{
 				compiled_sources->emplace(pair.first, result);
+			}
 
 			log::shadertoy()->debug("Compiled following code for {}:\n{}",
 									(void*)this,
@@ -262,7 +271,9 @@ gl::program program_template::compile(const std::map<GLenum, shader_template> &t
 	{
 		// Only attach shaders that are not being overriden
 		if (templates.find(pair.first) == templates.end())
+		{
 			program.attach_shader(pair.second);
+		}
 	}
 
 	// Attach compiled on-the-fly shaders
@@ -280,12 +291,16 @@ gl::program program_template::compile(const std::map<GLenum, shader_template> &t
 	{
 		// Detach shaders
 		for (const auto &s : attached_shaders)
+		{
 			program.detach_shader(s);
+		}
 
 		for (const auto &pair : compiled_shaders_)
 		{
 			if (templates.find(pair.first) == templates.end())
+			{
 				program.detach_shader(pair.second);
+			}
 		}
 
 		throw;
@@ -293,12 +308,16 @@ gl::program program_template::compile(const std::map<GLenum, shader_template> &t
 
 	// Detach shaders
 	for (const auto &s : attached_shaders)
+	{
 		program.detach_shader(s);
+	}
 
 	for (const auto &pair : compiled_shaders_)
 	{
 		if (templates.find(pair.first) == templates.end())
+		{
 			program.detach_shader(pair.second);
+		}
 	}
 
 	return program;
@@ -309,7 +328,9 @@ std::vector<std::unique_ptr<bound_inputs_base>> program_template::bind_inputs(co
 	std::vector<std::unique_ptr<bound_inputs_base>> bound_inputs;
 
 	for (const auto &input_object : shader_inputs_)
+	{
 		bound_inputs.push_back(input_object.second->bind_inputs(program));
+	}
 
 	return bound_inputs;
 }

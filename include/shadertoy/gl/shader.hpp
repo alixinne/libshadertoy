@@ -34,7 +34,7 @@ namespace gl
 		 * @param  shaderId Id of the shader that triggered the error
 		 * @param  log      Contents of the shader compilation log
 		 */
-		explicit shader_compilation_error(GLuint shaderId, const std::string &log);
+		explicit shader_compilation_error(GLuint shaderId, std::string log);
 
 		/**
 		 * @brief Get the id of the shader that triggered the error.

@@ -35,7 +35,7 @@ protected:
 	 *
 	 * @param[in] id        Identifier for this buffer
 	 */
-	basic_buffer(const std::string &id);
+	basic_buffer(std::string id);
 
 	/**
 	 * @brief     Initialize the contents of the buffer for rendering. This method
@@ -121,7 +121,7 @@ public:
 	 * @return     Number of nanoseconds elapsed during the rendering of this
 	 *             buffer.
 	 */
-	unsigned long long elapsed_time();
+	uint64_t elapsed_time();
 };
 }
 }

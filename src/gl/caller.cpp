@@ -3,8 +3,8 @@
 
 #include <epoxy/gl.h>
 
-#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/gl/caller.hpp"
+#include "shadertoy/shadertoy_error.hpp"
 
 #define ERROR_PREFIX "OpenGL error: "
 
@@ -42,7 +42,7 @@ std::string gl_error_to_string(GLenum error, const std::string &extraMsg)
 			ss << "An attempt has been made to perform an operation that would cause an internal stack to overflow.";
 			break;
 		default:
-			ss << "Unknown error (" << (int)error << ")";
+			ss << "Unknown error (" << static_cast<int>(error) << ")";
 			break;
 	}
 
@@ -71,5 +71,5 @@ namespace gl
 			throw opengl_error(error, std::string());
 		}
 	}
-}
-}
+}  // namespace gl
+}  // namespace shadertoy

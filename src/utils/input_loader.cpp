@@ -8,8 +8,8 @@
 
 #include "shadertoy/inputs/basic_input.hpp"
 
-#include "shadertoy/utils/input_loader.hpp"
 #include "shadertoy/utils/input_factories.hpp"
+#include "shadertoy/utils/input_loader.hpp"
 
 #include "shadertoy/utils/assert.hpp"
 
@@ -17,7 +17,7 @@ using namespace shadertoy;
 using namespace shadertoy::utils;
 
 input_loader::input_loader()
-	: factories_()
+
 {
 	add(std::make_unique<soil_input_factory>());
 	add(std::make_unique<jpeg_input_factory>());
@@ -50,8 +50,12 @@ std::unique_ptr<inputs::basic_input> input_loader::create(const std::string &inp
 	}
 
 	if (throw_on_failure)
+	{
 		error_assert(false, "Could not find input factory for {}", input);
+	}
 	else
+	{
 		warn_assert(false, "Could not find input factory for {}", input);
+	}
 	return {};
 }

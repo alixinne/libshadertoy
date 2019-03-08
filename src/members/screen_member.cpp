@@ -1,14 +1,15 @@
 #include <epoxy/gl.h>
 
-#include "shadertoy/gl.hpp"
+#include <utility>
 
+#include "shadertoy/gl.hpp"
 #include "shadertoy/uniform_state.hpp"
 
 #include "shadertoy/members/buffer_member.hpp"
 #include "shadertoy/members/screen_member.hpp"
 
-#include "shadertoy/swap_chain.hpp"
 #include "shadertoy/render_context.hpp"
+#include "shadertoy/swap_chain.hpp"
 
 #include "shadertoy/geometry/screen_quad.hpp"
 
@@ -54,25 +55,22 @@ gl::texture *screen_member::output(const swap_chain &chain)
 	if (auto member = member_.lock())
 	{
 		auto out(member->output());
-		assert(out);
+		assert(out != nullptr);
 		return out;
 	}
 
 	// Check that the swapchain has a last rendered-to member
 	auto before(chain.before(this));
-	assert(before);
+	assert(before != nullptr);
 
 	auto texptr(before->output());
-	assert(texptr);
+	assert(texptr != nullptr);
 
 	return texptr;
 }
 
 screen_member::screen_member(rsize_ref &&viewport_size)
-	: sampler_(),
-	viewport_x_(0),
-	viewport_y_(0),
-	viewport_size_(std::move(viewport_size))
+: viewport_x_(0), viewport_y_(0), viewport_size_(std::move(viewport_size))
 {
 	sampler_.parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	sampler_.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -81,10 +79,7 @@ screen_member::screen_member(rsize_ref &&viewport_size)
 }
 
 screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size)
-	: sampler_(),
-	viewport_x_(viewport_x),
-	viewport_y_(viewport_y),
-	viewport_size_(std::move(viewport_size))
+: viewport_x_(viewport_x), viewport_y_(viewport_y), viewport_size_(std::move(viewport_size))
 {
 	sampler_.parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	sampler_.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -93,11 +88,9 @@ screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewpor
 }
 
 screen_member::screen_member(rsize_ref &&viewport_size, std::weak_ptr<members::basic_member> member)
-	: member_(member),
-	sampler_(),
-	viewport_x_(0),
-	viewport_y_(0),
-	viewport_size_(std::move(viewport_size))
+: member_(std::move(std::move(member))),
+
+  viewport_x_(0), viewport_y_(0), viewport_size_(std::move(viewport_size))
 {
 	sampler_.parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	sampler_.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -105,12 +98,11 @@ screen_member::screen_member(rsize_ref &&viewport_size, std::weak_ptr<members::b
 	sampler_.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
-screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size, std::weak_ptr<members::basic_member> member)
-	: member_(member),
-	sampler_(),
-	viewport_x_(viewport_x),
-	viewport_y_(viewport_y),
-	viewport_size_(std::move(viewport_size))
+screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size,
+							 std::weak_ptr<members::basic_member> member)
+: member_(std::move(std::move(member))),
+
+  viewport_x_(viewport_x), viewport_y_(viewport_y), viewport_size_(std::move(viewport_size))
 {
 	sampler_.parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	sampler_.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -121,7 +113,9 @@ screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewpor
 gl::texture *screen_member::output()
 {
 	if (auto member = member_.lock())
+	{
 		return member->output();
+	}
 
 	return nullptr;
 }

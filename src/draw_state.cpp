@@ -6,10 +6,6 @@
 
 using namespace shadertoy;
 
-using shadertoy::utils::log;
-using shadertoy::utils::warn_assert;
-using shadertoy::utils::error_assert;
-
 void draw_state::apply_enabled(GLenum cap) const
 {
 	// Unchecked call for performance reasons
@@ -19,9 +15,13 @@ void draw_state::apply_enabled(GLenum cap) const
 	bool actual = glIsEnabled(cap);
 
 	if (expected && !actual)
+	{
 		glEnable(cap);
+	}
 	else if (!expected && actual)
+	{
 		glDisable(cap);
+	}
 }
 
 void draw_state::set_blend_mode(GLenum &target, GLenum new_value) const
@@ -140,31 +140,41 @@ void draw_state::apply() const
 
 	// Define clear parameters
 	// Unchecked OpenGL calls are used when no error can be raised
-	glGetFloatv(GL_COLOR_CLEAR_VALUE, current_color);
-	if (memcmp(current_color, clear_color_.data(), sizeof(current_color)) != 0)
+	glGetFloatv(GL_COLOR_CLEAR_VALUE, std::begin(current_color));
+	if (memcmp(std::begin(current_color), clear_color_.data(), sizeof(current_color)) != 0)
+	{
 		glClearColor(clear_color_[0], clear_color_[1], clear_color_[2], clear_color_[3]);
+	}
 
 	GLfloat current_depth;
 	glGetFloatv(GL_DEPTH_CLEAR_VALUE, &current_depth);
 	if (current_depth != clear_depth_)
+	{
 		glClearDepth(clear_depth_);
+	}
 
 	GLint current_stencil;
 	glGetIntegerv(GL_STENCIL_CLEAR_VALUE, &current_stencil);
 	if (current_stencil != clear_stencil_)
+	{
 		glClearStencil(clear_stencil_);
+	}
 
 	// Define depth testing function
 	GLint current_depth_func;
 	glGetIntegerv(GL_DEPTH_FUNC, &current_depth_func);
 	if (static_cast<GLenum>(current_depth_func) != depth_func_)
+	{
 		glDepthFunc(depth_func_);
+	}
 
 	// Set polygon mode
 	GLint current_mode;
 	glGetIntegerv(GL_POLYGON_MODE, &current_mode);
 	if (static_cast<GLenum>(current_mode) != polygon_mode_)
+	{
 		glPolygonMode(GL_FRONT_AND_BACK, polygon_mode_);
+	}
 
 	// Set blend mode equation
 	GLint current_mode_rgb, current_mode_alpha;
@@ -172,7 +182,9 @@ void draw_state::apply() const
 	glGetIntegerv(GL_BLEND_EQUATION_ALPHA, &current_mode_alpha);
 	if (static_cast<GLenum>(current_mode_rgb) != blend_mode_rgb_ ||
 		static_cast<GLenum>(current_mode_alpha) != blend_mode_alpha_)
+	{
 		glBlendEquationSeparate(blend_mode_rgb_, blend_mode_alpha_);
+	}
 
 	// Set blend mode function
 	GLint current_src_rgb, current_dst_rgb, current_src_alpha, current_dst_alpha;
@@ -184,24 +196,32 @@ void draw_state::apply() const
 		static_cast<GLenum>(current_dst_rgb) != blend_dst_rgb_ ||
 		static_cast<GLenum>(current_src_alpha) != blend_src_alpha_ ||
 		static_cast<GLenum>(current_dst_alpha) != blend_dst_alpha_)
+	{
 		glBlendFuncSeparate(blend_src_rgb_, blend_dst_rgb_, blend_src_alpha_, blend_dst_alpha_);
+	}
 
 	// Set blend color
-	glGetFloatv(GL_BLEND_COLOR, current_color);
-	if (memcmp(current_color, blend_color_.data(), sizeof(current_color)) != 0)
+	glGetFloatv(GL_BLEND_COLOR, std::begin(current_color));
+	if (memcmp(std::begin(current_color), blend_color_.data(), sizeof(current_color)) != 0)
+	{
 		glBlendColor(blend_color_[0], blend_color_[1], blend_color_[2], blend_color_[3]);
+	}
 }
 
 void draw_state::clear() const
 {
-	if (clear_bits_)
+	if (clear_bits_ != 0u)
+	{
 		glClear(clear_bits_);
+	}
 }
 
 void draw_state::clear_bits(GLbitfield new_bits)
 {
-	if (new_bits & ~(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT))
+	if ((new_bits & ~(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT)) != 0u)
+	{
 		throw shadertoy::shadertoy_error("Invalid bit combination for clear_bits");
+	}
 
 	clear_bits_ = new_bits;
 }

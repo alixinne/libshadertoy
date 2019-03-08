@@ -23,4 +23,4 @@ void image_input::reset_input() { image_texture_.reset(); }
 
 gl::texture *image_input::use_input() { return image_texture_.get(); }
 
-image_input::image_input() : basic_input(), image_texture_() {}
+image_input::image_input() : image_texture_() {}

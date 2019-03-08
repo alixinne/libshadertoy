@@ -1,4 +1,5 @@
 #include <boost/filesystem.hpp>
+#include <utility>
 
 #include <epoxy/gl.h>
 
@@ -20,10 +21,8 @@ std::unique_ptr<gl::texture> file_input::load_image()
 	{
 		fs::path filepath(filename_);
 
-		error_assert(fs::exists(filepath),
-					 "{}: file not found for input {}",
-					 filename_,
-					 (void*)this);
+		error_assert(fs::exists(filepath), "{}: file not found for input {}", filename_,
+					 static_cast<const void *>(this));
 
 		return load_file(filename_, vflip_);
 	}
@@ -31,9 +30,6 @@ std::unique_ptr<gl::texture> file_input::load_image()
 	return {};
 }
 
-file_input::file_input() : image_input(), filename_(), vflip_(true) {}
+file_input::file_input() : vflip_(true) {}
 
-file_input::file_input(const std::string &filename)
-: image_input(), filename_(filename), vflip_(true)
-{
-}
+file_input::file_input(std::string filename) : filename_(std::move(filename)), vflip_(true) {}

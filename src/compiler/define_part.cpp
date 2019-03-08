@@ -8,19 +8,14 @@ using namespace shadertoy::compiler;
 
 using shadertoy::utils::error_assert;
 
-preprocessor_defines::preprocessor_defines()
-	: generated_source_(),
-	source_ready_(true),
-	definitions_()
-{
-}
+preprocessor_defines::preprocessor_defines() : source_ready_(true) {}
 
 const std::string &preprocessor_defines::source()
 {
 	if (!source_ready_)
 	{
 		std::ostringstream oss;
-		for (auto define : definitions_)
+		for (const auto &define : definitions_)
 		{
 			oss << "#define " << define.first;
 			if (!define.second.empty())
@@ -42,11 +37,10 @@ define_part::define_part(const std::string &name)
 {
 }
 
-define_part::define_part(const std::string &name, std::shared_ptr<preprocessor_defines> defines)
-	: cloneable_part(name),
-	definitions_(defines)
+define_part::define_part(const std::string &name, const std::shared_ptr<preprocessor_defines> &defines)
+: cloneable_part(name), definitions_(defines)
 {
-	error_assert(defines.get(), "The defines pointer cannot be null");
+	error_assert(defines.get() != nullptr, "The defines pointer cannot be null");
 }
 
 define_part::operator bool() const

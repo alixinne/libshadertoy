@@ -426,7 +426,7 @@ namespace gl
 		 * @param  programId OpenGL resource id of the failed program
 		 * @param  log       Contents of the link step log
 		 */
-		explicit program_link_error(GLuint programId, const std::string &log);
+		explicit program_link_error(GLuint programId, std::string log);
 
 		/**
 		 * @brief Get the program id of the failed linking step.
@@ -463,7 +463,7 @@ namespace gl
 		 * @param  programId OpenGL resource id of the failed program
 		 * @param  log       Contents of the validate step log
 		 */
-		explicit program_validate_error(GLuint programId, const std::string &log);
+		explicit program_validate_error(GLuint programId, std::string log);
 
 		/**
 		 * @brief Get the program id of the failed validation step.

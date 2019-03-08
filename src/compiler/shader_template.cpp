@@ -31,17 +31,14 @@ void shader_template::check_unique(const std::unique_ptr<basic_part> &part)
 								 part->name());
 }
 
-shader_template::shader_template()
-	: parts_()
-{
-}
+shader_template::shader_template() = default;
 
-shader_template::shader_template(shader_template &&other)
+shader_template::shader_template(shader_template &&other) noexcept
 	: parts_(std::move(other.parts_))
 {
 }
 
-shader_template &shader_template::operator=(shader_template &&rhs)
+shader_template &shader_template::operator=(shader_template &&rhs) noexcept
 {
 	if (this != &rhs)
 	{
@@ -182,7 +179,8 @@ static void emit_part(shader_template &st, const std::string &name_prefix, int &
 
 shader_template shader_template::parse(std::istream &is, const std::string &name_prefix)
 {
-	const std::regex cmd_regex("^\\s*#pragma\\s+shadertoy\\s+part\\s+(?:((?:\\*|[a-zA-Z_][a-zA-Z\\-_0-9]*):[a-zA-Z_][a-zA-Z\\-_0-9]*)(?:\\s+(begin))?|(end))\\s*$");
+	const std::regex cmd_regex(
+	R"(^\s*#pragma\s+shadertoy\s+part\s+(?:((?:\*|[a-zA-Z_][a-zA-Z\-_0-9]*):[a-zA-Z_][a-zA-Z\-_0-9]*)(?:\s+(begin))?|(end))\s*$)");
 
 	enum
 	{

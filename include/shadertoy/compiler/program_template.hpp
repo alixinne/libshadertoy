@@ -5,6 +5,7 @@
 
 #include "shadertoy/compiler/define_part.hpp"
 #include "shadertoy/compiler/shader_template.hpp"
+#include "shadertoy/uniform_state.hpp"
 
 #include <map>
 

@@ -14,29 +14,17 @@ using namespace shadertoy;
 using shadertoy::utils::error_assert;
 
 swap_chain::swap_chain()
-	: members_(),
-	members_set_(),
-	current_(),
-	internal_format_(GL_RGBA32F),
-	swap_policy_(member_swap_policy::double_buffer)
+: internal_format_(GL_RGBA32F), swap_policy_(member_swap_policy::double_buffer)
 {
 }
 
 swap_chain::swap_chain(GLint internal_format)
-	: members_(),
-	members_set_(),
-	current_(),
-	internal_format_(internal_format),
-	swap_policy_(member_swap_policy::double_buffer)
+: internal_format_(internal_format), swap_policy_(member_swap_policy::double_buffer)
 {
 }
 
 swap_chain::swap_chain(GLint internal_format, member_swap_policy swap_policy)
-	: members_(),
-	members_set_(),
-	current_(),
-	internal_format_(internal_format),
-	swap_policy_(swap_policy)
+: internal_format_(internal_format), swap_policy_(swap_policy)
 {
 }
 
@@ -50,7 +38,7 @@ std::shared_ptr<members::basic_member> swap_chain::before(members::basic_member 
 		{
 			return *it;
 		}
-		else if ((*it).get() == member)
+		if ((*it).get() == member)
 		{
 			is_next = true;
 		}
@@ -59,17 +47,17 @@ std::shared_ptr<members::basic_member> swap_chain::before(members::basic_member 
 	return {};
 }
 
-void swap_chain::push_back(std::shared_ptr<members::basic_member> member)
+void swap_chain::push_back(const std::shared_ptr<members::basic_member> &member)
 {
-	error_assert(members_set_.count(member) == 0,
-				 "This member is already part of chain {}", (void*)this);
+	error_assert(members_set_.count(member) == 0, "This member is already part of chain {}",
+				 static_cast<const void *>(this));
 
 	members_.push_back(member);
 	members_set_.insert(member);
 }
 
-std::shared_ptr<members::basic_member> swap_chain::render(const render_context &context,
-														  std::shared_ptr<members::basic_member> target)
+std::shared_ptr<members::basic_member>
+swap_chain::render(const render_context &context, const std::shared_ptr<members::basic_member> &target)
 {
 	current_.reset();
 
@@ -79,7 +67,9 @@ std::shared_ptr<members::basic_member> swap_chain::render(const render_context &
 		current_ = member;
 
 		if (target && current_ == target)
+		{
 			break;
+		}
 	}
 
 	return current_;

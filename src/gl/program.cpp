@@ -1,10 +1,11 @@
+#include <utility>
 #include <vector>
 
 #include <epoxy/gl.h>
 
-#include "shadertoy/shadertoy_error.hpp"
-#include "shadertoy/gl/shader.hpp"
 #include "shadertoy/gl/program.hpp"
+#include "shadertoy/gl/shader.hpp"
+#include "shadertoy/shadertoy_error.hpp"
 
 using namespace shadertoy::gl;
 
@@ -39,17 +40,13 @@ bool uniform_location::is_active() const
 	return location_ != -1;
 }
 
-program_link_error::program_link_error(GLuint programId, const std::string &log)
-	: shadertoy_error("OpenGL program linking error"),
-	program_id_(programId),
-	log_(log)
+program_link_error::program_link_error(GLuint programId, std::string log)
+: shadertoy_error("OpenGL program linking error"), program_id_(programId), log_(std::move(log))
 {
 }
 
-program_validate_error::program_validate_error(GLuint programId, const std::string &log)
-	: shadertoy_error("OpenGL program validation error"),
-	program_id_(programId),
-	log_(log)
+program_validate_error::program_validate_error(GLuint programId, std::string log)
+: shadertoy_error("OpenGL program validation error"), program_id_(programId), log_(std::move(log))
 {
 }
 
@@ -85,13 +82,13 @@ void program::validate() const
 uniform_location program::get_uniform_location(const GLchar *name) const
 {
 	GLint location = gl_call(glGetUniformLocation, GLuint(*this), name);
-	return uniform_location(*this, location);
+	return { *this, location };
 }
 
 attrib_location program::get_attrib_location(const GLchar *name) const
 {
 	GLint location = gl_call(glGetAttribLocation, GLuint(*this), name);
-	return attrib_location(location);
+	return { location };
 }
 
 void program::attach_shader(const shader &shader) const
@@ -111,7 +108,9 @@ std::string program::log() const
 	gl_call(glGetProgramiv, GLuint(*this), GL_INFO_LOG_LENGTH, &infoLogLength);
 
 	if (infoLogLength == 0)
+	{
 		return std::string();
+	}
 
 	// Get log
 	std::vector<GLchar> logStr(infoLogLength);

@@ -84,6 +84,8 @@ template <typename T> struct basic_size
 template <typename T> class size_ref_interface
 {
 public:
+	virtual ~size_ref_interface() = default;
+
 	/**
 	 * @brief Resolve this size reference into an actual size object
 	 *

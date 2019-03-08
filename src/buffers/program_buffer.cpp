@@ -5,7 +5,6 @@
 #include "shadertoy/inputs/basic_input.hpp"
 #include "shadertoy/inputs/error_input.hpp"
 
-#include "shadertoy/uniform_state.hpp"
 #include "shadertoy/buffers/program_buffer.hpp"
 #include "shadertoy/render_context.hpp"
 
@@ -22,21 +21,20 @@ using shadertoy::gl::gl_call;
 using shadertoy::utils::log;
 
 program_buffer::program_buffer(const std::string &id)
-	: gl_buffer(id),
-	  bound_inputs_(),
-	  inputs_(),
-	  source_map_(nullptr)
+: gl_buffer(id),
+
+  source_map_(nullptr)
 {
 }
 
 void program_buffer::init_contents(const render_context &context, const io_resource &io)
 {
 	// Initialize the geometry
-	log::shadertoy()->trace("Loading geometry for {} ({})", id(), (void*)this);
+	log::shadertoy()->trace("Loading geometry for {} ({})", id(), static_cast<const void *>(this));
 	init_geometry(context, io);
 
 	// Shader objects
-	log::shadertoy()->trace("Compiling program for {} ({})", id(), (void*)this);
+	log::shadertoy()->trace("Compiling program for {} ({})", id(), static_cast<const void *>(this));
 
 	// Load the fragment shader for this buffer
 	std::vector<std::unique_ptr<compiler::basic_part>> fs_template_parts;
@@ -44,7 +42,9 @@ void program_buffer::init_contents(const render_context &context, const io_resou
 	// Add the uniform inputs for this buffer
 	fs_template_parts.emplace_back(std::make_unique<compiler::input_part>("buffer:inputs", inputs_));
 	if (source_)
+	{
 		fs_template_parts.emplace_back(source_->clone());
+	}
 
 	// Compile
 	std::map<GLenum, std::vector<std::unique_ptr<compiler::basic_part>>> parts;
@@ -59,10 +59,8 @@ void program_buffer::init_contents(const render_context &context, const io_resou
 	// bind uniform inputs
 	bound_inputs_ = buffer_template.bind_inputs(program_);
 
-	log::shadertoy()->debug("Bound {} input objects for {} ({})",
-							bound_inputs_.size(),
-							id(),
-							(void*)this);
+	log::shadertoy()->debug("Bound {} input objects for {} ({})", bound_inputs_.size(), id(),
+							static_cast<const void *>(this));
 
 	// Set input uniform units
 	size_t current_unit = 0;
@@ -85,14 +83,18 @@ void program_buffer::render_gl_contents(const render_context &context, const io_
 
 	// Apply context-level uniforms
 	for (auto &inputs : bound_inputs_)
+	{
 		inputs->apply();
+	}
 
 	// Override values in bound inputs 0 (ShaderToy inputs)
 	shader_inputs_t::bound_inputs *state_ptr = nullptr;
 	for (auto &bound_input : bound_inputs_)
 	{
-		if ((state_ptr = dynamic_cast<shader_inputs_t::bound_inputs*>(bound_input.get())))
+		if ((state_ptr = dynamic_cast<shader_inputs_t::bound_inputs *>(bound_input.get())) != nullptr)
+		{
 			break;
+		}
 	}
 
 	auto &state(*state_ptr);
@@ -119,7 +121,9 @@ void program_buffer::render_gl_contents(const render_context &context, const io_
 		}
 
 		if (current_unit < SHADERTOY_ICHANNEL_COUNT)
+		{
 			resolutions[current_unit] = sz;
+		}
 	}
 
 	state.set<iChannelResolution>(resolutions);
@@ -130,7 +134,7 @@ void program_buffer::render_gl_contents(const render_context &context, const io_
 	// Try to set iTimeDelta
 	GLint available = 0;
 	time_delta_query().get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
-	if (available)
+	if (available != 0)
 	{
 		// Result available, set uniform value
 		GLuint64 timeDelta;
