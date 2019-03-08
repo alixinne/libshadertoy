@@ -29,7 +29,7 @@ void noise_input::load_input()
 	// Create the actual noise
 	std::random_device hr;
 	std::minstd_rand r(hr());
-	std::uniform_int_distribution<uint8_t> uniform_dist;
+	std::uniform_int_distribution<uint_fast32_t> uniform_dist(0, 255);
 
 	std::vector<unsigned char> rnd(ts.width * ts.height);
 	std::generate(rnd.begin(), rnd.end(), [&]() { return uniform_dist(r); });
