@@ -286,5 +286,13 @@ shader_template shader_template::parse(std::istream &is, const std::string &name
 shader_template shader_template::parse_file(const std::string &filename)
 {
 	std::ifstream ifs(filename);
+
+	if (!ifs.is_open())
+	{
+		std::stringstream ss;
+		ss << "Failed to open template file " << filename;
+		throw template_error(ss.str());
+	}
+
 	return parse(ifs, filename);
 }
