@@ -199,6 +199,10 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 		${JPEG_LIBRARIES}
 		${SOIL_LIBRARIES})
 
+	if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+		target_link_libraries(${TARGET_NAME} PUBLIC stdc++fs)
+	endif()
+
 	if (SOIL_FOUND AND (NOT WIN32 OR OpenGL_FOUND))
 		target_link_libraries(${TARGET_NAME} PUBLIC ${SOIL_LIBRARIES})
 
