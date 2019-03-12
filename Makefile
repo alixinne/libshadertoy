@@ -1,12 +1,11 @@
 # Known build distributions
-ALL_DISTS=bionic stretch buster
+ALL_DISTS=bionic buster
 
 # Known package types
 PKG_TYPES=amd64 i386 source
 
 # Possible combinations of distributions-types
 ALL_BIONIC_ARCHS=$(patsubst %,bionic-%,$(PKG_TYPES))
-ALL_STRETCH_ARCHS=$(patsubst %,stretch-%,$(PKG_TYPES))
 ALL_BUSTER_ARCHS=$(patsubst %,buster-%,$(PKG_TYPES))
 ALL_PKGS=$(ALL_BIONIC_ARCHS) $(ALL_STRETCH_ARCHS) $(ALL_BUSTER_ARCHS)
 
@@ -28,8 +27,6 @@ export GIT_PREFIX
 all: $(ALL_DISTS)
 
 bionic: $(ALL_BIONIC_ARCHS)
-
-stretch: $(ALL_STRETCH_ARCHS)
 
 buster: $(ALL_BUSTER_ARCHS)
 

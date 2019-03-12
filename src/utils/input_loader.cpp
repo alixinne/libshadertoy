@@ -1,5 +1,5 @@
 #include <algorithm>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <epoxy/gl.h>
 
 #include "shadertoy/gl.hpp"

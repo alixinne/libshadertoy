@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.10)
 
 project(shadertoy LANGUAGES CXX)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules")
@@ -50,8 +50,6 @@ set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Required packages
-find_package(Boost 1.54 REQUIRED COMPONENTS filesystem)
-
 find_package(PkgConfig REQUIRED)
 
 # Find GLM using CMake
@@ -130,7 +128,6 @@ endif()
 # Include directories
 target_include_directories(shadertoy-objects PRIVATE
 	${shadertoy_INCLUDE_DIRS}
-	${Boost_INCLUDE_DIR}
 	${OPENGL_INCLUDE_DIRS}
 	${Epoxy_INCLUDE_DIRS}
 	${GLM_INCLUDE_DIRS})
@@ -170,15 +167,17 @@ if (OpenEXR_FOUND)
 		${OpenEXR_INCLUDE_DIRS})
 	target_compile_definitions(shadertoy-objects PRIVATE
 		LIBSHADERTOY_OPENEXR=1)
+
+	# https://github.com/openexr/openexr/issues/235
+	set_property(SOURCE ${SRC_DIR}/inputs/exr_input.cpp PROPERTY COMPILE_FLAGS -std=c++14)
 else()
 	message(STATUS "Building without OpenEXR support")
 	target_compile_definitions(shadertoy-objects PRIVATE
 		LIBSHADERTOY_OPENEXR=0)
 endif()
 
-# C++14
-set(CXX_STANDARD_REQUIRED ON)
-set_property(TARGET shadertoy-objects PROPERTY CXX_STANDARD 14)
+# C++17
+target_compile_features(shadertoy-objects PUBLIC cxx_std_17)
 
 # -fPIC
 set_property(TARGET shadertoy-objects PROPERTY POSITION_INDEPENDENT_CODE ON)
@@ -196,7 +195,6 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 
 	# Link dependencies
 	target_link_libraries(${TARGET_NAME} PUBLIC
-		${Boost_LIBRARIES}
 		${Epoxy_LIBRARIES}
 		${JPEG_LIBRARIES}
 		${SOIL_LIBRARIES})
@@ -225,7 +223,6 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 	# Include directories for install
 	target_include_directories(${TARGET_NAME} INTERFACE
 		${shadertoy_INCLUDE_DIRS}
-		${Boost_INCLUDE_DIR}
 		${GLM_INCLUDE_DIRS})
 
 	# Set library file version

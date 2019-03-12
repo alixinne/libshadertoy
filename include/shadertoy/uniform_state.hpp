@@ -8,8 +8,7 @@
 #include <sstream>
 #include <string>
 #include <tuple>
-
-#include <boost/variant.hpp>
+#include <variant>
 
 namespace shadertoy
 {
@@ -21,11 +20,11 @@ namespace shadertoy
 typedef std::tuple<std::string, std::string> glsl_type_info;
 
 /**
- * @brief boost::variant visitor to return the GLSL typename of a boost::variant used
+ * @brief std::variant visitor to return the GLSL typename of a std::variant used
  * in a dynamic inputs block. This class may be derived to implement support
  * for more GLSL types.
  */
-struct shadertoy_EXPORT dynamic_shader_inputs_glsl_type_visitor : public boost::static_visitor<glsl_type_info>
+struct shadertoy_EXPORT dynamic_shader_inputs_glsl_type_visitor
 {
 	/** @cond NODOC */
 	inline glsl_type_info operator()(bool) const { return std::make_tuple("bool", ""); }
@@ -68,10 +67,10 @@ struct shadertoy_EXPORT dynamic_shader_inputs_glsl_type_visitor : public boost::
 };
 
 /**
- * @brief boost::variant visitor that sets the value to be sent to the driver based on
- * the type of the object contained in the boost::variant.
+ * @brief std::variant visitor that sets the value to be sent to the driver based on
+ * the type of the object contained in the std::variant.
  */
-class shadertoy_EXPORT dynamic_shader_input_uniform_setter : public boost::static_visitor<bool>
+class shadertoy_EXPORT dynamic_shader_input_uniform_setter
 {
 	/// OpenGL GLSL uniform location to set
 	const gl::uniform_location &location_;
@@ -201,7 +200,7 @@ public:
  *
  * @tparam DynamicInputName Name of the uniform block. This is used to
  *                          distinguish this input from other static inputs.
- * @tparam GLSLTypeVisitor  An implementation of a boost::variant visitor that
+ * @tparam GLSLTypeVisitor  An implementation of a std::variant visitor that
  *                          follows the conventions set by
  *                          DynamicShaderInputsGLSLTypeVisitor.
  * @tparam Types            List of typenames that define the types supported by
@@ -216,7 +215,7 @@ struct dynamic_shader_inputs
 	static constexpr const size_t size = 0;
 
 	/// Type of the variant to hold the possible uniform values
-	typedef boost::variant<Types...> variant_input;
+	typedef std::variant<Types...> variant_input;
 	/// Type of the shader input value
 	typedef dynamic_shader_inputs<DynamicInputName, Types...> value_type;
 
@@ -250,7 +249,7 @@ public:
 	template<typename T>
 	const T &get(const std::string &name) const
 	{
-		return boost::get<T>(input_map[name]);
+		return std::get<T>(input_map[name]);
 	}
 
 	/**
@@ -262,7 +261,7 @@ public:
 	template<typename T>
 	T &get(const std::string &name)
 	{
-		return boost::get<T>(input_map[name]);
+		return std::get<T>(input_map[name]);
 	}
 
 	/**
@@ -282,7 +281,7 @@ public:
 			return false;
 
 		// Try to get the input value as a T
-		auto ptr = boost::get<T>(&(it->second));
+		auto ptr = std::get<T>(&(it->second));
 		if (!ptr) // type unboxing failed
 			return false;
 
@@ -307,7 +306,7 @@ public:
 			return false;
 
 		// Try to get the input value as a T
-		auto ptr = boost::get<T>(&(it->second));
+		auto ptr = std::get<T>(&(it->second));
 		if (!ptr) // type unboxing failed
 			return false;
 
@@ -336,7 +335,7 @@ public:
 
 		for (auto &pair : input_map)
 		{
-			auto type_info(boost::apply_visitor(glsl_type_visitor(), pair.second));
+			auto type_info(std::visit(glsl_type_visitor(), pair.second));
 			os << "uniform " << std::get<0>(type_info) << " "
 				<< pair.first << std::get<1>(type_info) << ";" << std::endl;
 		}
@@ -371,7 +370,7 @@ public:
 	 */
 	bool set_value(const std::string &name, const gl::uniform_location &location) const
 	{
-		return boost::apply_visitor(dynamic_shader_input_uniform_setter(location), input_map.at(name));
+		return std::visit(dynamic_shader_input_uniform_setter(location), input_map.at(name));
 	}
 };
 

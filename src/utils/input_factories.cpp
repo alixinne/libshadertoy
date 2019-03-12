@@ -1,7 +1,7 @@
 #include <algorithm>
+#include <filesystem>
 #include <sstream>
 
-#include <boost/filesystem.hpp>
 #include <epoxy/gl.h>
 
 #include "shadertoy/gl.hpp"
@@ -20,7 +20,7 @@ using namespace shadertoy::utils;
 
 std::string file_ext(const std::string &path)
 {
-	boost::filesystem::path p(path);
+	std::filesystem::path p(path);
 	auto ext(p.extension().string());
 	std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 	return ext;

@@ -1,9 +1,5 @@
 ---
 variables:
-  STRETCH_AMD64_TEST_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/amd64/build-stretch:$CI_COMMIT_REF_SLUG
-  STRETCH_AMD64_RELEASE_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/amd64/build-stretch:latest
-  STRETCH_I386_TEST_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/i386/build-stretch:$CI_COMMIT_REF_SLUG
-  STRETCH_I386_RELEASE_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/i386/build-stretch:latest
   BUSTER_AMD64_TEST_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/amd64/build-buster:$CI_COMMIT_REF_SLUG
   BUSTER_AMD64_RELEASE_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/amd64/build-buster:latest
   BUSTER_I386_TEST_IMAGE: registry.gitlab.inria.fr/vtaverni/libshadertoy/i386/build-buster:$CI_COMMIT_REF_SLUG
@@ -95,36 +91,6 @@ release_bionic_i386_image:
   only:
     - tags
 
-stretch_amd64_image:
-  <<: *build_image
-  script:
-    - docker pull $STRETCH_AMD64_TEST_IMAGE || true
-    - docker build --pull -t $STRETCH_AMD64_TEST_IMAGE --cache-from $STRETCH_AMD64_TEST_IMAGE -f docker/Dockerfile.stretch-amd64 docker
-    - docker push $STRETCH_AMD64_TEST_IMAGE
-
-stretch_i386_image:
-  <<: *build_image
-  script:
-    - docker pull $STRETCH_I386_TEST_IMAGE || true
-    - docker build --pull -t $STRETCH_I386_TEST_IMAGE --cache-from $STRETCH_I386_TEST_IMAGE -f docker/Dockerfile.stretch-i386 docker
-    - docker push $STRETCH_I386_TEST_IMAGE
-
-stretch_amd64_pkg:
-  <<: *build_pkg
-  image: $STRETCH_AMD64_TEST_IMAGE
-  artifacts:
-    name: 'libshadertoy-stretch-amd64-$CI_COMMIT_REF_SLUG'
-    paths:
-      - '*.deb'
-
-stretch_i386_pkg:
-  <<: *build_pkg
-  image: $STRETCH_I386_TEST_IMAGE
-  artifacts:
-    name: 'libshadertoy-stretch-i386-$CI_COMMIT_REF_SLUG'
-    paths:
-      - '*.deb'
-
 win10_amd64_pkg:
   <<: *fetch_submodules
   stage: build
@@ -141,24 +107,6 @@ win10_amd64_pkg:
       - '*.7z'
   tags:
     - windows
-
-release_stretch_amd64_image:
-  <<: *release_img
-  script:
-    - docker pull $STRETCH_AMD64_TEST_IMAGE
-    - docker tag $STRETCH_AMD64_TEST_IMAGE $STRETCH_AMD64_RELEASE_IMAGE
-    - docker push $STRETCH_AMD64_RELEASE_IMAGE
-  only:
-    - tags
-
-release_stretch_i386_image:
-  <<: *release_img
-  script:
-    - docker pull $STRETCH_I386_TEST_IMAGE
-    - docker tag $STRETCH_I386_TEST_IMAGE $STRETCH_I386_RELEASE_IMAGE
-    - docker push $STRETCH_I386_RELEASE_IMAGE
-  only:
-    - tags
 
 buster_amd64_image:
   <<: *build_image

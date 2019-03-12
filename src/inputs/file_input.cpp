@@ -1,4 +1,4 @@
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <utility>
 
 #include <epoxy/gl.h>
@@ -11,7 +11,7 @@
 using namespace shadertoy;
 using namespace shadertoy::inputs;
 
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 using shadertoy::utils::error_assert;
 

@@ -22,9 +22,7 @@ trap cleanup EXIT
 echo "[==== BUILDING v$LIBVERSION ====]" >&2
 
 version_suffix () {
-	if [ "$1" = "stretch" ]; then
-		echo -n "debian9"
-	elif [ "$1" = "buster" ]; then
+	if [ "$1" = "buster" ]; then
 		echo -n "debian10"
 	elif [ "$1" = "bionic" ]; then
 		echo -n "ubuntu18"
