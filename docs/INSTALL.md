@@ -4,17 +4,16 @@ There are several options for installing libshadertoy.
 
 ## Install the Debian/Ubuntu packages
 
-A package repository is maintained for Debian Stretch (9) and Ubuntu Bionic
-(18.04 LTS). It can be used to install a pre-built version of the library with
-all its features:
+A package repository is maintained for Debian Buster (10) and Ubuntu Bionic (18.04 LTS).
+It can be used to install a pre-built version of the library with all its features:
 
 ```bash
 # Get repository GPG key
 sudo apt-key adv --recv-keys --keyserver pool.sks-keyservers.net --recv 0xF35C413E
 
 # Add repository to apt config
-#  Debian Stretch
-sudo sh -c 'echo "deb https://dl.bintray.com/vtavernier/libshadertoy stretch main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
+#  Debian Buster
+sudo sh -c 'echo "deb https://dl.bintray.com/vtavernier/libshadertoy buster main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
 #  Ubuntu Bionic (18.04)
 sudo sh -c 'echo "deb https://dl.bintray.com/vtavernier/libshadertoy bionic main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
 
@@ -35,9 +34,8 @@ git clone --recursive https://gitlab.inria.fr/vtaverni/libshadertoy.git
 In order to compile the project, the following tools and libraries are required:
 
 * OpenGL 4.5
-* C++14-enabled compiler (GCC 6 or Clang 3.4)
+* C++17-enabled compiler (GCC 7 or Clang 5)
 * [CMake 3.1+](https://launchpad.net/ubuntu/bionic/+source/cmake)
-* [Boost 1.54+](https://launchpad.net/ubuntu/bionic/+package/libboost-all-dev)
 * [libepoxy 1.3+](https://launchpad.net/ubuntu/bionic/+source/libepoxy)
 
 *Note: GCC 5 is not supported due to a bug fixed in v6: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67371*
@@ -70,16 +68,16 @@ To build the library on the development machine (needed for running tests) the
 provided `Makefile` should be used. See `debian/control` for the up-to-date list
 of build dependencies.
 
-The packages for Ubuntu Bionic and Debian Stretch can be built using
+The packages for Ubuntu Bionic and Debian Buster can be built using
 [sbuild](https://wiki.debian.org/sbuild) and a suitably setup
 [schroot](https://wiki.debian.org/Schroot). Here is a reminder on how to setup
-such an environment (Debian Stretch instructions, based on provided links).
+such an environment (Debian Buster instructions, based on provided links).
 
 ```bash
 # Note: replace /disc/schroot with the location of the chroot you chose
 
-# Debian Stretch amd64
-sudo sbuild-createchroot --include=eatmydata,ccache,gnupg stretch /disc/schroot/stretch-amd64-sbuild http://deb.debian.org/debian
+# Debian Buster amd64
+sudo sbuild-createchroot --include=eatmydata,ccache,gnupg buster /disc/schroot/buster-amd64-sbuild http://deb.debian.org/debian
 
 # Ubuntu Bionic amd64
 sudo sbuild-createchroot --include=eatmydata,ccache,gnupg bionic /disc/schroot/bionic-amd64-sbuild http://archive.ubuntu.com/ubuntu/
@@ -91,8 +89,8 @@ Once the sbuild environment is setup, the Makefile can be used as follows.
 # Build all Bionic packages (amd64, i386, source)
 make bionic
 
-# Build Debian Stretch amd64
-make stretch-amd64
+# Build Debian Buster amd64
+make buster-amd64
 
 # The result can be found in ../libshadertoy-{version}-{distribution}-{git-revision}
 ```
@@ -104,7 +102,7 @@ created for building the packages.
 
 ```bash
 # Switch into chroot
-sudo schroot -c stretch-amd64-sbuild
+sudo schroot -c buster-amd64-sbuild
 
 # You need to install the same GL driver as the host, here for Nvidia
 #  Enable non-free
