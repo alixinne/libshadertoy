@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <filesystem>
 #include <epoxy/gl.h>
 
 #include "shadertoy/gl.hpp"

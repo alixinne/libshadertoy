@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <filesystem>
 #include <sstream>
 
 #include <epoxy/gl.h>
@@ -15,12 +14,20 @@
 #include "shadertoy/inputs/checker_input.hpp"
 #include "shadertoy/inputs/noise_input.hpp"
 
+#if __cpp_lib_filesystem >= 201703
+#include <filesystem>
+namespace fs = std::filesystem;
+#else
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem::v1;
+#endif
+
 using namespace shadertoy;
 using namespace shadertoy::utils;
 
 std::string file_ext(const std::string &path)
 {
-	std::filesystem::path p(path);
+	fs::path p(path);
 	auto ext(p.extension().string());
 	std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 	return ext;

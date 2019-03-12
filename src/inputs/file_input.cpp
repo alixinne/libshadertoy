@@ -1,4 +1,3 @@
-#include <filesystem>
 #include <utility>
 
 #include <epoxy/gl.h>
@@ -8,10 +7,16 @@
 
 #include "shadertoy/inputs/file_input.hpp"
 
+#if __cpp_lib_filesystem >= 201703
+#include <filesystem>
+namespace fs = std::filesystem;
+#else
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem::v1;
+#endif
+
 using namespace shadertoy;
 using namespace shadertoy::inputs;
-
-namespace fs = std::filesystem;
 
 using shadertoy::utils::error_assert;
 
