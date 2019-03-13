@@ -64,6 +64,9 @@ set(SPDLOG_BUILD_TESTING OFF)
 set(SPDLOG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/spdlog)
 add_subdirectory(${SPDLOG_DIR} EXCLUDE_FROM_ALL)
 
+# spdlog requires a thread init library
+find_package(Threads REQUIRED)
+
 # Copy headers to include directory for build
 set(SPDLOG_MAIN_INCLUDE ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog/spdlog.h)
 add_custom_command(OUTPUT ${SPDLOG_MAIN_INCLUDE}
@@ -197,7 +200,8 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 	target_link_libraries(${TARGET_NAME} PUBLIC
 		${Epoxy_LIBRARIES}
 		${JPEG_LIBRARIES}
-		${SOIL_LIBRARIES})
+		${SOIL_LIBRARIES}
+		${CMAKE_THREAD_LIBS_INIT})
 
 	if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
 		target_link_libraries(${TARGET_NAME} PUBLIC stdc++fs)
