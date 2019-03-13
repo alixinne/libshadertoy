@@ -15,5 +15,5 @@ target_link_libraries(example00-build
 	${GLFW3_LIBRARIES}
 	shadertoy-shared)
 
-# C++14
-set_property(TARGET example00-build PROPERTY CXX_STANDARD 14)
+# C++17
+set_property(TARGET example00-build PROPERTY CXX_STANDARD 17)

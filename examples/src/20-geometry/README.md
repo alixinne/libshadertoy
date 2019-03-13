@@ -7,6 +7,7 @@ internet connection to download the Stanford bunny model and the code of
 
 ## Dependencies
 
+* libboost-filesystem-dev
 * libglfw3-dev
 * cmake
 * git

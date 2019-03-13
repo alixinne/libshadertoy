@@ -5,6 +5,7 @@ with a custom shader, using libshadertoy.
 
 ## Dependencies
 
+* libboost-filesystem-dev
 * libglfw3-dev
 * cmake
 * git

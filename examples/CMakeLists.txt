@@ -1,9 +1,10 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.10)
 
 project(libshadertoy-examples)
 include(FindPkgConfig)
 
 # OpenGL libraries
+set(OpenGL_GL_PREFERENCE GLVND)
 find_package(OpenGL REQUIRED)
 
 if (NOT EPOXY_FOUND)

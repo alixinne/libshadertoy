@@ -36,8 +36,9 @@ target_include_directories(example20-geometry PRIVATE
 target_link_libraries(example20-geometry
 	${OPENGL_LIBRARY}
 	${EPOXY_LIBRARIES}
+	${Boost_LIBRARIES}
 	${GLFW3_LIBRARIES}
 	shadertoy-shared)
 
-# C++14
-set_property(TARGET example20-geometry PROPERTY CXX_STANDARD 14)
+# C++17
+set_property(TARGET example20-geometry PROPERTY CXX_STANDARD 17)

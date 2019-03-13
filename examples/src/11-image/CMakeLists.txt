@@ -14,8 +14,9 @@ target_include_directories(example11-image PRIVATE
 target_link_libraries(example11-image
 	${OPENGL_LIBRARY}
 	${EPOXY_LIBRARIES}
+	${Boost_LIBRARIES}
 	${GLFW3_LIBRARIES}
 	shadertoy-shared)
 
-# C++14
-set_property(TARGET example11-image PROPERTY CXX_STANDARD 14)
+# C++17
+set_property(TARGET example11-image PROPERTY CXX_STANDARD 17)

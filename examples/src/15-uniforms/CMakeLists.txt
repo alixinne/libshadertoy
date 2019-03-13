@@ -16,8 +16,9 @@ target_include_directories(example15-uniforms PRIVATE
 target_link_libraries(example15-uniforms
 	${OPENGL_LIBRARY}
 	${EPOXY_LIBRARIES}
+	${Boost_LIBRARIES}
 	${GLFW3_LIBRARIES}
 	shadertoy-shared)
 
-# C++14
-set_property(TARGET example15-uniforms PROPERTY CXX_STANDARD 14)
+# C++17
+set_property(TARGET example15-uniforms PROPERTY CXX_STANDARD 17)

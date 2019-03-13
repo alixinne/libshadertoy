@@ -27,5 +27,5 @@ target_link_libraries(example60-xscreensaver
 
 target_compile_definitions(example60-xscreensaver PUBLIC USE_GL=1)
 
-# C++14
-set_property(TARGET example60-xscreensaver PROPERTY CXX_STANDARD 14)
+# C++17
+set_property(TARGET example60-xscreensaver PROPERTY CXX_STANDARD 17)

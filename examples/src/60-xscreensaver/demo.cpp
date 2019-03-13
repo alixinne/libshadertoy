@@ -229,6 +229,8 @@ int shadertoy_init(const char *api_key, const char *query, const char *sort, int
 
 	// Free curl memory
 	curl_easy_cleanup(curl);
+
+	return 0;
 }
 
 void shadertoy_free()

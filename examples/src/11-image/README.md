@@ -5,6 +5,7 @@ libshadertoy.
 
 ## Dependencies
 
+* libboost-filesystem-dev
 * libglfw3-dev
 * cmake
 * git

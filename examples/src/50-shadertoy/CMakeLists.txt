@@ -24,5 +24,5 @@ target_link_libraries(example50-shadertoy
 	${JSONCPP_LIBRARIES}
 	shadertoy-shared)
 
-# C++14
-set_property(TARGET example50-shadertoy PROPERTY CXX_STANDARD 14)
+# C++17
+set_property(TARGET example50-shadertoy PROPERTY CXX_STANDARD 17)
