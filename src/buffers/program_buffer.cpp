@@ -155,3 +155,34 @@ void program_buffer::source_file(const std::string &new_file)
 {
 	source_ = std::unique_ptr<compiler::basic_part>(std::make_unique<compiler::file_part>("buffer:sources", new_file));
 }
+
+std::optional<std::vector<buffer_output>> program_buffer::get_buffer_outputs() const
+{
+	GLint active_outputs;
+	program_.get_program_interface(GL_PROGRAM_OUTPUT, GL_ACTIVE_RESOURCES, &active_outputs);
+
+	std::vector<buffer_output> outputs;
+	outputs.reserve(active_outputs);
+
+	const GLenum properties[] = { GL_TYPE, GL_LOCATION, GL_NAME_LENGTH };
+	constexpr const size_t propCount = sizeof(properties) / sizeof(properties[0]);
+	for (int output = 0; output < active_outputs; ++output)
+	{
+		// Get properties
+		GLint values[propCount];
+		program_.get_program_resource(GL_PROGRAM_OUTPUT, output, propCount, std::begin(properties),
+									  propCount, nullptr, std::begin(values));
+
+		// Get name
+		std::string output_name(values[2] - 1, ' ');
+		program_.get_program_resource_name(GL_PROGRAM_OUTPUT, output, values[2], nullptr,
+										   output_name.data());
+
+		log::shadertoy()->debug("Discovered program output #{} layout(location = {}) {:#x} {}",
+								output, values[1], values[0], output_name);
+
+		outputs.emplace_back(output_name, values[1], values[0]);
+	}
+
+	return outputs;
+}

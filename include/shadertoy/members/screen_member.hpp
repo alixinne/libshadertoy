@@ -39,6 +39,12 @@ class shadertoy_EXPORT screen_member : public basic_member
 	/// Member to render the output of
 	std::weak_ptr<basic_member> member_;
 
+	/// Output name of the target to render
+	std::optional<output_name_t> output_name_;
+
+	/// Output index of the target to render
+	int output_index_;
+
 	/// Sampler object to control how the texture is rendered to the screen
 	gl::sampler sampler_;
 
@@ -76,9 +82,9 @@ protected:
 	 *
 	 * @return Pointer to the OpenGL texture output object
 	 */
-	gl::texture *output(const swap_chain &chain);
+	std::vector<member_output_t> output(const swap_chain &chain);
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new instance of the screen_member class
 	 *
@@ -86,8 +92,9 @@ public:
 	 * current swap chain.
 	 *
 	 * @param viewport_size Initial viewport size
+	 * @param output_name   Index of the target output texture to render to the screen
 	 */
-	screen_member(rsize_ref &&viewport_size);
+	screen_member(rsize_ref &&viewport_size, std::optional<output_name_t> output_name = std::nullopt);
 
 	/**
 	 * @brief Initialize a new instance of the screen_member class
@@ -98,8 +105,10 @@ public:
 	 * @param viewport_x    Initial viewport X offset
 	 * @param viewport_y    Initial viewport Y offset
 	 * @param viewport_size Initial viewport size
+	 * @param output_name   Index of the target output texture to render to the screen
 	 */
-	screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size);
+	screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size,
+				  std::optional<output_name_t> output_name = std::nullopt);
 
 	/**
 	 * @brief Initialize a new instance of the screen_member class
@@ -109,9 +118,10 @@ public:
 	 *
 	 * @param viewport_size Initial viewport size
 	 * @param member        Target member
+	 * @param output_name   Index of the target output texture to render to the screen
 	 */
-	screen_member(rsize_ref &&viewport_size, std::weak_ptr<members::basic_member> member);
-
+	screen_member(rsize_ref &&viewport_size, std::weak_ptr<members::basic_member> member,
+				  std::optional<output_name_t> output_name = std::nullopt);
 
 	/**
 	 * @brief Initialize a new instance of the screen_member class
@@ -123,8 +133,11 @@ public:
 	 * @param viewport_y    Initial viewport Y offset
 	 * @param viewport_size Initial viewport size
 	 * @param member        Target member
+	 * @param output_name   Index of the target output texture to render to the screen
 	 */
-	screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size, std::weak_ptr<members::basic_member> member);
+	screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size,
+				  std::weak_ptr<members::basic_member> member,
+				  std::optional<output_name_t> output_name = std::nullopt);
 
 	/**
 	 * @brief Return the same output that will be drawn to the screen
@@ -137,7 +150,21 @@ public:
 	 * is valid for the lifetime of the basic_member this screen_member is
 	 * rendering to the screen. See basic_member#output for more details.
 	 */
-	gl::texture *output() override;
+	std::vector<member_output_t> output() override;
+
+	/**
+	 * @brief  Obtain the output name for this input
+	 *
+	 * @return Output index for this input
+	 */
+	inline std::optional<output_name_t> output_name() const { return output_name_; }
+
+	/**
+	 * @brief Set the output name for this input
+	 *
+	 * @param new_name New output name. Must be less than the number of outputs the target member has.
+	 */
+	inline void output_name(size_t new_name) { output_name_ = new_name; }
 
 	/**
 	 * @brief Obtain a reference to the sampler object of this member

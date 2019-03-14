@@ -7,7 +7,7 @@ precision highp int;
 precision highp sampler2D;
 
 in vec2 vtexCoord;
-out vec4 fragColor;
+layout(location = 0) out vec4 fragColor;
 
 #pragma shadertoy part *:defines
 

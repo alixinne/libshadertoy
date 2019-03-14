@@ -129,3 +129,21 @@ void program::get_binary(GLsizei bufsize, GLsizei *length, GLenum *binaryFormat,
 {
 	gl_call(glGetProgramBinary, GLuint(*this), bufsize, length, binaryFormat, binary);
 }
+
+void program::get_program_interface(GLenum programInterface, GLenum pname, GLint *params) const
+{
+	gl_call(glGetProgramInterfaceiv, GLuint(*this), programInterface, pname, params);
+}
+
+void program::get_program_resource(GLenum programInterface, GLuint index, GLsizei propCount,
+								   const GLenum *props, GLsizei bufSize, GLsizei *length, GLint *params) const
+{
+	gl_call(glGetProgramResourceiv, GLuint(*this), programInterface, index, propCount, props,
+			bufSize, length, params);
+}
+
+void program::get_program_resource_name(GLenum programInterface, GLuint index, GLsizei bufSize,
+										GLsizei *length, char *name) const
+{
+	gl_call(glGetProgramResourceName, GLuint(*this), programInterface, index, bufSize, length, name);
+}

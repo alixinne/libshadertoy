@@ -51,3 +51,10 @@ const bound_ops<framebuffer> &bound_ops<framebuffer>::texture_2d(GLenum target,
 	
 	return (*this);
 }
+
+const bound_ops<framebuffer> &bound_ops<framebuffer>::draw_buffers(GLsizei n, const GLenum *bufs) const
+{
+	gl_call(glDrawBuffers, n, bufs);
+
+	return (*this);
+}

@@ -140,7 +140,7 @@ public:
 template <typename T>
 std::unique_ptr<size_ref_interface<T>> make_ref(const size_ref_interface<T> &int_ref)
 {
-	return std::unique_ptr<size_ref_interface_ref<T>>(int_ref);
+	return std::make_unique<size_ref_interface_ref<T>>(int_ref);
 }
 
 /**

@@ -78,12 +78,12 @@ protected:
 	 *            to bind the first layer of the texture object to the first color attachment.
 	 *
 	 * @param[in]  target_fbo Target framebuffer bound object
-	 * @param[in]  texture    Target texture object to bind
+	 * @param[in]  io         IO resource object containing the target textures to bind
 	 */
-	virtual void attach_framebuffer_outputs(const gl::bound_ops<gl::framebuffer> &target_fbo,
-											const gl::texture &texture);
+	virtual void attach_framebuffer_outputs(const gl::bind_guard<gl::framebuffer, GLint> &target_fbo,
+											const io_resource &io);
 
-public:
+	public:
 	/**
 	 * @brief Obtain this buffer's GL framebuffer object
 	 *

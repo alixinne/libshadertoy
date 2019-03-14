@@ -9,6 +9,7 @@ namespace shadertoy
 	/// Definition of rendering buffers
 	namespace buffers
 	{
+		struct buffer_output;
 		class basic_buffer;
 		class program_buffer;
 		class toy_buffer;

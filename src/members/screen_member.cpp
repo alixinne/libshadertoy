@@ -17,10 +17,57 @@ using namespace shadertoy;
 using namespace shadertoy::members;
 
 using shadertoy::gl::gl_call;
+using shadertoy::utils::error_assert;
+using shadertoy::utils::log;
 
 void screen_member::render_member(const swap_chain &chain, const render_context &context)
 {
-	auto texptr(output(chain));
+	gl::texture *texptr = nullptr;
+	auto outputs(output(chain));
+
+	if (output_name_)
+	{
+		// Check that the output id is valid
+		if (output_index_ >= 0)
+		{
+			if (static_cast<size_t>(output_index_) >= outputs.size() ||
+				std::get<0>(outputs[output_index_]) != *output_name_)
+				output_index_ = -1;
+		}
+
+		// Try to find the output
+		if (output_index_ < 0)
+		{
+			for (auto it = outputs.begin(); it != outputs.end(); ++it)
+			{
+				if (std::get<0>(*it) == *output_name_)
+				{
+					output_index_ = it - outputs.begin();
+					break;
+				}
+			}
+		}
+
+		// Load output if it is valid
+		if (output_index_ >= 0)
+		{
+			texptr = std::get<1>(outputs[output_index_]);
+		}
+		else
+		{
+			std::visit(
+			[&](const auto &name) {
+				log::shadertoy()->warn("Failed to find target output at index {} for screen member "
+									   "{}",
+									   name, static_cast<const void *>(this));
+			},
+			*output_name_);
+		}
+	}
+	else
+	{
+		texptr = std::get<1>(outputs.front());
+	}
 
 	rsize vp_size(viewport_size_->resolve());
 	gl_call(glBindFramebuffer, GL_DRAW_FRAMEBUFFER, 0);
@@ -50,27 +97,31 @@ void screen_member::allocate_member(const swap_chain &chain, const render_contex
 {
 }
 
-gl::texture *screen_member::output(const swap_chain &chain)
+std::vector<member_output_t> screen_member::output(const swap_chain &chain)
 {
 	if (auto member = member_.lock())
 	{
 		auto out(member->output());
-		assert(out != nullptr);
+		error_assert(!out.empty(), "Member {} used as input for screen_member does not have any rendered-to targets for screen_member {}",
+					 static_cast<const void *>(member.get()), static_cast<const void *>(this));
 		return out;
 	}
 
 	// Check that the swapchain has a last rendered-to member
 	auto before(chain.before(this));
-	assert(before != nullptr);
+	error_assert(before != nullptr, "Swap chain {} has no member preceding screen_member {}",
+				 static_cast<const void *>(&chain), static_cast<const void *>(this));
 
 	auto texptr(before->output());
-	assert(texptr != nullptr);
+	error_assert(!texptr.empty(), "Preceding member {} used as input for screen_member does not have any rendered-to targets for screen_member {}",
+				 static_cast<const void *>(before.get()), static_cast<const void *>(this));
 
 	return texptr;
 }
 
-screen_member::screen_member(rsize_ref &&viewport_size)
-: viewport_x_(0), viewport_y_(0), viewport_size_(std::move(viewport_size))
+screen_member::screen_member(rsize_ref &&viewport_size, std::optional<output_name_t> output_name)
+: output_name_(output_name), output_index_(-1), viewport_x_(0), viewport_y_(0),
+  viewport_size_(std::move(viewport_size))
 {
 	sampler_.parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	sampler_.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -78,8 +129,10 @@ screen_member::screen_member(rsize_ref &&viewport_size)
 	sampler_.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
-screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size)
-: viewport_x_(viewport_x), viewport_y_(viewport_y), viewport_size_(std::move(viewport_size))
+screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size,
+							 std::optional<output_name_t> output_name)
+: output_name_(output_name), output_index_(-1), viewport_x_(viewport_x), viewport_y_(viewport_y),
+  viewport_size_(std::move(viewport_size))
 {
 	sampler_.parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	sampler_.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -87,8 +140,9 @@ screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewpor
 	sampler_.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
-screen_member::screen_member(rsize_ref &&viewport_size, std::weak_ptr<members::basic_member> member)
-: member_(std::move(std::move(member))),
+screen_member::screen_member(rsize_ref &&viewport_size, std::weak_ptr<members::basic_member> member,
+							 std::optional<output_name_t> output_name)
+: member_(std::move(std::move(member))), output_name_(output_name), output_index_(-1),
 
   viewport_x_(0), viewport_y_(0), viewport_size_(std::move(viewport_size))
 {
@@ -99,8 +153,8 @@ screen_member::screen_member(rsize_ref &&viewport_size, std::weak_ptr<members::b
 }
 
 screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size,
-							 std::weak_ptr<members::basic_member> member)
-: member_(std::move(std::move(member))),
+							 std::weak_ptr<members::basic_member> member, std::optional<output_name_t> output_name)
+: member_(std::move(std::move(member))), output_name_(output_name), output_index_(-1),
 
   viewport_x_(viewport_x), viewport_y_(viewport_y), viewport_size_(std::move(viewport_size))
 {
@@ -110,12 +164,12 @@ screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewpor
 	sampler_.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
-gl::texture *screen_member::output()
+std::vector<member_output_t> screen_member::output()
 {
 	if (auto member = member_.lock())
 	{
 		return member->output();
 	}
 
-	return nullptr;
+	return {};
 }

@@ -89,6 +89,8 @@ namespace gl
 												 GLenum texture_target,
 												 const texture &texture,
 												 GLint level) const;
+
+		const bound_ops<framebuffer> &draw_buffers(GLsizei n, const GLenum *bufs) const;
 	};
 }
 }

@@ -172,6 +172,13 @@ public:
 	 */
 	inline void source_map(std::map<GLenum, std::string> *new_map)
 	{ source_map_ = new_map; }
+
+	/**
+	 * @brief Obtains the list of outputs for this buffer.
+	 *
+	 * @return List of discovered program outputs
+	 */
+	std::optional<std::vector<buffer_output>> get_buffer_outputs() const override;
 };
 }
 }

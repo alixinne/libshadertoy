@@ -117,6 +117,8 @@ namespace gl
 			unbind_resource(std::make_index_sequence<sizeof...(bind_args)>());
 		}
 
+		inline const std::tuple<bind_args...> &args() const { return args_; }
+
 		template<typename resource_type_, typename... bind_args_>
 		friend void drop_bind_guard(bind_guard<resource_type_, bind_args_...> &&guard);
 	};

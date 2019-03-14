@@ -7,10 +7,37 @@
 
 #include "shadertoy/members/buffer_member.hpp"
 
+#include <optional>
+#include <vector>
+
 namespace shadertoy
 {
 namespace buffers
 {
+
+/**
+ * @brief Represents a program output location to be used in a buffer
+ */
+struct buffer_output
+{
+	/// Name of the buffer output
+	std::string name;
+
+	/// Interface location of the output
+	GLint location;
+
+	/// Type of the output
+	GLenum type;
+
+	/**
+	 * @brief Construct a new instance of the buffer_output class
+	 *
+	 * @param name     Name of the buffer output
+	 * @param location Interface location of the output
+	 * @param type     Type of the output
+	 */
+	buffer_output(std::string name, GLint location, GLenum type);
+};
 
 /**
  * @brief Represents a buffer in a swap chain.
@@ -122,6 +149,18 @@ public:
 	 *             buffer.
 	 */
 	uint64_t elapsed_time();
+
+	/**
+	 * @brief Obtains the list of outputs for this buffer.
+	 *
+	 * This method is to be implemented by derived classes which are able to
+	 * describe their outputs from their internal representations (i.e.
+	 * programs using ARB_program_interface_query).
+	 *
+	 * @return std::nullopt if the query is not supported, otherwise list of
+	 * requested outputs
+	 */
+	virtual std::optional<std::vector<buffer_output>> get_buffer_outputs() const;
 };
 }
 }

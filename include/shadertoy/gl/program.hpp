@@ -598,6 +598,50 @@ namespace gl
 		 * @throws null_program_error
 		 */
 		void get_binary(GLsizei bufsize, GLsizei *length, GLenum *binaryFormat, void *binary) const;
+
+		/**
+		 * @brief glGetProgramInterfaceiv
+		 *
+		 * @param programInterface Name of program interface to query
+		 * @param pname            Parameter name
+		 * @param params           Parameter return value
+		 *
+		 * @throws opengl_error
+		 * @throws null_program_error
+		 */
+		void get_program_interface(GLenum programInterface, GLenum pname, GLint *params) const;
+
+		/**
+		 * @brief glGetProgramResourceiv
+		 *
+		 * @param programInterface
+		 * @param index
+		 * @param propCount
+		 * @param props
+		 * @param bufSize
+		 * @param length
+		 * @param params
+		 *
+		 * @throws opengl_error
+		 * @throws null_program_error
+		 */
+		void get_program_resource(GLenum programInterface, GLuint index, GLsizei propCount,
+								  const GLenum *props, GLsizei bufSize, GLsizei *length, GLint *params) const;
+
+		/**
+		 * @brief glGetProgramResourceName
+		 *
+		 * @param programInterface
+		 * @param index
+		 * @param bufSize
+		 * @param length
+		 * @param name
+		 *
+		 * @throws opengl_error
+		 * @throws null_program_error
+		 */
+		void get_program_resource_name(GLenum programInterface, GLuint index, GLsizei bufSize,
+									   GLsizei *length, char *name) const;
 	};
 }
 }

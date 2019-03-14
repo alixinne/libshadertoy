@@ -5,6 +5,8 @@
 
 #include "shadertoy/inputs/basic_input.hpp"
 
+#include "shadertoy/output_name.hpp"
+
 namespace shadertoy
 {
 namespace inputs
@@ -26,7 +28,13 @@ class shadertoy_EXPORT buffer_input : public basic_input
 	/// Reference to the member for this input
 	std::weak_ptr<members::basic_member> member_;
 
-protected:
+	/// Output name from the member
+	output_name_t output_name_;
+
+	/// Cached output index
+	int output_index_;
+
+	protected:
 	/// unused
 	void load_input() override;
 
@@ -57,9 +65,10 @@ public:
 	 * @brief Initialize a new instance of the buffer_input class with \p
 	 * member as an associated member.
 	 *
-	 * @param member Buffer to use as a source
+	 * @param member      Buffer to use as a source
+	 * @param output_name Output index from the target
 	 */
-	buffer_input(std::weak_ptr<members::basic_member> member);
+	buffer_input(std::weak_ptr<members::basic_member> member, output_name_t output_name = 0);
 
 	/**
 	 * @brief Obtain the source member for this input
@@ -77,6 +86,20 @@ public:
 	 * @param new_member New source member
 	 */
 	inline void member(std::weak_ptr<members::basic_member> new_member) { member_ = new_member; }
+
+	/**
+	 * @brief  Obtain the output name for this input
+	 *
+	 * @return Output index for this input
+	 */
+	inline output_name_t output_name() const { return output_name_; }
+
+	/**
+	 * @brief Set the output name for this input
+	 *
+	 * @param new_name New output name.
+	 */
+	inline void output_name(output_name_t new_name) { output_name_ = new_name; }
 };
 }
 }

@@ -10,6 +10,11 @@
 using namespace shadertoy;
 using namespace shadertoy::buffers;
 
+buffer_output::buffer_output(std::string name, GLint location, GLenum type)
+: name(name), location(location), type(type)
+{
+}
+
 basic_buffer::basic_buffer(std::string id) : id_(std::move(id)), time_delta_query_(GL_TIME_ELAPSED)
 {
 }
@@ -47,4 +52,9 @@ uint64_t basic_buffer::elapsed_time()
 	time_delta_query_.get_object_ui64v(GL_QUERY_RESULT, &result);
 
 	return result;
+}
+
+std::optional<std::vector<buffer_output>> basic_buffer::get_buffer_outputs() const
+{
+	return std::nullopt;
 }

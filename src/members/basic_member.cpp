@@ -1,3 +1,5 @@
+#include <epoxy/gl.h>
+
 #include "shadertoy/members/basic_member.hpp"
 
 using namespace shadertoy;
@@ -17,3 +19,5 @@ void basic_member::allocate(const swap_chain &chain, const render_context &conte
 {
 	allocate_member(chain, context);
 }
+
+int basic_member::find_output(const output_name_t &name) const { return -1; }
