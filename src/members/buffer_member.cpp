@@ -103,7 +103,7 @@ int buffer_member::find_output(const output_name_t &name) const
 	if (it == io_.output_specs().end())
 		return -1;
 
-	return it - io_.output_specs().end();
+	return it - io_.output_specs().begin();
 }
 
 std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size)
