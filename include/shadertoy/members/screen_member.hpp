@@ -7,6 +7,8 @@
 
 #include "shadertoy/draw_state.hpp"
 
+#include <optional>
+
 namespace shadertoy
 {
 namespace members
