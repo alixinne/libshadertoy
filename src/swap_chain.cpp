@@ -56,8 +56,7 @@ void swap_chain::push_back(const std::shared_ptr<members::basic_member> &member)
 	members_set_.insert(member);
 }
 
-std::shared_ptr<members::basic_member>
-swap_chain::render(const render_context &context, const std::shared_ptr<members::basic_member> &target)
+std::shared_ptr<members::basic_member> swap_chain::render(const render_context &context)
 {
 	current_.reset();
 
@@ -65,11 +64,35 @@ swap_chain::render(const render_context &context, const std::shared_ptr<members:
 	{
 		member->render(*this, context);
 		current_ = member;
+	}
 
-		if (target && current_ == target)
-		{
-			break;
-		}
+	return current_;
+}
+
+std::shared_ptr<members::basic_member>
+swap_chain::render(const render_context &context, const std::shared_ptr<members::basic_member> &begin,
+				   const std::shared_ptr<members::basic_member> &end)
+{
+	auto begin_it = std::find(members_.begin(), members_.end(), begin);
+	auto end_it = std::find(members_.begin(), members_.end(), end);
+
+	if (begin_it == members_.end())
+	{
+		throw shadertoy_error("member for beginning render was not found in this swap chain");
+	}
+
+	if (end_it == members_.end())
+	{
+		throw shadertoy_error("member for ending render was not found in this swap chain");
+	}
+
+	// We need it to be one past the target member
+	end_it++;
+
+	for (auto it = begin_it; it != end_it; ++it)
+	{
+		(*it)->render(*this, context);
+		current_ = *it;
 	}
 
 	return current_;

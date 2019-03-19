@@ -7,6 +7,7 @@ libshadertoy (1.0.0~rc7) UNRELEASED; urgency=medium
   * Add draw_state to screen_member
   * Remove Boost dependency
   * Drop support for Debian Stretch
+  * Update interface for swap-chain range rendering
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Mon, 04 Mar 2019 14:49:00 +0100
 

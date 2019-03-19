@@ -175,19 +175,28 @@ public:
 	}
 
 	/**
-	 * @brief Render the swap chain using \p context up to the specified \p target
-	 *
-	 * All members from members().begin() up to \p target will be fully rendered.
+	 * @brief Render the entire swap chain using the given \p context.
 	 *
 	 * @param context Context used to render this swap chain
-	 * @param target  Optional. Target member to render. If null, the last buffer in
-	 * chain will be used as the rendering target.
 	 *
 	 * @return Pointer to the latest rendered member
 	 */
-	std::shared_ptr<members::basic_member>
-	render(const render_context &context,
-		   const std::shared_ptr<members::basic_member> &target = std::shared_ptr<members::basic_member>());
+	std::shared_ptr<members::basic_member> render(const render_context &context);
+
+	/**
+	 * @brief Render a subrange of the swap chain using the given \p context.
+	 *
+	 * @param context Context used to render this swap chain
+	 * @param begin   Pointer to the first member to render
+	 * @param end     Pointer to the last member to render
+	 *
+	 * @throws shadertoy_error If begin or end are not present in \c members()
+	 *
+	 * @return Pointer to the latest rendered member
+	 */
+	std::shared_ptr<members::basic_member> render(const render_context &context,
+												  const std::shared_ptr<members::basic_member> &begin,
+												  const std::shared_ptr<members::basic_member> &end);
 
 	/**
 	 * @brief Initialize the members of this swap chain
