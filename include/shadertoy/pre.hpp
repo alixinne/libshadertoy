@@ -15,6 +15,7 @@ namespace shadertoy
 		class toy_buffer;
 	}
 
+	/// Shader source compiler types
 	namespace compiler
 	{
 		class basic_part;
@@ -24,6 +25,7 @@ namespace shadertoy
 		class program_template;
 	}
 
+	/// Geometry primitives
 	namespace geometry
 	{
 		class basic_geometry;
@@ -91,6 +93,11 @@ namespace shadertoy
 		class basic_member;
 		class buffer_member;
 		class screen_member;
+	}
+
+	/// Miscellaneous utilities
+	namespace utils
+	{
 	}
 
 	class basic_shader_inputs;
