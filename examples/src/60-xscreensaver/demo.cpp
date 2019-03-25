@@ -61,12 +61,10 @@ double now()
 
 void shadertoy_render_frame()
 {
-	auto &state(ctx->context.state());
-
 	// Update uniforms
 	//  iTime and iFrame
-	state.get<shadertoy::iFrame>() = ctx->frame_count;
-	state.get<shadertoy::iTime>() = now() - ctx->last_clock;
+	ctx->chain.set_uniform("iFrame", ctx->frame_count);
+	ctx->chain.set_uniform("iTime", static_cast<float>(now() - ctx->last_clock));
 
 	// No measurement of GL_TIMESTAMP yet, add it
 	if (ctx->last_query_value == 0)
@@ -83,10 +81,10 @@ void shadertoy_render_frame()
 		GLuint64 currentTime;
 		ctx->fps_query.get_object_ui64v(GL_QUERY_RESULT, &currentTime);
 
-		double timeDelta = (1e-9 * (currentTime - ctx->last_query_value)) / (double)(ctx->frame_count - ctx->last_query_count);
+		float timeDelta = (1e-9 * (currentTime - ctx->last_query_value)) / (double)(ctx->frame_count - ctx->last_query_count);
 
-		state.get<shadertoy::iTimeDelta>() = timeDelta;
-		state.get<shadertoy::iFrameRate>() = 1.0 / timeDelta;
+		ctx->chain.set_uniform("iTimeDelta", timeDelta);
+		ctx->chain.set_uniform("iFrameRate", 1.0f / timeDelta);
 
 		ctx->last_query_value = currentTime;
 		ctx->last_query_count = ctx->frame_count;
@@ -96,10 +94,10 @@ void shadertoy_render_frame()
 
 	//  iDate
 	boost::posix_time::ptime dt = boost::posix_time::microsec_clock::local_time();
-	state.get<shadertoy::iDate>() = glm::vec4(dt.date().year() - 1,
-									dt.date().month(),
-									dt.date().day(),
-									dt.time_of_day().total_nanoseconds() / 1e9f);
+	ctx->chain.set_uniform("iDate", glm::vec4(dt.date().year() - 1,
+											  dt.date().month(),
+											  dt.date().day(),
+											  dt.time_of_day().total_nanoseconds() / 1e9f));
 
 	// End update uniforms
 
@@ -141,6 +139,9 @@ int shadertoy_load(const char *shader_id, const char *shader_api_key)
 		ctx->last_clock = now();
 		ctx->last_query_value = 0;
 		ctx->last_query_count = 0;
+
+		ctx->chain.set_uniform("iTimeDelta", 1.0f / 30.0f);
+		ctx->chain.set_uniform("iFrameRate", 30.0f);
 	}
 	catch (shadertoy::gl::shader_compilation_error &sce)
 	{
@@ -190,8 +191,6 @@ int shadertoy_init(const char *api_key, const char *query, const char *sort, int
 	// Create context
 	ctx = std::make_unique<my_context>();
 	ctx->render_size = size;
-	ctx->context.state().get<shadertoy::iFrameRate>() = 30.0;
-	ctx->context.state().get<shadertoy::iTimeDelta>() = 1.0 / ctx->context.state().get<shadertoy::iTimeDelta>();
 
 	// Iterate shaders
 	bool foundShader = false;

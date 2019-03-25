@@ -8,7 +8,6 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "uniforms.hpp"
 #include "test.hpp"
 
 #include "tiny_obj_loader.h"
@@ -16,11 +15,6 @@
 namespace fs = boost::filesystem;
 using shadertoy::gl::gl_call;
 using namespace shadertoy;
-
-// We need a custom inputs type to pass the MVP matrix
-typedef shader_inputs<
-	eMVP
-> geometry_inputs_t;
 
 // Type that will manage the geometry
 class tiny_geometry : public geometry::basic_geometry
@@ -141,12 +135,6 @@ int main(int argc, char *argv[])
 			auto &context(ctx.context);
 			auto &chain(ctx.chain);
 
-			// Extra uniform inputs storage
-			geometry_inputs_t extra_inputs;
-
-			// Register the custom inputs with the buffer template
-			context.buffer_template().shader_inputs().emplace("geometry", &extra_inputs);
-
 			// The default vertex shader is not sufficient, we replace it with our own
 			context.buffer_template()[GL_VERTEX_SHADER] = compiler::shader_template::parse_file(ST_BASE_DIR "/shaders/20_vertex.glsl");
 
@@ -158,8 +146,6 @@ int main(int argc, char *argv[])
 
 			// Set the context parameters (render size and some uniforms)
 			ctx.render_size = rsize(width, height);
-			context.state().get<iTimeDelta>() = 1.0 / 60.0;
-			context.state().get<iFrameRate>() = 60.0;
 
 			// Create the image buffer
 			auto imageBuffer(std::make_shared<buffers::geometry_buffer>("image"));
@@ -186,9 +172,16 @@ int main(int argc, char *argv[])
 			context.init(chain);
 			std::cout << "Initialized swap chain" << std::endl;
 
+			// Set uniforms
+			chain.set_uniform("iTimeDelta", 1.0f / 60.0f);
+			chain.set_uniform("iFrameRate", 60.0f);
+
+			// MVP matrix location
+			auto mvp_location(imageBuffer->interface().get_uniform_location("eMVP"));
+
 			// Now render for 5s
 			int frameCount = 0;
-			double t = 0.;
+			float t = 0.;
 
 			// Set the resize callback
 			glfwSetWindowUserPointer(window, &ctx);
@@ -200,8 +193,8 @@ int main(int argc, char *argv[])
 				glfwPollEvents();
 
 				// Update uniforms
-				context.state().get<iTime>() = t;
-				context.state().get<iFrame>() = frameCount;
+				chain.set_uniform("iTime", t);
+				chain.set_uniform("iFrame", frameCount);
 
 				// Set viewport
 				// This is not necessary when the last pass is rendering to a
@@ -224,7 +217,7 @@ int main(int argc, char *argv[])
 				// Model matrix : an identity matrix (model will be at the origin)
 				glm::mat4 Model = glm::rotate(glm::mat4(1.f), frameCount * 0.0125f, glm::vec3(0.f, 1.f, 0.f));
 				// Our ModelViewProjection : multiplication of our 3 matrices
-				extra_inputs.get<eMVP>() = Projection * View * Model;
+				mvp_location.set_value(Projection * View * Model);
 
 				// Render the swap chain
 				context.render(chain);

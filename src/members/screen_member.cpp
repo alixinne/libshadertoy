@@ -3,7 +3,6 @@
 #include <utility>
 
 #include "shadertoy/gl.hpp"
-#include "shadertoy/uniform_state.hpp"
 
 #include "shadertoy/members/buffer_member.hpp"
 #include "shadertoy/members/screen_member.hpp"

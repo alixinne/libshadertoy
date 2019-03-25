@@ -5,7 +5,6 @@
 
 #include "shadertoy/compiler/define_part.hpp"
 #include "shadertoy/compiler/shader_template.hpp"
-#include "shadertoy/uniform_state.hpp"
 
 #include <map>
 
@@ -165,15 +164,6 @@ public:
 	 */
 	inline const std::map<std::string, std::shared_ptr<preprocessor_defines>> &shader_defines() const
 	{ return shader_defines_; }
-
-	/**
-	 * @brief Binds the inputs from this template to a given program
-	 *
-	 * @param program Compiled program to bind inputs to
-	 *
-	 * @return List of bound input objects to apply uniform values at runtime
-	 */
-	std::vector<std::unique_ptr<bound_inputs_base>> bind_inputs(const gl::program &program) const;
 };
 }
 }

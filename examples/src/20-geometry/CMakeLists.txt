@@ -21,7 +21,6 @@ file(COPY ${CMAKE_CURRENT_BINARY_DIR}/bunny.obj
 
 add_executable(example20-geometry
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/uniforms.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/tiny_obj_loader.cc
 	${SRC_ROOT}/test.cpp)
 

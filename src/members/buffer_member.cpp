@@ -6,7 +6,6 @@
 #include "shadertoy/gl.hpp"
 
 #include "shadertoy/render_context.hpp"
-#include "shadertoy/uniform_state.hpp"
 
 #include "shadertoy/buffers/basic_buffer.hpp"
 

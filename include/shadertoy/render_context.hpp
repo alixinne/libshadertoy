@@ -5,7 +5,6 @@
 
 #include "shadertoy/compiler/program_template.hpp"
 #include "shadertoy/geometry/screen_quad.hpp"
-#include "shadertoy/uniform_state.hpp"
 
 namespace shadertoy
 {
@@ -35,7 +34,10 @@ namespace shadertoy
  *
  * #pragma shadertoy part *:defines
  *
- * #pragma shadertoy part *:uniforms
+ * // Standard Shadertoy uniform definitions
+ * uniform vec3 iResolution;
+ * uniform vec4 iMouse;
+ * // etc.
  *
  * #pragma shadertoy part buffer:inputs
  * #pragma shadertoy part buffer:sources
@@ -54,14 +56,6 @@ namespace shadertoy
  * // Generated on the fly depending on its value
  * // Example:
  * #define MY_VALUE 10
- * ```
- *   * `*:uniforms`: Uniform variables defined by the render context and other
- *   uniform objects registered in render_context#program_buffer().
- * ```
- * // Generated on the fly from the definitions in uniform_state.hpp
- * uniform vec3 iResolution;
- * uniform vec4 iMouse;
- * // etc.
  * ```
  *   * `buffer:inputs`: Sampler uniforms defined by the buffer being compiled
  * ```
@@ -87,9 +81,6 @@ class shadertoy_EXPORT render_context
 
 	/// Screen quad geometry
 	mutable std::unique_ptr<geometry::screen_quad> screen_quad_;
-
-	/// Uniform state
-	shader_inputs_t state_;
 
 	/// Buffer source template
 	compiler::program_template buffer_template_;
@@ -139,22 +130,6 @@ public:
 	 * @return     Result of chain#render
 	 */
 	std::shared_ptr<members::basic_member> render(swap_chain &chain) const;
-
-	/**
-	 * @brief  Get a reference to the uniform state container
-	 *
-	 * @return Reference to the state object
-	 */
-	inline const shader_inputs_t &state() const
-	{ return state_; }
-
-	/**
-	 * @brief  Get a reference to the uniform state container
-	 *
-	 * @return Reference to the state object
-	 */
-	inline shader_inputs_t &state()
-	{ return state_; }
 
 	/**
 	 * @brief  Get a reference to the buffer template

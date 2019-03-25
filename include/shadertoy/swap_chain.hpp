@@ -3,6 +3,8 @@
 
 #include "shadertoy/pre.hpp"
 
+#include "shadertoy/buffers/program_buffer.hpp"
+
 #include <deque>
 #include <memory>
 #include <set>
@@ -211,6 +213,25 @@ public:
 	 * @param context Context used to allocate textures
 	 */
 	void allocate_textures(const render_context &context);
+
+	/**
+	 * @brief Set a uniform value on all buffers in this chain
+	 *
+	 *
+	 */
+	template<typename TIndex, typename... TValue>
+	void set_uniform(const TIndex &identifier, TValue && ...value)
+	{
+		for (auto &member : members_) {
+			if (auto buf_member = std::dynamic_pointer_cast<members::buffer_member>(member)) {
+				if (auto buf = std::dynamic_pointer_cast<buffers::program_buffer>(buf_member->buffer())) {
+					if (auto loc = buf->interface().try_get_uniform_location(identifier)) {
+						loc->set_value(value...);
+					}
+				}
+			}
+		}
+	}
 };
 }
 

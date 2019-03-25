@@ -5,6 +5,9 @@
 
 #include "shadertoy/buffers/basic_buffer.hpp"
 
+#include "shadertoy/gl/framebuffer.hpp"
+#include "shadertoy/gl/renderbuffer.hpp"
+
 namespace shadertoy
 {
 namespace buffers

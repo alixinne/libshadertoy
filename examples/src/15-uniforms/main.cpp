@@ -8,18 +8,10 @@
 #include <shadertoy.hpp>
 #include <shadertoy/utils/log.hpp>
 
-#include "uniforms.hpp"
 #include "test.hpp"
 
 namespace fs = boost::filesystem;
 using shadertoy::gl::gl_call;
-
-// Create a shader_inputs type, which references the custom
-// uniforms (either static, known at compile time, or dynamic, defined at
-// runtime)
-typedef shadertoy::shader_inputs<
-	iDynamicFloats
-> example_inputs_t;
 
 int main(int argc, char *argv[])
 {
@@ -53,26 +45,12 @@ int main(int argc, char *argv[])
 			auto &context(ctx.context);
 			auto &chain(ctx.chain);
 
-			// Extra uniform inputs storage
-			example_inputs_t extra_inputs;
-
-			// Add a custom runtime input
-			// This needs to happen before compiling shaders relying on these inputs,
-			// otherwise the generated sources will not include the corresponding uniform
-			// definition.
-			extra_inputs.get<iDynamicFloats>().insert<float>("iCustomTime", 0.0f);
-
-			// Update the template to include the inputs when binding new programs
-			context.buffer_template().shader_inputs().emplace("example", &extra_inputs);
-
 			// Set the internal format of the chain
 			chain.internal_format(GL_RGB8);
 			chain.swap_policy(shadertoy::member_swap_policy::single_buffer);
 
 			// Set the context parameters (render size and some uniforms)
 			ctx.render_size = shadertoy::rsize(width, height);
-			context.state().get<shadertoy::iTimeDelta>() = 1.0 / 60.0;
-			context.state().get<shadertoy::iFrameRate>() = 60.0;
 
 			// Create the image buffer
 			auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image"));
@@ -88,9 +66,13 @@ int main(int argc, char *argv[])
 			context.init(chain);
 			std::cout << "Initialized swap chain" << std::endl;
 
+			// Set uniforms
+			chain.set_uniform("iTimeDelta", 1.0f / 60.0f);
+			chain.set_uniform("iFrameRate", 60.0f);
+
 			// Now render for 5s
 			int frameCount = 0;
-			double t = 0.;
+			float t = 0.;
 
 			// Set the resize callback
 			glfwSetWindowUserPointer(window, &ctx);
@@ -102,11 +84,11 @@ int main(int argc, char *argv[])
 				glfwPollEvents();
 
 				// Update uniforms
-				context.state().get<shadertoy::iTime>() = t;
-				context.state().get<shadertoy::iFrame>() = frameCount;
+				chain.set_uniform("iTime", t);
+				chain.set_uniform("iFrame", frameCount);
 
 				// Update custom uniform
-				extra_inputs.get<iDynamicFloats>().get<float>("iCustomTime") = (int(t) % 2) == 0 ? 1.0f : 0.0f;
+				chain.set_uniform("iCustomTime", (int(t) % 2) == 0 ? 1.0f : 0.0f);
 
 				// Render the swap chain
 				context.render(chain);

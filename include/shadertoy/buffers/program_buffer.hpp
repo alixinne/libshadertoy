@@ -6,8 +6,12 @@
 #include "shadertoy/buffers/gl_buffer.hpp"
 
 #include "shadertoy/program_input.hpp"
+#include "shadertoy/program_interface.hpp"
+#include "shadertoy/compiler/program_template.hpp"
 
 #include <deque>
+
+#define SHADERTOY_ICHANNEL_COUNT 4
 
 namespace shadertoy
 {
@@ -23,8 +27,8 @@ private:
 	/// Buffer program
 	gl::program program_;
 
-	/// Bound uniform state
-	std::vector<std::unique_ptr<shadertoy::bound_inputs_base>> bound_inputs_;
+	/// Program interface details
+	std::unique_ptr<program_interface> program_interface_;
 
 	/// Inputs for this shader
 	std::deque<program_input> inputs_;
@@ -179,6 +183,14 @@ public:
 	 * @return List of discovered program outputs
 	 */
 	std::optional<std::vector<buffer_output>> get_buffer_outputs() const override;
+
+	/**
+	 * @brief Get the program interface for this buffer
+	 *
+	 * @return Reference to the interface object for this buffer
+	 */
+	inline const program_interface &interface() const
+	{ return *program_interface_; }
 };
 }
 }

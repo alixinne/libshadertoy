@@ -41,13 +41,11 @@
 #include "shadertoy/members/buffer_member.hpp"
 #include "shadertoy/members/screen_member.hpp"
 
-#include "shadertoy/uniform_state.hpp"
-#include "shadertoy/uniform_state_decl.hpp"
-#include "shadertoy/uniform_state_impl.hpp"
-
 #include "shadertoy/buffers/program_buffer.hpp"
 #include "shadertoy/buffers/toy_buffer.hpp"
 #include "shadertoy/buffers/geometry_buffer.hpp"
+
+#include "shadertoy/program_interface.hpp"
 
 #include "shadertoy/render_context.hpp"
 #include "shadertoy/shader_compiler.hpp"

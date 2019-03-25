@@ -56,18 +56,21 @@ void program_buffer::init_contents(const render_context &context, const io_resou
 	// Use the program
 	program_.use();
 
-	// bind uniform inputs
-	bound_inputs_ = buffer_template.bind_inputs(program_);
+	// Discover program interface
+	program_interface_ = std::make_unique<program_interface>(program_);
 
-	log::shadertoy()->debug("Bound {} input objects for {} ({})", bound_inputs_.size(), id(),
-							static_cast<const void *>(this));
+	log::shadertoy()->debug("Program {} ({}) has {} uniform inputs",
+							id(), static_cast<const void *>(this),
+							program_interface_->uniforms().resources().size());
 
 	// Set input uniform units
 	size_t current_unit = 0;
 	for (auto it = inputs_.begin(); it != inputs_.end(); ++it, ++current_unit)
 	{
-		auto location(program_.get_uniform_location(it->sampler_name().c_str()));
-		location.set_value(static_cast<GLint>(current_unit));
+		if (auto resource = program_interface_->uniforms().try_get(it->sampler_name()))
+		{
+			resource->get_location(program_).set_value(static_cast<GLint>(current_unit));
+		}
 	}
 }
 
@@ -81,24 +84,8 @@ void program_buffer::render_gl_contents(const render_context &context, const io_
 	// Setup program and its uniforms
 	program_.use();
 
-	// Apply context-level uniforms
-	for (auto &inputs : bound_inputs_)
-	{
-		inputs->apply();
-	}
-
-	// Override values in bound inputs 0 (ShaderToy inputs)
-	shader_inputs_t::bound_inputs *state_ptr = nullptr;
-	for (auto &bound_input : bound_inputs_)
-	{
-		if ((state_ptr = dynamic_cast<shader_inputs_t::bound_inputs *>(bound_input.get())) != nullptr)
-		{
-			break;
-		}
-	}
-
-	auto &state(*state_ptr);
-	std::array<glm::vec3, SHADERTOY_ICHANNEL_COUNT> resolutions(state.get<iChannelResolution>());
+	// Set iChannelResolution details
+	std::array<glm::vec3, SHADERTOY_ICHANNEL_COUNT> resolutions;
 
 	// Setup the texture targets
 	size_t current_unit = 0;
@@ -107,6 +94,16 @@ void program_buffer::render_gl_contents(const render_context &context, const io_
 		auto &input(it->input());
 		glm::vec3 sz(0.f);
 
+		// Set the sampler uniform value
+		if (!it->sampler_name().empty())
+		{
+			if (auto sampler_uniform = program_interface_->try_get_uniform_location(it->sampler_name()))
+			{
+				sampler_uniform->set_value(static_cast<int>(current_unit));
+			}
+		}
+
+		// Bind the texture to the unit
 		if (input)
 		{
 			auto texture(input->bind(current_unit));
@@ -126,20 +123,29 @@ void program_buffer::render_gl_contents(const render_context &context, const io_
 		}
 	}
 
-	state.set<iChannelResolution>(resolutions);
+	if (auto channel_resolutions_resource = program_interface_->uniforms().try_get("iChannelResolution"))
+	{
+		channel_resolutions_resource->get_location(program_).set_value(resolutions.size(), resolutions.data());
+	}
 
 	// Set the current buffer resolution
-	state.set<iResolution>(glm::vec3(size.width, size.height, 1.f));
+	if (auto resolution_resource = program_interface_->uniforms().try_get("iResolution"))
+	{
+		resolution_resource->get_location(program_).set_value(glm::vec3(size.width, size.height, 1.f));
+	}
 
 	// Try to set iTimeDelta
-	GLint available = 0;
-	time_delta_query().get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
-	if (available != 0)
+	if (auto time_delta_resource = program_interface_->uniforms().try_get("iTimeDelta"))
 	{
-		// Result available, set uniform value
-		GLuint64 timeDelta;
-		time_delta_query().get_object_ui64v(GL_QUERY_RESULT, &timeDelta);
-		state.set<iTimeDelta>(timeDelta / 1e9);
+		GLint available = 0;
+		time_delta_query().get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
+		if (available != 0)
+		{
+			// Result available, set uniform value
+			GLuint64 timeDelta;
+			time_delta_query().get_object_ui64v(GL_QUERY_RESULT, &timeDelta);
+			time_delta_resource->get_location(program_).set_value(timeDelta / 1e9f);
+		}
 	}
 
 	// Render the program
@@ -158,30 +164,15 @@ void program_buffer::source_file(const std::string &new_file)
 
 std::optional<std::vector<buffer_output>> program_buffer::get_buffer_outputs() const
 {
-	GLint active_outputs;
-	program_.get_program_interface(GL_PROGRAM_OUTPUT, GL_ACTIVE_RESOURCES, &active_outputs);
-
 	std::vector<buffer_output> outputs;
-	outputs.reserve(active_outputs);
+	outputs.reserve(program_interface_->outputs().resources().size());
 
-	const GLenum properties[] = { GL_TYPE, GL_LOCATION, GL_NAME_LENGTH };
-	constexpr const size_t propCount = sizeof(properties) / sizeof(properties[0]);
-	for (int output = 0; output < active_outputs; ++output)
+	for (const auto &output : program_interface_->outputs().resources())
 	{
-		// Get properties
-		GLint values[propCount];
-		program_.get_program_resource(GL_PROGRAM_OUTPUT, output, propCount, std::begin(properties),
-									  propCount, nullptr, std::begin(values));
-
-		// Get name
-		std::string output_name(values[2] - 1, ' ');
-		program_.get_program_resource_name(GL_PROGRAM_OUTPUT, output, values[2], nullptr,
-										   output_name.data());
-
 		log::shadertoy()->debug("Discovered program output #{} layout(location = {}) {:#x} {}",
-								output, values[1], values[0], output_name);
+								outputs.size(), output.location, output.type, output.name);
 
-		outputs.emplace_back(output_name, values[1], values[0]);
+		outputs.emplace_back(output.name, output.location, output.type);
 	}
 
 	return outputs;

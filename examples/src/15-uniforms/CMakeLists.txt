@@ -2,13 +2,11 @@ message(STATUS "Building example 15-uniforms")
 
 add_executable(example15-uniforms
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/uniforms.cpp
 	${SRC_ROOT}/test.cpp)
 
 target_include_directories(example15-uniforms PRIVATE
 	${ST_INC_DIR}
 	${INCLUDE_ROOT}
-	${INCLUDE_ROOT}/15-uniforms
 	${OPENGL_INCLUDE_DIRS}
 	${EPOXY_INCLUDE_DIRS}
 	${GLFW3_INCLUDE_DIRS})

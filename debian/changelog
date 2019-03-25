@@ -5,6 +5,7 @@ libshadertoy (1.0.0~rc7) UNRELEASED; urgency=medium
   * Add try_get/try_set methods to dynamic uniforms
   * Add support for setting bvec uniforms
   * Add draw_state to screen_member
+  * Replace compile-time uniforms with program interface discovery
   * Remove Boost dependency
   * Drop support for Debian Stretch
   * Update interface for swap-chain range rendering

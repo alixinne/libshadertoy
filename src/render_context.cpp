@@ -30,7 +30,6 @@ render_context::render_context() : error_input_(std::make_shared<inputs::error_i
 	preprocessor_defines->definitions().emplace("LIBSHADERTOY", "1");
 
 	buffer_template_.shader_defines().emplace("glsl", preprocessor_defines);
-	buffer_template_.shader_inputs().emplace("shadertoy", &state_);
 
 	buffer_template_.emplace(GL_VERTEX_SHADER,
 							 compiler::shader_template::parse(
@@ -44,15 +43,6 @@ render_context::render_context() : error_input_(std::make_shared<inputs::error_i
 
 	// Compile screen quad vertex shader
 	buffer_template_.compile(GL_VERTEX_SHADER);
-
-	// Set uniform texture units
-	state_.get<iChannel0>() = 0;
-	state_.get<iChannel1>() = 1;
-	state_.get<iChannel2>() = 2;
-	state_.get<iChannel3>() = 3;
-
-	state_.get<iChannelTime>() = { 0.f, 0.f, 0.f, 0.f };
-	state_.get<iSampleRate>() = 48000.f;
 }
 
 const gl::program &render_context::screen_prog() const

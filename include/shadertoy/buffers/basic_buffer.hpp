@@ -7,6 +7,8 @@
 
 #include "shadertoy/members/buffer_member.hpp"
 
+#include "shadertoy/gl/query.hpp"
+
 #include <optional>
 #include <vector>
 

@@ -70,7 +70,6 @@ int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 
 	auto &chain(ctx.chain);
 	auto &context(ctx.context);
-	auto &state(context.state());
 
 	// Add member that renders to the screen
 	chain.emplace_back<shadertoy::members::screen_member>(shadertoy::make_size_ref(ctx.render_size));
@@ -80,6 +79,10 @@ int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 		// Initialize context
 		context.init(chain);
 		u::log::shadertoy()->info("Initialized rendering context");
+
+		// Set uniforms
+		chain.set_uniform("iTimeDelta", 1.0f / 60.0f);
+		chain.set_uniform("iFrameRate", 60.0f);
 
 		if (dumpShaders)
 		{
@@ -122,6 +125,8 @@ int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 		glfwSetKeyCallback(window, key_callback);
 		glfwSetFramebufferSizeCallback(window, example_set_framebuffer_size<example_ctx>);
 
+		glm::vec4 mouse(0.f);
+
 		while (!glfwWindowShouldClose(window))
 		{
 			// Poll events
@@ -129,15 +134,15 @@ int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 
 			// Update uniforms
 			//  iTime and iFrame
-			state.get<shadertoy::iTime>() += 1.0 / state.get<shadertoy::iFrameRate>();
-			state.get<shadertoy::iFrame>() = frameCount;
+			chain.set_uniform("iTime", frameCount / 60.0f);
+			chain.set_uniform("iFrame", frameCount);
 
 			//  iDate
 			boost::posix_time::ptime dt = boost::posix_time::microsec_clock::local_time();
-			state.get<shadertoy::iDate>() = glm::vec4(dt.date().year() - 1,
-											dt.date().month(),
-											dt.date().day(),
-											dt.time_of_day().total_nanoseconds() / 1e9f);
+			chain.set_uniform("iDate", glm::vec4(dt.date().year() - 1,
+												 dt.date().month(),
+												 dt.date().day(),
+												 dt.time_of_day().total_nanoseconds() / 1e9f));
 
 			//  iMouse
 			int btnstate = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
@@ -146,16 +151,14 @@ int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 				double xpos, ypos;
 				glfwGetCursorPos(window, &xpos, &ypos);
 
-				state.get<shadertoy::iMouse>()[0] =
-					state.get<shadertoy::iMouse>()[2] = xpos;
-				state.get<shadertoy::iMouse>()[1] =
-					state.get<shadertoy::iMouse>()[3] = ctx.render_size.height - ypos;
+				mouse[0] = mouse[2] = xpos;
+				mouse[1] = mouse[3] = ctx.render_size.height - ypos;
 			}
 			else
 			{
-				state.get<shadertoy::iMouse>()[2] =
-					state.get<shadertoy::iMouse>()[3] = 0.f;
+				mouse[2] = mouse[3] = 0.f;
 			}
+			chain.set_uniform("iMouse", mouse);
 			// End update uniforms
 
 			// Render to texture
@@ -217,8 +220,6 @@ int performRender(bool dumpShaders, Args&&... args)
 
 		// Set the context parameters (render size and some uniforms)
 		ctx.render_size = shadertoy::rsize(width, height);
-		context.state().get<shadertoy::iTimeDelta>() = 1.0 / 60.0;
-		context.state().get<shadertoy::iFrameRate>() = 60.0;
 
 		code = load_remote(ctx.context, ctx.chain, ctx.render_size, args...);
 

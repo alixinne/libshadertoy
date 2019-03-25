@@ -34,26 +34,7 @@ shader_template program_template::specify_template_parts(std::vector<std::unique
 			std::string type_name(part_name.begin() + sep + 1, part_name.end());
 			std::string subpart_name(part_name.begin(), part_name.begin() + sep);
 
-			if (type_name == "uniforms")
-			{
-				if (subpart_name == "*")
-				{
-					std::transform(shader_inputs_.begin(), shader_inputs_.end(),
-								   std::back_inserter(result), [](const auto &pair) {
-									   return std::make_unique<compiler::template_part>(
-									   pair.first, pair.second->definitions_string());
-								   });
-				}
-				else
-				{
-					auto it(shader_inputs_.find(subpart_name));
-					if (it != shader_inputs_.end())
-					{
-						result.emplace_back(std::make_unique<compiler::template_part>(part_name, it->second->definitions_string()));
-					}
-				}
-			}
-			else if (type_name == "defines")
+			if (type_name == "defines")
 			{
 				if (subpart_name == "*")
 				{
@@ -321,16 +302,4 @@ gl::program program_template::compile(const std::map<GLenum, shader_template> &t
 	}
 
 	return program;
-}
-
-std::vector<std::unique_ptr<bound_inputs_base>> program_template::bind_inputs(const gl::program &program) const
-{
-	std::vector<std::unique_ptr<bound_inputs_base>> bound_inputs;
-
-	for (const auto &input_object : shader_inputs_)
-	{
-		bound_inputs.push_back(input_object.second->bind_inputs(program));
-	}
-
-	return bound_inputs;
 }

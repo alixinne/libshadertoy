@@ -45,8 +45,6 @@ int main(int argc, char *argv[])
 
 			// Set the context parameters (render size and some uniforms)
 			ctx.render_size = shadertoy::rsize(width, height);
-			context.state().get<shadertoy::iTimeDelta>() = 1.0 / 60.0;
-			context.state().get<shadertoy::iFrameRate>() = 60.0;
 
 			// Create an auxiliary buffer that renders a gradient
 			auto gradientBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("gradient"));
@@ -86,9 +84,13 @@ int main(int argc, char *argv[])
 			context.init(chain);
 			std::cout << "Initialized swap chain" << std::endl;
 
+			// Set uniforms
+			chain.set_uniform("iTimeDelta", 1.0f / 60.0f);
+			chain.set_uniform("iFrameRate", 60.0f);
+
 			// Now render for 5s
 			int frameCount = 0;
-			double t = 0.;
+			float t = 0.;
 
 			// Set the resize callback
 			glfwSetWindowUserPointer(window, &ctx);
@@ -100,8 +102,8 @@ int main(int argc, char *argv[])
 				glfwPollEvents();
 
 				// Update uniforms
-				context.state().get<shadertoy::iTime>() = t;
-				context.state().get<shadertoy::iFrame>() = frameCount;
+				chain.set_uniform("iTime", t);
+				chain.set_uniform("iFrame", frameCount);
 
 				// Render the swap chain
 				context.render(chain);
