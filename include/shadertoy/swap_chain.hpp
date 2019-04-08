@@ -220,7 +220,7 @@ public:
 	 *
 	 */
 	template<typename TIndex, typename... TValue>
-	void set_uniform(const TIndex &identifier, TValue && ...value)
+	void set_uniform(const TIndex &identifier, TValue && ...value) const
 	{
 		for (auto &member : members_) {
 			if (auto buf_member = std::dynamic_pointer_cast<members::buffer_member>(member)) {
