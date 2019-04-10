@@ -84,14 +84,14 @@ void program_template::compile(GLenum type)
 	// Get sources
 	auto sources(specify_template_parts(it->second).sources());
 	
-	if (log::shadertoy()->level() <= spdlog::level::debug)
+	if (log::shadertoy()->level() <= spdlog::level::trace)
 	{
 		std::stringstream ss;
 		for (auto &pair : sources)
 		{
 			ss << pair.second;
 		}
-		log::shadertoy()->debug("Compiled following code for {}:\n{}", static_cast<const void *>(this), ss.str());
+		log::shadertoy()->trace("Compiled following code for {}:\n{}", static_cast<const void *>(this), ss.str());
 	}
 
 	// Compile shader
@@ -134,7 +134,7 @@ gl::program program_template::compile(std::map<GLenum, std::vector<std::unique_p
 			sources = specified_template.sources();
 		}
 
-		if (log::shadertoy()->level() <= spdlog::level::debug || compiled_sources != nullptr)
+		if (log::shadertoy()->level() <= spdlog::level::trace || compiled_sources != nullptr)
 		{
 			std::stringstream ss;
 			for (auto &pair : sources)
@@ -149,7 +149,7 @@ gl::program program_template::compile(std::map<GLenum, std::vector<std::unique_p
 				compiled_sources->emplace(pair.first, result);
 			}
 
-			log::shadertoy()->debug("Compiled following code for {}:\n{}", static_cast<const void *>(this), result);
+			log::shadertoy()->trace("Compiled following code for {}:\n{}", static_cast<const void *>(this), result);
 		}
 
 		// Compile shader
@@ -219,7 +219,7 @@ gl::program program_template::compile(const std::map<GLenum, shader_template> &t
 		// Compile sources
 		auto sources(pair.second.sources());
 
-		if (log::shadertoy()->level() <= spdlog::level::debug || compiled_sources != nullptr)
+		if (log::shadertoy()->level() <= spdlog::level::trace || compiled_sources != nullptr)
 		{
 			std::stringstream ss;
 			for (auto &pair : sources)
@@ -234,7 +234,7 @@ gl::program program_template::compile(const std::map<GLenum, shader_template> &t
 				compiled_sources->emplace(pair.first, result);
 			}
 
-			log::shadertoy()->debug("Compiled following code for {}:\n{}",
+			log::shadertoy()->trace("Compiled following code for {}:\n{}",
 									(void*)this,
 									result);
 		}
