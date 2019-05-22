@@ -107,6 +107,19 @@ build_pkg () {
 				fi
 			fi
 		fi
+
+		if [ "x$EXPORT_DOC" = "x1" ]; then
+			echo "[==== EXPORTING DOCUMENTATION FROM $DISTRIBUTION-$ARCH ====]" >&2
+
+			# Ensure build directory exists
+			mkdir -p "$LIBDIRECTORY/build"
+
+			# Ensure doc directory doesn't exist
+			rm -rf "$LIBDIRECTORY/build/doc"
+
+			# Copy pages from built distribution
+			cp -r "$LIBTMPDIR/libshadertoy/obj-x86_64-linux-gnu/html" "$LIBDIRECTORY/build/doc"
+		fi
 	else
 		(cd libshadertoy && dpkg-buildpackage -S -uc -us $FAKEROOT_ARG -d \
 			--changes-option=-DDistribution=$DISTRIBUTION
@@ -193,6 +206,7 @@ elif [ "$1" = "gl" ]; then
 	SKIP_TESTS=1
 	NO_SBUILD=1
 	PROC_ARG=2
+	EXPORT_DOC=1
 
 	build_pkg "${OS_DIST}-${DEB_BUILD_ARCH}"
 else

@@ -1,0 +1,6 @@
+.git/
+obj-*/
+build/
+build-*/
+*.dump
+.idea/

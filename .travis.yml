@@ -1,0 +1,98 @@
+language: cpp
+
+services:
+  - docker
+
+env:
+  global:
+    - PACKAGE_NAME=libshadertoy
+    - BINTRAY_ORG=vtavernier
+
+cache:
+  directories:
+    - $HOME/vcpkg
+
+matrix:
+  fast_finish: true
+  include:
+    - os: windows
+    - os: linux
+      env:
+      - OS_TYPE=deb
+      - OS_DIST=ubuntu
+      - OS_VERSION=bionic
+      - secure: JqjgwhDE2Mpoo+QhLG6DdA2wrXHgOuWivmo66u7JtmMGyMM4TXGRBQqyPsmVJIg1nnqPDeCrhGNfLsKpVfsR9x2lJnms0EwEmBdVIlOD3JRlr7edVcnPlU/QpIICAHk5/hsRITD9NjY1q9uFclyGmVyjjoY8sa2kRqAcfoCcaFUe1FyHGH0mlodLaSJtJLcGeSLoZJgh5zF7W1H79UiBU2H5AXb5vDnToS2axsK0z4KeJw6fZhFdvms5lKp5O+a/p+vsstuhimoHHf03GBNBDcXSPlgGodCztRx24LWpIJGpTIS8Pv9Bzst7SCFMPRS6OdNiqw04gYdtSCFW/6bJzvm/j0aC4Ph9OmFwA5YxDa5qU/EpwXVzS4D0edxH4GFMmUTWcbxUvaRjOqrpB0PwVrbKpko9FPglZXeGV4fkJUKOv1LCWaNkRTBiY2F/9cOgYftX5xfV0UKuGVEZScMGz8h5Es0hANmv5/ORQe6pW5F3aDFsV8X7KgUExChIrQADqpgmWGVhrgqyRfTfCVF/yE4Ms6Us03EP14VbHWTwyIovCN4n27calRQs+lAbSnPjM3nDr6J6vEQ4jPHZSsBY3bUSCueGDOo9fz1z8V35gU3As+vf2msZgLR4FSNwMZo/erMZVpyHD1z3JH84vnSf3JD6tnjiUhF+84iSAUD+Ngw=
+    - os: linux
+      env:
+      - OS_TYPE=deb
+      - OS_DIST=debian
+      - OS_VERSION=buster
+      - secure: AjwztIF/jbLnRcMOiF9DuhOTtt5Bx6kUwM3u2/aUMkyPeqn5ASeMTj738ozW3uA0RAAPD6pCxTbi8KTEcVp9DvvtXijmXUAePIZh/ySCGsNp4aF/OEY3R++NSwxE8853/WR2elhpw72xlDHJe5uelYfO3e7/rStBFKYblzr7LXw0z+hzcoryxZmAnYnwID268zsn61nw+SEWUfm+OL4e2dsnMyR2jqbKHbAwtJ1MFlQPNeE9o2ralNq3xwlZ83d4Ge6GHKDDIBgGhyTmcsVZjiRv0rIAbOdd1KYBjjrBy8SmOjV9bxaUjsoF8z/I2ZCGxybE8m9iYepfNOUt5MW0vVl/DeVRVj0iA5MBNejCyvR5ZugvCjehimf+H5CY4SfET5EukgSg17KD1oU+U0hNI3bYytNEIlec0TdkPqRIv8l7mV/AgC7vDvzYrWuhU6MXwfOFred/AaE+gBA53FwX+VYglpgt6vo6LEjk0aZ9yRSvqaQXPuOB6MmAZdZw+Pk4gtB4I9nfwHb2Y4F52cu7owFhr7vB6zWo+gGqjpt2GnuDB4gmZKAnJJv8g/ABBJh/qHLAepifaJSVDF4ZSJ+eqnHvsbhemfJ6WGfDeILKSM37PJQ8TyfpaLUICkQZK2V3NQavR3UQlrbpx9YediULxhxOczrgt6Yc8nfUgG/uSgI=
+      - secure: JqjgwhDE2Mpoo+QhLG6DdA2wrXHgOuWivmo66u7JtmMGyMM4TXGRBQqyPsmVJIg1nnqPDeCrhGNfLsKpVfsR9x2lJnms0EwEmBdVIlOD3JRlr7edVcnPlU/QpIICAHk5/hsRITD9NjY1q9uFclyGmVyjjoY8sa2kRqAcfoCcaFUe1FyHGH0mlodLaSJtJLcGeSLoZJgh5zF7W1H79UiBU2H5AXb5vDnToS2axsK0z4KeJw6fZhFdvms5lKp5O+a/p+vsstuhimoHHf03GBNBDcXSPlgGodCztRx24LWpIJGpTIS8Pv9Bzst7SCFMPRS6OdNiqw04gYdtSCFW/6bJzvm/j0aC4Ph9OmFwA5YxDa5qU/EpwXVzS4D0edxH4GFMmUTWcbxUvaRjOqrpB0PwVrbKpko9FPglZXeGV4fkJUKOv1LCWaNkRTBiY2F/9cOgYftX5xfV0UKuGVEZScMGz8h5Es0hANmv5/ORQe6pW5F3aDFsV8X7KgUExChIrQADqpgmWGVhrgqyRfTfCVF/yE4Ms6Us03EP14VbHWTwyIovCN4n27calRQs+lAbSnPjM3nDr6J6vEQ4jPHZSsBY3bUSCueGDOo9fz1z8V35gU3As+vf2msZgLR4FSNwMZo/erMZVpyHD1z3JH84vnSf3JD6tnjiUhF+84iSAUD+Ngw=
+
+before_script: |
+  if [ $TRAVIS_OS_NAME = linux ]; then
+    (
+      set -exv
+      if [ -n "$OS_TYPE" ]; then
+        # CI build of packages
+        # Docker image parameters
+        OS_BASE_IMAGE=${OS_DIST}:${OS_VERSION}
+        BUILD_IMAGE=${PACKAGE_NAME}/${OS_DIST}_${OS_VERSION}
+        # Build image
+        docker build -t $BUILD_IMAGE --build-arg base_image=$OS_BASE_IMAGE .
+      fi
+    )
+  elif [ $TRAVIS_OS_NAME = windows ]; then
+    BAT_PATH=$(tr '/' '\\' <<< "$TRAVIS_BUILD_DIR/prebuild.bat" | sed 's#^\\\(.\)\\#\U\1:\\#')
+    echo "$BAT_PATH"
+    cmd.exe /C "$BAT_PATH"
+  fi
+
+script: |
+  if [ $TRAVIS_OS_NAME = linux ]; then
+    (
+      set -exv
+      if [ -n "$OS_TYPE" ]; then
+        # CI build of packages
+        # Docker image parameters
+        BUILD_IMAGE=${PACKAGE_NAME}/${OS_DIST}_${OS_VERSION}
+        # TODO: i386
+        docker run --mount type=bind,source=$(pwd),target=/build --rm $BUILD_IMAGE make CI_COMMIT_REF_NAME=$TRAVIS_TAG gl
+      fi
+    )
+  elif [ $TRAVIS_OS_NAME = windows ]; then
+    BAT_PATH=$(tr '/' '\\' <<< "$TRAVIS_BUILD_DIR/build.bat" | sed 's#^\\\(.\)\\#\U\1:\\#')
+    echo "$BAT_PATH"
+    cmd.exe /C "$BAT_PATH"
+  fi
+
+after_success: |
+  [ $TRAVIS_PULL_REQUEST = false ] &&
+  [ $TRAVIS_OS_NAME = linux ] &&
+  [ $OS_TYPE = deb ] &&
+  [ $OS_DIST = debian ] &&
+  [ $OS_VERSION = buster ] &&
+  [ -n "$GH_TOKEN" ] &&
+  git clone --depth 1 -b gh-pages https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git /tmp/${PACKAGE_NAME}-gh-pages &&
+  rm -rf /tmp/${PACKAGE_NAME}-gh-pages/${TRAVIS_BRANCH} &&
+  cp -r build/doc /tmp/${PACKAGE_NAME}-gh-pages/${TRAVIS_BRANCH} &&
+  touch /tmp/${PACKAGE_NAME}-gh-pages/.nojekyll &&
+  echo '<meta http-equiv="refresh" content="0; url=master/">' >/tmp/${PACKAGE_NAME}-gh-pages/index.html &&
+  git -C /tmp/${PACKAGE_NAME}-gh-pages add ${TRAVIS_BRANCH} .nojekyll index.html &&
+  git -C /tmp/${PACKAGE_NAME}-gh-pages commit -m "Update ${TRAVIS_BRANCH} documentation" &&
+  git -C /tmp/${PACKAGE_NAME}-gh-pages push
+
+deploy:
+  provider: releases
+  draft: true
+  file_glob: true
+  overwrite: true
+  skip_cleanup: true
+  on:
+    tags: true
+  api_key:
+    secure: MFJasadYWecBBNuSzgs2LR+Lv2rjuL6s/8GyI5vffCQmoYYYjAphM5S3uMq09K4kntyb+nD6f5vYBfiQDX3427RieQ7stn1ijb2jDEBWKTHdufX+iu58SWUi4TrvSiJL2pRqHoyXTlTUF0lQHM5T/hxCPwKoE77cIN1FENjO81D+onENC654GAXQIeWl82y7/f2xuWtTibENjxMGVXiSEzTjYH/qAXUp4QSJC3Wha1zyugNvYoVyhRb0Zt1FxnkJwQj+AXL82uCxwG6Cj8vyGqWiltbLGFy79dVNJx+5PRv+GlVhOHXV04qskm/sV0DJEu/L0dHkuIkMg/NZURxeMz3qe9OwJKI5okFYWEmxwk77YXCqMJvyS0Q5u7QkhP19fltsv99LKiNJamGmatIgTkAUwHRrQv0L+xH0gYOSym+gThemttGgkdwOt2sjVLiUxRq25xtvDa4MzagUkhZoQQCDsEbJdOXQ1o0BkwcggMsBskpZFWW1a8rP/638HlSBcANBxfk/pUb2yKbsiCnymrS5FUHped5klMX0W1fISiGRUuMH4Djht7lPAT/Vh+mQEgCsGiMdDtwi4QZQJEy/j2/lCMeIjuR09NOlQJATjWphYtoMQLN8Xu3jCthAJQJ7SYHSieQntk6kwc2g94ropXPwB8H5EaZz9fL6Eg69AG8=
+  file:
+    - "build/*.7z"
+    - "../libshadertoy-*/*.deb"
