@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$structshadertoy_1_1program__resource.html" title="Representation of an OpenGL program interface resource. " alt="" coords="5,49,155,90"/>
+<area shape="rect" id="node2" href="$structshadertoy_1_1input__resource.html" title="Represents a program input resource. " alt="" coords="207,5,397,32"/>
+<area shape="rect" id="node3" href="$structshadertoy_1_1output__resource.html" title="Represents a program output resource. " alt="" coords="203,56,401,83"/>
+<area shape="rect" id="node4" href="$structshadertoy_1_1uniform__resource.html" title="Represents a uniform interface resource. " alt="" coords="229,107,375,149"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="shadertoy::size_ref_interface&lt; T &gt;" name="shadertoy::size_ref_interface&lt; T &gt;">
+<area shape="rect" id="node2" href="$classshadertoy_1_1explicit__size.html" title="Represents a size object, wrapped in a size_ref_interface. " alt="" coords="211,5,353,47"/>
+<area shape="rect" id="node3" href="$classshadertoy_1_1explicit__size__ref.html" title="Represents a reference to a size object, wrapped in a size_ref_interface. " alt="" coords="211,71,353,112"/>
+<area shape="rect" id="node4" href="$classshadertoy_1_1getter__size__ref.html" title="Represents a reference to a size object that is obtained through a callback. " alt="" coords="199,136,365,177"/>
+<area shape="rect" id="node5" href="$classshadertoy_1_1size__ref__interface__ref.html" title="Represents a reference to another size_ref_interface object. " alt="" coords="207,201,357,243"/>
+</map>

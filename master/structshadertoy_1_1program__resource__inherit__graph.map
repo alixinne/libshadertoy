@@ -1,0 +1,5 @@
+<map id="shadertoy::program_resource" name="shadertoy::program_resource">
+<area shape="rect" id="node2" href="$structshadertoy_1_1input__resource.html" title="Represents a program input resource. " alt="" coords="5,102,196,129"/>
+<area shape="rect" id="node3" href="$structshadertoy_1_1output__resource.html" title="Represents a program output resource. " alt="" coords="220,102,419,129"/>
+<area shape="rect" id="node4" href="$structshadertoy_1_1uniform__resource.html" title="Represents a uniform interface resource. " alt="" coords="443,95,588,136"/>
+</map>

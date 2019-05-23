@@ -1,0 +1,4 @@
+<map id="shadertoy::members::basic_member" name="shadertoy::members::basic_member">
+<area shape="rect" id="node2" href="$classshadertoy_1_1members_1_1buffer__member.html" title="Represents a swap chain member backed by a buffer. " alt="" coords="5,95,161,136"/>
+<area shape="rect" id="node3" href="$classshadertoy_1_1members_1_1screen__member.html" title="swap_chain member that renders to the default framebuffer " alt="" coords="185,95,341,136"/>
+</map>

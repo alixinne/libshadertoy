@@ -1,0 +1,6 @@
+<map id="shadertoy::buffers::gl_buffer" name="shadertoy::buffers::gl_buffer">
+<area shape="rect" id="node3" href="$classshadertoy_1_1buffers_1_1program__buffer.html" title="Represents a buffer that processes its inputs with a shader. " alt="" coords="87,184,225,225"/>
+<area shape="rect" id="node2" href="$classshadertoy_1_1buffers_1_1basic__buffer.html" title="Represents a buffer in a swap chain. " alt="" coords="87,5,225,47"/>
+<area shape="rect" id="node4" href="$classshadertoy_1_1buffers_1_1geometry__buffer.html" title="Represents a buffer that operates on the given geometry. " alt="" coords="5,273,144,315"/>
+<area shape="rect" id="node5" href="$classshadertoy_1_1buffers_1_1toy__buffer.html" title="Represents a buffer that operates on a full screen quad. " alt="" coords="168,273,307,315"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classshadertoy_1_1gl_1_1resource.html" title="shadertoy::gl::resource\l\&lt; sampler, multi_allocator\l\&lt;&amp;glCreateSamplers, &amp;glDeleteSamplers\l \&gt;, null_sampler_error \&gt;" alt="" coords="5,5,299,76"/>
+<area shape="rect" id="node2" href="$classshadertoy_1_1gl_1_1sampler.html" title="Represents an OpenGL sampler. " alt="" coords="347,27,513,54"/>
+</map>

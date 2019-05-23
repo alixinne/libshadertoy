@@ -1,0 +1,11 @@
+<map id="shadertoy::compiler::basic_part" name="shadertoy::compiler::basic_part">
+<area shape="rect" id="node2" href="$classshadertoy_1_1compiler_1_1cloneable__part.html" title="shadertoy::compiler\l::cloneable_part\&lt; define\l_part \&gt;" alt="" coords="213,5,395,61"/>
+<area shape="rect" id="node4" href="$classshadertoy_1_1compiler_1_1cloneable__part.html" title="shadertoy::compiler\l::cloneable_part\&lt; file\l_part \&gt;" alt="" coords="223,85,385,141"/>
+<area shape="rect" id="node6" href="$classshadertoy_1_1compiler_1_1cloneable__part.html" title="shadertoy::compiler\l::cloneable_part\&lt; input\l_part \&gt;" alt="" coords="217,165,391,221"/>
+<area shape="rect" id="node8" href="$classshadertoy_1_1compiler_1_1cloneable__part.html" title="shadertoy::compiler\l::cloneable_part\&lt; template\l_part \&gt;" alt="" coords="204,245,404,301"/>
+<area shape="rect" id="node10" href="$classshadertoy_1_1compiler_1_1cloneable__part.html" title="Implements clone functionality for template parts. " alt="" coords="209,325,399,381"/>
+<area shape="rect" id="node3" href="$classshadertoy_1_1compiler_1_1define__part.html" title="Represents a shader template part that defines preprocessor variables. " alt="" coords="452,13,603,54"/>
+<area shape="rect" id="node5" href="$classshadertoy_1_1compiler_1_1file__part.html" title="Represents a part of a shader template which reads its sources from files. " alt="" coords="452,93,603,134"/>
+<area shape="rect" id="node7" href="$classshadertoy_1_1compiler_1_1input__part.html" title="Represents a shader template part based on a list of inputs to a toy_buffer. " alt="" coords="452,173,603,214"/>
+<area shape="rect" id="node9" href="$classshadertoy_1_1compiler_1_1template__part.html" title="Represents a part of a shader template. " alt="" coords="452,253,603,294"/>
+</map>

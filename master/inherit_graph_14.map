@@ -1,0 +1,4 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classshadertoy_1_1gl_1_1resource.html" title="shadertoy::gl::resource\l\&lt; buffer, multi_allocator\l\&lt;&amp;glCreateBuffers, &amp;glDeleteBuffers\l \&gt;, null_buffer_error \&gt;" alt="" coords="5,5,268,76"/>
+<area shape="rect" id="node2" href="$classshadertoy_1_1gl_1_1buffer.html" title="Represents an OpenGL buffer. " alt="" coords="316,27,468,54"/>
+</map>

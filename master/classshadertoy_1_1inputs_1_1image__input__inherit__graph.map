@@ -1,0 +1,7 @@
+<map id="shadertoy::inputs::image_input" name="shadertoy::inputs::image_input">
+<area shape="rect" id="node3" href="$classshadertoy_1_1inputs_1_1file__input.html" title="Represents an image input that is loaded from a file. " alt="" coords="387,71,529,112"/>
+<area shape="rect" id="node2" href="$classshadertoy_1_1inputs_1_1basic__input.html" title="Represents a texture input to a buffer. " alt="" coords="5,71,148,112"/>
+<area shape="rect" id="node4" href="$classshadertoy_1_1inputs_1_1exr__input.html" title="Represents an input that is loaded from a file using the OpenEXR library. " alt="" coords="577,5,720,47"/>
+<area shape="rect" id="node5" href="$classshadertoy_1_1inputs_1_1jpeg__input.html" title="Represents an input that is loaded from a file using libjpeg. " alt="" coords="577,71,720,112"/>
+<area shape="rect" id="node6" href="$classshadertoy_1_1inputs_1_1soil__input.html" title="Represents an input that is loaded from a file using the SOIL image loading library. " alt="" coords="577,136,720,177"/>
+</map>

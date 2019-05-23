@@ -1,0 +1,4 @@
+<map id="shadertoy::gl::bound_ops&lt; resource_type &gt;" name="shadertoy::gl::bound_ops&lt; resource_type &gt;">
+<area shape="rect" id="node3" href="$classshadertoy_1_1gl_1_1bind__guard.html" title="Guard objects that handles binding and unbinding various OpenGL objects automatically when it goes ou..." alt="" coords="17,184,205,225"/>
+<area shape="rect" id="node2" href="$classshadertoy_1_1gl_1_1bound__ops__base.html" title="Class that defines operations that are possible on a particular bound object. " alt="" coords="5,5,217,47"/>
+</map>

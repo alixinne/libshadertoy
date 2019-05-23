@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classshadertoy_1_1buffers_1_1basic__buffer.html" title="Represents a buffer in a swap chain. " alt="" coords="5,39,144,80"/>
+<area shape="rect" id="node2" href="$classshadertoy_1_1buffers_1_1gl__buffer.html" title="Represents a buffer in a swap chain. Rendering is done using a framebuffer. " alt="" coords="192,39,331,80"/>
+<area shape="rect" id="node3" href="$classshadertoy_1_1buffers_1_1program__buffer.html" title="Represents a buffer that processes its inputs with a shader. " alt="" coords="379,39,517,80"/>
+<area shape="rect" id="node4" href="$classshadertoy_1_1buffers_1_1geometry__buffer.html" title="Represents a buffer that operates on the given geometry. " alt="" coords="565,5,704,47"/>
+<area shape="rect" id="node5" href="$classshadertoy_1_1buffers_1_1toy__buffer.html" title="Represents a buffer that operates on a full screen quad. " alt="" coords="565,71,704,112"/>
+</map>

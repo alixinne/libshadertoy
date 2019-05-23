@@ -1,0 +1,4 @@
+<map id="shadertoy::inputs::file_input" name="shadertoy::inputs::file_input">
+<area shape="rect" id="node2" href="$classshadertoy_1_1inputs_1_1image__input.html" title="Represents an input based on an image, potentially loaded from the disk or another source..." alt="" coords="5,95,148,136"/>
+<area shape="rect" id="node3" href="$classshadertoy_1_1inputs_1_1basic__input.html" title="Represents a texture input to a buffer. " alt="" coords="5,5,148,47"/>
+</map>
