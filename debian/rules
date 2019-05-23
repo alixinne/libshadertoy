@@ -28,5 +28,8 @@ override_dh_auto_configure:
 	dh_auto_configure -- -DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH) \
 		-DLIBSHADERTOY_BUILD_DOCUMENTATION=$(BUILD_DOCUMENTATION)
 
+override_dh_auto_build:
+	dh_auto_build -- default_target shadertoy_doc
+
 override_dh_auto_clean:
 	rm -rf obj-$(DEB_HOST_MULTIARCH)/*

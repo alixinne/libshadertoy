@@ -336,13 +336,7 @@ if(SHADERTOY_BUILD_DOCUMENTATION)
 
 	configure_file(${doxyfile_in} ${doxyfile} @ONLY)
 
-	if (LIBSHADERTOY_BUILD_DOCUMENTATION)
-		set(DOC_ARG_MODE ALL)
-	else()
-		set(DOC_ARG_MODE "")
-	endif()
-
-	add_custom_target(shadertoy_doc ${DOC_ARG_MODE}
+	add_custom_target(shadertoy_doc
 		COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
 		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 		COMMENT "Generating API documentation with Doxygen"
