@@ -7,9 +7,9 @@ Build-Depends: debhelper (>= 9),
  pkg-config, cmake (>= 3.10), gcc-7 | gcc-8
 Standards-Version: 3.9.8
 Section: libs
-Homepage: https://gitlab.inria.fr/vtaverni/libshadertoy
-Vcs-Git: https://gitlab.inria.fr/vtaverni/libshadertoy.git
-Vcs-Browser: https://gitlab.inria.fr/vtaverni/libshadertoy/tree/master
+Homepage: https://github.com/vtavernier/libshadertoy
+Vcs-Git: https://github.com/vtavernier/libshadertoy.git
+Vcs-Browser: https://github.com/vtavernier/libshadertoy/tree/master
 
 Package: libshadertoy-dev
 Section: libdevel

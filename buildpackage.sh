@@ -201,7 +201,7 @@ PROC_ARG=$(nproc)
 if [ "$1" = "ci-src" ]; then
 	build_src
 elif [ "$1" = "gl" ]; then
-	# Set build parameters for GitLab CI build
+	# Set build parameters for CI build
 	eval $(dpkg-architecture)
 	SKIP_TESTS=1
 	NO_SBUILD=1

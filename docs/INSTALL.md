@@ -28,7 +28,7 @@ To build the library from source, first clone the repository as well as its
 dependencies:
 
 ```bash
-git clone --recursive https://gitlab.inria.fr/vtaverni/libshadertoy.git
+git clone --recursive https://github.com/vtavernier/libshadertoy.git
 ```
 
 In order to compile the project, the following tools and libraries are required:
