@@ -58,7 +58,12 @@ script: |
         # Docker image parameters
         BUILD_IMAGE=${PACKAGE_NAME}/${OS_DIST}_${OS_VERSION}
         # TODO: i386
-        docker run --mount type=bind,source=$(pwd),target=/build --rm $BUILD_IMAGE make CI_COMMIT_REF_NAME=$TRAVIS_TAG gl
+        docker run --mount type=bind,source=$(pwd),target=/build --rm $BUILD_IMAGE \
+          make \
+          BINTRAY_API_KEY=$BINTRAY_API_KEY \
+          BINTRAY_ORG=$BINTRAY_ORG \
+          CI_COMMIT_REF_NAME=$TRAVIS_TAG \
+          gl
       fi
     )
   elif [ $TRAVIS_OS_NAME = windows ]; then
@@ -70,6 +75,7 @@ script: |
 after_success: |
   [ $TRAVIS_PULL_REQUEST = false ] &&
   [ $TRAVIS_OS_NAME = linux ] &&
+  [[ $TRAVIS_BRANCH =~ "^master|develop$" ]] &&
   [ $OS_TYPE = deb ] &&
   [ $OS_DIST = debian ] &&
   [ $OS_VERSION = buster ] &&
@@ -89,10 +95,11 @@ deploy:
   file_glob: true
   overwrite: true
   skip_cleanup: true
-  on:
-    tags: true
   api_key:
-    secure: MFJasadYWecBBNuSzgs2LR+Lv2rjuL6s/8GyI5vffCQmoYYYjAphM5S3uMq09K4kntyb+nD6f5vYBfiQDX3427RieQ7stn1ijb2jDEBWKTHdufX+iu58SWUi4TrvSiJL2pRqHoyXTlTUF0lQHM5T/hxCPwKoE77cIN1FENjO81D+onENC654GAXQIeWl82y7/f2xuWtTibENjxMGVXiSEzTjYH/qAXUp4QSJC3Wha1zyugNvYoVyhRb0Zt1FxnkJwQj+AXL82uCxwG6Cj8vyGqWiltbLGFy79dVNJx+5PRv+GlVhOHXV04qskm/sV0DJEu/L0dHkuIkMg/NZURxeMz3qe9OwJKI5okFYWEmxwk77YXCqMJvyS0Q5u7QkhP19fltsv99LKiNJamGmatIgTkAUwHRrQv0L+xH0gYOSym+gThemttGgkdwOt2sjVLiUxRq25xtvDa4MzagUkhZoQQCDsEbJdOXQ1o0BkwcggMsBskpZFWW1a8rP/638HlSBcANBxfk/pUb2yKbsiCnymrS5FUHped5klMX0W1fISiGRUuMH4Djht7lPAT/Vh+mQEgCsGiMdDtwi4QZQJEy/j2/lCMeIjuR09NOlQJATjWphYtoMQLN8Xu3jCthAJQJ7SYHSieQntk6kwc2g94ropXPwB8H5EaZz9fL6Eg69AG8=
+    secure: SX7gC/xySnV5JjZ0biTwLRTyQ7yAO4AX8eTp7fYLltkmEAfOckZ90LltwkHBjwUbqIdPHN7FkvnrHsSUG8RYuam1W/V3YGViRlNMbfz2uDHJV0yC+HaGsJsVXipoyV4htvFt2uiJbaKfapZJtXn4vYuwZkgFI4Ldi8jlLfR3rzbcCLqEFPbIAXFs9df3odJKOA1fjRiMYBvNnRY8YwmDrdoaGJuaadgMwuAOhfeiQRgGrOmgVAAAotqYpYFUbBOOTxiH1c3woXYVVYsFr/Qb8aw7t45VssoWl+6J2Rj7jo9rejJbwSfuC3RT+rN2gE0PaVqud9ZEUb9Z2a03VNIFcFFx9F1KyzS8TqJHAKUoL1CqGNOyGnrxIgNvRZiS2+eJ73QS5zGHiAr5Lw0ltKDaDlpDdvo/pGX9f9G+TyyaicpwPfqRp/hsOR+a6qMWGMKPnib5ZZzYWiub5i4BA+kHx40FIqjGpBTiHS7qQCcXWeCqSIKkINEnG8z44keQZY5e2iaAiwy0eC7A/hYK0tzUoMBqcmwT5EMd0KUngRAwN2wth98jV71OUrLRyWUat0Ly+BZrfW5QCrpf39fK3KRoxXzQ0kq6kfrjr85oTKJb5iUP911byzlK+Mktji8IVfCCLnYxws7YO7KI0lzoRo45Rj2NjEaoWTcOmGK8sZEmW/0=
   file:
     - "build/*.7z"
-    - "../libshadertoy-*/*.deb"
+    - "*.deb"
+  on:
+    repo: vtavernier/libshadertoy
+    tags: true

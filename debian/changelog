@@ -1,4 +1,4 @@
-libshadertoy (1.0.0~rc7) UNRELEASED; urgency=medium
+libshadertoy (1.0.0~rc7) unstable; urgency=medium
 
   * Upgrade to C++17
   * Add support for multiple render targets
@@ -12,7 +12,7 @@ libshadertoy (1.0.0~rc7) UNRELEASED; urgency=medium
   * Update logging levels
   * Switch to GitHub
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Mon, 04 Mar 2019 14:49:00 +0100
+ -- Vincent Tavernier <vince.tavernier@gmail.com>  Tue, 04 Jun 2019 13:57:03 +0200
 
 libshadertoy (1.0.0~rc6) unstable; urgency=medium
 
