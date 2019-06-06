@@ -45,7 +45,8 @@ public:
 	 * the following schemes are supported:
 	 *
 	 *  * file (path to an image file)
-	 *  * noise (no parameters)
+	 *  * noise (width, height query parameters)
+	 *  * checker (width, height, size query parameters)
 	 *
 	 * The file URI scheme is dispatched to the corresponding loader depending
 	 * on the file name extension, and supported loaders that have been built
