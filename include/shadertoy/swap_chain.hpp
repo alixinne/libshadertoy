@@ -217,7 +217,8 @@ public:
 	/**
 	 * @brief Set a uniform value on all buffers in this chain
 	 *
-	 *
+	 * @param identifier Name of the uniform to set
+	 * @param value      Arguments to set_value to set this uniform
 	 */
 	template<typename TIndex, typename... TValue>
 	void set_uniform(const TIndex &identifier, TValue && ...value) const
