@@ -63,6 +63,24 @@ void wrapper_context::bind_texture_unit(GLuint unit, std::optional<std::referenc
 	}
 }
 
+void wrapper_context::unbind_texture_units(GLuint start, int count)
+{
+	if (!state_tracking_)
+		throw opengl_error(GL_INVALID_OPERATION, "This context is not tracking state.");
+
+	for (size_t i = start;
+		 i < texture_unit_mappings_.size() &&
+		 (count < 0 || i < (start + count));
+		 ++i)
+	{
+		if (texture_unit_mappings_[i] != 0)
+		{
+			gl_call(glBindTextureUnit, i, 0);
+			texture_unit_mappings_[i] = 0;
+		}
+	}
+}
+
 void wrapper_context::bind_texture(GLenum target, std::optional<std::reference_wrapper<const gl::texture>> texture)
 {
 	GLuint texture_id = texture == std::nullopt ? 0 : GLuint(texture->get());

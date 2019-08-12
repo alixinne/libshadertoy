@@ -66,6 +66,16 @@ namespace gl
 							   std::optional<std::reference_wrapper<const gl::texture>> texture = std::nullopt);
 
 		/**
+		 * @brief Unbind a range of texture units
+		 *
+		 * Requires state tracking to be enabled.
+		 *
+		 * @param start First texture unit to unbind
+		 * @param count Number of texture units to unbind. -1 for all remaining
+		 */
+		void unbind_texture_units(GLuint start, int count = -1);
+
+		/**
 		 * @brief Bind a texture to a target
 		 *
 		 * @param target  Texture target

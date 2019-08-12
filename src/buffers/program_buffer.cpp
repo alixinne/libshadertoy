@@ -1,6 +1,7 @@
 #include <epoxy/gl.h>
 
 #include "shadertoy/gl.hpp"
+#include "shadertoy/gl/wrapper_context.hpp"
 
 #include "shadertoy/inputs/basic_input.hpp"
 #include "shadertoy/inputs/error_input.hpp"
@@ -145,6 +146,9 @@ void program_buffer::render_gl_contents(const render_context &context, const io_
 		// Increment unit
 		(*current_unit)++;
 	}
+
+	// Unbind extra texture units not in use
+	gl::current_context.unbind_texture_units(current_texture_unit);
 
 	if (auto channel_resolutions_resource = program_interface_->uniforms().try_get("iChannelResolution"))
 	{
