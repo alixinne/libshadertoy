@@ -3,6 +3,7 @@
 #include "shadertoy/gl/texture.hpp"
 #include "shadertoy/shadertoy_error.hpp"
 
+using namespace shadertoy;
 using namespace shadertoy::gl;
 
 null_texture_error::null_texture_error()
@@ -82,4 +83,14 @@ void texture::clear_tex_image(GLint level, GLenum format, GLenum type, const voi
 void texture::get_image(GLint level, GLenum format, GLenum type, GLsizei bufSize, void *pixels) const
 {
 	gl_call(glGetTextureImage, GLuint(*this), level, format, type, bufSize, pixels);
+}
+
+void texture::buffer(GLenum internalformat, const gl::buffer &buffer) const
+{
+	gl_call(glTextureBuffer, GLuint(*this), internalformat, GLuint(buffer));
+}
+
+void texture::buffer_range(GLenum internalformat, const gl::buffer &buffer, GLintptr offset, GLsizeiptr size) const
+{
+	gl_call(glTextureBufferRange, GLuint(*this), internalformat, GLuint(buffer), offset, size);
 }

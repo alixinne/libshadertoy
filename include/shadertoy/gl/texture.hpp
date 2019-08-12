@@ -3,6 +3,8 @@
 
 #include "shadertoy/gl/resource.hpp"
 
+#include "shadertoy/gl/buffer.hpp"
+
 namespace shadertoy
 {
 namespace gl
@@ -196,6 +198,32 @@ namespace gl
 		 * @throws null_texture_error
 		 */
 		void get_image(GLint level, GLenum format, GLenum type, GLsizei bufSize, void *pixels) const;
+
+		/**
+		 * @brief glTextureBuffer
+		 *
+		 * @param internalformat Internal format
+		 * @param buffer         Buffer
+		 *
+		 * @throws opengl_error
+		 * @throws null_texture_error
+		 * @throws null_buffer_error
+		 */
+		void buffer(GLenum internalformat, const gl::buffer &buffer) const;
+
+		/**
+		 * @brief glTextureBufferRange
+		 *
+		 * @param internalformat Internal format
+		 * @param buffer         Buffer
+		 * @param offset         Offset
+		 * @param size           Size
+		 *
+		 * @throws opengl_error
+		 * @throws null_texture_error
+		 * @throws null_buffer_error
+		 */
+		void buffer_range(GLenum internalformat, const gl::buffer &buffer, GLintptr offset, GLsizeiptr size) const;
 	};
 }
 }
