@@ -33,6 +33,7 @@
 #include "shadertoy/inputs/jpeg_input.hpp"
 #include "shadertoy/inputs/noise_input.hpp"
 #include "shadertoy/inputs/soil_input.hpp"
+#include "shadertoy/inputs/texture_input.hpp"
 
 #include "shadertoy/draw_state.hpp"
 
