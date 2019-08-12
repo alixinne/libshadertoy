@@ -52,7 +52,16 @@ int main(int argc, char *argv[])
 
 			// Create an auxiliary buffer that renders a gradient
 			auto gradientBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("gradient"));
-			gradientBuffer->source_file(ST_BASE_DIR "/shaders/shader-gradient.glsl");
+			gradientBuffer->source_file(ST_BASE_DIR "/shaders/shader-gradient-ils.glsl");
+
+			// Add image load/store image target
+			shadertoy::gl::texture texture(GL_TEXTURE_2D);
+			texture.parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST); // no mipmaps
+			texture.image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F, 16, 16, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+			auto gradient_image(std::make_shared<shadertoy::inputs::texture_input>(std::move(texture), GL_RGBA32F));
+			gradientBuffer->inputs().emplace_back("layout(rgba32f)", "image2D",
+												  "gradientImage", gradient_image);
+
 			auto buffer_input(std::make_shared<shadertoy::inputs::buffer_input>(chain.emplace_back(gradientBuffer, shadertoy::make_size(shadertoy::rsize(16, 16)), GL_R8)));
 
 			// Create the image buffer
@@ -67,7 +76,8 @@ int main(int argc, char *argv[])
 			imageBuffer->inputs().emplace_back("noiseChannel", loader.create("noise:?width=64&height=64"));
 			imageBuffer->inputs().emplace_back("checkerChannel", loader.create("checker:?width=64&height=64&size=4"));
 			imageBuffer->inputs().emplace_back("errorChannel", context.error_input());
-			imageBuffer->inputs().emplace_back("bufferChannel", buffer_input);
+			auto program_buffer_input(imageBuffer->inputs().emplace_back("bufferChannel", buffer_input));
+			auto program_image_input(imageBuffer->inputs().emplace_back("imageChannel", gradient_image));
 
 			for (auto &program_input : imageBuffer->inputs())
 			{
@@ -76,10 +86,14 @@ int main(int argc, char *argv[])
 				program_input.input()->wrap(GL_REPEAT);
 			}
 
-			imageBuffer->inputs().back().input()->sampler().parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			program_buffer_input.input()->sampler().parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			program_image_input.input()->min_filter(GL_LINEAR);
 
 			// Add the image buffer to the swap chain
-			chain.emplace_back(imageBuffer, shadertoy::make_size_ref(ctx.render_size));
+			auto image_member(chain.emplace_back(imageBuffer, shadertoy::make_size_ref(ctx.render_size)));
+
+			// Image load store is not coherent
+			image_member->state().memory_barrier(GL_TEXTURE_FETCH_BARRIER_BIT);
 
 			// Create a swap chain member that renders to the screen
 			chain.emplace_back<shadertoy::members::screen_member>(shadertoy::make_size_ref(ctx.render_size));
