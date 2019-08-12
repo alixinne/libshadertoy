@@ -14,7 +14,7 @@ using shadertoy::gl::gl_call;
 using shadertoy::utils::error_assert;
 
 gl_buffer::gl_buffer(const std::string &id)
-	: basic_buffer(id)
+	: graphics_buffer(id)
 {
 }
 

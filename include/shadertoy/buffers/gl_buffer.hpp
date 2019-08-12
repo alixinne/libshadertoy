@@ -3,7 +3,7 @@
 
 #include "shadertoy/pre.hpp"
 
-#include "shadertoy/buffers/basic_buffer.hpp"
+#include "shadertoy/buffers/graphics_buffer.hpp"
 
 #include "shadertoy/gl/framebuffer.hpp"
 #include "shadertoy/gl/renderbuffer.hpp"
@@ -19,7 +19,7 @@ namespace buffers
  * This class instantiates a framebuffer and a renderbuffer which are bound
  * before rendering the contents of this buffer.
  */
-class gl_buffer : public basic_buffer
+class gl_buffer : public graphics_buffer
 {
 	/// Target framebuffer
 	gl::framebuffer target_fbo_;

@@ -7,7 +7,7 @@
 
 #include "shadertoy/render_context.hpp"
 
-#include "shadertoy/buffers/basic_buffer.hpp"
+#include "shadertoy/buffers/graphics_buffer.hpp"
 
 #include "shadertoy/members/buffer_member.hpp"
 
@@ -73,7 +73,7 @@ void buffer_member::allocate_member(const swap_chain &chain, const render_contex
 	buffer_->allocate_textures(context, io_);
 }
 
-buffer_member::buffer_member(std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref render_size,
+buffer_member::buffer_member(std::shared_ptr<buffers::graphics_buffer> buffer, rsize_ref render_size,
 							 GLint internal_format, member_swap_policy swap_policy)
 : buffer_(std::move(std::move(buffer))), io_(swap_policy), render_size_(std::move(render_size)),
   internal_format_(internal_format)
@@ -105,22 +105,22 @@ int buffer_member::find_output(const output_name_t &name) const
 	return it - io_.output_specs().begin();
 }
 
-std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size)
+std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::graphics_buffer> buffer, rsize_ref &&render_size)
 {
 	return make_buffer(buffer, std::forward<rsize_ref&&>(render_size), chain.internal_format(), chain.swap_policy());
 }
 
-std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format)
+std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::graphics_buffer> buffer, rsize_ref &&render_size, GLint internal_format)
 {
 	return make_buffer(buffer, std::forward<rsize_ref&&>(render_size), internal_format, chain.swap_policy());
 }
 
-std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, member_swap_policy swap_policy)
+std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::graphics_buffer> buffer, rsize_ref &&render_size, member_swap_policy swap_policy)
 {
 	return make_buffer(buffer, std::forward<rsize_ref&&>(render_size), chain.internal_format(), swap_policy);
 }
 
-std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::basic_buffer> buffer, rsize_ref &&render_size, GLint internal_format, member_swap_policy swap_policy)
+std::shared_ptr<buffer_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::graphics_buffer> buffer, rsize_ref &&render_size, GLint internal_format, member_swap_policy swap_policy)
 {
 	return make_buffer(buffer, std::forward<rsize_ref&&>(render_size), internal_format, swap_policy);
 }

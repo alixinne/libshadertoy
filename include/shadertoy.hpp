@@ -7,6 +7,7 @@
 #include "shadertoy/member_swap_policy.hpp"
 
 #include "shadertoy/buffers/basic_buffer.hpp"
+#include "shadertoy/buffers/graphics_buffer.hpp"
 #include "shadertoy/buffers/gl_buffer.hpp"
 
 #include "shadertoy/compiler/basic_part.hpp"

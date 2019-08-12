@@ -11,6 +11,8 @@ namespace shadertoy
 	{
 		struct buffer_output;
 		class basic_buffer;
+		class gl_buffer;
+		class graphics_buffer;
 		class program_buffer;
 		class toy_buffer;
 	}
