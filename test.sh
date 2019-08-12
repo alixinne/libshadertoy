@@ -44,11 +44,11 @@ for TEST_FILE in ${@:-$DEFAULT_TESTS}; do
 		else
 			echo "[==== TEST: $TEST_NAME: FAILED ($TEST_RESULT) ====]" >&2
 
-			if [ "$TEST_RESULT" -eq 1 ]; then
+			if [ "$TEST_RESULT" -eq 2 ]; then
+				echo "  - Considered non-critical by test script" >&2
+			else
 				FAILED_TESTS=$(( FAILED_TESTS + 1 ))
 				FAILED_TEST_NAMES+=("$TEST_NAME")
-			elif [ "$TEST_RESULT" -eq 2 ]; then
-				echo "  - Considered non-critical by test script" >&2
 			fi
 		fi
 	fi
