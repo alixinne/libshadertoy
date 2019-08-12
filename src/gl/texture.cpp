@@ -3,6 +3,8 @@
 #include "shadertoy/gl/texture.hpp"
 #include "shadertoy/shadertoy_error.hpp"
 
+#include "shadertoy/gl/wrapper_context.hpp"
+
 using namespace shadertoy;
 using namespace shadertoy::gl;
 
@@ -30,17 +32,17 @@ texture::texture(GLenum target)
 
 void texture::bind(GLenum target) const
 {
-    gl_call(glBindTexture, target, GLuint(*this));
+	current_context.bind_texture(target, *this);
 }
 
 void texture::unbind(GLenum target) const
 {
-	gl_call(glBindTexture, target, 0);
+	current_context.bind_texture(target, std::nullopt);
 }
 
 void texture::bind_unit(GLuint unit) const
 {
-	gl_call(glBindTextureUnit, unit, GLuint(*this));
+	current_context.bind_texture_unit(unit, *this);
 }
 
 void texture::parameter(GLenum pname, GLint param) const

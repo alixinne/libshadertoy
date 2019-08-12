@@ -7,27 +7,8 @@ namespace shadertoy
 {
 namespace gl
 {
-	/**
-	 * @brief Error thrown when an OpenGL operation fails.
-	 */
-	class shadertoy_EXPORT opengl_error : public shadertoy::shadertoy_error
-	{
-	public:
-		/**
-		 * @brief Initialize a new instance of the opengl_error class.
-		 *
-		 * @param  error    OpenGL error code
-		 * @param  extraMsg Extra information to include in what()
-		 */
-		explicit opengl_error(GLenum error, const std::string &extraMsg);
-	};
-
-	/**
-	 * @brief Throw an opengl_error if glGetError returns non-zero
-	 *
-	 * @throws opengl_error
-	 */
-	void shadertoy_EXPORT check_errors();
+	/// Check errors with the current context wrapper
+	void check_errors();
 
 	/**
 	 * @brief Invoke the given OpenGL function
