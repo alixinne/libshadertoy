@@ -202,6 +202,11 @@ int performRender(bool dumpShaders, Args&&... args)
 						 std::cerr << "GLFW error: " << description << std::endl;
 						 });
 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	// Initialize window
 	int width = 640, height = 480;
 	GLFWwindow *window = glfwCreateWindow(width, height, "libshadertoy example 50-shadertoy", nullptr, nullptr);
