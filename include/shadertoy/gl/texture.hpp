@@ -224,6 +224,30 @@ namespace gl
 		 * @throws null_buffer_error
 		 */
 		void buffer_range(GLenum internalformat, const gl::buffer &buffer, GLintptr offset, GLsizeiptr size) const;
+
+		/**
+		 * @brief glBindImageTexture
+		 *
+		 * @param unit    Unit
+		 * @param level   Level
+		 * @param layered Layered
+		 * @param layer   Layer
+		 * @param access  Access
+		 * @param format  Format
+		 *
+		 * @throws opengl_error
+		 * @throws null_texture_error
+		 */
+		void bind_image(GLuint unit, GLint level, GLboolean layered, GLint layer, GLenum access, GLenum format) const;
+
+		/**
+		 * @brief glBindImageTexture without a texture to clear bindings
+		 *
+		 * @param unit    Unit
+		 *
+		 * @throws opengl_error
+		 */
+		static void unbind_image(GLuint unit);
 	};
 }
 }

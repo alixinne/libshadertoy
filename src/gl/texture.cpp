@@ -94,3 +94,13 @@ void texture::buffer_range(GLenum internalformat, const gl::buffer &buffer, GLin
 {
 	gl_call(glTextureBufferRange, GLuint(*this), internalformat, GLuint(buffer), offset, size);
 }
+
+void texture::bind_image(GLuint unit, GLint level, GLboolean layered, GLint layer, GLenum access, GLenum format) const
+{
+	gl_call(glBindImageTexture, unit, GLuint(*this), level, layered, layer, access, format);
+}
+
+void texture::unbind_image(GLuint unit)
+{
+	gl_call(glBindImageTexture, unit, 0, 0, false, 0, GL_READ_WRITE, GL_RGB);
+}
