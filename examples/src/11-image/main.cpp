@@ -21,6 +21,10 @@ int main(int argc, char *argv[])
 		return 2;
 	}
 
+	glfwSetErrorCallback([] (int error, const char *description) {
+						 std::cerr << "GLFW error: " << description << std::endl;
+						 });
+
 	// Initialize window
 	int width = 7 * 64, height = 7 * 64;
 	GLFWwindow *window = glfwCreateWindow(width, height, "libshadertoy example 11-image", nullptr, nullptr);
