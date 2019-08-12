@@ -7,6 +7,16 @@ namespace shadertoy
 {
 
 /**
+ * @brief Represents the type of a program input
+ */
+enum class program_input_type
+{
+	unknown,
+	sampler,
+	image
+};
+
+/**
  * @brief Represents an input texture to shader code
  */
 class shadertoy_EXPORT program_input
@@ -17,8 +27,17 @@ class shadertoy_EXPORT program_input
 	/// Name of the sampler in GLSL
 	std::string sampler_name_;
 
+	/// Memory qualifier
+	std::string memory_qualifier_;
+
 	/// Input object
 	std::shared_ptr<inputs::basic_input> input_;
+
+	/// Input type
+	program_input_type type_;
+
+	/// Set the type from the sampler_type_
+	static program_input_type type_from_sampler(const std::string &sampler_type);
 
 public:
 	/**
@@ -67,6 +86,15 @@ public:
 	program_input(std::string sampler_type, std::string sampler_name);
 
 	/**
+	 * @brief Create a new empty input
+	 *
+	 * @param memory_qualifier GLSL memory qualifier for the variable
+	 * @param sampler_type     GLSL type of the variable
+	 * @param sampler_name     GLSL name of the variable
+	 */
+	program_input(std::string memory_qualifier, std::string sampler_type, std::string sampler_name);
+
+	/**
 	 * @brief Create a new input with a given value
 	 *
 	 * @param sampler_type GLSL type of the sampler
@@ -74,6 +102,17 @@ public:
 	 * @param input        Initial input value
 	 */
 	program_input(std::string sampler_type, std::string sampler_name,
+				  const std::shared_ptr<inputs::basic_input> &input);
+
+	/**
+	 * @brief Create a new input with a given value
+	 *
+	 * @param memory_qualifier GLSL memory qualifier for the variable
+	 * @param sampler_type     GLSL type of the sampler
+	 * @param sampler_name     GLSL name of the sampler
+	 * @param input            Initial input value
+	 */
+	program_input(std::string memory_qualifier, std::string sampler_type, std::string sampler_name,
 				  const std::shared_ptr<inputs::basic_input> &input);
 
 	/**
@@ -91,6 +130,14 @@ public:
 	 */
 	inline const std::string sampler_name() const
 	{ return sampler_name_; }
+
+	/**
+	 * @brief Get the memory qualifier
+	 *
+	 * @return Memory qualifier for this variable
+	 */
+	inline const std::string memory_qualifier() const
+	{ return memory_qualifier_; }
 
 	/**
 	 * @brief Get the input object
@@ -115,6 +162,12 @@ public:
 	 */
 	inline void input(std::shared_ptr<inputs::basic_input> new_input)
 	{ input_ = new_input; }
+
+	/**
+	 * @brief Get the input type
+	 */
+	inline program_input_type type() const
+	{ return type_; }
 
 	/**
 	 * @brief Get the GLSL definition for this sampler

@@ -7,9 +7,11 @@
 using namespace shadertoy;
 using namespace shadertoy::inputs;
 
-void image_input::load_input()
+GLenum image_input::load_input()
 {
-	image_texture_ = load_image();
+	GLenum format = 0;
+
+	image_texture_ = load_image(format);
 
 	// Note that we always generate mipmaps, to allow changing
 	// the sampler settings afterwards from non-mipmap to mipmap
@@ -17,6 +19,8 @@ void image_input::load_input()
 	{
 		image_texture_->generate_mipmap();
 	}
+
+	return format;
 }
 
 void image_input::reset_input() { image_texture_.reset(); }

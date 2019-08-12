@@ -22,8 +22,10 @@ class shadertoy_EXPORT error_input : public basic_input
 protected:
 	/**
 	 * @brief Load this input's contents
+	 *
+	 * @return The internal format of the loaded texture
 	 */
-	void load_input() override;
+	GLenum load_input() override;
 
 	/**
 	 * @brief Reset this input's contents

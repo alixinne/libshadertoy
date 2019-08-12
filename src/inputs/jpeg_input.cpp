@@ -17,7 +17,7 @@ using namespace shadertoy::inputs;
 using shadertoy::utils::log;
 using shadertoy::utils::error_assert;
 
-std::unique_ptr<gl::texture> jpeg_input::load_file(const std::string &filename, bool vflip)
+std::unique_ptr<gl::texture> jpeg_input::load_file(const std::string &filename, bool vflip, GLenum &format)
 {
 	std::unique_ptr<gl::texture> texture;
 
@@ -85,8 +85,8 @@ std::unique_ptr<gl::texture> jpeg_input::load_file(const std::string &filename, 
 		}
 
 		texture = std::make_unique<gl::texture>(GL_TEXTURE_2D);
-		texture->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F, cinfo.output_width, cinfo.output_height,
-						  0, fmt, GL_UNSIGNED_BYTE, imgbuf);
+		texture->image_2d(GL_TEXTURE_2D, 0, format = GL_RGBA32F, cinfo.output_width,
+						  cinfo.output_height, 0, fmt, GL_UNSIGNED_BYTE, imgbuf);
 
 		jpeg_finish_decompress(&cinfo);
 		jpeg_destroy_decompress(&cinfo);

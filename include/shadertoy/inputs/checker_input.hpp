@@ -28,7 +28,7 @@ protected:
 	/**
 	 * @brief Load this input's contents
 	 */
-	void load_input() override;
+	GLenum load_input() override;
 
 	/**
 	 * @brief Reset this input's contents

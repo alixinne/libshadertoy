@@ -54,6 +54,9 @@ class shadertoy_EXPORT draw_state
 	/// Blend color
 	std::array<float, 4> blend_color_;
 
+	/// Memory barrier bits
+	GLenum memory_barrier_;
+
 	static constexpr size_t enable_idx(GLenum cap)
 	{
 		switch (cap)
@@ -433,6 +436,22 @@ class shadertoy_EXPORT draw_state
 	 * @param new_color New blend color
 	 */
 	inline void blend_color(const std::array<float, 4> &new_color) { blend_color_ = new_color; }
+
+	/**
+	 * @brief Get the memory barrier bits
+	 *
+	 * The default is none.
+	 *
+	 * @return Memory barrier bits
+	 */
+	inline const GLenum &memory_barrier() const { return memory_barrier_; }
+
+	/**
+	 * @brief Sets the memory barrier bits
+	 *
+	 * @param new_memory New memory barrier bits
+	 */
+	inline void memory_barrier(GLenum new_memory) { memory_barrier_ = new_memory & GL_ALL_BARRIER_BITS; }
 };
 }
 

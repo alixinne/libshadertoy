@@ -23,17 +23,21 @@ protected:
 	/**
 	 * @brief Implemented by derived classes to provide the image decoding logic
 	 *
+	 * @param[out] format Internal format of the resulting image
+	 *
 	 * @return OpenGL texture representing the image
 	 */
-	virtual std::unique_ptr<gl::texture> load_image() = 0;
+	virtual std::unique_ptr<gl::texture> load_image(GLenum &format) = 0;
 
 	/**
 	 * @brief Load the input's contents.
 	 *
 	 * Classes implementing image_input should implement load_image to
 	 * support this behavior.
+	 *
+	 * @return The internal format of the loaded texture
 	 */
-	void load_input() final;
+	GLenum load_input() final;
 
 	/**
 	 * @brief Reset the input's contents.

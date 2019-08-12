@@ -14,8 +14,10 @@ using namespace shadertoy::inputs;
 using shadertoy::utils::error_assert;
 using shadertoy::utils::log;
 
-void checker_input::load_input()
+GLenum checker_input::load_input()
 {
+	auto format = GL_R8;
+
 	texture_ = std::make_unique<gl::texture>(GL_TEXTURE_2D);
 
 	// Resolve texture size
@@ -35,7 +37,7 @@ void checker_input::load_input()
 	}
 
 	// Load it
-	texture_->image_2d(GL_TEXTURE_2D, 0, GL_RED, ts.width, ts.height, 0, GL_RED,
+	texture_->image_2d(GL_TEXTURE_2D, 0, format, ts.width, ts.height, 0, GL_RED,
 					   GL_UNSIGNED_BYTE, chk.data());
 
 	texture_->parameter(GL_TEXTURE_SWIZZLE_B, GL_RED);
@@ -45,6 +47,8 @@ void checker_input::load_input()
 
 	log::shadertoy()->info("Generated {}x{} checkerboard texture for {} (GL id {})", ts.width,
 						   ts.height, static_cast<const void *>(this), GLuint(*texture_));
+
+	return format;
 }
 
 void checker_input::reset_input() { texture_.reset(); }

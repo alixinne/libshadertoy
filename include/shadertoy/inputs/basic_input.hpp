@@ -11,6 +11,30 @@ namespace inputs
 {
 
 /**
+ * @brief Represents image binding parameters for a texture
+ */
+struct image_binding
+{
+	GLint level;
+	GLboolean layered;
+	GLint layer;
+	GLenum access;
+	GLenum format;
+
+	/**
+	 * @brief Initialize a new image_binding instance.
+	 *
+	 * The default settings are:
+	 *  * level = 0
+	 *  * layered = false
+	 *  * layer = 0
+	 *  * access = GL_READ_WRITE
+	 *  * format = 0 (auto, request texture info)
+	 */
+	image_binding();
+};
+
+/**
  * @brief Represents a texture input to a buffer
  *
  * The default minification (resp. magnification) filter parameters default to GL_NEAREST.
@@ -19,6 +43,12 @@ class shadertoy_EXPORT basic_input
 {
 	/// Sampler object to configure the texture unit for this input
 	gl::sampler sampler_;
+
+	/// Image binding details
+	image_binding binding_;
+
+	/// Detected format
+	GLenum format_;
 
 	/// true if this input has been loaded
 	bool loaded_;
@@ -29,8 +59,10 @@ protected:
 	 *
 	 * This method must be implemented by derived classes as part
 	 * of their loading routine.
+	 *
+	 * @return The internal format of the loaded texture
 	 */
-	virtual void load_input() = 0;
+	virtual GLenum load_input() = 0;
 
 	/**
 	 * @brief Reset this input's contents.
@@ -134,11 +166,32 @@ public:
 	/**
 	 * @brief Bind the sampler and its texture to the given unit
 	 *
-	 * @param unit Unit to bind to
+	 * @param unit Texture image unit to bind to
 	 *
 	 * @return The bound texture. See basic_input#use for details.
 	 */
 	gl::texture *bind(GLuint unit);
+
+	/**
+	 * @brief Obtain the image binding object for this input
+	 *
+	 * @return Reference to the image binding object
+	 */
+	inline image_binding &binding() { return binding_; }
+
+	/**
+	 * @brief Obtain the image binding object for this input
+	 *
+	 * @return Reference to the image binding object
+	 */
+	inline const image_binding &binding() const { return binding_; }
+
+	/**
+	 * @brief Bind the texture to the given image unit
+	 *
+	 * @param unit Image unit to bind to
+	 */
+	gl::texture *bind_image(GLuint unit);
 };
 }
 }

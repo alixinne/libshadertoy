@@ -17,10 +17,11 @@ namespace members
 /**
  * @brief Named output of a member
  *
- * This type holds the naming details of a given output in a render pass as
- * well as a pointer to the texture holding the result of the pass.
+ * This type holds the naming details of a given output in a render pass,
+ * a pointer to the texture holding the result of the pass, as well as its
+ * internal format.
  */
-typedef std::tuple<output_name_info_t, gl::texture *> member_output_t;
+typedef std::tuple<output_name_info_t, gl::texture *, GLenum> member_output_t;
 
 /**
  * @brief Base class for swap_chain members

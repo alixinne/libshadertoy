@@ -12,7 +12,12 @@ using namespace shadertoy::inputs;
 using shadertoy::utils::log;
 using shadertoy::utils::error_assert;
 
-basic_input::basic_input() : loaded_(false)
+image_binding::image_binding()
+: level(0), layered(GL_FALSE), layer(0), access(GL_READ_WRITE), format(0)
+{
+}
+
+basic_input::basic_input() : format_(0), loaded_(false)
 {
 	min_filter(GL_NEAREST);
 	mag_filter(GL_NEAREST);
@@ -24,8 +29,17 @@ void basic_input::load()
 	{
 		log::shadertoy()->trace("Loading input {}", static_cast<const void *>(this));
 
-		load_input();
+		auto new_format = load_input();
 		loaded_ = true;
+
+		// If the previous format matched the previous loaded image format,
+		// update the current format with the new image format.
+		if (format_ == binding_.format)
+		{
+			binding_.format = new_format;
+		}
+
+		format_ = new_format;
 	}
 }
 
@@ -85,9 +99,25 @@ gl::texture *basic_input::bind(GLuint unit)
 	auto tex(use());
 
 	// Check that we have a texture object
-	error_assert(tex != nullptr, "Failed to get texture to bind to unit {} for input {}", unit,
+	error_assert(tex != nullptr, "Failed to get texture to bind to texture unit {} for input {}", unit,
 				 static_cast<const void *>(this));
 
 	tex->bind_unit(unit);
+	return tex;
+}
+
+gl::texture *basic_input::bind_image(GLuint unit)
+{
+	auto tex(use());
+
+	// Check that we have a texture object
+	error_assert(tex != nullptr, "Failed to get texture to bind to image unit {} for input {}", unit,
+				 static_cast<const void *>(this));
+
+	// Check that we know the actual internal format of the image
+	error_assert(binding_.format != 0, "Unknown format for image binding for input {}",
+				 static_cast<const void *>(this));
+
+	tex->bind_image(unit, binding_.level, binding_.layered, binding_.layer, binding_.access, binding_.format);
 	return tex;
 }

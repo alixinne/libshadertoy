@@ -16,7 +16,7 @@ using namespace shadertoy::utils;
 
 using shadertoy::utils::log;
 
-std::unique_ptr<gl::texture> exr_input::load_file(const std::string &filename, bool vflip)
+std::unique_ptr<gl::texture> exr_input::load_file(const std::string &filename, bool vflip, GLenum &format)
 {
 	std::unique_ptr<gl::texture> texture;
 
@@ -46,8 +46,8 @@ std::unique_ptr<gl::texture> exr_input::load_file(const std::string &filename, b
 
 	// Create a texture object
 	texture = std::make_unique<gl::texture>(GL_TEXTURE_2D);
-	texture->image_2d(GL_TEXTURE_2D, 0, GL_RGBA16F, dim.x, dim.y, 0, GL_RGBA, GL_HALF_FLOAT,
-					  pixelBuffer.data());
+	texture->image_2d(GL_TEXTURE_2D, 0, format = GL_RGBA16F, dim.x, dim.y, 0, GL_RGBA,
+					  GL_HALF_FLOAT, pixelBuffer.data());
 
 	log::shadertoy()->info("Loaded {}x{} EXR {} for input {} (GL id {})", dim.x, dim.y, filename,
 						   static_cast<const void *>(this), GLuint(*texture));

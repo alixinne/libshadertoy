@@ -3,9 +3,12 @@
 
 #include "shadertoy/pre.hpp"
 
+#include "shadertoy/members/basic_member.hpp"
 #include "shadertoy/inputs/basic_input.hpp"
 
 #include "shadertoy/output_name.hpp"
+
+#include <optional>
 
 namespace shadertoy
 {
@@ -34,9 +37,16 @@ class shadertoy_EXPORT buffer_input : public basic_input
 	/// Cached output index
 	int output_index_;
 
-	protected:
-	/// unused
-	void load_input() override;
+	/// Find the target output
+	std::optional<members::member_output_t> find_output(std::shared_ptr<members::basic_member> member);
+
+protected:
+	/**
+	 * @brief Unused, except for determining the target internal format.
+	 *
+	 * @return The internal format of the loaded texture
+	 */
+	GLenum load_input() override;
 
 	/// unused
 	void reset_input() override;

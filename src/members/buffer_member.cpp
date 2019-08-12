@@ -88,7 +88,7 @@ std::vector<member_output_t> buffer_member::output()
 	for (auto it = io_.output_specs().begin(); it != io_.output_specs().end(); ++it)
 	{
 		size_t i = it - io_.output_specs().begin();
-		result[i] = std::make_tuple(it->name, io_.source_texture(i).get());
+		result[i] = std::make_tuple(it->name, io_.source_texture(i).get(), it->internal_format);
 	}
 
 	return result;

@@ -13,8 +13,10 @@ using namespace shadertoy::inputs;
 
 using shadertoy::utils::log;
 
-void error_input::load_input()
+GLenum error_input::load_input()
 {
+	auto format = GL_R8;
+
 	texture_ = std::make_unique<gl::texture>(GL_TEXTURE_2D);
 
 	// Generate the checkerboard
@@ -28,7 +30,7 @@ void error_input::load_input()
 		}
 	}
 
-	texture_->image_2d(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, chk.data());
+	texture_->image_2d(GL_TEXTURE_2D, 0, format, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, chk.data());
 
 	// Set the sampler parameters for the texture to work
 	min_filter(GL_NEAREST);
@@ -41,6 +43,8 @@ void error_input::load_input()
 
 	log::shadertoy()->trace("Initialized error input at {} (GL id {})", static_cast<const void *>(this),
 							GLuint(*texture_));
+
+	return format;
 }
 
 void error_input::reset_input() { texture_.reset(); }

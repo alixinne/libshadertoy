@@ -88,39 +88,62 @@ void program_buffer::render_gl_contents(const render_context &context, const io_
 	std::array<glm::vec3, SHADERTOY_ICHANNEL_COUNT> resolutions;
 
 	// Setup the texture targets
-	size_t current_unit = 0;
-	for (auto it = inputs_.begin(); it != inputs_.end(); ++it, ++current_unit)
+	size_t current_texture_unit = 0,
+		   current_image_unit = 0;
+	for (auto it = inputs_.begin(); it != inputs_.end(); ++it)
 	{
 		auto &input(it->input());
 		glm::vec3 sz(0.f);
+
+		size_t *current_unit = nullptr;
+
+		if (it->type() == program_input_type::sampler)
+		{
+			current_unit = &current_texture_unit;
+
+			// Bind the texture to the unit
+			if (input)
+			{
+				auto texture(input->bind(*current_unit));
+
+				texture->get_parameter(0, GL_TEXTURE_WIDTH, &sz.x);
+				texture->get_parameter(0, GL_TEXTURE_HEIGHT, &sz.y);
+				sz.z = 1.0f;
+			}
+			else
+			{
+				context.error_input()->bind(*current_unit);
+			}
+
+			if (*current_unit < SHADERTOY_ICHANNEL_COUNT)
+			{
+				resolutions[*current_unit] = sz;
+			}
+		}
+		else if (it->type() == program_input_type::image)
+		{
+			current_unit = &current_image_unit;
+
+			if (input)
+			{
+				input->bind_image(*current_unit);
+			}
+		}
+
+		// Skip setting sampler value if we have no unit number to set
+		if (current_unit == nullptr) continue;
 
 		// Set the sampler uniform value
 		if (!it->sampler_name().empty())
 		{
 			if (auto sampler_uniform = program_interface_->try_get_uniform_location(it->sampler_name()))
 			{
-				sampler_uniform->set_value(static_cast<int>(current_unit));
+				sampler_uniform->set_value(static_cast<int>(*current_unit));
 			}
 		}
 
-		// Bind the texture to the unit
-		if (input)
-		{
-			auto texture(input->bind(current_unit));
-
-			texture->get_parameter(0, GL_TEXTURE_WIDTH, &sz.x);
-			texture->get_parameter(0, GL_TEXTURE_HEIGHT, &sz.y);
-			sz.z = 1.0f;
-		}
-		else
-		{
-			context.error_input()->bind(current_unit);
-		}
-
-		if (current_unit < SHADERTOY_ICHANNEL_COUNT)
-		{
-			resolutions[current_unit] = sz;
-		}
+		// Increment unit
+		(*current_unit)++;
 	}
 
 	if (auto channel_resolutions_resource = program_interface_->uniforms().try_get("iChannelResolution"))

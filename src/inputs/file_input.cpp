@@ -20,7 +20,7 @@ using namespace shadertoy::inputs;
 
 using shadertoy::utils::error_assert;
 
-std::unique_ptr<gl::texture> file_input::load_image()
+std::unique_ptr<gl::texture> file_input::load_image(GLenum &format)
 {
 	if (!filename_.empty())
 	{
@@ -29,7 +29,7 @@ std::unique_ptr<gl::texture> file_input::load_image()
 		error_assert(fs::exists(filepath), "{}: file not found for input {}", filename_,
 					 static_cast<const void *>(this));
 
-		return load_file(filename_, vflip_);
+		return load_file(filename_, vflip_, format);
 	}
 
 	return {};

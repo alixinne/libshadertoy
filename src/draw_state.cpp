@@ -101,7 +101,8 @@ draw_state::draw_state()
   clear_color_{ 0.f, 0.f, 0.f, 0.f }, clear_depth_(0.f), clear_stencil_(0), clear_bits_(0),
   depth_func_(GL_LESS), polygon_mode_(GL_FILL), blend_mode_rgb_(GL_FUNC_ADD),
   blend_mode_alpha_(GL_FUNC_ADD), blend_src_rgb_(GL_ONE), blend_dst_rgb_(GL_ZERO),
-  blend_src_alpha_(GL_ONE), blend_dst_alpha_(GL_ZERO), blend_color_{ 0.f, 0.f, 0.f, 0.f }
+  blend_src_alpha_(GL_ONE), blend_dst_alpha_(GL_ZERO), blend_color_{ 0.f, 0.f, 0.f, 0.f },
+  memory_barrier_(0)
 {
 }
 
@@ -205,6 +206,12 @@ void draw_state::apply() const
 	if (memcmp(std::begin(current_color), blend_color_.data(), sizeof(current_color)) != 0)
 	{
 		glBlendColor(blend_color_[0], blend_color_[1], blend_color_[2], blend_color_[3]);
+	}
+
+	// Invoke memory barrier
+	if (memory_barrier_)
+	{
+		glMemoryBarrier(memory_barrier_);
 	}
 }
 

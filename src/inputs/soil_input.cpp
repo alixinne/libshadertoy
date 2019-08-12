@@ -15,7 +15,7 @@ using namespace shadertoy::inputs;
 using shadertoy::utils::log;
 using shadertoy::utils::error_assert;
 
-std::unique_ptr<gl::texture> soil_input::load_file(const std::string &filename, bool vflip)
+std::unique_ptr<gl::texture> soil_input::load_file(const std::string &filename, bool vflip, GLenum &format)
 {
 	// Create a texture object
 	std::unique_ptr<gl::texture> texture;
@@ -25,8 +25,16 @@ std::unique_ptr<gl::texture> soil_input::load_file(const std::string &filename, 
 
 	texture = std::make_unique<gl::texture>(GL_TEXTURE_2D);
 
+	// TODO: replace SOIL with openimageio
+	//
+	// Here, we force the use of GL_RGBA (4 channels). But it uses
+	// GL_RGBA internally which means the implementation is free to
+	// chose any suitable internal format that matches that. By default
+	// it is safe to assume it will end up being GL_RGBA8.
+	format = GL_RGBA8;
+
 	// Load image into texture object using SOIL
-	GLuint texid = SOIL_load_OGL_texture(filename.c_str(), SOIL_LOAD_AUTO, GLuint(*texture),
+	GLuint texid = SOIL_load_OGL_texture(filename.c_str(), 4, GLuint(*texture),
 										 vflip ? SOIL_FLAG_INVERT_Y : 0);
 
 	if (texid == 0)

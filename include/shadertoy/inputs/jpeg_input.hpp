@@ -20,12 +20,13 @@ protected:
 	/**
 	 * @brief Load the image from filename
 	 *
-	 * @param filename Filename to load the image from
-	 * @param vflip    true if the image should be flipped vertically while loading
+	 * @param      filename Filename to load the image from
+	 * @param      vflip    true if the image should be flipped vertically while loading
+	 * @param[out] format   Internal format of the resulting image
 	 *
 	 * @return OpenGL texture representing the image
 	 */
-	std::unique_ptr<gl::texture> load_file(const std::string &filename, bool vflip) override;
+	std::unique_ptr<gl::texture> load_file(const std::string &filename, bool vflip, GLenum &format) override;
 
 public:
 	/**
