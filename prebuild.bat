@@ -27,4 +27,4 @@ REM Upgrade libraries
 vcpkg upgrade --no-dry-run
 
 REM Install dependencies
-vcpkg install soil libjpeg-turbo libepoxy glm
+vcpkg install openimageio libepoxy glm

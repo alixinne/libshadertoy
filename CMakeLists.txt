@@ -91,6 +91,9 @@ find_package(JPEG)
 # libopenexr
 find_package(OpenEXR)
 
+# libOpenImageIO
+find_package(OpenImageIO)
+
 # Copy shaders to source
 file(GLOB RESOURCES_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*)
 add_custom_command(
@@ -179,6 +182,21 @@ else()
 		LIBSHADERTOY_OPENEXR=0)
 endif()
 
+if (OpenImageIO_FOUND)
+	message(STATUS "Building with OpenImageIO support")
+	target_include_directories(shadertoy-objects PRIVATE
+		${OpenImageIO_INCLUDE_DIRS})
+	target_compile_definitions(shadertoy-objects PRIVATE
+		LIBSHADERTOY_OPENIMAGEIO=1)
+
+	# https://github.com/openexr/openexr/issues/235 still occurs recent installs
+	set_property(SOURCE ${SRC_DIR}/inputs/openimageio_wrapper.cpp PROPERTY COMPILE_FLAGS -std=c++14)
+else()
+	message(STATUS "Building without OpenImageIO support")
+	target_compile_definitions(shadertoy-objects PRIVATE
+		LIBSHADERTOY_OPENIMAGEIO=0)
+endif()
+
 # C++17
 target_compile_features(shadertoy-objects PUBLIC cxx_std_17)
 
@@ -222,6 +240,10 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 
 	if (OpenEXR_FOUND)
 		target_link_libraries(${TARGET_NAME} PUBLIC ${OpenEXR_LIBRARIES})
+	endif()
+
+	if (OpenImageIO_FOUND)
+		target_link_libraries(${TARGET_NAME} PUBLIC ${OIIO_LIBRARIES})
 	endif()
 
 	if (NOT MSVC)

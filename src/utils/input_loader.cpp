@@ -21,6 +21,7 @@ input_loader::input_loader()
 	add(std::make_unique<soil_input_factory>());
 	add(std::make_unique<jpeg_input_factory>());
 	add(std::make_unique<exr_input_factory>());
+	add(std::make_unique<openimageio_input_factory>());
 	
 	add(std::make_unique<noise_input_factory>());
 	add(std::make_unique<checker_input_factory>());

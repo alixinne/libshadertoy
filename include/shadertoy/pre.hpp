@@ -87,6 +87,7 @@ namespace shadertoy
 		class jpeg_input;
 		class noise_input;
 		class soil_input;
+		class openimageio_input;
 		class texture_input;
 	}
 

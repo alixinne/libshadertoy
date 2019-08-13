@@ -6,6 +6,7 @@ libshadertoy (1.0.0~rc8) UNRELEASED; urgency=medium
   * Add texture_input type
   * Introduce state tracking
   * Unbind unused texture units in program_buffer
+  * Add OpenImageIO support
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Tue, 13 Aug 2019 13:20:29 +0200
 

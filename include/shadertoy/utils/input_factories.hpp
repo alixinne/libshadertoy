@@ -60,6 +60,22 @@ public:
 	exr_input_factory();
 };
 
+class openimageio_input_factory : public input_factory
+{
+	const std::string type_name_;
+
+public:
+	inline int priority() const override { return 100; }
+
+	bool supported(const std::map<std::string, std::string> &spec) const override;
+
+	std::unique_ptr<inputs::basic_input> create(const std::map<std::string, std::string> &spec) const override;
+
+	inline const std::string &type_name() const override { return type_name_; }
+
+	openimageio_input_factory();
+};
+
 class noise_input_factory : public input_factory
 {
 	const std::string type_name_;

@@ -10,6 +10,7 @@
 #include "shadertoy/inputs/exr_input.hpp"
 #include "shadertoy/inputs/jpeg_input.hpp"
 #include "shadertoy/inputs/soil_input.hpp"
+#include "shadertoy/inputs/openimageio_input.hpp"
 
 #include "shadertoy/inputs/checker_input.hpp"
 #include "shadertoy/inputs/noise_input.hpp"
@@ -77,6 +78,21 @@ std::unique_ptr<inputs::basic_input> exr_input_factory::create(const std::map<st
 }
 
 exr_input_factory::exr_input_factory()
+	: type_name_("file")
+{}
+
+bool openimageio_input_factory::supported(const std::map<std::string, std::string> &spec) const
+{
+	auto ext(file_ext(spec.at("")));
+	return inputs::openimageio_input::supported();
+}
+
+std::unique_ptr<inputs::basic_input> openimageio_input_factory::create(const std::map<std::string, std::string> &spec) const
+{
+	return std::make_unique<inputs::openimageio_input>(spec.at(""));
+}
+
+openimageio_input_factory::openimageio_input_factory()
 	: type_name_("file")
 {}
 
