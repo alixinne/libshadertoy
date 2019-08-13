@@ -1,8 +1,7 @@
 # libshadertoy - 50-shadertoy
 
 This example implements a desktop version of ShaderToy using the implemented
-functionality in libshadertoy. Note that in order to support progressive JPEG
-(not supported by SOIL).
+functionality in libshadertoy.
 
 ## Example of invocation
 

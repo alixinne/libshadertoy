@@ -81,12 +81,9 @@ namespace shadertoy
 		class buffer_input;
 		class checker_input;
 		class error_input;
-		class exr_input;
 		class file_input;
 		class image_input;
-		class jpeg_input;
 		class noise_input;
-		class soil_input;
 		class openimageio_input;
 		class texture_input;
 	}

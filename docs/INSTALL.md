@@ -42,9 +42,7 @@ In order to compile the project, the following tools and libraries are required:
 
 These additional dependencies can be installed to support loading images as inputs:
 
-* BMP, PNG, JPG, TGA, DDS, PSD, HDR: [libsoil-dev](https://launchpad.net/ubuntu/bionic/+package/libsoil-dev)
-* JPG (including progressive): [libjpeg-dev](https://launchpad.net/ubuntu/bionic/+package/libjpeg-dev)
-* OpenEXR (half precision): [libopenexr-dev](https://launchpad.net/ubuntu/bionic/+package/libopenexr-dev)
+* OpenImageIO: [libopenimageio-dev](https://launchpad.net/ubuntu/bionic/+package/libopenimageio-dev)
 
 You can then compile and install the library using CMake:
 
@@ -113,8 +111,8 @@ apt-get install -y nvidia-driver
 
 # You can also install the build dependencies beforehand to speed up the
 # compilation
-apt-get install -y build-essential libsoil-dev libjpeg-dev libepoxy-dev \
-    libgl1-mesa-dev libglm-dev libopenexr-dev doxygen doxygen-latex \
+apt-get install -y build-essential libopenimageio-dev \
+    libgl1-mesa-dev libglm-dev doxygen doxygen-latex \
     graphviz pkg-config cmake git ca-certificates
 
 # Leave the chroot

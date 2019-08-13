@@ -74,15 +74,6 @@ add_custom_command(OUTPUT ${SPDLOG_MAIN_INCLUDE}
 				   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog
 				   COMMAND ${CMAKE_COMMAND} -E copy_directory ${SPDLOG_DIR}/include/spdlog ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog)
 
-# libsoil
-find_package(SOIL)
-
-# libjpeg
-find_package(JPEG)
-
-# libopenexr
-find_package(OpenEXR)
-
 # libOpenImageIO
 find_package(OpenImageIO)
 
@@ -129,50 +120,6 @@ target_include_directories(shadertoy-objects PRIVATE
 	${Epoxy_INCLUDE_DIRS}
 	${GLM_INCLUDE_DIRS})
 
-# The vcpkg port of SOIL requires OpenGL to be linked manually
-if (WIN32 AND SOIL_FOUND)
-	find_package(OpenGL QUIET)
-endif()
-
-if (SOIL_FOUND AND (NOT WIN32 OR OpenGL_FOUND))
-	message(STATUS "Building with SOIL support")
-	target_include_directories(shadertoy-objects PRIVATE
-		${SOIL_INCLUDE_DIRS})
-	target_compile_definitions(shadertoy-objects PRIVATE
-		LIBSHADERTOY_SOIL=1)
-else()
-	message(STATUS "Building without SOIL support")
-	target_compile_definitions(shadertoy-objects PRIVATE
-		LIBSHADERTOY_SOIL=0)
-endif()
-
-if (JPEG_FOUND)
-	message(STATUS "Building with JPEG support")
-	target_include_directories(shadertoy-objects PRIVATE
-		${JPEG_INCLUDE_DIRS})
-	target_compile_definitions(shadertoy-objects PRIVATE
-		LIBSHADERTOY_JPEG=1)
-else()
-	message(STATUS "Building without JPEG support")
-	target_compile_definitions(shadertoy-objects PRIVATE
-		LIBSHADERTOY_JPEG=0)
-endif()
-
-if (OpenEXR_FOUND)
-	message(STATUS "Building with OpenEXR support")
-	target_include_directories(shadertoy-objects PRIVATE
-		${OpenEXR_INCLUDE_DIRS})
-	target_compile_definitions(shadertoy-objects PRIVATE
-		LIBSHADERTOY_OPENEXR=1)
-
-	# https://github.com/openexr/openexr/issues/235
-	set_property(SOURCE ${SRC_DIR}/inputs/exr_input.cpp PROPERTY COMPILE_FLAGS -std=c++14)
-else()
-	message(STATUS "Building without OpenEXR support")
-	target_compile_definitions(shadertoy-objects PRIVATE
-		LIBSHADERTOY_OPENEXR=0)
-endif()
-
 if (OpenImageIO_FOUND)
 	message(STATUS "Building with OpenImageIO support")
 	target_include_directories(shadertoy-objects PRIVATE
@@ -208,29 +155,10 @@ foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
 	# Link dependencies
 	target_link_libraries(${TARGET_NAME} PUBLIC
 		${Epoxy_LIBRARIES}
-		${JPEG_LIBRARIES}
-		${SOIL_LIBRARIES}
 		${CMAKE_THREAD_LIBS_INIT})
 
 	if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
 		target_link_libraries(${TARGET_NAME} PUBLIC stdc++fs)
-	endif()
-
-	if (SOIL_FOUND AND (NOT WIN32 OR OpenGL_FOUND))
-		target_link_libraries(${TARGET_NAME} PUBLIC ${SOIL_LIBRARIES})
-
-		# See find_package(SOIL) handling
-		if (WIN32)
-			target_link_libraries(${TARGET_NAME} PUBLIC ${OPENGL_LIBRARY})
-		endif()
-	endif()
-
-	if (JPEG_FOUND)
-		target_link_libraries(${TARGET_NAME} PUBLIC ${JPEG_LIBRARIES})
-	endif()
-
-	if (OpenEXR_FOUND)
-		target_link_libraries(${TARGET_NAME} PUBLIC ${OpenEXR_LIBRARIES})
 	endif()
 
 	if (OpenImageIO_FOUND)
