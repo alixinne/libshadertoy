@@ -5,6 +5,8 @@
 
 #include "shadertoy/output_name.hpp"
 
+#include "shadertoy/gl/texture.hpp"
+
 #include <functional>
 
 namespace shadertoy
