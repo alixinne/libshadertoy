@@ -46,7 +46,10 @@ before_script: |
   elif [ $TRAVIS_OS_NAME = windows ]; then
     BAT_PATH=$(tr '/' '\\' <<< "$TRAVIS_BUILD_DIR/prebuild.bat" | sed 's#^\\\(.\)\\#\U\1:\\#')
     echo "$BAT_PATH"
+
+    while sleep 9m; do echo "=====[ $SECONDS seconds still running ]====="; done &
     cmd.exe /C "$BAT_PATH"
+    kill %1
   fi
 
 script: |

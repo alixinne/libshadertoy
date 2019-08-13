@@ -17,6 +17,8 @@ IF NOT EXIST %VCPKG_ROOT%\vcpkg.exe (
 	git -C %VCPKG_ROOT% reset --hard origin/master
 )
 
+ECHO set(VCPKG_BUILD_TYPE release) >>%VCPKG_ROOT%\triplets\%VCPKG_DEFAULT_TRIPLET%.cmake
+
 REM Bootstrap vcpkg
 SET OLD_CD=%cd%
 SET PATH=%PATH%;%VCPKG_ROOT%
@@ -28,3 +30,6 @@ vcpkg upgrade --no-dry-run
 
 REM Install dependencies
 vcpkg install openimageio libepoxy glm
+
+REM Cleanup
+rd /Q /S %VCPKG_ROOT%\buildtrees
