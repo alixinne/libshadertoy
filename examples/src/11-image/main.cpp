@@ -68,14 +68,22 @@ int main(int argc, char *argv[])
 			auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image"));
 			imageBuffer->source_file(ST_BASE_DIR "/shaders/shader-image.glsl");
 
-			shadertoy::utils::input_loader loader;
+			// clang-format off
 
-			imageBuffer->inputs().emplace_back(loader.create("file:///" ST_BASE_DIR "/images/vase_rect.exr", false)); // implicit iChannel0
-			imageBuffer->inputs().emplace_back(loader.create("file:///" ST_BASE_DIR "/images/vase_rect.png", false)); // implicit iChannel1
-			imageBuffer->inputs().emplace_back(loader.create("file:///" ST_BASE_DIR "/images/vase_rect.jpg", false)); // implicit iChannel2
-			imageBuffer->inputs().emplace_back("noiseChannel", loader.create("noise:?width=64&height=64"));
-			imageBuffer->inputs().emplace_back("checkerChannel", loader.create("checker:?width=64&height=64&size=4"));
+			imageBuffer->inputs().emplace_back(std::make_shared<shadertoy::inputs::openimageio_input>(
+				ST_BASE_DIR "/images/vase_rect.exr")); // implicit iChannel0
+			imageBuffer->inputs().emplace_back(std::make_shared<shadertoy::inputs::openimageio_input>(
+				ST_BASE_DIR "/images/vase_rect.png")); // implicit iChannel1
+			imageBuffer->inputs().emplace_back(std::make_shared<shadertoy::inputs::openimageio_input>(
+				ST_BASE_DIR "/images/vase_rect.jpg")); // implicit iChannel2
+			imageBuffer->inputs().emplace_back("noiseChannel", std::make_shared<shadertoy::inputs::noise_input>(
+				shadertoy::make_size(64u, 64u)));
+			imageBuffer->inputs().emplace_back("checkerChannel", std::make_shared<shadertoy::inputs::checker_input>(
+				shadertoy::make_size(64u, 64u), 4));
 			imageBuffer->inputs().emplace_back("errorChannel", context.error_input());
+
+			// clang-format on
+
 			auto program_buffer_input(imageBuffer->inputs().emplace_back("bufferChannel", buffer_input));
 			auto program_image_input(imageBuffer->inputs().emplace_back("imageChannel", gradient_image));
 

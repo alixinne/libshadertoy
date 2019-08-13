@@ -74,14 +74,6 @@ add_custom_command(OUTPUT ${SPDLOG_MAIN_INCLUDE}
 				   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog
 				   COMMAND ${CMAKE_COMMAND} -E copy_directory ${SPDLOG_DIR}/include/spdlog ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog)
 
-# uri.hh
-set(URI_LIBRARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/uri-library)
-set(URI_LIBRARY_MAIN_INCLUDE ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/uri.hpp)
-add_custom_command(OUTPUT ${URI_LIBRARY_MAIN_INCLUDE}
-				   MAIN_DEPENDENCY ${URI_LIBRARY_DIR}/uri.hh
-				   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/shadertoy
-				   COMMAND ${CMAKE_COMMAND} -E copy ${URI_LIBRARY_DIR}/uri.hh ${URI_LIBRARY_MAIN_INCLUDE})
-
 # libsoil
 find_package(SOIL)
 
@@ -121,8 +113,7 @@ add_library(shadertoy-objects OBJECT EXCLUDE_FROM_ALL
 
 	${CMAKE_CURRENT_BINARY_DIR}/resources.cpp
 	${POLYMORPHIC_VALUE_INCLUDE}
-	${SPDLOG_MAIN_INCLUDE}
-	${URI_LIBRARY_MAIN_INCLUDE})
+	${SPDLOG_MAIN_INCLUDE})
 
 # Enable warnings
 if(MSVC)

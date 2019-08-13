@@ -121,13 +121,7 @@ void load_nonbuffer_input(std::shared_ptr<shadertoy::inputs::basic_input> &buffe
 			u::log::shadertoy()->info("Using cache for {}", url);
 		}
 
-		shadertoy::utils::input_loader loader;
-
-		auto uri(dstpath.string());
-		std::transform(uri.begin(), uri.end(), uri.begin(), [](char cc)
-			{ if (cc == '\\') return '/'; return cc; });
-
-		buffer_input = loader.create("file:///" + uri);
+		buffer_input = std::make_shared<shadertoy::inputs::openimageio_input>(dstpath.string());
 
 		if (buffer_input)
 			std::static_pointer_cast<shadertoy::inputs::file_input>(buffer_input)->vflip(sampler["vflip"] == "true");
