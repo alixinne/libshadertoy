@@ -221,7 +221,7 @@ protected:
 	 *
 	 * @param new_viewport_size New viewport size
 	 */
-	inline void viewport_size(rsize_ref &&new_viewport_size)
+	inline void viewport_size(rsize_ref new_viewport_size)
 	{ viewport_size_ = std::move(new_viewport_size); }
 
 	/**

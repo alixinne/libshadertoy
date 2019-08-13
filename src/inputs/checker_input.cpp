@@ -55,9 +55,9 @@ void checker_input::reset_input() { texture_.reset(); }
 
 gl::texture *checker_input::use_input() { return texture_.get(); }
 
-checker_input::checker_input(rsize_ref &&size) : size_(std::move(size)), tile_size_(10) {}
+checker_input::checker_input(rsize_ref size) : size_(std::move(size)), tile_size_(10) {}
 
-checker_input::checker_input(rsize_ref &&size, size_t tile_size)
+checker_input::checker_input(rsize_ref size, size_t tile_size)
 : size_(std::move(size)), tile_size_(tile_size)
 {
 }

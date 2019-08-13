@@ -183,6 +183,22 @@ std::unique_ptr<size_ref_interface<T>> make_size(const basic_size<T> &size)
 }
 
 /**
+ * @brief Helper method to construct explicit_size objects
+ *
+ * @param  size Size of the new explicit_size instance
+ * @tparam T    Type of the size object elements
+ *
+ * @see explicit_size#explicit_size
+ *
+ * @return Unique pointer to a new explicit_size instance
+ */
+template <typename T>
+std::unique_ptr<size_ref_interface<T>> make_size(T width, T height)
+{
+	return std::make_unique<explicit_size<T>>(basic_size<T>(width, height));
+}
+
+/**
  * @brief Represents a reference to a size object, wrapped in a size_ref_interface
  *
  * @tparam T Type of the size object elements

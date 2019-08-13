@@ -47,7 +47,7 @@ public:
 	 *
 	 * @param size Size object to define the noise texture size
 	 */
-	noise_input(rsize_ref &&size);
+	noise_input(rsize_ref size);
 };
 }
 }

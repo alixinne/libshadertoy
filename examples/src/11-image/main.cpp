@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 			gradientBuffer->inputs().emplace_back("layout(rgba32f)", "image2D",
 												  "gradientImage", gradient_image);
 
-			auto buffer_input(std::make_shared<shadertoy::inputs::buffer_input>(chain.emplace_back(gradientBuffer, shadertoy::make_size(shadertoy::rsize(16, 16)), GL_R8)));
+			auto buffer_input(std::make_shared<shadertoy::inputs::buffer_input>(chain.emplace_back(gradientBuffer, shadertoy::make_size(16u, 16u), GL_R8)));
 
 			// Create the image buffer
 			auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image"));

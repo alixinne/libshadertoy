@@ -55,4 +55,4 @@ void noise_input::reset_input() { texture_.reset(); }
 
 gl::texture *noise_input::use_input() { return texture_.get(); }
 
-noise_input::noise_input(rsize_ref &&size) : size_(std::move(size)) {}
+noise_input::noise_input(rsize_ref size) : size_(std::move(size)) {}
