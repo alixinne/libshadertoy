@@ -12,7 +12,17 @@ using shadertoy::gl::gl_call;
 
 using shadertoy::utils::log;
 
-void compute_buffer::init_contents(const render_context &context, const io_resource &io)
+void compute_buffer::dispatch_compute()
+{
+	gl_call(glDispatchCompute, num_groups_.x, num_groups_.y, num_groups_.z);
+}
+
+compute_buffer::compute_buffer(const std::string &id)
+	: basic_buffer(id)
+{
+}
+
+void compute_buffer::init(const render_context &context)
 {
 	// Shader objects
 	log::shadertoy()->trace("Compiling program for {} ({})", id(), static_cast<const void *>(this));
@@ -24,13 +34,12 @@ void compute_buffer::init_contents(const render_context &context, const io_resou
 
 }
 
-void compute_buffer::allocate_contents(const render_context &context, const io_resource &io)
+void compute_buffer::allocate_textures(const render_context &context)
 {
 	// Nothing currently
 }
 
-void compute_buffer::render_contents(const render_context &context, const io_resource &io,
-									 const members::buffer_member &member)
+void compute_buffer::dispatch(const render_context &context)
 {
 	// Prepare the program
 	host_.prepare_render(context);
@@ -51,14 +60,4 @@ void compute_buffer::render_contents(const render_context &context, const io_res
 
 	// Dispatch the program
 	dispatch_compute();
-}
-
-void compute_buffer::dispatch_compute()
-{
-	gl_call(glDispatchCompute, num_groups_.x, num_groups_.y, num_groups_.z);
-}
-
-compute_buffer::compute_buffer(const std::string &id)
-	: basic_buffer(id)
-{
 }

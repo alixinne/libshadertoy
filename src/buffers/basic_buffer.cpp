@@ -14,24 +14,6 @@ basic_buffer::basic_buffer(std::string id) : id_(std::move(id)), time_delta_quer
 {
 }
 
-void basic_buffer::init(const render_context &context, const io_resource &io)
-{
-	// Initialize buffer contents
-	init_contents(context, io);
-}
-
-void basic_buffer::allocate_textures(const render_context &context, const io_resource &io)
-{
-	// Allocate content resources
-	allocate_contents(context, io);
-}
-
-void basic_buffer::render(const render_context &context, const io_resource &io, const members::buffer_member &member)
-{
-	// Render the contents of this buffer
-	render_contents(context, io, member);
-}
-
 uint64_t basic_buffer::elapsed_time()
 {
 	GLint available = 0;

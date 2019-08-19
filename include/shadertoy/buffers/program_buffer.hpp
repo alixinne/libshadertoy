@@ -39,14 +39,6 @@ protected:
 	virtual void render_geometry(const render_context &context, const io_resource &io) = 0;
 
 	/**
-	 * @brief      Initialize the contents of this buffer
-	 *
-	 * @param[in]  context Rendering context to use for shared objects
-	 * @param[in]  io      IO resource object
-	 */
-	void init_contents(const render_context &context, const io_resource &io) override;
-
-	/**
 	 * @brief      Render the contents of this buffer.
 	 *
 	 * @param[in]  context Rendering context to use for rendering this buffer
@@ -61,6 +53,14 @@ public:
 	 * @param[in]  id       Identifier for this buffer
 	 */
 	program_buffer(const std::string &id);
+
+	/**
+	 * @brief      Initialize the contents of this buffer
+	 *
+	 * @param[in]  context Rendering context to use for shared objects
+	 * @param[in]  io      IO resource object
+	 */
+	void init(const render_context &context, const io_resource &io) override;
 
 	/**
 	 * @brief      Get a reference to the program represented by this buffer

@@ -17,7 +17,7 @@ program_buffer::program_buffer(const std::string &id)
 {
 }
 
-void program_buffer::init_contents(const render_context &context, const io_resource &io)
+void program_buffer::init(const render_context &context, const io_resource &io)
 {
 	// Initialize the geometry
 	log::shadertoy()->trace("Loading geometry for {} ({})", id(), static_cast<const void *>(this));

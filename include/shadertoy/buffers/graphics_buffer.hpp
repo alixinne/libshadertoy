@@ -59,6 +59,38 @@ protected:
 
 public:
 	/**
+	 * @brief     Initialize the contents of the buffer for rendering. This method
+	 *            must be implemented by derived classes as part of their initialization
+	 *            routine.
+	 *
+	 * @param[in]  context Rendering context to use for shared objects
+	 * @param[in]  io      IO resource object
+	 */
+	virtual void init(const render_context &context, const io_resource &io) = 0;
+
+	/**
+	 * @brief     Allocate size-dependent resources for the contents of this buffer.
+	 *            This method must be implemented by derived classes to respond to
+	 *            rendering size changes.
+	 *
+	 * @param[in]  context Rendering context to use for shared objects
+	 * @param[in]  io      IO resource object
+	 */
+	virtual void allocate_textures(const render_context &context, const io_resource &io) = 0;
+
+	/**
+	 * @brief     Render the contents of this buffer. This method must
+	 *            be implemented by derived classes as part of their rendering routine.
+	 *            The target framebuffer and renderbuffer are already bound when this
+	 *            function is called.
+	 *
+	 * @param[in]  context Rendering context to use for rendering this buffer
+	 * @param[in]  io      IO resource object
+	 * @param[in]  member  Current swap-chain member
+	 */
+	virtual void render(const render_context &context, const io_resource &io, const members::buffer_member &member) = 0;
+
+	/**
 	 * @brief Obtains the list of outputs for this buffer.
 	 *
 	 * This method is to be implemented by derived classes which are able to

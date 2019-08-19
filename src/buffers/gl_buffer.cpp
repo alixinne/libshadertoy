@@ -18,12 +18,12 @@ gl_buffer::gl_buffer(const std::string &id)
 {
 }
 
-void gl_buffer::init_contents(const render_context &context, const io_resource &io)
+void gl_buffer::init(const render_context &context, const io_resource &io)
 {
 	// Nothing currently
 }
 
-void gl_buffer::allocate_contents(const render_context &context, const io_resource &io)
+void gl_buffer::allocate_textures(const render_context &context, const io_resource &io)
 {
 	// Setup render buffers
 	target_fbo_.framebuffer_renderbuffer(GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, target_rbo_);
@@ -40,8 +40,8 @@ void gl_buffer::allocate_contents(const render_context &context, const io_resour
 	target_rbo_.storage(GL_DEPTH_COMPONENT, size.width, size.height);
 }
 
-void gl_buffer::render_contents(const render_context &context, const io_resource &io,
-								const members::buffer_member &member)
+void gl_buffer::render(const render_context &context, const io_resource &io,
+					   const members::buffer_member &member)
 {
 	if (io.swap_policy() == member_swap_policy::default_framebuffer)
 	{

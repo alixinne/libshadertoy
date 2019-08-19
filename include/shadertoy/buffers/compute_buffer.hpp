@@ -25,39 +25,6 @@ class shadertoy_EXPORT compute_buffer : public basic_buffer
 
 protected:
 	/**
-	 * @brief     Initialize the contents of the buffer for rendering. This method
-	 *            must be implemented by derived classes as part of their initialization
-	 *            routine.
-	 *
-	 * @param[in]  context Rendering context to use for shared objects
-	 * @param[in]  io      IO resource object
-	 */
-	void init_contents(const render_context &context, const io_resource &io) override;
-
-	/**
-	 * @brief     Allocate size-dependent resources for the contents of this buffer.
-	 *            This method must be implemented by derived classes to respond to
-	 *            rendering size changes.
-	 *
-	 * @param[in]  context Rendering context to use for shared objects
-	 * @param[in]  io      IO resource object
-	 */
-	void allocate_contents(const render_context &context, const io_resource &io) override;
-
-	/**
-	 * @brief     Render the contents of this buffer. This method must
-	 *            be implemented by derived classes as part of their rendering routine.
-	 *            The target framebuffer and renderbuffer are already bound when this
-	 *            function is called.
-	 *
-	 * @param[in]  context Rendering context to use for rendering this buffer
-	 * @param[in]  io      IO resource object
-	 * @param[in]  member  Current swap-chain member
-	 */
-	void render_contents(const render_context &context, const io_resource &io,
-						 const members::buffer_member &member) override;
-
-	/**
 	 * @brief Dispatch the compute operation
 	 */
 	virtual void dispatch_compute();
@@ -69,6 +36,34 @@ public:
 	 * @param[in]  id       Identifier for this buffer
 	 */
 	compute_buffer(const std::string &id);
+
+	/**
+	 * @brief     Initialize the contents of the buffer for rendering. This method
+	 *            must be implemented by derived classes as part of their initialization
+	 *            routine.
+	 *
+	 * @param[in]  context Rendering context to use for shared objects
+	 */
+	virtual void init(const render_context &context);
+
+	/**
+	 * @brief     Allocate size-dependent resources for the contents of this buffer.
+	 *            This method must be implemented by derived classes to respond to
+	 *            rendering size changes.
+	 *
+	 * @param[in]  context Rendering context to use for shared objects
+	 */
+	virtual void allocate_textures(const render_context &context);
+
+	/**
+	 * @brief     Render the contents of this buffer. This method must
+	 *            be implemented by derived classes as part of their rendering routine.
+	 *            The target framebuffer and renderbuffer are already bound when this
+	 *            function is called.
+	 *
+	 * @param[in]  context Rendering context to use for rendering this buffer
+	 */
+	virtual void dispatch(const render_context &context);
 
 	/**
 	 * @brief      Get a reference to the program represented by this buffer

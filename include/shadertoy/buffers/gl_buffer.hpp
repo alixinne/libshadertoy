@@ -36,35 +36,6 @@ protected:
 	gl_buffer(const std::string &id);
 
 	/**
-	 * @brief     Initialize the contents of the buffer for rendering.
-	 *
-	 * @param[in]  context Rendering context to use for shared objects
-	 * @param[in]  io      IO resource object
-	 */
-	void init_contents(const render_context &context, const io_resource &io) override;
-
-	/**
-	 * @brief     Initialize the renderbuffer object for the new specified size.
-	 *
-	 * @param[in]  context Rendering context to use for shared objects
-	 * @param[in]  io      IO resource object
-	 */
-	void allocate_contents(const render_context &context, const io_resource &io) override;
-
-	/**
-	 * @brief     Render the contents of this buffer. This methods binds the
-	 *            framebuffer and renderbuffer to the appropriate texture for
-	 *            rendering, and then calls render_gl_contents as defined by
-	 *            the derived class.
-	 *
-	 * @param[in]  context Rendering context to use for rendering this buffer
-	 * @param[in]  io      IO resource object
-	 * @param[in]  member  Current swap-chain member
-	 */
-	void render_contents(const render_context &context, const io_resource &io,
-						 const members::buffer_member &member) final;
-
-	/**
 	 * @brief     Render the contents of this buffer to the currently bound
 	 *            framebuffer and renderbuffer. This method must be implemented
 	 *            by derived classes as part of their rendering routine.
@@ -86,7 +57,36 @@ protected:
 	virtual void attach_framebuffer_outputs(const gl::bind_guard<gl::framebuffer, GLint> &target_fbo,
 											const io_resource &io);
 
-	public:
+public:
+	/**
+	 * @brief     Initialize the contents of the buffer for rendering.
+	 *
+	 * @param[in]  context Rendering context to use for shared objects
+	 * @param[in]  io      IO resource object
+	 */
+	void init(const render_context &context, const io_resource &io) override;
+
+	/**
+	 * @brief     Initialize the renderbuffer object for the new specified size.
+	 *
+	 * @param[in]  context Rendering context to use for shared objects
+	 * @param[in]  io      IO resource object
+	 */
+	void allocate_textures(const render_context &context, const io_resource &io) override;
+
+	/**
+	 * @brief     Render the contents of this buffer. This methods binds the
+	 *            framebuffer and renderbuffer to the appropriate texture for
+	 *            rendering, and then calls render_gl_contents as defined by
+	 *            the derived class.
+	 *
+	 * @param[in]  context Rendering context to use for rendering this buffer
+	 * @param[in]  io      IO resource object
+	 * @param[in]  member  Current swap-chain member
+	 */
+	void render(const render_context &context, const io_resource &io,
+				const members::buffer_member &member) final;
+
 	/**
 	 * @brief Obtain this buffer's GL framebuffer object
 	 *
