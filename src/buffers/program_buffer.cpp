@@ -1,17 +1,8 @@
 #include <epoxy/gl.h>
 
 #include "shadertoy/gl.hpp"
-#include "shadertoy/gl/wrapper_context.hpp"
-
-#include "shadertoy/inputs/basic_input.hpp"
-#include "shadertoy/inputs/error_input.hpp"
 
 #include "shadertoy/buffers/program_buffer.hpp"
-#include "shadertoy/render_context.hpp"
-
-#include "shadertoy/compiler/file_part.hpp"
-#include "shadertoy/compiler/input_part.hpp"
-#include "shadertoy/compiler/template_part.hpp"
 
 #include "shadertoy/utils/assert.hpp"
 
@@ -22,9 +13,7 @@ using shadertoy::gl::gl_call;
 using shadertoy::utils::log;
 
 program_buffer::program_buffer(const std::string &id)
-: gl_buffer(id),
-
-  source_map_(nullptr)
+	: gl_buffer(id)
 {
 }
 
@@ -36,43 +25,12 @@ void program_buffer::init_contents(const render_context &context, const io_resou
 
 	// Shader objects
 	log::shadertoy()->trace("Compiling program for {} ({})", id(), static_cast<const void *>(this));
+	host_.init_program(context);
 
-	// Load the fragment shader for this buffer
-	std::vector<std::unique_ptr<compiler::basic_part>> fs_template_parts;
+	// Print status
+	log::shadertoy()->debug("Program {} ({}) has {} uniform inputs", id(), static_cast<const void *>(this),
+							host_.program_intf().uniforms().resources().size());
 
-	// Add the uniform inputs for this buffer
-	fs_template_parts.emplace_back(std::make_unique<compiler::input_part>("buffer:inputs", inputs_));
-	if (source_)
-	{
-		fs_template_parts.emplace_back(source_->clone());
-	}
-
-	// Compile
-	std::map<GLenum, std::vector<std::unique_ptr<compiler::basic_part>>> parts;
-	parts.emplace(GL_FRAGMENT_SHADER, std::move(fs_template_parts));
-
-	const auto &buffer_template(override_program_ ? *override_program_ : context.buffer_template());
-	program_ = buffer_template.compile(std::move(parts), source_map_);
-
-	// Use the program
-	program_.use();
-
-	// Discover program interface
-	program_interface_ = std::make_unique<program_interface>(program_);
-
-	log::shadertoy()->debug("Program {} ({}) has {} uniform inputs",
-							id(), static_cast<const void *>(this),
-							program_interface_->uniforms().resources().size());
-
-	// Set input uniform units
-	size_t current_unit = 0;
-	for (auto it = inputs_.begin(); it != inputs_.end(); ++it, ++current_unit)
-	{
-		if (auto resource = program_interface_->uniforms().try_get(it->sampler_name()))
-		{
-			resource->get_location(program_).set_value(static_cast<GLint>(current_unit));
-		}
-	}
 }
 
 void program_buffer::render_gl_contents(const render_context &context, const io_resource &io)
@@ -82,87 +40,17 @@ void program_buffer::render_gl_contents(const render_context &context, const io_
 	gl_call(glGetIntegerv, GL_VIEWPORT, &viewport[0]);
 	rsize size(viewport[2], viewport[3]);
 
-	// Setup program and its uniforms
-	program_.use();
-
-	// Set iChannelResolution details
-	std::array<glm::vec3, SHADERTOY_ICHANNEL_COUNT> resolutions;
-
-	// Setup the texture targets
-	size_t current_texture_unit = 0,
-		   current_image_unit = 0;
-	for (auto it = inputs_.begin(); it != inputs_.end(); ++it)
-	{
-		auto &input(it->input());
-		glm::vec3 sz(0.f);
-
-		size_t *current_unit = nullptr;
-
-		if (it->type() == program_input_type::sampler)
-		{
-			current_unit = &current_texture_unit;
-
-			// Bind the texture to the unit
-			if (input)
-			{
-				auto texture(input->bind(*current_unit));
-
-				texture->get_parameter(0, GL_TEXTURE_WIDTH, &sz.x);
-				texture->get_parameter(0, GL_TEXTURE_HEIGHT, &sz.y);
-				sz.z = 1.0f;
-			}
-			else
-			{
-				context.error_input()->bind(*current_unit);
-			}
-
-			if (*current_unit < SHADERTOY_ICHANNEL_COUNT)
-			{
-				resolutions[*current_unit] = sz;
-			}
-		}
-		else if (it->type() == program_input_type::image)
-		{
-			current_unit = &current_image_unit;
-
-			if (input)
-			{
-				input->bind_image(*current_unit);
-			}
-		}
-
-		// Skip setting sampler value if we have no unit number to set
-		if (current_unit == nullptr) continue;
-
-		// Set the sampler uniform value
-		if (!it->sampler_name().empty())
-		{
-			if (auto sampler_uniform = program_interface_->try_get_uniform_location(it->sampler_name()))
-			{
-				sampler_uniform->set_value(static_cast<int>(*current_unit));
-			}
-		}
-
-		// Increment unit
-		(*current_unit)++;
-	}
-
-	// Unbind extra texture units not in use
-	gl::current_context.unbind_texture_units(current_texture_unit);
-
-	if (auto channel_resolutions_resource = program_interface_->uniforms().try_get("iChannelResolution"))
-	{
-		channel_resolutions_resource->get_location(program_).set_value(resolutions.size(), resolutions.data());
-	}
+	// Prepare the program
+	host_.prepare_render(context);
 
 	// Set the current buffer resolution
-	if (auto resolution_resource = program_interface_->uniforms().try_get("iResolution"))
+	if (auto resolution_resource = host_.program_intf().uniforms().try_get("iResolution"))
 	{
-		resolution_resource->get_location(program_).set_value(glm::vec3(size.width, size.height, 1.f));
+		resolution_resource->get_location(host_.program()).set_value(glm::vec3(size.width, size.height, 1.f));
 	}
 
 	// Try to set iTimeDelta
-	if (auto time_delta_resource = program_interface_->uniforms().try_get("iTimeDelta"))
+	if (auto time_delta_resource = host_.program_intf().uniforms().try_get("iTimeDelta"))
 	{
 		GLint available = 0;
 		time_delta_query().get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
@@ -171,7 +59,7 @@ void program_buffer::render_gl_contents(const render_context &context, const io_
 			// Result available, set uniform value
 			GLuint64 timeDelta;
 			time_delta_query().get_object_ui64v(GL_QUERY_RESULT, &timeDelta);
-			time_delta_resource->get_location(program_).set_value(timeDelta / 1e9f);
+			time_delta_resource->get_location(host_.program()).set_value(timeDelta / 1e9f);
 		}
 	}
 
@@ -179,22 +67,14 @@ void program_buffer::render_gl_contents(const render_context &context, const io_
 	render_geometry(context, io);
 }
 
-void program_buffer::source(const std::string &new_source)
-{
-	source_ = std::unique_ptr<compiler::basic_part>(std::make_unique<compiler::template_part>("buffer:sources", new_source));
-}
-
-void program_buffer::source_file(const std::string &new_file)
-{
-	source_ = std::unique_ptr<compiler::basic_part>(std::make_unique<compiler::file_part>("buffer:sources", new_file));
-}
-
 std::optional<std::vector<buffer_output>> program_buffer::get_buffer_outputs() const
 {
-	std::vector<buffer_output> outputs;
-	outputs.reserve(program_interface_->outputs().resources().size());
+	const auto &program_intf(host_.program_intf());
 
-	for (const auto &output : program_interface_->outputs().resources())
+	std::vector<buffer_output> outputs;
+	outputs.reserve(program_intf.outputs().resources().size());
+
+	for (const auto &output : program_intf.outputs().resources())
 	{
 		log::shadertoy()->debug("Discovered program output #{} layout(location = {}) {:#x} {}",
 								outputs.size(), output.location, output.type, output.name);

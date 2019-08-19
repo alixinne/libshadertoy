@@ -3,6 +3,8 @@
 
 #include "shadertoy/pre.hpp"
 
+#include "shadertoy/gl/sampler.hpp"
+
 #include <memory>
 
 namespace shadertoy
