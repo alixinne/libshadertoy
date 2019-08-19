@@ -17,6 +17,7 @@ IF NOT EXIST %VCPKG_ROOT%\vcpkg.exe (
 	git -C %VCPKG_ROOT% reset --hard origin/master
 )
 
+copy %VCPKG_ROOT%\triplets\%VCPKG_DEFAULT_TRIPLET%.cmake %VCPKG_ROOT%\triplets\%VCPKG_DEFAULT_TRIPLET%.cmake.bak
 ECHO set(VCPKG_BUILD_TYPE release) >>%VCPKG_ROOT%\triplets\%VCPKG_DEFAULT_TRIPLET%.cmake
 
 REM Bootstrap vcpkg
@@ -28,8 +29,14 @@ CALL .\bootstrap-vcpkg.bat
 REM Upgrade libraries
 vcpkg upgrade --no-dry-run
 
-REM Install dependencies
-vcpkg install openimageio libepoxy glm
+REM Install release-only dependencies
+vcpkg install openimageio glm
+
+REM Restore triplet file
+copy %VCPKG_ROOT%\triplets\%VCPKG_DEFAULT_TRIPLET%.cmake.bak %VCPKG_ROOT%\triplets\%VCPKG_DEFAULT_TRIPLET%.cmake
+
+REM Install libepoxy (meson/ninja is broken for release-only)
+vcpkg install libepoxy
 
 REM Cleanup
 rd /Q /S %VCPKG_ROOT%\buildtrees
