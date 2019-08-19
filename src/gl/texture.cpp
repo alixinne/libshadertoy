@@ -65,6 +65,12 @@ void texture::get_parameter(GLint level, GLenum pname, GLfloat *params) const
 	gl_call(glGetTextureLevelParameterfv, GLuint(*this), level, pname, params);
 }
 
+void texture::image_1d(GLenum target, GLint level, GLint internalFormat, GLsizei width,
+					   GLint border, GLenum format, GLenum type, const GLvoid *data) const
+{
+	gl_call(glTextureImage1DEXT, GLuint(*this), target, level, internalFormat, width, border, format, type, data);
+}
+
 void texture::image_2d(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height,
 					   GLint border, GLenum format, GLenum type, const GLvoid *data) const
 {

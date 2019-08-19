@@ -146,6 +146,24 @@ namespace gl
 		void get_parameter(GLint level, GLenum pname, GLfloat *params) const;
 
 		/**
+		 * @brief glTextureImage1DEXT
+		 *
+		 * @param target         Target
+		 * @param level          Level
+		 * @param internalFormat Internal format
+		 * @param width          Width
+		 * @param border         Border (must be 0)
+		 * @param format         Format
+		 * @param type           Type
+		 * @param data           Data
+		 *
+		 * @throws opengl_error
+		 * @throws null_texture_error
+		 */
+		void image_1d(GLenum target, GLint level, GLint internalFormat, GLsizei width,
+					  GLint border, GLenum format, GLenum type, const GLvoid *data) const;
+
+		/**
 		 * @brief glTextureImage2DEXT
 		 *
 		 * @param target         Target
