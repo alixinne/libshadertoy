@@ -33,13 +33,13 @@ render_context::render_context() : error_input_(std::make_shared<inputs::error_i
 
 	buffer_template_.emplace(GL_VERTEX_SHADER,
 							 compiler::shader_template::parse(
-							 std::string(std::addressof(screenQuad_vsh[0]), screenQuad_vsh_size),
-							 "libshadertoy/shaders/screenQuad.vsh"));
+							 std::string(std::addressof(screen_quad_vert_glsl[0]), screen_quad_vert_glsl_size),
+							 "libshadertoy/shaders/screen_quad.vert.glsl"));
 
 	buffer_template_.emplace(GL_FRAGMENT_SHADER,
 							 compiler::shader_template::parse(
 							 std::string(std::addressof(shadertoy_frag_glsl[0]), shadertoy_frag_glsl_size),
-							 "libshadertoy/shaders/shadertoy_frag.glsl"));
+							 "libshadertoy/shaders/shadertoy.frag.glsl"));
 
 	// Compile screen quad vertex shader
 	buffer_template_.compile(GL_VERTEX_SHADER);
@@ -56,8 +56,8 @@ const gl::program &render_context::screen_prog() const
 		overrides.emplace(GL_FRAGMENT_SHADER,
 						  compiler::shader_template(
 						  compiler::template_part("shadertoy:screenquad",
-												  std::string(std::addressof(screenQuad_fsh[0]),
-															  screenQuad_fsh_size))));
+												  std::string(std::addressof(screen_quad_frag_glsl[0]),
+															  screen_quad_frag_glsl_size))));
 
 		screen_prog_ = std::make_unique<gl::program>(buffer_template_.compile(overrides));
 	}
