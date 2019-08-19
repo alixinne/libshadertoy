@@ -53,8 +53,11 @@ public:
 	 * an OpenGL program object.
 	 *
 	 * @param context Rendering context
+	 * @param stage   Target stage. Can be either GL_FRAGMENT_SHADER or GL_COMPUTE_SHADER
+	 *
+	 * @throws shadertoy_error stage is not a valid target
 	 */
-	void init_program(const render_context &context);
+	void init_program(const render_context &context, GLenum stage);
 
 	/**
 	 * @brief Prepare the program for rendering

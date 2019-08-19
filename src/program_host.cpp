@@ -20,8 +20,11 @@ using namespace shadertoy;
 
 program_host::program_host() : source_map_(nullptr) {}
 
-void program_host::init_program(const render_context &context)
+void program_host::init_program(const render_context &context, GLenum stage)
 {
+	if (stage != GL_FRAGMENT_SHADER && stage != GL_COMPUTE_SHADER)
+		throw shadertoy_error("invalid shader stage");
+
 	// Load the fragment shader for this buffer
 	std::vector<std::unique_ptr<compiler::basic_part>> fs_template_parts;
 
@@ -34,10 +37,10 @@ void program_host::init_program(const render_context &context)
 
 	// Compile
 	std::map<GLenum, std::vector<std::unique_ptr<compiler::basic_part>>> parts;
-	parts.emplace(GL_FRAGMENT_SHADER, std::move(fs_template_parts));
+	parts.emplace(stage, std::move(fs_template_parts));
 
 	const auto &buffer_template(override_program_ ? *override_program_ : context.buffer_template());
-	program_ = buffer_template.compile(std::move(parts), source_map_);
+	program_ = buffer_template.compile(stage, std::move(parts), source_map_);
 
 	// Use the program
 	program_.use();

@@ -1,4 +1,5 @@
 #include <epoxy/gl.h>
+#include <set>
 #include <sstream>
 
 #include "shadertoy/gl.hpp"
@@ -102,8 +103,26 @@ void program_template::compile(GLenum type)
 	compiled_shaders_.emplace(type, std::move(so));
 }
 
-gl::program program_template::compile(std::map<GLenum, std::vector<std::unique_ptr<basic_part>>> parts, std::map<GLenum, std::string> *compiled_sources) const
+gl::program program_template::compile(GLenum stage,
+									  std::map<GLenum, std::vector<std::unique_ptr<basic_part>>> parts,
+									  std::map<GLenum, std::string> *compiled_sources) const
 {
+	std::set<GLenum> allowed_shaders;
+
+	if (stage == GL_FRAGMENT_SHADER)
+	{
+		allowed_shaders.insert(GL_VERTEX_SHADER);
+		allowed_shaders.insert(GL_FRAGMENT_SHADER);
+	}
+	else if (stage == GL_COMPUTE_SHADER)
+	{
+		allowed_shaders.insert(GL_COMPUTE_SHADER);
+	}
+	else
+	{
+		throw shadertoy_error("invalid shader stage");
+	}
+
 	gl::program program;
 
 	std::vector<gl::shader> attached_shaders;
@@ -111,6 +130,9 @@ gl::program program_template::compile(std::map<GLenum, std::vector<std::unique_p
 	// Compile and attach fully specified shaders
 	for (const auto &pair : shader_templates_)
 	{
+		if (allowed_shaders.find(pair.first) == allowed_shaders.end())
+			continue;
+
 		// Do not try to recompile precompiled shaders
 		if (compiled_shaders_.find(pair.first) != compiled_shaders_.end())
 		{
@@ -163,6 +185,9 @@ gl::program program_template::compile(std::map<GLenum, std::vector<std::unique_p
 	// Attach pre-compiled shaders
 	for (const auto &pair : compiled_shaders_)
 	{
+		if (allowed_shaders.find(pair.first) == allowed_shaders.end())
+			continue;
+
 		program.attach_shader(pair.second);
 	}
 
@@ -187,6 +212,9 @@ gl::program program_template::compile(std::map<GLenum, std::vector<std::unique_p
 
 		for (const auto &pair : compiled_shaders_)
 		{
+			if (allowed_shaders.find(pair.first) == allowed_shaders.end())
+				continue;
+
 			program.detach_shader(pair.second);
 		}
 
@@ -201,14 +229,33 @@ gl::program program_template::compile(std::map<GLenum, std::vector<std::unique_p
 
 	for (const auto &pair : compiled_shaders_)
 	{
+		if (allowed_shaders.find(pair.first) == allowed_shaders.end())
+			continue;
+
 		program.detach_shader(pair.second);
 	}
 
 	return program;
 }
 
-gl::program program_template::compile(const std::map<GLenum, shader_template> &templates, std::map<GLenum, std::string> *compiled_sources) const
+gl::program program_template::compile(GLenum stage, const std::map<GLenum, shader_template> &templates, std::map<GLenum, std::string> *compiled_sources) const
 {
+	std::set<GLenum> allowed_shaders;
+
+	if (stage == GL_FRAGMENT_SHADER)
+	{
+		allowed_shaders.insert(GL_VERTEX_SHADER);
+		allowed_shaders.insert(GL_FRAGMENT_SHADER);
+	}
+	else if (stage == GL_COMPUTE_SHADER)
+	{
+		allowed_shaders.insert(GL_COMPUTE_SHADER);
+	}
+	else
+	{
+		throw shadertoy_error("invalid shader stage");
+	}
+
 	gl::program program;
 
 	std::vector<gl::shader> attached_shaders;
@@ -216,6 +263,9 @@ gl::program program_template::compile(const std::map<GLenum, shader_template> &t
 	// Compile and attach templates
 	for (const auto &pair : templates)
 	{
+		if (allowed_shaders.find(pair.first) == allowed_shaders.end())
+			continue;
+
 		// Compile sources
 		auto sources(pair.second.sources());
 
@@ -250,6 +300,9 @@ gl::program program_template::compile(const std::map<GLenum, shader_template> &t
 	// Attach pre-compiled shaders
 	for (const auto &pair : compiled_shaders_)
 	{
+		if (allowed_shaders.find(pair.first) == allowed_shaders.end())
+			continue;
+
 		// Only attach shaders that are not being overriden
 		if (templates.find(pair.first) == templates.end())
 		{
@@ -278,6 +331,9 @@ gl::program program_template::compile(const std::map<GLenum, shader_template> &t
 
 		for (const auto &pair : compiled_shaders_)
 		{
+			if (allowed_shaders.find(pair.first) == allowed_shaders.end())
+				continue;
+
 			if (templates.find(pair.first) == templates.end())
 			{
 				program.detach_shader(pair.second);
@@ -295,6 +351,9 @@ gl::program program_template::compile(const std::map<GLenum, shader_template> &t
 
 	for (const auto &pair : compiled_shaders_)
 	{
+		if (allowed_shaders.find(pair.first) == allowed_shaders.end())
+			continue;
+
 		if (templates.find(pair.first) == templates.end())
 		{
 			program.detach_shader(pair.second);

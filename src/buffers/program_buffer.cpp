@@ -25,7 +25,7 @@ void program_buffer::init_contents(const render_context &context, const io_resou
 
 	// Shader objects
 	log::shadertoy()->trace("Compiling program for {} ({})", id(), static_cast<const void *>(this));
-	host_.init_program(context);
+	host_.init_program(context, GL_FRAGMENT_SHADER);
 
 	// Print status
 	log::shadertoy()->debug("Program {} ({}) has {} uniform inputs", id(), static_cast<const void *>(this),

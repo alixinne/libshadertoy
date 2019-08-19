@@ -106,6 +106,9 @@ public:
 	/**
 	 * @brief Compile this program_template into a GL program.
 	 *
+	 * @param stage          Target stage. If GL_FRAGMENT_SHADER, will compile both GL_VERTEX_SHADER
+	 *                       and GL_FRAGMENT_SHADER and link them together. If GL_COMPUTE_SHADER, will
+	 *                       only compile and link GL_COMPUTE_SHADER.
 	 * @param specifications Map of specifications for each shader template. This is
 	 *                       used to specify missing parts in all templates before
 	 *                       compiling. Pre-compiled shaders are used as-is and cannot
@@ -115,11 +118,15 @@ public:
 	 *
 	 * @return Compiled program
 	 */
-	gl::program compile(std::map<GLenum, std::vector<std::unique_ptr<basic_part>>> parts, std::map<GLenum, std::string> *compiled_sources = nullptr) const;
+	gl::program compile(GLenum stage, std::map<GLenum, std::vector<std::unique_ptr<basic_part>>> parts,
+						std::map<GLenum, std::string> *compiled_sources = nullptr) const;
 
 	/**
 	 * @brief Compile the given fully specified templates into a GL program.
 	 *
+	 * @param stage     Target stage. If GL_FRAGMENT_SHADER, will compile both GL_VERTEX_SHADER
+	 *                  and GL_FRAGMENT_SHADER and link them together. If GL_COMPUTE_SHADER, will
+	 *                  only compile and link GL_COMPUTE_SHADER.
 	 * @param templates Map of fully specified templates. Entries from this map will
 	 *                  be used instead of the precompiled shaders if there is a conflict.
 	 *
@@ -127,7 +134,7 @@ public:
 	 *
 	 * @return Compiled program
 	 */
-	gl::program compile(const std::map<GLenum, shader_template> &templates, std::map<GLenum, std::string> *compiled_sources = nullptr) const;
+	gl::program compile(GLenum stage, const std::map<GLenum, shader_template> &templates, std::map<GLenum, std::string> *compiled_sources = nullptr) const;
 
 	/**
 	 * @brief Get the list of supported shader inputs

@@ -39,11 +39,14 @@
 
 #include "shadertoy/members/basic_member.hpp"
 #include "shadertoy/members/buffer_member.hpp"
+#include "shadertoy/members/compute_member.hpp"
 #include "shadertoy/members/screen_member.hpp"
 
 #include "shadertoy/buffers/program_buffer.hpp"
 #include "shadertoy/buffers/toy_buffer.hpp"
 #include "shadertoy/buffers/geometry_buffer.hpp"
+
+#include "shadertoy/buffers/compute_buffer.hpp"
 
 #include "shadertoy/program_interface.hpp"
 
