@@ -10,7 +10,7 @@ env:
 
 cache:
   directories:
-    - $HOME/vcpkg
+    - $HOME/vcpkg/installed
 
 matrix:
   fast_finish: true

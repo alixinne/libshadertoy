@@ -9,16 +9,10 @@ REM Install vcpkg
 SET VCPKG_ROOT=%USERPROFILE%\vcpkg
 SET VCPKG_DEFAULT_TRIPLET=x64-windows
 
-IF NOT EXIST %VCPKG_ROOT%\vcpkg.exe (
-	md %VCPKG_ROOT%
-	git clone --depth=1 https://github.com/Microsoft/vcpkg.git %VCPKG_ROOT%
-) ELSE (
-	git -C %VCPKG_ROOT% fetch
-	git -C %VCPKG_ROOT% reset --hard origin/master
-)
-
-copy %VCPKG_ROOT%\triplets\%VCPKG_DEFAULT_TRIPLET%.cmake %VCPKG_ROOT%\triplets\%VCPKG_DEFAULT_TRIPLET%.cmake.bak
-ECHO set(VCPKG_BUILD_TYPE release) >>%VCPKG_ROOT%\triplets\%VCPKG_DEFAULT_TRIPLET%.cmake
+REM Clone and preserve installed folder
+robocopy %VCPKG_ROOT%\installed %USEPRROFILE%\vcpkg-installed /MOVE /MIR
+git clone --depth=1 https://github.com/Microsoft/vcpkg.git %VCPKG_ROOT%
+robocopy %USERPROFILE%\vcpkg-installed %VCPKG_ROOT%\installed /MOVE /MIR
 
 REM Bootstrap vcpkg
 SET OLD_CD=%cd%
@@ -26,8 +20,9 @@ SET PATH=%PATH%;%VCPKG_ROOT%
 cd %VCPKG_ROOT%
 CALL .\bootstrap-vcpkg.bat
 
-REM Upgrade libraries
-vcpkg upgrade --no-dry-run
+REM Set triplet file to release-only
+copy %VCPKG_ROOT%\triplets\%VCPKG_DEFAULT_TRIPLET%.cmake %VCPKG_ROOT%\triplets\%VCPKG_DEFAULT_TRIPLET%.cmake.bak
+ECHO set(VCPKG_BUILD_TYPE release) >>%VCPKG_ROOT%\triplets\%VCPKG_DEFAULT_TRIPLET%.cmake
 
 REM Install release-only dependencies
 vcpkg install openimageio glm
@@ -37,6 +32,3 @@ copy %VCPKG_ROOT%\triplets\%VCPKG_DEFAULT_TRIPLET%.cmake.bak %VCPKG_ROOT%\triple
 
 REM Install libepoxy (meson/ninja is broken for release-only)
 vcpkg install libepoxy
-
-REM Cleanup
-rd /Q /S %VCPKG_ROOT%\buildtrees
