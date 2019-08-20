@@ -1,27 +1,23 @@
-Tests: 00-build
+Tests: gradient
 Restrictions: allow-stderr
 Depends: @, libglfw3-dev, cmake, g++, pkg-config
 
-Tests: 10-gradient
+Tests: image
 Restrictions: allow-stderr
 Depends: @, libglfw3-dev, cmake, g++, pkg-config
 
-Tests: 11-image
+Tests: uniforms
 Restrictions: allow-stderr
 Depends: @, libglfw3-dev, cmake, g++, pkg-config
 
-Tests: 15-uniforms
+Tests: geometry
 Restrictions: allow-stderr
 Depends: @, libglfw3-dev, cmake, g++, pkg-config
 
-Tests: 20-geometry
+Tests: compute
 Restrictions: allow-stderr
 Depends: @, libglfw3-dev, cmake, g++, pkg-config
 
-Tests: 30-compute
-Restrictions: allow-stderr
-Depends: @, libglfw3-dev, cmake, g++, pkg-config
-
-Tests: 50-shadertoy
+Tests: shadertoy
 Restrictions: allow-stderr
 Depends: @, libglfw3-dev, cmake, g++, pkg-config, libcurl4-openssl-dev, libjsoncpp-dev, libboost-filesystem-dev, libboost-program-options-dev

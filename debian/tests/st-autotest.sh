@@ -14,7 +14,7 @@ while getopts ":n:a:" opt; do
 done
 
 if [ "x$TEST_NAME" = "x" ]; then
-	echo "Usage: ./st-autotest.sh -n 00-build" >&2
+	echo "Usage: ./st-autotest.sh -n <NAME>" >&2
 	exit 50
 fi
 
@@ -61,9 +61,9 @@ cd build
 cmake $CMAKE_EXTRA_OPTS .. || exit 1
 
 # Build
-make -j$(( $(nproc) + 1 )) VERBOSE=1 example$TEST_NAME || exit 1
+make -j$(( $(nproc) + 1 )) VERBOSE=1 example_$TEST_NAME || exit 1
 
-$ST_AUTOTEST_LAUNCH_ARGS ./src/$TEST_NAME/example$TEST_NAME $TEST_ARGS
+$ST_AUTOTEST_LAUNCH_ARGS ./$TEST_NAME/example_$TEST_NAME $TEST_ARGS
 RESULT="$?"
 
 if [ "$RESULT" -eq 2 ]; then
@@ -77,6 +77,3 @@ if [ "$RESULT" -eq 2 ]; then
 else
 	exit "$RESULT"
 fi
-
-
-

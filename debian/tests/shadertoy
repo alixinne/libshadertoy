@@ -1,0 +1,3 @@
+#!/bin/bash
+
+"$(dirname "${BASH_SOURCE[0]}")/st-autotest.sh" -n shadertoy -a "-a fdnKWn -i XtX3Rr"

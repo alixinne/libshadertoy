@@ -10,6 +10,7 @@ libshadertoy (1.0.0~rc8) UNRELEASED; urgency=medium
   * Remove input_loader
   * Remove OpenEXR, libjpeg and SOIL dependencies
   * Add compute shader support
+  * Cleanup examples structure
 
  -- Vincent Tavernier <vince.tavernier@gmail.com>  Tue, 13 Aug 2019 13:20:29 +0200
 
