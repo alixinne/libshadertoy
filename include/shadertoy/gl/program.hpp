@@ -3,6 +3,10 @@
 
 #include "shadertoy/gl/resource.hpp"
 
+#include "shadertoy/gl/shader.hpp"
+
+#include "shadertoy/shadertoy_error.hpp"
+
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -23,6 +27,8 @@ namespace shadertoy
 {
 namespace gl
 {
+	class program;
+
 	/**
 	 * @brief Error thrown when an attempt is made to dereference a null program object.
 	 */

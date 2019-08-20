@@ -1,6 +1,6 @@
 #include <epoxy/gl.h>
 
-#include "shadertoy/gl.hpp"
+#include "shadertoy/gl/program.hpp"
 
 #include "shadertoy/buffers/gl_buffer.hpp"
 #include "shadertoy/render_context.hpp"

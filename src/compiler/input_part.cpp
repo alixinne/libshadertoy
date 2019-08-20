@@ -1,3 +1,5 @@
+#include <epoxy/gl.h>
+
 #include <sstream>
 
 #include "shadertoy/compiler/input_part.hpp"

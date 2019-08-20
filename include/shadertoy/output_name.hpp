@@ -3,6 +3,7 @@
 
 #include "shadertoy/pre.hpp"
 
+#include <string>
 #include <tuple>
 #include <variant>
 

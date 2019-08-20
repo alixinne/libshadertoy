@@ -1,8 +1,7 @@
-#include <utility>
-
 #include <epoxy/gl.h>
 
-#include "shadertoy/gl.hpp"
+#include <utility>
+
 #include "shadertoy/utils/assert.hpp"
 
 #include "shadertoy/inputs/file_input.hpp"

@@ -11,7 +11,6 @@
 #include "shadertoy/compiler/input_part.hpp"
 #include "shadertoy/compiler/template_part.hpp"
 
-#include "shadertoy/gl.hpp"
 #include "shadertoy/gl/wrapper_context.hpp"
 
 #include "shadertoy/utils/assert.hpp"

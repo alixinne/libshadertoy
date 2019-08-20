@@ -3,6 +3,8 @@
 
 #include "shadertoy/pre.hpp"
 
+#include "shadertoy/shadertoy_error.hpp"
+
 #include <array>
 
 namespace shadertoy

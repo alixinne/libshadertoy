@@ -3,7 +3,9 @@
 
 #include "shadertoy/pre.hpp"
 
+#include "shadertoy/member_swap_policy.hpp"
 #include "shadertoy/output_name.hpp"
+#include "shadertoy/size.hpp"
 
 #include "shadertoy/gl/texture.hpp"
 

@@ -1,6 +1,6 @@
 #include <epoxy/gl.h>
 
-#include "shadertoy/gl.hpp"
+#include <cstring>
 
 #include "shadertoy/draw_state.hpp"
 

@@ -1,8 +1,9 @@
 #include <epoxy/gl.h>
+
 #include <set>
 #include <sstream>
 
-#include "shadertoy/gl.hpp"
+#include "shadertoy/gl/program.hpp"
 
 #include "shadertoy/compiler/program_template.hpp"
 #include "shadertoy/compiler/template_error.hpp"

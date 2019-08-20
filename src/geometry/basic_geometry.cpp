@@ -1,6 +1,6 @@
 #include <epoxy/gl.h>
 
-#include "shadertoy/gl.hpp"
+#include "shadertoy/gl/bind_guard.hpp"
 
 #include "shadertoy/geometry/basic_geometry.hpp"
 

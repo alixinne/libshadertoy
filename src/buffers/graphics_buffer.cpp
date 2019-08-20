@@ -4,11 +4,6 @@
 
 using namespace shadertoy::buffers;
 
-buffer_output::buffer_output(std::string name, GLint location, GLenum type)
-: name(name), location(location), type(type)
-{
-}
-
 graphics_buffer::graphics_buffer(std::string id)
 	: basic_buffer(id)
 {

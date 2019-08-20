@@ -3,8 +3,6 @@
 #include <algorithm>
 #include <utility>
 
-#include "shadertoy/gl.hpp"
-
 #include "shadertoy/render_context.hpp"
 
 #include "shadertoy/buffers/graphics_buffer.hpp"

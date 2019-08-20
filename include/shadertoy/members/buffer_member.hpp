@@ -3,6 +3,7 @@
 
 #include "shadertoy/pre.hpp"
 
+#include "shadertoy/buffers/buffer_output.hpp"
 #include "shadertoy/members/basic_member.hpp"
 
 #include "shadertoy/io_resource.hpp"

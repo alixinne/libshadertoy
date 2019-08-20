@@ -6,7 +6,7 @@
 #include "shadertoy/compiler/define_part.hpp"
 #include "shadertoy/compiler/shader_template.hpp"
 
-#include "shadertoy/gl/shader.hpp"
+#include "shadertoy/gl/program.hpp"
 
 #include <map>
 
@@ -38,11 +38,6 @@ class shadertoy_EXPORT program_template
 	 * cache, which will be reused when compiling derived programs.
 	 */
 	std::map<GLenum, gl::shader> compiled_shaders_;
-
-	/**
-	 * @brief List of input objects to bind when creating new programs
-	 */
-	std::map<std::string, basic_shader_inputs *> shader_inputs_;
 
 	/**
 	 * @brief List of preprocessor definition objects
@@ -135,28 +130,6 @@ public:
 	 * @return Compiled program
 	 */
 	gl::program compile(GLenum stage, const std::map<GLenum, shader_template> &templates, std::map<GLenum, std::string> *compiled_sources = nullptr) const;
-
-	/**
-	 * @brief Get the list of supported shader inputs
-	 *
-	 * The raw pointers in this list should remain valid for as long as this object
-	 * is in use to compile programs.
-	 *
-	 * @return Reference to the shader input list
-	 */
-	inline std::map<std::string, basic_shader_inputs*> &shader_inputs()
-	{ return shader_inputs_; }
-
-	/**
-	 * @brief Get the list of supported shader inputs
-	 *
-	 * The raw pointers in this list should remain valid for as long as this object
-	 * is in use to compile programs.
-	 *
-	 * @return Reference to the shader input list
-	 */
-	inline const std::map<std::string, basic_shader_inputs *> &shader_inputs() const
-	{ return shader_inputs_; }
 
 	/**
 	 * @brief Get the list of supported shader define objects

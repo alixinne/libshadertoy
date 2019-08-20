@@ -1,6 +1,5 @@
 #include <epoxy/gl.h>
 
-#include "shadertoy/gl.hpp"
 #include "shadertoy/utils/log.hpp"
 
 #include "resources.hpp"

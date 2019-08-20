@@ -1,10 +1,8 @@
+#include <epoxy/gl.h>
+
 #include <algorithm>
 #include <random>
 #include <vector>
-
-#include <epoxy/gl.h>
-
-#include "shadertoy/gl.hpp"
 
 #include "shadertoy/inputs/noise_input.hpp"
 

@@ -3,6 +3,8 @@
 
 #include "shadertoy/gl/resource.hpp"
 
+#include "shadertoy/shadertoy_error.hpp"
+
 namespace shadertoy
 {
 namespace gl

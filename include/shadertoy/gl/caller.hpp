@@ -3,6 +3,9 @@
 
 #include "shadertoy/pre.hpp"
 
+#include <type_traits>
+#include <utility>
+
 namespace shadertoy
 {
 namespace gl

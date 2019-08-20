@@ -4,6 +4,7 @@
 #include "shadertoy/pre.hpp"
 
 #include "shadertoy/gl/sampler.hpp"
+#include "shadertoy/gl/texture.hpp"
 
 #include <memory>
 

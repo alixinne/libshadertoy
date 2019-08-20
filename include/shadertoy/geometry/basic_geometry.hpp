@@ -3,6 +3,9 @@
 
 #include "shadertoy/pre.hpp"
 
+#include "shadertoy/gl/query.hpp"
+#include "shadertoy/gl/vertex_array.hpp"
+
 namespace shadertoy
 {
 namespace geometry

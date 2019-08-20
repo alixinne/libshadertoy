@@ -5,6 +5,8 @@
 
 #include "shadertoy/gl/buffer.hpp"
 
+#include "shadertoy/shadertoy_error.hpp"
+
 namespace shadertoy
 {
 namespace gl

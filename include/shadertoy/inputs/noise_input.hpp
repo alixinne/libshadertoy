@@ -4,6 +4,7 @@
 #include "shadertoy/pre.hpp"
 
 #include "shadertoy/inputs/basic_input.hpp"
+#include "shadertoy/size.hpp"
 
 namespace shadertoy
 {

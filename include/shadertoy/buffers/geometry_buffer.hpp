@@ -5,6 +5,8 @@
 
 #include "shadertoy/buffers/program_buffer.hpp"
 
+#include "shadertoy/geometry/basic_geometry.hpp"
+
 namespace shadertoy
 {
 namespace buffers

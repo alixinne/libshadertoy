@@ -3,6 +3,7 @@
 
 #include "shadertoy/pre.hpp"
 
+#include "shadertoy/gl/sampler.hpp"
 #include "shadertoy/members/basic_member.hpp"
 
 #include "shadertoy/draw_state.hpp"

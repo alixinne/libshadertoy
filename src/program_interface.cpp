@@ -1,7 +1,5 @@
 #include <epoxy/gl.h>
 
-#include "shadertoy/gl.hpp"
-
 #include "shadertoy/program_interface.hpp"
 
 using namespace shadertoy;

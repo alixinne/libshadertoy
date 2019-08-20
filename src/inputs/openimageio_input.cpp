@@ -1,6 +1,5 @@
 #include <epoxy/gl.h>
 
-#include "shadertoy/gl.hpp"
 #include "shadertoy/utils/assert.hpp"
 
 #include "shadertoy/inputs/openimageio_input.hpp"

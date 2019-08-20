@@ -4,6 +4,7 @@
 #include "shadertoy/pre.hpp"
 
 #include "shadertoy/buffers/basic_buffer.hpp"
+#include "shadertoy/buffers/buffer_output.hpp"
 
 #include <optional>
 #include <string>
@@ -12,31 +13,6 @@ namespace shadertoy
 {
 namespace buffers
 {
-
-/**
- * @brief Represents a program output location to be used in a buffer
- */
-struct buffer_output
-{
-	/// Name of the buffer output
-	std::string name;
-
-	/// Interface location of the output
-	GLint location;
-
-	/// Type of the output
-	GLenum type;
-
-	/**
-	 * @brief Construct a new instance of the buffer_output class
-	 *
-	 * @param name     Name of the buffer output
-	 * @param location Interface location of the output
-	 * @param type     Type of the output
-	 */
-	buffer_output(std::string name, GLint location, GLenum type);
-};
-
 
 /**
  * @brief Represents a buffer in the graphics pipeline

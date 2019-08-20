@@ -1,7 +1,5 @@
 #include <epoxy/gl.h>
 
-#include "shadertoy/gl.hpp"
-
 #include "shadertoy/buffers/compute_buffer.hpp"
 
 #include "shadertoy/utils/assert.hpp"

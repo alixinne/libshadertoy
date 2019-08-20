@@ -1,6 +1,6 @@
 #include <epoxy/gl.h>
 
-#include "shadertoy/gl.hpp"
+#include "shadertoy/gl/program.hpp"
 
 #include "shadertoy/geometry/screen_quad.hpp"
 

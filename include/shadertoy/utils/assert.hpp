@@ -3,6 +3,7 @@
 
 #include "shadertoy/pre.hpp"
 
+#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/utils/log.hpp"
 
 namespace shadertoy

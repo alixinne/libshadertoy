@@ -2,8 +2,6 @@
 
 #include <epoxy/gl.h>
 
-#include "shadertoy/gl.hpp"
-
 #include "shadertoy/inputs/error_input.hpp"
 
 #include "shadertoy/utils/log.hpp"

@@ -5,6 +5,7 @@
 
 #include "shadertoy/gl/texture.hpp"
 
+#include <functional>
 #include <map>
 #include <optional>
 #include <vector>

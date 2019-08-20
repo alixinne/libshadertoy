@@ -1,10 +1,8 @@
+#include <epoxy/gl.h>
+
 #include <algorithm>
 #include <sstream>
 #include <vector>
-
-#include <epoxy/gl.h>
-
-#include "shadertoy/gl.hpp"
 
 #include "shadertoy/shader_compiler.hpp"
 

@@ -3,6 +3,7 @@
 
 #include "shadertoy/pre.hpp"
 
+#include "shadertoy/gl/texture.hpp"
 #include "shadertoy/output_name.hpp"
 
 #include <memory>

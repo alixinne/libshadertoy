@@ -5,6 +5,11 @@
 
 #include "shadertoy/gl/bind_guard.hpp"
 
+#include "shadertoy/gl/renderbuffer.hpp"
+#include "shadertoy/gl/texture.hpp"
+
+#include "shadertoy/shadertoy_error.hpp"
+
 namespace shadertoy
 {
 namespace gl

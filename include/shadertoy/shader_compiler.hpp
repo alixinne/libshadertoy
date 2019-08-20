@@ -3,6 +3,8 @@
 
 #include "shadertoy/pre.hpp"
 
+#include "shadertoy/gl/shader.hpp"
+
 namespace shadertoy
 {
 

@@ -1,6 +1,12 @@
-#ifndef _SHADERTOY_UTILS_HPP_
-#define _SHADERTOY_UTILS_HPP_
+namespace shadertoy
+{
+/// Miscellaneous utilities
+namespace utils
+{
+}
+}
+
+// Do not include assert and log headers to prevent conflicts
+// with spdlog/libfmt in client code
 
 #include "shadertoy/utils/dump_program.hpp"
-
-#endif /* _SHADERTOY_UTILS_HPP_ */

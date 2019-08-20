@@ -1,6 +1,6 @@
-#include <vector>
-
 #include <epoxy/gl.h>
+
+#include <vector>
 
 #include "shadertoy/shadertoy_error.hpp"
 

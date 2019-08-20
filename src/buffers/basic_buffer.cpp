@@ -2,10 +2,7 @@
 
 #include <utility>
 
-#include "shadertoy/gl.hpp"
-
 #include "shadertoy/buffers/basic_buffer.hpp"
-#include "shadertoy/render_context.hpp"
 
 using namespace shadertoy;
 using namespace shadertoy::buffers;

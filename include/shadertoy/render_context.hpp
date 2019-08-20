@@ -6,6 +6,8 @@
 #include "shadertoy/compiler/program_template.hpp"
 #include "shadertoy/geometry/screen_quad.hpp"
 
+#include "shadertoy/inputs/error_input.hpp"
+
 namespace shadertoy
 {
 

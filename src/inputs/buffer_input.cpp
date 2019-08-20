@@ -3,8 +3,6 @@
 
 #include <epoxy/gl.h>
 
-#include "shadertoy/gl.hpp"
-
 #include "shadertoy/inputs/buffer_input.hpp"
 #include "shadertoy/members/buffer_member.hpp"
 
