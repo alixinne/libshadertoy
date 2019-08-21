@@ -11,8 +11,10 @@ SET VCPKG_DEFAULT_TRIPLET=x64-windows
 
 REM Clone and preserve installed folder
 robocopy %VCPKG_ROOT%\installed %USEPRROFILE%\vcpkg-installed /MOVE /MIR
+robocopy %VCPKG_ROOT%\packages %USEPRROFILE%\vcpkg-packages /MOVE /MIR
 git clone --depth=1 https://github.com/Microsoft/vcpkg.git %VCPKG_ROOT%
 robocopy %USERPROFILE%\vcpkg-installed %VCPKG_ROOT%\installed /MOVE /MIR
+robocopy %USERPROFILE%\vcpkg-packages %VCPKG_ROOT%\packages /MOVE /MIR
 
 REM Bootstrap vcpkg
 SET OLD_CD=%cd%

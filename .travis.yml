@@ -11,6 +11,7 @@ env:
 cache:
   directories:
     - $HOME/vcpkg/installed
+    - $HOME/vcpkg/packages
 
 matrix:
   fast_finish: true
