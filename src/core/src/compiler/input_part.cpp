@@ -8,15 +8,11 @@ using namespace shadertoy;
 using namespace shadertoy::compiler;
 
 input_part::input_part(const std::string &name, const std::deque<program_input> &inputs)
-	: cloneable_part(name),
-	inputs_(inputs)
+: cloneable_part(name), inputs_(inputs)
 {
 }
 
-input_part::operator bool() const
-{
-	return true;
-}
+input_part::operator bool() const { return true; }
 
 std::vector<std::pair<std::string, std::string>> input_part::sources() const
 {

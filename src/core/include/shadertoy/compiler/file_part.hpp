@@ -18,7 +18,7 @@ class shadertoy_EXPORT file_part : public cloneable_part<file_part>
 	/// Source file for this template
 	std::string source_file_;
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new unspecified file_part
 	 *
@@ -50,7 +50,7 @@ public:
 	 */
 	std::vector<std::pair<std::string, std::string>> sources() const override;
 };
-}
-}
+} // namespace compiler
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_COMPILER_FILE_PART_HPP_ */

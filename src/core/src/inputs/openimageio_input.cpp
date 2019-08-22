@@ -8,11 +8,12 @@ using namespace shadertoy;
 using namespace shadertoy::inputs;
 using namespace shadertoy::backends;
 
-using shadertoy::utils::log;
 using shadertoy::utils::error_assert;
+using shadertoy::utils::log;
 
 #if LIBSHADERTOY_OPENIMAGEIO
-void st_oiio_load_image_to_texture(const std::string &filename, bool vflip, GLenum &output_format, const gx::texture &texture, int &width, int &height);
+void st_oiio_load_image_to_texture(const std::string &filename, bool vflip, GLenum &output_format,
+								   const gx::texture &texture, int &width, int &height);
 #endif /* LIBSHADERTOY_OPENIMAGEIO */
 
 std::unique_ptr<gx::texture> openimageio_input::load_file(const std::string &filename, bool vflip, GLenum &output_format)
@@ -38,8 +39,7 @@ std::unique_ptr<gx::texture> openimageio_input::load_file(const std::string &fil
 	{
 		texture.reset();
 
-		error_assert(false, "{} for {} while loading {}", ex.what(),
-					 filename, static_cast<const void *>(this));
+		error_assert(false, "{} for {} while loading {}", ex.what(), filename, static_cast<const void *>(this));
 	}
 #else
 	error_assert(false, "Cannot load {} for input {}: OPENIMAGEIO support is disabled", filename,

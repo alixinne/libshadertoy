@@ -9,50 +9,35 @@ using namespace shadertoy;
 using namespace shadertoy::backends::gl4;
 
 null_texture_error::null_texture_error()
-	: shadertoy_error("An attempt was made to dereference a null texture")
+: shadertoy_error("An attempt was made to dereference a null texture")
 {
 }
 
 GLuint texture_allocator::create(GLenum target)
 {
 	GLuint res;
-    gl_call(glCreateTextures, target, 1, &res);
+	gl_call(glCreateTextures, target, 1, &res);
 	return res;
 }
 
-void texture_allocator::destroy(GLuint resource)
-{
-    gl_call(glDeleteTextures, 1, &resource);
-}
+void texture_allocator::destroy(GLuint resource) { gl_call(glDeleteTextures, 1, &resource); }
 
-texture::texture(GLenum target)
-	: resource(allocator_type().create(target))
-{
-}
+texture::texture(GLenum target) : resource(allocator_type().create(target)) {}
 
-void texture::bind(GLenum target) const
-{
-	backend::current().bind_texture(target, *this);
-}
+void texture::bind(GLenum target) const { backend::current().bind_texture(target, *this); }
 
-void texture::unbind(GLenum target) const
-{
-	backend::current().bind_texture(target, std::nullopt);
-}
+void texture::unbind(GLenum target) const { backend::current().bind_texture(target, std::nullopt); }
 
-void texture::bind_unit(GLuint unit) const
-{
-	backend::current().bind_texture_unit(unit, *this);
-}
+void texture::bind_unit(GLuint unit) const { backend::current().bind_texture_unit(unit, *this); }
 
 void texture::parameter(GLenum pname, GLint param) const
 {
-    gl_call(glTextureParameteri, GLuint(*this), pname, param);
+	gl_call(glTextureParameteri, GLuint(*this), pname, param);
 }
 
 void texture::parameter(GLenum pname, GLfloat param) const
 {
-    gl_call(glTextureParameterf, GLuint(*this), pname, param);
+	gl_call(glTextureParameterf, GLuint(*this), pname, param);
 }
 
 void texture::get_parameter(GLint level, GLenum pname, GLint *params) const
@@ -74,14 +59,11 @@ void texture::image_1d(GLenum target, GLint level, GLint internalFormat, GLsizei
 void texture::image_2d(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height,
 					   GLint border, GLenum format, GLenum type, const GLvoid *data) const
 {
-    gl_call(glTextureImage2DEXT, GLuint(*this), target, level, internalFormat, width, height, border, format, type,
-            data);
+	gl_call(glTextureImage2DEXT, GLuint(*this), target, level, internalFormat, width, height,
+			border, format, type, data);
 }
 
-void texture::generate_mipmap() const
-{
-    gl_call(glGenerateTextureMipmap, GLuint(*this));
-}
+void texture::generate_mipmap() const { gl_call(glGenerateTextureMipmap, GLuint(*this)); }
 
 void texture::clear_tex_image(GLint level, GLenum format, GLenum type, const void *data) const
 {

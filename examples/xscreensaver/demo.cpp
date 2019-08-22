@@ -1,7 +1,7 @@
 #include <iostream>
-#include <string>
-#include <sstream>
 #include <set>
+#include <sstream>
+#include <string>
 
 #include <epoxy/gl.h>
 
@@ -11,8 +11,8 @@
 #include "api.hpp"
 #include "demo.h"
 
-#include <shadertoy/utils/log.hpp>
 #include <shadertoy/backends/gl4.hpp>
+#include <shadertoy/utils/log.hpp>
 
 #define TEST_NO_GLFW
 #include "test.hpp"
@@ -33,12 +33,8 @@ struct my_context : public example_ctx
 	double last_clock;
 
 	my_context()
-		: example_ctx(),
-		fps_query(shadertoy::backends::current->make_query(GL_TIMESTAMP)),
-		last_query_value(0),
-		last_query_count(0),
-		frame_count(0),
-		last_clock(0.0)
+	: example_ctx(), fps_query(shadertoy::backends::current->make_query(GL_TIMESTAMP)),
+	  last_query_value(0), last_query_count(0), frame_count(0), last_clock(0.0)
 	{
 	}
 };
@@ -82,7 +78,8 @@ void shadertoy_render_frame()
 		GLuint64 currentTime;
 		ctx->fps_query->get_object_ui64v(GL_QUERY_RESULT, &currentTime);
 
-		float timeDelta = (1e-9 * (currentTime - ctx->last_query_value)) / (double)(ctx->frame_count - ctx->last_query_count);
+		float timeDelta = (1e-9 * (currentTime - ctx->last_query_value)) /
+						  (double)(ctx->frame_count - ctx->last_query_count);
 
 		ctx->chain.set_uniform("iTimeDelta", timeDelta);
 		ctx->chain.set_uniform("iFrameRate", 1.0f / timeDelta);
@@ -95,9 +92,7 @@ void shadertoy_render_frame()
 
 	//  iDate
 	boost::posix_time::ptime dt = boost::posix_time::microsec_clock::local_time();
-	ctx->chain.set_uniform("iDate", glm::vec4(dt.date().year() - 1,
-											  dt.date().month(),
-											  dt.date().day(),
+	ctx->chain.set_uniform("iDate", glm::vec4(dt.date().year() - 1, dt.date().month(), dt.date().day(),
 											  dt.time_of_day().total_nanoseconds() / 1e9f));
 
 	// End update uniforms
@@ -151,8 +146,7 @@ int shadertoy_load(const char *shader_id, const char *shader_api_key)
 	}
 	catch (shadertoy::shadertoy_error &err)
 	{
-		std::cerr << "Error: "
-				  << err.what();
+		std::cerr << "Error: " << err.what();
 		code = 2;
 	}
 
@@ -179,12 +173,7 @@ int shadertoy_init(const char *api_key, const char *query, const char *sort, int
 
 	// Build search query url
 	std::stringstream ss;
-	ss << "https://www.shadertoy.com/api/v1/shaders/query/"
-		<< query
-		<< "?sort="
-		<< sort
-		<< "&key="
-		<< api_key;
+	ss << "https://www.shadertoy.com/api/v1/shaders/query/" << query << "?sort=" << sort << "&key=" << api_key;
 
 	// Get returned json
 	Json::Value sr = json_get(curl, ss.str());
@@ -202,7 +191,7 @@ int shadertoy_init(const char *api_key, const char *query, const char *sort, int
 	srand(time(NULL) * getpid());
 	std::set<std::string> testedShaders;
 
-	for (; testedShaders.size() < sr["Results"].size(); )
+	for (; testedShaders.size() < sr["Results"].size();)
 	{
 		std::string shaderId = sr["Results"][rand() % sr["Results"].size()].asString();
 
@@ -236,7 +225,4 @@ int shadertoy_init(const char *api_key, const char *query, const char *sort, int
 	return 0;
 }
 
-void shadertoy_free()
-{
-	ctx.reset();
-}
+void shadertoy_free() { ctx.reset(); }

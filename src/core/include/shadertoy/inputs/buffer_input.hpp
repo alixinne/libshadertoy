@@ -3,8 +3,8 @@
 
 #include "shadertoy/pre.hpp"
 
-#include "shadertoy/members/basic_member.hpp"
 #include "shadertoy/inputs/basic_input.hpp"
+#include "shadertoy/members/basic_member.hpp"
 
 #include "shadertoy/output_name.hpp"
 
@@ -40,7 +40,7 @@ class shadertoy_EXPORT buffer_input : public basic_input
 	/// Find the target output
 	std::optional<members::member_output_t> find_output(std::shared_ptr<members::basic_member> member);
 
-protected:
+	protected:
 	/**
 	 * @brief Unused, except for determining the target internal format.
 	 *
@@ -65,7 +65,7 @@ protected:
 	 */
 	backends::gx::texture *use_input() override;
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new instance of the buffer_input class with no associated buffer.
 	 */
@@ -111,7 +111,7 @@ public:
 	 */
 	inline void output_name(output_name_t new_name) { output_name_ = new_name; }
 };
-}
-}
+} // namespace inputs
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_INPUTS_BUFFER_INPUT_HPP_ */

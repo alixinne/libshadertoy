@@ -46,9 +46,10 @@ class shadertoy_EXPORT program_template
 
 	shader_template specify_template_parts(const shader_template &source_template) const;
 
-	shader_template specify_template_parts(std::vector<std::unique_ptr<basic_part>> parts, const shader_template &source_template) const;
+	shader_template specify_template_parts(std::vector<std::unique_ptr<basic_part>> parts,
+										   const shader_template &source_template) const;
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new empty program_template
 	 */
@@ -89,7 +90,10 @@ public:
 	 *
 	 * @return Reference to the shader_template object for the given shader type
 	 */
-	inline const shader_template &operator[](GLenum type) const { return shader_templates_.at(type); }
+	inline const shader_template &operator[](GLenum type) const
+	{
+		return shader_templates_.at(type);
+	}
 
 	/**
 	 * @brief Compiles a fully specified shader in the cache of this program_template
@@ -102,8 +106,8 @@ public:
 	 * @brief Compile this program_template into a GL program.
 	 *
 	 * @param stage          Target stage. If GL_FRAGMENT_SHADER, will compile both GL_VERTEX_SHADER
-	 *                       and GL_FRAGMENT_SHADER and link them together. If GL_COMPUTE_SHADER, will
-	 *                       only compile and link GL_COMPUTE_SHADER.
+	 *                       and GL_FRAGMENT_SHADER and link them together. If GL_COMPUTE_SHADER,
+	 * will only compile and link GL_COMPUTE_SHADER.
 	 * @param specifications Map of specifications for each shader template. This is
 	 *                       used to specify missing parts in all templates before
 	 *                       compiling. Pre-compiled shaders are used as-is and cannot
@@ -140,7 +144,9 @@ public:
 	 * @return Reference to the definition objects
 	 */
 	inline std::map<std::string, std::shared_ptr<preprocessor_defines>> &shader_defines()
-	{ return shader_defines_; }
+	{
+		return shader_defines_;
+	}
 
 	/**
 	 * @brief Get the list of supported shader define objects
@@ -148,9 +154,11 @@ public:
 	 * @return Reference to the definition objects
 	 */
 	inline const std::map<std::string, std::shared_ptr<preprocessor_defines>> &shader_defines() const
-	{ return shader_defines_; }
+	{
+		return shader_defines_;
+	}
 };
-}
-}
+} // namespace compiler
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_COMPILER_PROGRAM_TEMPLATE_HPP_ */

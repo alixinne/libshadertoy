@@ -13,7 +13,7 @@ SHADERTOY_BACKENDS_GX_NAMESPACE_BEGIN
  */
 class shadertoy_EXPORT draw_state
 {
-protected:
+	protected:
 	/// List of supported enables
 	std::array<bool, 27> enables_;
 
@@ -327,8 +327,7 @@ protected:
 	 *
 	 * @return Current polygon drawing mode
 	 */
-	inline GLenum polygon_mode() const
-	{ return polygon_mode_; }
+	inline GLenum polygon_mode() const { return polygon_mode_; }
 
 	/**
 	 * @brief Sets the new polygon mode to use
@@ -344,8 +343,7 @@ protected:
 	 *
 	 * @return RGB blend equation mode
 	 */
-	inline GLenum blend_mode_rgb() const
-	{ return blend_mode_rgb_; }
+	inline GLenum blend_mode_rgb() const { return blend_mode_rgb_; }
 
 	/**
 	 * @brief Sets the new RGB blend equation mode
@@ -361,8 +359,7 @@ protected:
 	 *
 	 * @return alpha blend equation mode
 	 */
-	inline GLenum blend_mode_alpha() const
-	{ return blend_mode_alpha_; }
+	inline GLenum blend_mode_alpha() const { return blend_mode_alpha_; }
 
 	/**
 	 * @brief Sets the new alpha blend equation mode
@@ -378,8 +375,7 @@ protected:
 	 *
 	 * @return srcRGB blend parameter
 	 */
-	inline GLenum blend_src_rgb() const
-	{ return blend_src_rgb_; }
+	inline GLenum blend_src_rgb() const { return blend_src_rgb_; }
 
 	/**
 	 * @brief Sets the srcRGB blend parameter
@@ -395,8 +391,7 @@ protected:
 	 *
 	 * @return dstRGB blend parameter
 	 */
-	inline GLenum blend_dst_rgb() const
-	{ return blend_dst_rgb_; }
+	inline GLenum blend_dst_rgb() const { return blend_dst_rgb_; }
 
 	/**
 	 * @brief Sets the dstRGB blend parameter
@@ -412,8 +407,7 @@ protected:
 	 *
 	 * @return srcAlpha blend parameter
 	 */
-	inline GLenum blend_src_alpha() const
-	{ return blend_src_alpha_; }
+	inline GLenum blend_src_alpha() const { return blend_src_alpha_; }
 
 	/**
 	 * @brief Sets the srcAlpha blend parameter
@@ -429,8 +423,7 @@ protected:
 	 *
 	 * @return dstAlpha blend parameter
 	 */
-	inline GLenum blend_dst_alpha() const
-	{ return blend_dst_alpha_; }
+	inline GLenum blend_dst_alpha() const { return blend_dst_alpha_; }
 
 	/**
 	 * @brief Sets the dstAlpha blend parameter
@@ -471,7 +464,10 @@ protected:
 	 *
 	 * @param new_memory New memory barrier bits
 	 */
-	inline void memory_barrier(GLenum new_memory) { memory_barrier_ = new_memory & GL_ALL_BARRIER_BITS; }
+	inline void memory_barrier(GLenum new_memory)
+	{
+		memory_barrier_ = new_memory & GL_ALL_BARRIER_BITS;
+	}
 };
 SHADERTOY_BACKENDS_GX_NAMESPACE_END
 

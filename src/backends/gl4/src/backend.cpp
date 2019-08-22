@@ -144,20 +144,14 @@ backend::backend(bool state_tracking, bool checks_enabled)
 {
 }
 
-std::unique_ptr<gx::buffer> backend::make_buffer()
-{
-	return std::make_unique<buffer>();
-}
+std::unique_ptr<gx::buffer> backend::make_buffer() { return std::make_unique<buffer>(); }
 
 std::unique_ptr<gx::framebuffer> backend::make_framebuffer()
 {
 	return std::make_unique<framebuffer>();
 }
 
-std::unique_ptr<gx::program> backend::make_program()
-{
-	return std::make_unique<program>();
-}
+std::unique_ptr<gx::program> backend::make_program() { return std::make_unique<program>(); }
 
 std::unique_ptr<gx::attrib_location> backend::make_attrib_location(GLint location)
 {
@@ -179,10 +173,7 @@ std::unique_ptr<gx::renderbuffer> backend::make_renderbuffer()
 	return std::make_unique<renderbuffer>();
 }
 
-std::unique_ptr<gx::sampler> backend::make_sampler()
-{
-	return std::make_unique<sampler>();
-}
+std::unique_ptr<gx::sampler> backend::make_sampler() { return std::make_unique<sampler>(); }
 
 std::unique_ptr<gx::shader> backend::make_shader(GLenum shaderType)
 {
@@ -204,10 +195,7 @@ std::unique_ptr<gx::draw_state> backend::make_draw_state()
 	return std::make_unique<draw_state>();
 }
 
-void backend::bind_default_framebuffer(GLenum target)
-{
-	gl_call(glBindFramebuffer, target, 0);
-}
+void backend::bind_default_framebuffer(GLenum target) { gl_call(glBindFramebuffer, target, 0); }
 
 void backend::get_viewport(GLint viewport[4]) const
 {

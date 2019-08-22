@@ -16,7 +16,7 @@ namespace geometry
  */
 class shadertoy_EXPORT basic_geometry
 {
-public:
+	public:
 	virtual ~basic_geometry() = default;
 
 	/**
@@ -44,7 +44,7 @@ public:
 	 */
 	void render(const backends::gx::query &timer_query) const;
 };
-}
-}
+} // namespace geometry
+} // namespace shadertoy
 
 #endif

@@ -39,8 +39,8 @@ GLenum error_input::load_input()
 
 	texture_->generate_mipmap();
 
-	log::shadertoy()->trace("Initialized error input at {} (GL id {})", static_cast<const void *>(this),
-							GLuint(*texture_));
+	log::shadertoy()->trace("Initialized error input at {} (GL id {})",
+							static_cast<const void *>(this), GLuint(*texture_));
 
 	return format;
 }

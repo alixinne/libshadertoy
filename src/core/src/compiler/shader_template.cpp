@@ -16,25 +16,21 @@ using namespace shadertoy::compiler;
 using shadertoy::utils::throw_assert;
 
 shader_template::shader_template(std::deque<std::unique_ptr<basic_part>> parts)
-	: parts_(std::move(parts))
+: parts_(std::move(parts))
 {
 }
 
 void shader_template::check_unique(const std::unique_ptr<basic_part> &part)
 {
 	auto it = std::find_if(parts_.begin(), parts_.end(),
-						   [&part](const auto &item)
-						   { return item->name() == part->name(); });
+						   [&part](const auto &item) { return item->name() == part->name(); });
 
-	throw_assert<template_error>(it == parts_.end(),
-								 "A part named {} already exists",
-								 part->name());
+	throw_assert<template_error>(it == parts_.end(), "A part named {} already exists", part->name());
 }
 
 shader_template::shader_template() = default;
 
-shader_template::shader_template(shader_template &&other) noexcept
-	: parts_(std::move(other.parts_))
+shader_template::shader_template(shader_template &&other) noexcept : parts_(std::move(other.parts_))
 {
 }
 
@@ -88,19 +84,17 @@ void shader_template::push_back(std::unique_ptr<basic_part> part)
 
 void shader_template::replace(const std::string &name, std::unique_ptr<basic_part> part)
 {
-	auto target_it = std::find_if(parts_.begin(), parts_.end(), [&name](const auto &item)
-								  { return item->name() == name; });
+	auto target_it = std::find_if(parts_.begin(), parts_.end(),
+								  [&name](const auto &item) { return item->name() == name; });
 
 	throw_assert<template_error>(target_it != parts_.end(),
-								 "A part named {} could not be found for replacement",
-								 name);
+								 "A part named {} could not be found for replacement", name);
 
-	auto duplicate = std::find_if(parts_.begin(), parts_.end(), [&part](const auto &item)
-								  { return item->name() == part->name(); });
+	auto duplicate = std::find_if(parts_.begin(), parts_.end(),
+								  [&part](const auto &item) { return item->name() == part->name(); });
 
 	throw_assert<template_error>(duplicate == parts_.end() || duplicate == target_it,
-								 "A part named {} already exists",
-								 part->name());
+								 "A part named {} already exists", part->name());
 
 	*target_it = std::move(part);
 }
@@ -110,12 +104,9 @@ void shader_template::insert_before(const std::string &target, std::unique_ptr<b
 	check_unique(part);
 
 	auto it = std::find_if(parts_.begin(), parts_.end(),
-						   [&target](const auto &item)
-						   { return item->name() == target; });
+						   [&target](const auto &item) { return item->name() == target; });
 
-	throw_assert<template_error>(it != parts_.end(),
-								 "A part named {} could not be found",
-								 target);
+	throw_assert<template_error>(it != parts_.end(), "A part named {} could not be found", target);
 
 	parts_.insert(it, std::move(part));
 }
@@ -125,20 +116,17 @@ void shader_template::insert_after(const std::string &target, std::unique_ptr<ba
 	check_unique(part);
 
 	auto it = std::find_if(parts_.begin(), parts_.end(),
-						   [&target](const auto &item)
-						   { return item->name() == target; });
+						   [&target](const auto &item) { return item->name() == target; });
 
-	throw_assert<template_error>(it != parts_.end(),
-								 "A part named {} could not be found",
-								 target);
+	throw_assert<template_error>(it != parts_.end(), "A part named {} could not be found", target);
 
 	parts_.insert(++it, std::move(part));
 }
 
 bool shader_template::erase(const std::string &name)
 {
-	auto it = std::find_if(parts_.begin(), parts_.end(), [&name](const auto &item)
-						   { return item->name() == name; });
+	auto it = std::find_if(parts_.begin(), parts_.end(),
+						   [&name](const auto &item) { return item->name() == name; });
 
 	if (it != parts_.end())
 	{

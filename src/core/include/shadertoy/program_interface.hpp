@@ -136,8 +136,7 @@ struct output_resource : public program_resource
  *
  * @tparam T Type of the resources to manage
  */
-template<typename T>
-class resource_interface
+template <typename T> class resource_interface
 {
 	/// List of resource objects
 	std::vector<T> resources_;
@@ -148,7 +147,7 @@ class resource_interface
 	/// Map for lookup of resources by location
 	std::unordered_map<GLint, size_t> resource_locations_;
 
-public:
+	public:
 	/**
 	 * @brief Build a new resource_interface object
 	 *
@@ -181,10 +180,7 @@ public:
 	 *
 	 * @return Reference to the vector of resource objects in this interface
 	 */
-	const std::vector<T> &resources() const
-	{
-		return resources_;
-	}
+	const std::vector<T> &resources() const { return resources_; }
 
 	/**
 	 * @brief Get a resource by its location.
@@ -274,20 +270,18 @@ class program_interface
 	input_interface inputs_;
 	output_interface outputs_;
 
-public:
+	public:
 	program_interface(const backends::gx::program &program);
 
 	/**
 	 * @brief Get the program corresponding to this interface
 	 */
-	inline const backends::gx::program &program() const
-	{ return program_; }
+	inline const backends::gx::program &program() const { return program_; }
 
 	/**
 	 * @brief Get the uniform resource interface
 	 */
-	inline const uniform_interface &uniforms() const
-	{ return uniforms_; }
+	inline const uniform_interface &uniforms() const { return uniforms_; }
 
 	/**
 	 * @brief Get the location of a uniform in this interface
@@ -298,9 +292,11 @@ public:
 	 * @return An instance of backends::gx::uniform_location corresponding to this
 	 * uniform.
 	 */
-	template<typename TIndex>
+	template <typename TIndex>
 	inline std::unique_ptr<backends::gx::uniform_location> get_uniform_location(const TIndex &identifier) const
-	{ return uniforms_[identifier].get_location(program_); }
+	{
+		return uniforms_[identifier].get_location(program_);
+	}
 
 	/**
 	 * @brief Try to get the location of a uniform in this interface
@@ -312,7 +308,7 @@ public:
 	 * returns an instance of backends::gx::uniform_location corresponding to this
 	 * uniform.
 	 */
-	template<typename TIndex>
+	template <typename TIndex>
 	inline std::unique_ptr<backends::gx::uniform_location> try_get_uniform_location(const TIndex &identifier) const
 	{
 		if (auto resource = uniforms_.try_get(identifier))
@@ -326,14 +322,12 @@ public:
 	/**
 	 * @brief Get the inputs resource interface
 	 */
-	inline const input_interface &inputs() const
-	{ return inputs_; }
+	inline const input_interface &inputs() const { return inputs_; }
 
 	/**
 	 * @brief Get the outputs resource interface
 	 */
-	inline const output_interface &outputs() const
-	{ return outputs_; }
+	inline const output_interface &outputs() const { return outputs_; }
 };
 
 } // namespace shadertoy

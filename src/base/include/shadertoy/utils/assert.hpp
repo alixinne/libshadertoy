@@ -9,8 +9,8 @@ namespace shadertoy
 namespace utils
 {
 
-template<typename... Args>
-inline bool warn_assert(bool condition, const char *format, Args&&... args)
+template <typename... Args>
+inline bool warn_assert(bool condition, const char *format, Args &&... args)
 {
 	if (!condition)
 	{
@@ -20,8 +20,8 @@ inline bool warn_assert(bool condition, const char *format, Args&&... args)
 	return condition;
 }
 
-template<typename Exception, typename... Args>
-inline void throw_assert(bool condition, const char *format, Args&&... args)
+template <typename Exception, typename... Args>
+inline void throw_assert(bool condition, const char *format, Args &&... args)
 {
 	if (!condition)
 	{
@@ -31,12 +31,12 @@ inline void throw_assert(bool condition, const char *format, Args&&... args)
 	}
 }
 
-template<typename... Args>
-inline void error_assert(bool condition, const char *format, Args&&... args)
+template <typename... Args>
+inline void error_assert(bool condition, const char *format, Args &&... args)
 {
 	throw_assert<shadertoy::shadertoy_error, Args...>(condition, format, std::forward<Args>(args)...);
 }
-}
-}
+} // namespace utils
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_UTILS_ASSERT_HPP_ */

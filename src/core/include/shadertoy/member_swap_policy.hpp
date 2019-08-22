@@ -39,6 +39,6 @@ enum class member_swap_policy
 	 */
 	default_framebuffer,
 };
-}
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_MEMBER_SWAP_POLICY_HPP_ */

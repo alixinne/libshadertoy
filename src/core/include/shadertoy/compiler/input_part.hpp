@@ -22,7 +22,7 @@ class shadertoy_EXPORT input_part : public cloneable_part<input_part>
 	/// Referenced input list
 	const std::deque<program_input> &inputs_;
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new instance of the input_part class
 	 *
@@ -49,7 +49,7 @@ public:
 	 */
 	std::vector<std::pair<std::string, std::string>> sources() const override;
 };
-}
-}
+} // namespace compiler
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_COMPILER_INPUT_PART_HPP_ */

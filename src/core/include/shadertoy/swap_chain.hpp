@@ -33,7 +33,7 @@ class shadertoy_EXPORT swap_chain
 	/// Default swap policy for members constructed for this chain
 	member_swap_policy swap_policy_;
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new instance of the swap_chain class. The internal format will
 	 *        default to \c GL_RGBA32F and the swap policy will be \c double_buffer.
@@ -61,15 +61,16 @@ public:
 	 * @return Reference to the list of members
 	 */
 	inline const std::deque<std::shared_ptr<members::basic_member>> &members() const
-	{ return members_; }
+	{
+		return members_;
+	}
 
 	/**
 	 * @brief Obtain the last member that has been rendered in this swap_chain
 	 *
 	 * @return Last member that has been rendered, or null
 	 */
-	inline const std::shared_ptr<members::basic_member> &current() const
-	{ return current_; }
+	inline const std::shared_ptr<members::basic_member> &current() const { return current_; }
 
 	/**
 	 * @brief Obtain the current internal format for member construction
@@ -85,8 +86,7 @@ public:
 	 *
 	 * @param new_format New internal format
 	 */
-	inline void internal_format(GLint new_format)
-	{ internal_format_ = new_format; }
+	inline void internal_format(GLint new_format) { internal_format_ = new_format; }
 
 	/**
 	 * @brief Obtain the current swap policy for member construction
@@ -102,8 +102,7 @@ public:
 	 *
 	 * @param new_policy New swap policy
 	 */
-	inline void swap_policy(member_swap_policy new_policy)
-	{ swap_policy_ = new_policy; }
+	inline void swap_policy(member_swap_policy new_policy) { swap_policy_ = new_policy; }
 
 	/**
 	 * @brief Obtain the member that occurs before \p member
@@ -129,10 +128,9 @@ public:
 	 *
 	 * @return Constructed member
 	 */
-	template<typename... Args>
-	auto emplace_back(Args&&... args)
+	template <typename... Args> auto emplace_back(Args &&... args)
 	{
-		auto member(members::make_member(std::forward<const swap_chain&>(*this), std::forward<Args>(args)...));
+		auto member(members::make_member(std::forward<const swap_chain &>(*this), std::forward<Args>(args)...));
 		push_back(member);
 		return member;
 	}
@@ -145,8 +143,8 @@ public:
 	 *
 	 * @return Constructed member
 	 */
-	template<typename TargetType, typename... Args>
-	std::shared_ptr<TargetType> emplace_back(Args&&... args)
+	template <typename TargetType, typename... Args>
+	std::shared_ptr<TargetType> emplace_back(Args &&... args)
 	{
 		auto member(std::make_shared<TargetType>(std::forward<Args>(args)...));
 		push_back(member);
@@ -156,14 +154,14 @@ public:
 	/**
 	 * @brief Find and return the first member of this chain that matches a given predicate
 	 *
-	 * @param  predicate  Predicate to find a match. Should accept a std::shared_ptr<MemberType> as a parameter and return
-	 * a boolean.
+	 * @param  predicate  Predicate to find a match. Should accept a std::shared_ptr<MemberType> as
+	 * a parameter and return a boolean.
 	 * @tparam MemberType Type of the member to look for
 	 * @tparam Callable   Type of the predicate
 	 *
 	 * @return Pointer to the member if found, or null otherwise
 	 */
-	template<typename MemberType, typename Callable>
+	template <typename MemberType, typename Callable>
 	std::shared_ptr<MemberType> find_if(Callable predicate)
 	{
 		for (const auto &member : members_)
@@ -220,13 +218,17 @@ public:
 	 * @param identifier Name of the uniform to set
 	 * @param value      Arguments to set_value to set this uniform
 	 */
-	template<typename TIndex, typename... TValue>
-	void set_uniform(const TIndex &identifier, TValue && ...value) const
+	template <typename TIndex, typename... TValue>
+	void set_uniform(const TIndex &identifier, TValue &&... value) const
 	{
-		for (auto &member : members_) {
-			if (auto buf_member = std::dynamic_pointer_cast<members::buffer_member>(member)) {
-				if (auto buf = std::dynamic_pointer_cast<buffers::program_buffer>(buf_member->buffer())) {
-					if (auto loc = buf->interface().try_get_uniform_location(identifier)) {
+		for (auto &member : members_)
+		{
+			if (auto buf_member = std::dynamic_pointer_cast<members::buffer_member>(member))
+			{
+				if (auto buf = std::dynamic_pointer_cast<buffers::program_buffer>(buf_member->buffer()))
+				{
+					if (auto loc = buf->interface().try_get_uniform_location(identifier))
+					{
 						loc->set_value(value...);
 					}
 				}
@@ -234,6 +236,6 @@ public:
 		}
 	}
 };
-}
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_SWAP_CHAIN_HPP_ */

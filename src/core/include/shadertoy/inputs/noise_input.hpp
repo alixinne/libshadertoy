@@ -22,7 +22,7 @@ class shadertoy_EXPORT noise_input : public basic_input
 	/// Size of the generated texture
 	rsize_ref size_;
 
-protected:
+	protected:
 	/**
 	 * @brief Load this input's contents
 	 *
@@ -42,7 +42,7 @@ protected:
 	 */
 	backends::gx::texture *use_input() override;
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new instance of the noise_input class of the given size
 	 *
@@ -50,7 +50,7 @@ public:
 	 */
 	noise_input(rsize_ref size);
 };
-}
-}
+} // namespace inputs
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_INPUTS_NOISE_INPUT_HPP_ */

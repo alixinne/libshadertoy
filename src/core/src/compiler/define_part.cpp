@@ -32,8 +32,7 @@ const std::string &preprocessor_defines::source()
 }
 
 define_part::define_part(const std::string &name)
-	: cloneable_part(name),
-	definitions_(std::make_shared<preprocessor_defines>())
+: cloneable_part(name), definitions_(std::make_shared<preprocessor_defines>())
 {
 }
 
@@ -43,10 +42,7 @@ define_part::define_part(const std::string &name, const std::shared_ptr<preproce
 	error_assert(defines.get() != nullptr, "The defines pointer cannot be null");
 }
 
-define_part::operator bool() const
-{
-	return true;
-}
+define_part::operator bool() const { return true; }
 
 std::vector<std::pair<std::string, std::string>> define_part::sources() const
 {

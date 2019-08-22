@@ -21,7 +21,7 @@ class shadertoy_EXPORT basic_part
 	/// Name of this template part
 	std::string name_;
 
-protected:
+	protected:
 	/**
 	 * @brief Initialize a new instance of basic_part
 	 *
@@ -29,7 +29,7 @@ protected:
 	 */
 	basic_part(const std::string &name);
 
-public:
+	public:
 	virtual ~basic_part();
 
 	/**
@@ -37,16 +37,14 @@ public:
 	 *
 	 * @return Name of this template part
 	 */
-	inline const std::string &name() const
-	{ return name_; }
+	inline const std::string &name() const { return name_; }
 
 	/**
 	 * @brief Get a value indicating if this template_part is specified
 	 *
 	 * @return true if the template_part is specified, false otherwise
 	 */
-	inline bool is_specified() const
-	{ return static_cast<bool>(*this); }
+	inline bool is_specified() const { return static_cast<bool>(*this); }
 
 	/**
 	 * @brief Convert this template_part to a boolean.
@@ -77,16 +75,12 @@ public:
 /**
  * @brief Implements clone functionality for template parts
  */
-template<typename defined_part>
-class cloneable_part : public basic_part
+template <typename defined_part> class cloneable_part : public basic_part
 {
-protected:
-	cloneable_part(const std::string &name)
-		: basic_part(name)
-	{
-	}
+	protected:
+	cloneable_part(const std::string &name) : basic_part(name) {}
 
-public:
+	public:
 	virtual basic_part *clone() const
 	{
 		return new defined_part(static_cast<const defined_part &>(*this));
@@ -97,12 +91,9 @@ public:
 	 *
 	 * @return unique_ptr pointing to the cloned instance
 	 */
-	operator std::unique_ptr<basic_part>() const
-	{
-		return std::unique_ptr<basic_part>(clone());
-	}
+	operator std::unique_ptr<basic_part>() const { return std::unique_ptr<basic_part>(clone()); }
 };
-}
-}
+} // namespace compiler
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_COMPILER_BASIC_PART_HPP_ */

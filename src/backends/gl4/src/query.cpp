@@ -6,7 +6,7 @@
 using namespace shadertoy::backends::gl4;
 
 null_query_error::null_query_error()
-	: shadertoy_error("An attempt was made to dereference a null query")
+: shadertoy_error("An attempt was made to dereference a null query")
 {
 }
 
@@ -17,30 +17,15 @@ GLuint query_allocator::create(GLenum target)
 	return id;
 }
 
-void query_allocator::destroy(GLuint resource)
-{
-	gl_call(glDeleteQueries, 1, &resource);
-}
+void query_allocator::destroy(GLuint resource) { gl_call(glDeleteQueries, 1, &resource); }
 
-query::query(GLenum target)
-	: resource(allocator_type().create(target))
-{
-}
+query::query(GLenum target) : resource(allocator_type().create(target)) {}
 
-void query::begin(GLenum target) const
-{
-	gl_call(glBeginQuery, target, GLuint(*this));
-}
+void query::begin(GLenum target) const { gl_call(glBeginQuery, target, GLuint(*this)); }
 
-void query::end(GLenum target) const
-{
-	gl_call(glEndQuery, target);
-}
+void query::end(GLenum target) const { gl_call(glEndQuery, target); }
 
-void query::query_counter(GLenum target) const
-{
-	gl_call(glQueryCounter, GLuint(*this), target);
-}
+void query::query_counter(GLenum target) const { gl_call(glQueryCounter, GLuint(*this), target); }
 
 void query::get_object_iv(GLenum pname, GLint *params) const
 {

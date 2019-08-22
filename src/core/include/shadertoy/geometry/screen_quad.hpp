@@ -25,18 +25,17 @@ class shadertoy_EXPORT screen_quad : public basic_geometry
 	/// Index buffer for screen quad
 	std::unique_ptr<backends::gx::buffer> quad_indices_;
 
-public:
+	public:
 	/**
 	 * @brief Initialize the screen quad geometry GL objects
 	 */
 	screen_quad();
 
-	inline const backends::gx::vertex_array &vertex_array() const final
-	{ return *quad_array_; }
+	inline const backends::gx::vertex_array &vertex_array() const final { return *quad_array_; }
 
 	void draw() const final;
 };
-}
-}
+} // namespace geometry
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_GEOMETRY_SCREEN_QUAD_HPP_ */

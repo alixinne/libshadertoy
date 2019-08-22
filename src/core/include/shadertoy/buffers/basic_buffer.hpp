@@ -32,7 +32,7 @@ class shadertoy_EXPORT basic_buffer
 	/// Query for iTimeDelta execution time
 	std::unique_ptr<backends::gx::query> time_delta_query_;
 
-protected:
+	protected:
 	/**
 	 * @brief     Initialize a new base buffer
 	 *
@@ -40,22 +40,20 @@ protected:
 	 */
 	basic_buffer(std::string id);
 
-public:
+	public:
 	/**
 	 * @brief      Obtain the identifier of this buffer
 	 *
 	 * @return     String identifying this buffer
 	 */
-	inline const std::string &id() const
-	{ return id_; }
+	inline const std::string &id() const { return id_; }
 
 	/**
 	 * @brief      Obtain the query object used to measure this buffer runtime
 	 *
 	 * @return     Reference to the query object
 	 */
-	inline const backends::gx::query &time_delta_query() const
-	{ return *time_delta_query_; }
+	inline const backends::gx::query &time_delta_query() const { return *time_delta_query_; }
 
 	/**
 	 * @brief      Obtain the duration of the last rendering of this buffer, in
@@ -67,7 +65,7 @@ public:
 	 */
 	uint64_t elapsed_time();
 };
-}
-}
+} // namespace buffers
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_BUFFERS_BASIC_BUFFER_HPP_ */

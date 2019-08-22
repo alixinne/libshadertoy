@@ -3,7 +3,4 @@
 using namespace shadertoy;
 using namespace shadertoy::compiler;
 
-template_error::template_error(const std::string &what)
-	: shadertoy_error(what)
-{
-}
+template_error::template_error(const std::string &what) : shadertoy_error(what) {}

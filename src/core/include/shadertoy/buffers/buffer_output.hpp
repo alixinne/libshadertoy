@@ -31,7 +31,7 @@ struct buffer_output
 	 */
 	buffer_output(std::string name, GLint location, GLenum type);
 };
-}
-}
+} // namespace buffers
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_BUFFERS_BUFFER_OUTPUT_HPP_ */

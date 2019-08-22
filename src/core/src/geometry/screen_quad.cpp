@@ -8,9 +8,8 @@ using namespace shadertoy;
 using namespace shadertoy::geometry;
 
 screen_quad::screen_quad()
-	: quad_array_(backends::current->make_vertex_array()),
-	quad_corners_(backends::current->make_buffer()),
-	quad_indices_(backends::current->make_buffer())
+: quad_array_(backends::current->make_vertex_array()),
+  quad_corners_(backends::current->make_buffer()), quad_indices_(backends::current->make_buffer())
 {
 	// clang-format off
 	GLfloat coords[] = {

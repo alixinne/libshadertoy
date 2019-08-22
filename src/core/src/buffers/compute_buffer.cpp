@@ -9,15 +9,9 @@ using namespace shadertoy::buffers;
 
 using shadertoy::utils::log;
 
-void compute_buffer::dispatch_compute()
-{
-	host_.program().dispatch_compute(num_groups_);
-}
+void compute_buffer::dispatch_compute() { host_.program().dispatch_compute(num_groups_); }
 
-compute_buffer::compute_buffer(const std::string &id)
-	: basic_buffer(id)
-{
-}
+compute_buffer::compute_buffer(const std::string &id) : basic_buffer(id) {}
 
 void compute_buffer::init(const render_context &context)
 {
@@ -28,7 +22,6 @@ void compute_buffer::init(const render_context &context)
 	// Print status
 	log::shadertoy()->debug("Program {} ({}) has {} uniform inputs", id(), static_cast<const void *>(this),
 							host_.program_intf().uniforms().resources().size());
-
 }
 
 void compute_buffer::allocate_textures(const render_context &context)

@@ -4,6 +4,7 @@
 #include <string>
 
 #include <epoxy/gl.h>
+
 #include <GLFW/glfw3.h>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -13,8 +14,8 @@
 #include "api.hpp"
 #include "test.hpp"
 
-#include <shadertoy/utils/log.hpp>
 #include <shadertoy/backends/gl4.hpp>
+#include <shadertoy/utils/log.hpp>
 
 using namespace std;
 
@@ -36,11 +37,12 @@ int parse_options(string &shaderId, string &shaderApiKey, bool &dump, int argc, 
 	// Read and parse options
 	bool help;
 	po::options_description desc("libshadertoy example - shadertoy");
-	desc.add_options()
-		("help,h", po::bool_switch(&help)->default_value(false), "show a help message")
-		("dump,d", po::bool_switch(&dump)->default_value(false), "Dump binary formats of the loaded programs")
-		("id,i", po::value<string>(&shaderId)->required(), "ID of the ShaderToy to render")
-		("api,a", po::value<string>(&shaderApiKey)->required(), "API key for ShaderToy query");
+	desc.add_options()("help,h", po::bool_switch(&help)->default_value(false),
+					   "show a help message")("dump,d", po::bool_switch(&dump)->default_value(false),
+											  "Dump binary formats of the loaded programs")(
+	"id,i", po::value<string>(&shaderId)->required(),
+	"ID of the ShaderToy to render")("api,a", po::value<string>(&shaderApiKey)->required(),
+									 "API key for ShaderToy query");
 
 	po::variables_map vm;
 
@@ -90,7 +92,8 @@ int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 			{
 				if (auto buffer_member = std::dynamic_pointer_cast<shadertoy::members::buffer_member>(member))
 				{
-					auto buffer(std::static_pointer_cast<shadertoy::buffers::toy_buffer>(buffer_member->buffer()));
+					auto buffer(
+					std::static_pointer_cast<shadertoy::buffers::toy_buffer>(buffer_member->buffer()));
 					auto dumpPath(buffer->id() + std::string(".dump"));
 
 					u::log::shadertoy()->info("Dumping {} to {}", buffer->id(), dumpPath);
@@ -139,9 +142,7 @@ int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 
 			//  iDate
 			boost::posix_time::ptime dt = boost::posix_time::microsec_clock::local_time();
-			chain.set_uniform("iDate", glm::vec4(dt.date().year() - 1,
-												 dt.date().month(),
-												 dt.date().day(),
+			chain.set_uniform("iDate", glm::vec4(dt.date().year() - 1, dt.date().month(), dt.date().day(),
 												 dt.time_of_day().total_nanoseconds() / 1e9f));
 
 			//  iMouse
@@ -165,13 +166,16 @@ int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 			context.render(chain);
 
 			// Print execution time
-			auto buffer = std::static_pointer_cast<shadertoy::buffers::toy_buffer>(std::static_pointer_cast<shadertoy::members::buffer_member>(chain.before(chain.members().back().get()))->buffer());
+			auto buffer = std::static_pointer_cast<shadertoy::buffers::toy_buffer>(
+			std::static_pointer_cast<shadertoy::members::buffer_member>(
+			chain.before(chain.members().back().get()))
+			->buffer());
 
 			auto renderTime = buffer->elapsed_time();
-			std::cerr << "frame time: " << renderTime
-					  << "ns fps: " << (1e9 / renderTime)
-					  << " mpx/s: " << (ctx.render_size.width * ctx.render_size.height / (renderTime / 1e3))
-					  << std::endl;
+			std::cerr
+			<< "frame time: " << renderTime << "ns fps: " << (1e9 / renderTime)
+			<< " mpx/s: " << (ctx.render_size.width * ctx.render_size.height / (renderTime / 1e3))
+			<< std::endl;
 
 			// Buffer swapping
 			glfwSwapBuffers(window);
@@ -187,8 +191,7 @@ int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 	return code;
 }
 
-template<typename... Args>
-int performRender(bool dumpShaders, Args&&... args)
+template <typename... Args> int performRender(bool dumpShaders, Args &&... args)
 {
 	int code = 0;
 
@@ -198,9 +201,9 @@ int performRender(bool dumpShaders, Args&&... args)
 		return 2;
 	}
 
-	glfwSetErrorCallback([] (int error, const char *description) {
-						 std::cerr << "GLFW error: " << description << std::endl;
-						 });
+	glfwSetErrorCallback([](int error, const char *description) {
+		std::cerr << "GLFW error: " << description << std::endl;
+	});
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);

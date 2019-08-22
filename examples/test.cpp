@@ -1,7 +1,8 @@
-#include <cstdlib>
 #include <chrono>
+#include <cstdlib>
 
 #include <epoxy/gl.h>
+
 #include <GLFW/glfw3.h>
 
 #include <shadertoy.hpp>
@@ -27,4 +28,3 @@ bool libshadertoy_test_exit()
 
 	return false;
 }
-

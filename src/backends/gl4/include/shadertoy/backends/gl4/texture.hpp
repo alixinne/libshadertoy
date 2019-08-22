@@ -258,7 +258,8 @@ class shadertoy_EXPORT texture : public resource<texture, texture_allocator, nul
 	 * @throws opengl_error
 	 * @throws null_texture_error
 	 */
-	void bind_image(GLuint unit, GLint level, GLboolean layered, GLint layer, GLenum access, GLenum format) const override;
+	void bind_image(GLuint unit, GLint level, GLboolean layered, GLint layer, GLenum access,
+					GLenum format) const override;
 
 	/**
 	 * @brief glBindImageTexture without a texture to clear bindings

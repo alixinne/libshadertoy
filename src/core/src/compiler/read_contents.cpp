@@ -19,8 +19,7 @@ std::string read_contents(const std::string &filename)
 	}
 
 	std::string loaded_source;
-	loaded_source.assign(std::istreambuf_iterator<char>(src),
-						 std::istreambuf_iterator<char>());
+	loaded_source.assign(std::istreambuf_iterator<char>(src), std::istreambuf_iterator<char>());
 
 	if (loaded_source.empty() || loaded_source.back() != '\n')
 	{
@@ -28,7 +27,6 @@ std::string read_contents(const std::string &filename)
 	}
 
 	src.close();
-	
+
 	return loaded_source;
 }
-

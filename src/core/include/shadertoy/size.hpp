@@ -23,9 +23,7 @@ template <typename T> struct basic_size
 	/**
 	 * @brief Create a default 2D size
 	 */
-	basic_size()
-		: width(0), height(0)
-	{}
+	basic_size() : width(0), height(0) {}
 
 	/**
 	 * @brief Create a 2D size from the given dimensions
@@ -33,9 +31,7 @@ template <typename T> struct basic_size
 	 * @param width  Width of the created size object
 	 * @param height Height of the created size object
 	 */
-	basic_size(T width, T height)
-		: width(width), height(height)
-	{}
+	basic_size(T width, T height) : width(width), height(height) {}
 
 	/**
 	 * @brief Compare this size object with another
@@ -83,7 +79,7 @@ template <typename T> struct basic_size
  */
 template <typename T> class size_ref_interface
 {
-public:
+	public:
 	virtual ~size_ref_interface() = default;
 
 	/**
@@ -113,7 +109,7 @@ template <typename T> class size_ref_interface_ref : public size_ref_interface<T
 	/// Reference interface
 	const size_ref_interface<T> &int_ref_;
 
-public:
+	public:
 	/**
 	 * @brief Build a new size_ref_interface&lt;T&gt; from a reference
 	 *
@@ -121,9 +117,7 @@ public:
 	 *
 	 * @param int_ref Reference to an interface
 	 */
-	size_ref_interface_ref(const size_ref_interface<T> &int_ref)
-		: int_ref_(int_ref)
-	{}
+	size_ref_interface_ref(const size_ref_interface<T> &int_ref) : int_ref_(int_ref) {}
 
 	basic_size<T> resolve() const override { return int_ref_.resolve(); }
 };
@@ -153,15 +147,13 @@ template <typename T> class explicit_size : public size_ref_interface<T>
 	/// Size object
 	basic_size<T> size_;
 
-public:
+	public:
 	/**
 	 * @brief Build a new explicit_size from the size object \p size
 	 *
 	 * @param size Size of this explicit_size instance
 	 */
-	explicit_size(const basic_size<T> &size)
-		: size_(size)
-	{}
+	explicit_size(const basic_size<T> &size) : size_(size) {}
 
 	basic_size<T> resolve() const override { return size_; }
 };
@@ -176,8 +168,7 @@ public:
  *
  * @return Unique pointer to a new explicit_size instance
  */
-template <typename T>
-std::unique_ptr<size_ref_interface<T>> make_size(const basic_size<T> &size)
+template <typename T> std::unique_ptr<size_ref_interface<T>> make_size(const basic_size<T> &size)
 {
 	return std::make_unique<explicit_size<T>>(size);
 }
@@ -192,8 +183,7 @@ std::unique_ptr<size_ref_interface<T>> make_size(const basic_size<T> &size)
  *
  * @return Unique pointer to a new explicit_size instance
  */
-template <typename T>
-std::unique_ptr<size_ref_interface<T>> make_size(T width, T height)
+template <typename T> std::unique_ptr<size_ref_interface<T>> make_size(T width, T height)
 {
 	return std::make_unique<explicit_size<T>>(basic_size<T>(width, height));
 }
@@ -208,7 +198,7 @@ template <typename T> class explicit_size_ref : public size_ref_interface<T>
 	/// Size object reference
 	const basic_size<T> &size_;
 
-public:
+	public:
 	/**
 	 * @brief Build a new explicit_size_ref&lt;T&gt; from a reference
 	 *
@@ -216,9 +206,7 @@ public:
 	 *
 	 * @param size Reference to a size object
 	 */
-	explicit_size_ref(const basic_size<T> &size)
-		: size_(size)
-	{}
+	explicit_size_ref(const basic_size<T> &size) : size_(size) {}
 
 	basic_size<T> resolve() const override { return size_; }
 };
@@ -250,15 +238,13 @@ template <typename T, typename Callable> class getter_size_ref : public size_ref
 	/// Callback object
 	Callable getter_;
 
-public:
+	public:
 	/**
 	 * @brief Buil a new getter_size_ref&lt;T&gt;
 	 *
 	 * @param getter Callback to obtain the size object
 	 */
-	getter_size_ref(Callable getter)
-		: getter_(getter)
-	{}
+	getter_size_ref(Callable getter) : getter_(getter) {}
 
 	basic_size<T> resolve() const override { return getter_(); }
 };
@@ -282,6 +268,6 @@ typedef basic_size<unsigned int> rsize;
 /// Unsigned integer render size reference
 typedef std::unique_ptr<size_ref_interface<unsigned int>> rsize_ref;
 
-}
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_SIZE_HPP_ */

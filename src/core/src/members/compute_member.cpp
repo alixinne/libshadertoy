@@ -20,22 +20,14 @@ void compute_member::allocate_member(const swap_chain &chain, const render_conte
 	buffer_->allocate_textures(context);
 }
 
-compute_member::compute_member(std::shared_ptr<buffers::compute_buffer> buffer)
-	: buffer_(buffer)
-{
-}
+compute_member::compute_member(std::shared_ptr<buffers::compute_buffer> buffer) : buffer_(buffer) {}
 
-std::vector<member_output_t> compute_member::output()
-{
-	return {};
-}
+std::vector<member_output_t> compute_member::output() { return {}; }
 
-int compute_member::find_output(const output_name_t &name) const
-{
-	return -1;
-}
+int compute_member::find_output(const output_name_t &name) const { return -1; }
 
-std::shared_ptr<compute_member> members::make_member(const swap_chain &chain, std::shared_ptr<buffers::compute_buffer> buffer)
+std::shared_ptr<compute_member>
+members::make_member(const swap_chain &chain, std::shared_ptr<buffers::compute_buffer> buffer)
 {
 	return make_compute(buffer);
 }

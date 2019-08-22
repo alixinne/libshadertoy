@@ -6,8 +6,7 @@ using namespace shadertoy::compiler;
 
 using shadertoy::utils::error_assert;
 
-basic_part::basic_part(const std::string &name)
-	: name_(name)
+basic_part::basic_part(const std::string &name) : name_(name)
 {
 	error_assert(!name.empty(), "The name of a template part cannot be empty");
 }

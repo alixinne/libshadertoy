@@ -71,7 +71,10 @@ class io_resource
 		 *
 		 * @return     Source texture for this buffer.
 		 */
-		inline const std::unique_ptr<backends::gx::texture> &source_texture() const { return source_tex; }
+		inline const std::unique_ptr<backends::gx::texture> &source_texture() const
+		{
+			return source_tex;
+		}
 
 		/**
 		 * @brief      Get a reference to the current texture for this buffer
@@ -147,8 +150,7 @@ class io_resource
 	 *
 	 * @param new_policy New swapping policy
 	 */
-	inline void swap_policy(member_swap_policy new_policy)
-	{ swap_policy_ = new_policy; }
+	inline void swap_policy(member_swap_policy new_policy) { swap_policy_ = new_policy; }
 
 	/**
 	 * @brief        Get a reference to the source texture for this buffer
@@ -174,6 +176,6 @@ class io_resource
 		return outputs_.at(target).target_texture();
 	}
 };
-}
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_IO_RESOURCE_HPP_ */

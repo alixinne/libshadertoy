@@ -25,7 +25,7 @@ class shadertoy_EXPORT checker_input : public basic_input
 	/// Size of the tiles
 	size_t tile_size_;
 
-protected:
+	protected:
 	/**
 	 * @brief Load this input's contents
 	 */
@@ -43,7 +43,7 @@ protected:
 	 */
 	backends::gx::texture *use_input() override;
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new instance of the checker_input class of the given size
 	 *
@@ -75,7 +75,7 @@ public:
 	 */
 	void tile_size(size_t new_tile_size) { tile_size_ = new_tile_size; }
 };
-}
-}
+} // namespace inputs
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_INPUTS_CHECKER_INPUT_HPP_ */

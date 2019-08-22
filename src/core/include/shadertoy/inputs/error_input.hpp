@@ -19,7 +19,7 @@ class shadertoy_EXPORT error_input : public basic_input
 	/// Texture object
 	std::unique_ptr<backends::gx::texture> texture_;
 
-protected:
+	protected:
 	/**
 	 * @brief Load this input's contents
 	 *
@@ -39,13 +39,13 @@ protected:
 	 */
 	backends::gx::texture *use_input() override;
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new instance of the error_input class
 	 */
 	error_input();
 };
-}
-}
+} // namespace inputs
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_INPUTS_ERROR_INPUT_HPP_ */

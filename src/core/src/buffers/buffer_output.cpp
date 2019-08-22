@@ -8,4 +8,3 @@ buffer_output::buffer_output(std::string name, GLint location, GLenum type)
 : name(name), location(location), type(type)
 {
 }
-

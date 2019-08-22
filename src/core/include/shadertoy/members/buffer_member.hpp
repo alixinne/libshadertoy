@@ -77,7 +77,7 @@ class shadertoy_EXPORT buffer_member : public basic_member
 	 */
 	void allocate_member(const swap_chain &chain, const render_context &context) override;
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new buffer swap chain member
 	 *
@@ -86,7 +86,8 @@ public:
 	 * @param internal_format Internal format of the rendering textures
 	 * @param swap_policy     Texture swapping policy for the rendering textures
 	 */
-	buffer_member(std::shared_ptr<buffers::graphics_buffer> buffer, rsize_ref render_size, GLint internal_format, member_swap_policy swap_policy);
+	buffer_member(std::shared_ptr<buffers::graphics_buffer> buffer, rsize_ref render_size,
+				  GLint internal_format, member_swap_policy swap_policy);
 
 	virtual ~buffer_member() = default;
 
@@ -95,40 +96,35 @@ public:
 	 *
 	 * @return Pointer to the buffer associated with this member
 	 */
-	inline const std::shared_ptr<buffers::graphics_buffer> &buffer() const
-	{ return buffer_; }
+	inline const std::shared_ptr<buffers::graphics_buffer> &buffer() const { return buffer_; }
 
 	/**
 	 * @brief Get the IO resource object that holds this member's textures
-	 * 
+	 *
 	 * @return Reference to the IO resource object
 	 */
-	inline const io_resource &io() const
-	{ return io_; }
+	inline const io_resource &io() const { return io_; }
 
 	/**
 	 * @brief Get a reference to the OpenGL state
 	 *
 	 * @return Reference to the OpenGL state
 	 */
-	inline const backends::gx::draw_state &state() const
-	{ return *state_; }
+	inline const backends::gx::draw_state &state() const { return *state_; }
 
 	/**
 	 * @brief Get a reference to the OpenGL state
 	 *
 	 * @return Reference to the OpenGL state
 	 */
-	inline backends::gx::draw_state &state()
-	{ return *state_; }
+	inline backends::gx::draw_state &state() { return *state_; }
 
 	/**
 	 * @brief Get the output allocator function
 	 *
 	 * @return Reference to the output allocator function
 	 */
-	inline const output_allocator_t &output_allocator() const
-	{ return output_allocator_; }
+	inline const output_allocator_t &output_allocator() const { return output_allocator_; }
 
 	/**
 	 * @brief Set the output allocator function
@@ -136,7 +132,9 @@ public:
 	 * @param new_allocator New output allocator function
 	 */
 	inline void output_allocator(output_allocator_t new_allocator)
-	{ output_allocator_ = new_allocator; }
+	{
+		output_allocator_ = new_allocator;
+	}
 
 	/**
 	 * @brief Return the buffer's latest output in the current chain
@@ -166,8 +164,7 @@ public:
  *
  * @see buffer_member#buffer_member
  */
-template<typename... Args>
-std::shared_ptr<buffer_member> make_buffer(Args&&... args)
+template <typename... Args> std::shared_ptr<buffer_member> make_buffer(Args &&... args)
 {
 	return std::make_shared<buffer_member>(std::forward<Args>(args)...);
 }
@@ -184,7 +181,9 @@ std::shared_ptr<buffer_member> make_buffer(Args&&... args)
  *
  * @see buffer_member#buffer_member(std::shared_ptr<buffers::graphics_buffer>, rsize_ref &&, GLint, member_swap_policy)
  */
-std::shared_ptr<buffer_member> shadertoy_EXPORT make_member(const swap_chain &chain, std::shared_ptr<buffers::graphics_buffer> buffer, rsize_ref &&render_size);
+std::shared_ptr<buffer_member> shadertoy_EXPORT make_member(const swap_chain &chain,
+															std::shared_ptr<buffers::graphics_buffer> buffer,
+															rsize_ref &&render_size);
 
 /**
  * @brief Construct a pointer to a buffer_member
@@ -199,7 +198,9 @@ std::shared_ptr<buffer_member> shadertoy_EXPORT make_member(const swap_chain &ch
  *
  * @see buffer_member#buffer_member(std::shared_ptr<buffers::graphics_buffer>, rsize_ref &&, GLint, member_swap_policy)
  */
-std::shared_ptr<buffer_member> shadertoy_EXPORT make_member(const swap_chain &chain, std::shared_ptr<buffers::graphics_buffer> buffer, rsize_ref &&render_size, GLint internal_format);
+std::shared_ptr<buffer_member>
+shadertoy_EXPORT make_member(const swap_chain &chain, std::shared_ptr<buffers::graphics_buffer> buffer,
+							 rsize_ref &&render_size, GLint internal_format);
 
 /**
  * @brief Construct a pointer to a buffer_member
@@ -214,7 +215,9 @@ std::shared_ptr<buffer_member> shadertoy_EXPORT make_member(const swap_chain &ch
  *
  * @see buffer_member#buffer_member(std::shared_ptr<buffers::graphics_buffer>, rsize_ref &&, GLint, member_swap_policy)
  */
-std::shared_ptr<buffer_member> shadertoy_EXPORT make_member(const swap_chain &chain, std::shared_ptr<buffers::graphics_buffer> buffer, rsize_ref &&render_size, member_swap_policy swap_policy);
+std::shared_ptr<buffer_member>
+shadertoy_EXPORT make_member(const swap_chain &chain, std::shared_ptr<buffers::graphics_buffer> buffer,
+							 rsize_ref &&render_size, member_swap_policy swap_policy);
 
 /**
  * @brief Construct a pointer to a buffer_member
@@ -230,7 +233,9 @@ std::shared_ptr<buffer_member> shadertoy_EXPORT make_member(const swap_chain &ch
  *
  * @see buffer_member#buffer_member(std::shared_ptr<buffers::graphics_buffer>, rsize_ref &&, GLint, member_swap_policy)
  */
-std::shared_ptr<buffer_member> shadertoy_EXPORT make_member(const swap_chain &chain, std::shared_ptr<buffers::graphics_buffer> buffer, rsize_ref &&render_size, GLint internal_format, member_swap_policy swap_policy);
+std::shared_ptr<buffer_member>
+shadertoy_EXPORT make_member(const swap_chain &chain, std::shared_ptr<buffers::graphics_buffer> buffer,
+							 rsize_ref &&render_size, GLint internal_format, member_swap_policy swap_policy);
 } // namespace members
 } // namespace shadertoy
 

@@ -1,7 +1,7 @@
 #include <utility>
 
-#include "shadertoy/compiler/template_error.hpp"
 #include "shadertoy/compiler/file_part.hpp"
+#include "shadertoy/compiler/template_error.hpp"
 
 #include "shadertoy/utils/assert.hpp"
 
@@ -17,10 +17,7 @@ file_part::file_part(const std::string &name, std::string source_file)
 {
 }
 
-file_part::operator bool() const
-{
-	return !source_file_.empty();
-}
+file_part::operator bool() const { return !source_file_.empty(); }
 
 std::vector<std::pair<std::string, std::string>> file_part::sources() const
 {
@@ -31,4 +28,3 @@ std::vector<std::pair<std::string, std::string>> file_part::sources() const
 	result.emplace_back(source_file_, read_contents(source_file_));
 	return result;
 }
-

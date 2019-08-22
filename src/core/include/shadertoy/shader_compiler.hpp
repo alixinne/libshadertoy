@@ -15,7 +15,7 @@ namespace shadertoy
  */
 class shader_compiler
 {
-public:
+	public:
 	/**
 	 * @brief      Load the sources in the provided shader object, and compiles
 	 *             the program. Any program building errors will be rewritten so
@@ -30,9 +30,10 @@ public:
 	 *             GLSL code. The parts will be compiled in the same order as
 	 *             they are added to this vector.
 	 */
-	static void compile(backends::gx::shader &shader, const std::vector<std::pair<std::string, std::string>> &sources);
+	static void compile(backends::gx::shader &shader,
+						const std::vector<std::pair<std::string, std::string>> &sources);
 };
 
-}
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_SHADER_COMPILER_HPP_ */

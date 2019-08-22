@@ -90,7 +90,7 @@ class shadertoy_EXPORT render_context
 	/// Default error input
 	std::shared_ptr<inputs::error_input> error_input_;
 
-public:
+	public:
 	/**
 	 * @brief      Create a new render context.
 	 */
@@ -138,26 +138,23 @@ public:
 	 *
 	 * @return Reference to the shader_template in use by this context
 	 */
-	inline const compiler::program_template &buffer_template() const
-	{ return buffer_template_; }
+	inline const compiler::program_template &buffer_template() const { return buffer_template_; }
 
 	/**
 	 * @brief  Get a reference to the buffer template
 	 *
 	 * @return Reference to the shader_template in use by this context
 	 */
-	inline compiler::program_template &buffer_template()
-	{ return buffer_template_; }
+	inline compiler::program_template &buffer_template() { return buffer_template_; }
 
 	/**
 	 * @brief  Get a reference to the default error_input instance
 	 *
 	 * @return Reference to the error_input fallback object
 	 */
-	inline const std::shared_ptr<inputs::error_input> &error_input() const
-	{ return error_input_; }
+	inline const std::shared_ptr<inputs::error_input> &error_input() const { return error_input_; }
 };
 
-}
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_RENDER_CONTEXT_HPP_ */

@@ -19,12 +19,12 @@ namespace buffers
  */
 class shadertoy_EXPORT toy_buffer : public program_buffer
 {
-protected:
+	protected:
 	void init_geometry(const render_context &context, const io_resource &io) override;
 
 	void render_geometry(const render_context &context, const io_resource &io) override;
 
-public:
+	public:
 	/**
 	 * @brief      Initialize a new ShaderToy buffer
 	 *
@@ -32,7 +32,7 @@ public:
 	 */
 	toy_buffer(const std::string &id);
 };
-}
-}
+} // namespace buffers
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_BUFFERS_TOY_BUFFER_HPP_ */

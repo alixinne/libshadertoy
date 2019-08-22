@@ -3,8 +3,8 @@
 
 #include "shadertoy/shadertoy_export.h"
 
-#include "shadertoy/spdlog/spdlog.h"
 #include "shadertoy/spdlog/fmt/ostr.h"
+#include "shadertoy/spdlog/spdlog.h"
 
 namespace shadertoy
 {
@@ -16,7 +16,7 @@ class shadertoy_EXPORT log
 {
 	static bool initialized_;
 
-public:
+	public:
 	/**
 	 * @brief Get the default logger instance for libshadertoy
 	 *
@@ -25,7 +25,7 @@ public:
 	static std::shared_ptr<spdlog::logger> shadertoy();
 };
 
-}
-}
+} // namespace utils
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_UTILS_LOG_HPP_ */

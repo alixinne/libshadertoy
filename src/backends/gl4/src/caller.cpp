@@ -8,8 +8,5 @@
 using namespace shadertoy::backends::gl4;
 
 SHADERTOY_BACKENDS_GL4_NAMESPACE_BEGIN
-	void check_errors()
-	{
-		backend::current().check_errors();
-	}
+void check_errors() { backend::current().check_errors(); }
 SHADERTOY_BACKENDS_GL4_NAMESPACE_END

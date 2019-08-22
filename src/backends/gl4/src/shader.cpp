@@ -11,24 +11,15 @@
 using namespace shadertoy::backends::gl4;
 
 null_shader_error::null_shader_error()
-	: shadertoy_error("An attempt was made to dereference a null shader")
+: shadertoy_error("An attempt was made to dereference a null shader")
 {
 }
 
-GLuint shader_allocator::create(GLenum shaderType)
-{
-	return gl_call(glCreateShader, shaderType);
-}
+GLuint shader_allocator::create(GLenum shaderType) { return gl_call(glCreateShader, shaderType); }
 
-void shader_allocator::destroy(GLuint resource)
-{
-	gl_call(glDeleteShader, resource);
-}
+void shader_allocator::destroy(GLuint resource) { gl_call(glDeleteShader, resource); }
 
-shader::shader(GLenum shaderType)
-	: resource(allocator_type().create(shaderType))
-{
-}
+shader::shader(GLenum shaderType) : resource(allocator_type().create(shaderType)) {}
 
 void shader::source(const std::string &string) const
 {
@@ -42,9 +33,7 @@ void shader::source(const std::vector<std::string> &string) const
 	std::vector<const char *> cstr(string.size());
 
 	std::transform(string.begin(), string.end(), cstr.begin(),
-		[] (const std::string &src) {
-			return src.c_str();
-		});
+				   [](const std::string &src) { return src.c_str(); });
 
 	gl_call(glShaderSource, GLuint(*this), string.size(), cstr.data(), nullptr);
 }

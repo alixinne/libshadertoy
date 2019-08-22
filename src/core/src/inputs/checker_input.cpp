@@ -35,8 +35,8 @@ GLenum checker_input::load_input()
 	}
 
 	// Load it
-	texture_->image_2d(GL_TEXTURE_2D, 0, format, ts.width, ts.height, 0, GL_RED,
-					   GL_UNSIGNED_BYTE, chk.data());
+	texture_->image_2d(GL_TEXTURE_2D, 0, format, ts.width, ts.height, 0, GL_RED, GL_UNSIGNED_BYTE,
+					   chk.data());
 
 	texture_->parameter(GL_TEXTURE_SWIZZLE_B, GL_RED);
 	texture_->parameter(GL_TEXTURE_SWIZZLE_G, GL_RED);

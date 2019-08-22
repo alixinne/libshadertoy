@@ -27,7 +27,7 @@ class gl_buffer : public graphics_buffer
 	/// Target renderbuffer
 	std::unique_ptr<backends::gx::renderbuffer> target_rbo_;
 
-protected:
+	protected:
 	/**
 	 * @brief     Initialize a new gl_buffer
 	 *
@@ -55,11 +55,10 @@ protected:
 	 * @param[in]  target_fbo Target framebuffer bound object
 	 * @param[in]  io         IO resource object containing the target textures to bind
 	 */
-	virtual void attach_framebuffer_outputs(GLenum target,
-											const backends::gx::framebuffer &target_fbo,
+	virtual void attach_framebuffer_outputs(GLenum target, const backends::gx::framebuffer &target_fbo,
 											const io_resource &io);
 
-public:
+	public:
 	/**
 	 * @brief     Initialize the contents of the buffer for rendering.
 	 *
@@ -86,26 +85,23 @@ public:
 	 * @param[in]  io      IO resource object
 	 * @param[in]  member  Current swap-chain member
 	 */
-	void render(const render_context &context, const io_resource &io,
-				const members::buffer_member &member) final;
+	void render(const render_context &context, const io_resource &io, const members::buffer_member &member) final;
 
 	/**
 	 * @brief Obtain this buffer's GL framebuffer object
 	 *
 	 * @return Reference to the framebuffer object
 	 */
-	inline const backends::gx::framebuffer &target_fbo() const
-	{ return *target_fbo_; }
+	inline const backends::gx::framebuffer &target_fbo() const { return *target_fbo_; }
 
 	/**
 	 * @brief Obtain this buffer's GL renderbuffer object
 	 *
 	 * @return Reference to the renderbuffer object
 	 */
-	inline const backends::gx::renderbuffer &target_rbo() const
-	{ return *target_rbo_; }
+	inline const backends::gx::renderbuffer &target_rbo() const { return *target_rbo_; }
 };
-}
-}
+} // namespace buffers
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_BUFFERS_BUFFER_BASE_HPP_ */

@@ -41,7 +41,7 @@ class shadertoy_EXPORT program_input
 	/// Set the type from the sampler_type_
 	static program_input_type type_from_sampler(const std::string &sampler_type);
 
-public:
+	public:
 	/**
 	 * @brief Create a new unnamed input
 	 *
@@ -55,7 +55,7 @@ public:
 	 *
 	 * Unnamed inputs are allowed for compatibility with iChannel*,
 	 * which forces their type to be sampler2D
-	 * 
+	 *
 	 * @param input Initial input value
 	 */
 	program_input(const std::shared_ptr<inputs::basic_input> &input);
@@ -122,54 +122,47 @@ public:
 	 *
 	 * @return Name of the GLSL sampler type
 	 */
-	inline const std::string sampler_type() const
-	{ return sampler_type_; }
+	inline const std::string sampler_type() const { return sampler_type_; }
 
 	/**
 	 * @brief Get the sampler name
 	 *
 	 * @return Name of this sampler
 	 */
-	inline const std::string sampler_name() const
-	{ return sampler_name_; }
+	inline const std::string sampler_name() const { return sampler_name_; }
 
 	/**
 	 * @brief Get the memory qualifier
 	 *
 	 * @return Memory qualifier for this variable
 	 */
-	inline const std::string memory_qualifier() const
-	{ return memory_qualifier_; }
+	inline const std::string memory_qualifier() const { return memory_qualifier_; }
 
 	/**
 	 * @brief Get the input object
 	 *
 	 * @return Reference to the input object
 	 */
-	inline const std::shared_ptr<inputs::basic_input> &input() const
-	{ return input_; }
+	inline const std::shared_ptr<inputs::basic_input> &input() const { return input_; }
 
 	/**
 	 * @brief Get the input object
 	 *
 	 * @return Reference to the input object
 	 */
-	inline std::shared_ptr<inputs::basic_input> &input()
-	{ return input_; }
+	inline std::shared_ptr<inputs::basic_input> &input() { return input_; }
 
 	/**
 	 * @brief Set the input object
 	 *
 	 * @param new_input New input object
 	 */
-	inline void input(std::shared_ptr<inputs::basic_input> new_input)
-	{ input_ = new_input; }
+	inline void input(std::shared_ptr<inputs::basic_input> new_input) { input_ = new_input; }
 
 	/**
 	 * @brief Get the input type
 	 */
-	inline program_input_type type() const
-	{ return type_; }
+	inline program_input_type type() const { return type_; }
 
 	/**
 	 * @brief Get the GLSL definition for this sampler
@@ -187,11 +180,10 @@ public:
  *
  * @return Pointer to the constructed program_input
  */
-template<typename... Args>
-std::shared_ptr<program_input> make_input(Args&&... args)
+template <typename... Args> std::shared_ptr<program_input> make_input(Args &&... args)
 {
 	return std::make_shared<program_input>(std::forward<Args>(args)...);
 }
-}
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_PROGRAM_INPUT_HPP_ */

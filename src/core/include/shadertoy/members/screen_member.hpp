@@ -3,8 +3,8 @@
 
 #include "shadertoy/pre.hpp"
 
-#include "shadertoy/backends/gx/sampler.hpp"
 #include "shadertoy/backends/gx/draw_state.hpp"
+#include "shadertoy/backends/gx/sampler.hpp"
 #include "shadertoy/members/basic_member.hpp"
 
 #include <optional>
@@ -52,7 +52,7 @@ class shadertoy_EXPORT screen_member : public basic_member
 
 	/// Viewport X
 	int viewport_x_;
-	
+
 	/// Viewport Y
 	int viewport_y_;
 
@@ -62,7 +62,7 @@ class shadertoy_EXPORT screen_member : public basic_member
 	/// OpenGL drawing state
 	std::unique_ptr<backends::gx::draw_state> state_;
 
-protected:
+	protected:
 	/**
 	 * @brief Implement rendering the last swap chain output to the screen
 	 *
@@ -173,48 +173,42 @@ protected:
 	 *
 	 * @return Reference to the OpenGL sampler object used for the rendering
 	 */
-	inline const backends::gx::sampler &sampler() const
-	{ return *sampler_; }
+	inline const backends::gx::sampler &sampler() const { return *sampler_; }
 
 	/**
 	 * @brief Obtain the viewport X offset
 	 *
 	 * @return Value of the viewport X offset
 	 */
-	inline int viewport_x() const
-	{ return viewport_x_; }
+	inline int viewport_x() const { return viewport_x_; }
 
 	/**
 	 * @brief Set the viewport X offset
 	 *
 	 * @param new_viewport_x New viewport X offset
 	 */
-	inline void viewport_x(int new_viewport_x)
-	{ viewport_x_ = new_viewport_x; }
+	inline void viewport_x(int new_viewport_x) { viewport_x_ = new_viewport_x; }
 
 	/**
 	 * @brief Obtain the viewport Y offset
 	 *
 	 * @return Value of the viewport Y offset
 	 */
-	inline int viewport_y() const
-	{ return viewport_y_; }
+	inline int viewport_y() const { return viewport_y_; }
 
 	/**
 	 * @brief Set the viewport Y offset
 	 *
 	 * @param new_viewport_y New viewport Y offset
 	 */
-	inline void viewport_y(int new_viewport_y)
-	{ viewport_y_ = new_viewport_y; }
+	inline void viewport_y(int new_viewport_y) { viewport_y_ = new_viewport_y; }
 
 	/**
 	 * @brief Obtain the viewport size object
 	 *
 	 * @return Reference to the viewport size object
 	 */
-	inline const rsize_ref &viewport_size() const
-	{ return viewport_size_; }
+	inline const rsize_ref &viewport_size() const { return viewport_size_; }
 
 	/**
 	 * @brief Set the viewport size object
@@ -222,23 +216,23 @@ protected:
 	 * @param new_viewport_size New viewport size
 	 */
 	inline void viewport_size(rsize_ref new_viewport_size)
-	{ viewport_size_ = std::move(new_viewport_size); }
+	{
+		viewport_size_ = std::move(new_viewport_size);
+	}
 
 	/**
 	 * @brief Get a reference to the OpenGL state
 	 *
 	 * @return Reference to the OpenGL state
 	 */
-	inline const backends::gx::draw_state &state() const
-	{ return *state_; }
+	inline const backends::gx::draw_state &state() const { return *state_; }
 
 	/**
 	 * @brief Get a reference to the OpenGL state
 	 *
 	 * @return Reference to the OpenGL state
 	 */
-	inline backends::gx::draw_state &state()
-	{ return *state_; }
+	inline backends::gx::draw_state &state() { return *state_; }
 };
 
 /**
@@ -250,12 +244,11 @@ protected:
  *
  * @see screen_member#screen_member
  */
-template<typename... Args>
-std::shared_ptr<screen_member> make_screen(Args&&... args)
+template <typename... Args> std::shared_ptr<screen_member> make_screen(Args &&... args)
 {
 	return std::make_shared<screen_member>(std::forward<Args>(args)...);
 }
-}
-}
+} // namespace members
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_MEMBERS_SCREEN_MEMBER_HPP_ */

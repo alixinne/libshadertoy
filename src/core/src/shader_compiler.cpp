@@ -9,23 +9,20 @@
 using namespace std;
 using namespace shadertoy;
 
-void shader_compiler::compile(backends::gx::shader &shader, const std::vector<std::pair<std::string, std::string>> &named_sources)
+void shader_compiler::compile(backends::gx::shader &shader,
+							  const std::vector<std::pair<std::string, std::string>> &named_sources)
 {
 	// Transform pairs into list of C strings
 	vector<std::string> sources(named_sources.size());
 	transform(named_sources.begin(), named_sources.end(), sources.begin(),
-		[] (const pair<string, string> &namedSource) {
-			return namedSource.second;
-		});
+			  [](const pair<string, string> &namedSource) { return namedSource.second; });
 
 	// Also, build a line count
 	vector<int> lineCounts(named_sources.size());
 	transform(named_sources.begin(), named_sources.end(), lineCounts.begin(),
-		[] (const pair<string, string> &namedSource) {
-			return count(namedSource.second.begin(),
-						 namedSource.second.end(),
-						 '\n');
-		});
+			  [](const pair<string, string> &namedSource) {
+				  return count(namedSource.second.begin(), namedSource.second.end(), '\n');
+			  });
 
 	// Load sources in fragment shader and compile
 	try
@@ -64,9 +61,7 @@ void shader_compiler::compile(backends::gx::shader &shader, const std::vector<st
 				// Parsing succeeded, find the source part which contains the
 				// actual error
 				size_t lc, lcn, li = 0;
-				for (lc = 0, lcn = 0;
-					 li < lineCounts.size();
-					 li++)
+				for (lc = 0, lcn = 0; li < lineCounts.size(); li++)
 				{
 					lc = lcn;
 					lcn += lineCounts.at(li);
@@ -85,12 +80,7 @@ void shader_compiler::compile(backends::gx::shader &shader, const std::vector<st
 				}
 
 				// Output a formatted message with the error
-				os << named_sources.at(li).first
-				   << c
-				   << (pline - lc)
-				   << d
-				   << msgis.rdbuf()
-				   << endl;
+				os << named_sources.at(li).first << c << (pline - lc) << d << msgis.rdbuf() << endl;
 			}
 		}
 

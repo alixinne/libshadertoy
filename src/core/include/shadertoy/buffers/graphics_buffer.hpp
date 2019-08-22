@@ -25,7 +25,7 @@ class shadertoy_EXPORT graphics_buffer : public basic_buffer
 	/// Size of this buffer's output
 	rsize_ref render_size_;
 
-protected:
+	protected:
 	/**
 	 * @brief     Initialize a new graphics buffer
 	 *
@@ -33,7 +33,7 @@ protected:
 	 */
 	graphics_buffer(std::string id);
 
-public:
+	public:
 	/**
 	 * @brief     Initialize the contents of the buffer for rendering. This method
 	 *            must be implemented by derived classes as part of their initialization
@@ -64,7 +64,8 @@ public:
 	 * @param[in]  io      IO resource object
 	 * @param[in]  member  Current swap-chain member
 	 */
-	virtual void render(const render_context &context, const io_resource &io, const members::buffer_member &member) = 0;
+	virtual void render(const render_context &context, const io_resource &io,
+						const members::buffer_member &member) = 0;
 
 	/**
 	 * @brief Obtains the list of outputs for this buffer.
@@ -79,7 +80,7 @@ public:
 	virtual std::optional<std::vector<buffer_output>> get_buffer_outputs() const;
 };
 
-}
-}
+} // namespace buffers
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_BUFFERS_GRAPHICS_BUFFER_HPP_ */

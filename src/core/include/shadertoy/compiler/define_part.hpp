@@ -28,7 +28,7 @@ class shadertoy_EXPORT preprocessor_defines
 	/// List of preprocessor definitions
 	std::map<std::string, std::string> definitions_;
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new instance of the preprocessor_defines class
 	 */
@@ -50,8 +50,7 @@ public:
 	 *
 	 * @return Const reference to the definitions map
 	 */
-	inline const std::map<std::string, std::string> &definitions() const
-	{ return definitions_; }
+	inline const std::map<std::string, std::string> &definitions() const { return definitions_; }
 
 	/**
 	 * @brief Obtain the source corresponding to the definitions in this object
@@ -69,7 +68,7 @@ class shadertoy_EXPORT define_part : public cloneable_part<define_part>
 	/// Preprocessor defines block
 	std::shared_ptr<preprocessor_defines> definitions_;
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new instance of the define_part class
 	 *
@@ -94,8 +93,7 @@ public:
 	 *
 	 * @return Reference to the preprocessor define block
 	 */
-	inline const std::shared_ptr<preprocessor_defines> &definitions() const
-	{ return definitions_; }
+	inline const std::shared_ptr<preprocessor_defines> &definitions() const { return definitions_; }
 
 	/**
 	 * @brief Convert this template_part to a boolean.
@@ -113,7 +111,7 @@ public:
 	 */
 	std::vector<std::pair<std::string, std::string>> sources() const override;
 };
-}
-}
+} // namespace compiler
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_COMPILER_DEFINE_PART_HPP_ */

@@ -4,7 +4,7 @@ namespace shadertoy
 namespace buffers
 {
 }
-}
+} // namespace shadertoy
 
 #include "shadertoy/buffers/basic_buffer.hpp"
 #include "shadertoy/buffers/compute_buffer.hpp"

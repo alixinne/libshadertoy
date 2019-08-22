@@ -4,9 +4,9 @@
 #include "shadertoy/pre.hpp"
 
 #include "shadertoy/backends/gx/program.hpp"
-#include "shadertoy/program_interface.hpp"
-#include "shadertoy/program_input.hpp"
 #include "shadertoy/compiler/program_template.hpp"
+#include "shadertoy/program_input.hpp"
+#include "shadertoy/program_interface.hpp"
 
 #include <deque>
 #include <map>
@@ -40,7 +40,7 @@ class shadertoy_EXPORT program_host
 	/// Pointer to the map to store compiled sources
 	std::map<GLenum, std::string> *source_map_;
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new program host
 	 */
@@ -74,24 +74,21 @@ public:
 	 *
 	 * @return     OpenGL program for this buffer.
 	 */
-	inline const backends::gx::program &program() const
-	{ return *program_; }
+	inline const backends::gx::program &program() const { return *program_; }
 
 	/**
 	 * @brief      Get a reference to the input array for this buffer
 	 *
 	 * @return     Reference to the input array for this buffer
 	 */
-	inline const std::deque<program_input> &inputs() const
-	{ return inputs_; }
+	inline const std::deque<program_input> &inputs() const { return inputs_; }
 
 	/**
 	 * @brief      Get a reference to the input array for this buffer
 	 *
 	 * @return     Reference to the input array for this buffer
 	 */
-	inline std::deque<program_input> &inputs()
-	{ return inputs_; }
+	inline std::deque<program_input> &inputs() { return inputs_; }
 
 	/**
 	 * @brief      Get the current override program template for this buffer
@@ -99,7 +96,9 @@ public:
 	 * @return     Pointer to the override program, or null if this buffer is using the default program template
 	 */
 	inline const std::shared_ptr<compiler::program_template> &override_program() const
-	{ return override_program_; }
+	{
+		return override_program_;
+	}
 
 	/**
 	 * @brief      Set the current override program template for this buffer
@@ -108,15 +107,16 @@ public:
 	 *                    this buffer should use the default program template
 	 */
 	inline void override_program(std::shared_ptr<compiler::program_template> new_program)
-	{ override_program_ = new_program; }
+	{
+		override_program_ = new_program;
+	}
 
 	/**
 	 * @brief       Get a reference to the current source part for this buffer
 	 *
 	 * @return      Pointer to the source part
 	 */
-	inline const std::unique_ptr<compiler::basic_part> &source() const
-	{ return source_; }
+	inline const std::unique_ptr<compiler::basic_part> &source() const { return source_; }
 
 	/**
 	 * @brief       Set the sources for this buffer to the given part
@@ -124,7 +124,9 @@ public:
 	 * @param new_part New part to use as sources for this buffer
 	 */
 	inline void source(std::unique_ptr<compiler::basic_part> new_part)
-	{ source_ = std::move(new_part); }
+	{
+		source_ = std::move(new_part);
+	}
 
 	/**
 	 * @brief       Set the sources for this buffer from the given part
@@ -148,8 +150,7 @@ public:
 	 *
 	 * @return        Current source map pointer
 	 */
-	inline std::map<GLenum, std::string> *source_map() const
-	{ return source_map_; }
+	inline std::map<GLenum, std::string> *source_map() const { return source_map_; }
 
 	/**
 	 * @brief         Set the source map pointer for the compiled sources
@@ -159,17 +160,15 @@ public:
 	 *
 	 * @param new_map New source map pointer
 	 */
-	inline void source_map(std::map<GLenum, std::string> *new_map)
-	{ source_map_ = new_map; }
+	inline void source_map(std::map<GLenum, std::string> *new_map) { source_map_ = new_map; }
 
 	/**
 	 * @brief         Get the program interface of the hosted program
 	 *
 	 * The program must have been compiled using init_program.
 	 */
-	inline const program_interface &program_intf() const
-	{ return *program_interface_; }
+	inline const program_interface &program_intf() const { return *program_interface_; }
 };
-}
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_PROGRAM_HOST_HPP_ */

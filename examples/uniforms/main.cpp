@@ -6,8 +6,8 @@
 #include <iostream>
 
 #include <shadertoy.hpp>
-#include <shadertoy/utils/log.hpp>
 #include <shadertoy/backends/gl4.hpp>
+#include <shadertoy/utils/log.hpp>
 
 #include "test.hpp"
 
@@ -23,9 +23,9 @@ int main(int argc, char *argv[])
 		return 2;
 	}
 
-	glfwSetErrorCallback([] (int error, const char *description) {
-						 std::cerr << "GLFW error: " << description << std::endl;
-						 });
+	glfwSetErrorCallback([](int error, const char *description) {
+		std::cerr << "GLFW error: " << description << std::endl;
+	});
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);

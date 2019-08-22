@@ -9,10 +9,7 @@ using namespace shadertoy::buffers;
 
 using shadertoy::utils::log;
 
-program_buffer::program_buffer(const std::string &id)
-	: gl_buffer(id)
-{
-}
+program_buffer::program_buffer(const std::string &id) : gl_buffer(id) {}
 
 void program_buffer::init(const render_context &context, const io_resource &io)
 {
@@ -27,7 +24,6 @@ void program_buffer::init(const render_context &context, const io_resource &io)
 	// Print status
 	log::shadertoy()->debug("Program {} ({}) has {} uniform inputs", id(), static_cast<const void *>(this),
 							host_.program_intf().uniforms().resources().size());
-
 }
 
 void program_buffer::render_gl_contents(const render_context &context, const io_resource &io)

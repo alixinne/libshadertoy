@@ -21,7 +21,7 @@ class shadertoy_EXPORT template_part : public cloneable_part<template_part>
 	/// true if this template part is specified
 	bool has_sources_;
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new unspecified template_part
 	 *
@@ -85,7 +85,7 @@ public:
 	 */
 	std::vector<std::pair<std::string, std::string>> sources() const override;
 };
-}
-}
+} // namespace compiler
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_COMPILER_TEMPLATE_PART_HPP_ */

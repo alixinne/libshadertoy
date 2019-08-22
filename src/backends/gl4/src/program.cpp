@@ -11,35 +11,26 @@ using namespace shadertoy::backends;
 using namespace shadertoy::backends::gl4;
 
 null_program_error::null_program_error()
-	: shadertoy_error("An attempt was made to dereference a null program")
+: shadertoy_error("An attempt was made to dereference a null program")
 {
 }
 
-attrib_location::attrib_location(GLint location)
-	: location_(location)
-{
-}
+attrib_location::attrib_location(GLint location) : location_(location) {}
 
-void attrib_location::vertex_pointer(GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer) const
+void attrib_location::vertex_pointer(GLint size, GLenum type, GLboolean normalized, GLsizei stride,
+									 const GLvoid *pointer) const
 {
 	gl_call(glVertexAttribPointer, location_, size, type, normalized, stride, pointer);
 }
 
-void attrib_location::enable_vertex_array() const
-{
-	gl_call(glEnableVertexAttribArray, location_);
-}
+void attrib_location::enable_vertex_array() const { gl_call(glEnableVertexAttribArray, location_); }
 
 uniform_location::uniform_location(const gx::program &program, GLint location)
-	: program_(GLuint(program)),
-	location_(location)
+: program_(GLuint(program)), location_(location)
 {
 }
 
-bool uniform_location::is_active() const
-{
-	return location_ != -1;
-}
+bool uniform_location::is_active() const { return location_ != -1; }
 
 void program::link() const
 {
@@ -53,10 +44,7 @@ void program::link() const
 	}
 }
 
-void program::use() const
-{
-	gl_call(glUseProgram, GLuint(*this));
-}
+void program::use() const { gl_call(glUseProgram, GLuint(*this)); }
 
 void program::validate() const
 {

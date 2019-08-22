@@ -15,7 +15,7 @@ namespace compiler
  */
 class shadertoy_EXPORT template_error : public shadertoy_error
 {
-public:
+	public:
 	/**
 	 * @brief Initialize a new instance of the template_error class
 	 *
@@ -23,7 +23,7 @@ public:
 	 */
 	explicit template_error(const std::string &what);
 };
-}
-}
+} // namespace compiler
+} // namespace shadertoy
 
 #endif

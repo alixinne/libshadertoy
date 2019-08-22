@@ -11,10 +11,7 @@
 using namespace shadertoy;
 using namespace shadertoy::buffers;
 
-toy_buffer::toy_buffer(const std::string &id)
-	: program_buffer(id)
-{
-}
+toy_buffer::toy_buffer(const std::string &id) : program_buffer(id) {}
 
 void toy_buffer::init_geometry(const render_context &context, const io_resource &io)
 {
@@ -27,4 +24,3 @@ void toy_buffer::render_geometry(const render_context &context, const io_resourc
 	// Render the program on a quad
 	context.screen_quad().render(time_delta_query());
 }
-

@@ -29,7 +29,7 @@ typedef std::tuple<output_name_info_t, backends::gx::texture *, GLenum> member_o
  */
 class shadertoy_EXPORT basic_member
 {
-protected:
+	protected:
 	/**
 	 * @brief Must be implemented by derived classes to perform
 	 * the render step for this member
@@ -57,7 +57,7 @@ protected:
 	 */
 	virtual void allocate_member(const swap_chain &chain, const render_context &context) = 0;
 
-public:
+	public:
 	/**
 	 * @brief Render this member
 	 *
@@ -107,7 +107,7 @@ public:
 	 */
 	virtual int find_output(const output_name_t &name) const;
 };
-}
-}
+} // namespace members
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_MEMBERS_BASIC_MEMBER_HPP_ */

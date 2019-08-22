@@ -4,7 +4,7 @@ namespace shadertoy
 namespace utils
 {
 }
-}
+} // namespace shadertoy
 
 // Do not include assert and log headers to prevent conflicts
 // with spdlog/libfmt in client code

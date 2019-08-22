@@ -1,11 +1,12 @@
 #include <epoxy/gl.h>
+
 #include <GLFW/glfw3.h>
 #include <boost/filesystem.hpp>
 #include <iostream>
 
 #include <shadertoy.hpp>
-#include <shadertoy/utils/log.hpp>
 #include <shadertoy/backends/gl4.hpp>
+#include <shadertoy/utils/log.hpp>
 
 #include "test.hpp"
 
@@ -21,9 +22,9 @@ int main(int argc, char *argv[])
 		return 2;
 	}
 
-	glfwSetErrorCallback([] (int error, const char *description) {
-						 std::cerr << "GLFW error: " << description << std::endl;
-						 });
+	glfwSetErrorCallback([](int error, const char *description) {
+		std::cerr << "GLFW error: " << description << std::endl;
+	});
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
@@ -67,10 +68,10 @@ int main(int argc, char *argv[])
 			texture->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST); // no mipmaps
 			texture->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F, 16, 16, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 			auto gradient_image(std::make_shared<shadertoy::inputs::texture_input>(std::move(texture), GL_RGBA32F));
-			gradientBuffer->inputs().emplace_back("layout(rgba32f)", "image2D",
-												  "gradientImage", gradient_image);
+			gradientBuffer->inputs().emplace_back("layout(rgba32f)", "image2D", "gradientImage", gradient_image);
 
-			auto buffer_input(std::make_shared<shadertoy::inputs::buffer_input>(chain.emplace_back(gradientBuffer, shadertoy::make_size(16u, 16u), GL_R8)));
+			auto buffer_input(std::make_shared<shadertoy::inputs::buffer_input>(
+			chain.emplace_back(gradientBuffer, shadertoy::make_size(16u, 16u), GL_R8)));
 
 			// Create the image buffer
 			auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image"));

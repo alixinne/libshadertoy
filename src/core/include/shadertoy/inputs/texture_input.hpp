@@ -24,7 +24,7 @@ class shadertoy_EXPORT texture_input : public basic_input
 	/// Internal format of the texture
 	GLenum internal_format_;
 
-protected:
+	protected:
 	/**
 	 * @brief Load the input's contents.
 	 *
@@ -44,10 +44,10 @@ protected:
 	 */
 	backends::gx::texture *use_input() final;
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new instance of the texture_input class.
-	 * 
+	 *
 	 * @param image_texture   Texture to return for this input
 	 * @param internal_format Internal format for the texture
 	 */
@@ -56,10 +56,9 @@ public:
 	/**
 	 * @brief Get a reference to the underlying texture object
 	 */
-	inline const backends::gx::texture &texture() const
-	{ return *image_texture_; }
+	inline const backends::gx::texture &texture() const { return *image_texture_; }
 };
-}
-}
+} // namespace inputs
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_INPUTS_TEXTURE_INPUT_HPP_ */

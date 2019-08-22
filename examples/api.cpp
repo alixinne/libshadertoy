@@ -15,7 +15,7 @@ namespace fs = boost::filesystem;
 
 size_t curl_write_data(char *buffer, size_t size, size_t nmemb, void *userp)
 {
-	auto &ss = *static_cast<std::ostream*>(userp);
+	auto &ss = *static_cast<std::ostream *>(userp);
 	size_t sz = size * nmemb;
 	ss.write(buffer, sz);
 	return sz;
@@ -139,7 +139,8 @@ void load_nonbuffer_input(std::shared_ptr<shadertoy::inputs::basic_input> &buffe
 }
 
 void load_buffer_input(std::shared_ptr<shadertoy::inputs::basic_input> &buffer_input, const Json::Value &input,
-					   std::map<std::string, std::shared_ptr<shadertoy::members::buffer_member>> known_buffers, int i, const std::string &shaderId)
+					   std::map<std::string, std::shared_ptr<shadertoy::members::buffer_member>> known_buffers,
+					   int i, const std::string &shaderId)
 {
 	auto &sampler(input["sampler"]);
 
@@ -161,8 +162,8 @@ void load_buffer_input(std::shared_ptr<shadertoy::inputs::basic_input> &buffer_i
 	}
 }
 
-int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain, const shadertoy::rsize &size,
-				const std::string &shaderId, const std::string &shaderApiKey)
+int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain,
+				const shadertoy::rsize &size, const std::string &shaderId, const std::string &shaderApiKey)
 {
 	CURL *curl = curl_easy_init();
 
@@ -190,9 +191,8 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 	int code = 0;
 	try
 	{
-		auto endpoint =
-			std::string("https://www.shadertoy.com/api/v1/shaders/") + shaderId +
-			std::string("?key=") + shaderApiKey;
+		auto endpoint = std::string("https://www.shadertoy.com/api/v1/shaders/") + shaderId +
+						std::string("?key=") + shaderApiKey;
 		u::log::shadertoy()->info("Fetching shader info from {}", endpoint);
 		Json::Value shaderSpec = json_get(curl, endpoint);
 
@@ -239,7 +239,8 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 				load_nonbuffer_input(buffer->inputs()[channel_id].input(), input, curl, tmpdir, i);
 			}
 
-			auto member(shadertoy::members::make_buffer(buffer, shadertoy::make_size_ref(size), chain.internal_format(), chain.swap_policy()));
+			auto member(shadertoy::members::make_buffer(buffer, shadertoy::make_size_ref(size),
+														chain.internal_format(), chain.swap_policy()));
 			known_buffers.emplace(name, member);
 
 			if (name != imageBufferName)
@@ -289,4 +290,3 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 
 	return code;
 }
-

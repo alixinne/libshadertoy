@@ -11,8 +11,8 @@
 using namespace shadertoy;
 using namespace shadertoy::inputs;
 
-using shadertoy::utils::log;
 using shadertoy::utils::error_assert;
+using shadertoy::utils::log;
 
 GLenum noise_input::load_input()
 {
@@ -35,8 +35,8 @@ GLenum noise_input::load_input()
 	std::generate(rnd.begin(), rnd.end(), [&]() { return uniform_dist(r); });
 
 	// Load it
-	texture_->image_2d(GL_TEXTURE_2D, 0, format, ts.width, ts.height, 0, GL_RED,
-					   GL_UNSIGNED_BYTE, rnd.data());
+	texture_->image_2d(GL_TEXTURE_2D, 0, format, ts.width, ts.height, 0, GL_RED, GL_UNSIGNED_BYTE,
+					   rnd.data());
 
 	texture_->parameter(GL_TEXTURE_SWIZZLE_B, GL_RED);
 	texture_->parameter(GL_TEXTURE_SWIZZLE_G, GL_RED);

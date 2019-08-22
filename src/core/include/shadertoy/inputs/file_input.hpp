@@ -21,7 +21,7 @@ class shadertoy_EXPORT file_input : public image_input
 	/// true if the image should be flipped vertically
 	bool vflip_;
 
-protected:
+	protected:
 	/**
 	 * @brief Load the image from filename
 	 *
@@ -31,7 +31,8 @@ protected:
 	 *
 	 * @return OpenGL texture representing the image
 	 */
-	virtual std::unique_ptr<backends::gx::texture> load_file(const std::string &filename, bool vflip, GLenum &format) = 0;
+	virtual std::unique_ptr<backends::gx::texture>
+	load_file(const std::string &filename, bool vflip, GLenum &format) = 0;
 
 	/**
 	 * @brief Load the decoded image into device memory.
@@ -92,7 +93,7 @@ protected:
 	 */
 	void vflip(bool new_vflip) { vflip_ = new_vflip; }
 };
-}
-}
+} // namespace inputs
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_INPUTS_FILE_INPUT_HPP_ */

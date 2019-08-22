@@ -56,7 +56,7 @@ class shadertoy_EXPORT basic_input
 	/// true if this input has been loaded
 	bool loaded_;
 
-protected:
+	protected:
 	/**
 	 * @brief Load this input's contents.
 	 *
@@ -94,7 +94,7 @@ protected:
 	 */
 	basic_input();
 
-public:
+	public:
 	virtual ~basic_input() = default;
 
 	/**
@@ -196,7 +196,7 @@ public:
 	 */
 	backends::gx::texture *bind_image(GLuint unit);
 };
-}
-}
+} // namespace inputs
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_INPUTS_BASIC_INPUT_HPP_ */

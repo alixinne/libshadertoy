@@ -11,7 +11,7 @@ namespace shadertoy
  */
 class shadertoy_error : public std::runtime_error
 {
-public:
+	public:
 	/**
 	 * @brief Initialize a new instance of the ShadertoyError class.
 	 *
@@ -25,6 +25,6 @@ public:
 	 */
 	explicit shadertoy_error(const char *what_arg);
 };
-}
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_SHADERTOY_ERROR_HPP_ */

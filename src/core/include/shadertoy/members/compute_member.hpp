@@ -25,7 +25,7 @@ class shadertoy_EXPORT compute_member : public basic_member
 	/// Buffer referenced by this member
 	std::shared_ptr<buffers::compute_buffer> buffer_;
 
-protected:
+	protected:
 	/**
 	 * @brief Render the buffer using the given \p context
 	 *
@@ -50,7 +50,7 @@ protected:
 	 */
 	void allocate_member(const swap_chain &chain, const render_context &context) override;
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new buffer swap chain member
 	 *
@@ -65,8 +65,7 @@ public:
 	 *
 	 * @return Pointer to the buffer associated with this member
 	 */
-	inline const std::shared_ptr<buffers::compute_buffer> &buffer() const
-	{ return buffer_; }
+	inline const std::shared_ptr<buffers::compute_buffer> &buffer() const { return buffer_; }
 
 	/**
 	 * @brief Return the buffer's latest output in the current chain
@@ -96,8 +95,7 @@ public:
  *
  * @see compute_member#compute_member
  */
-template<typename... Args>
-std::shared_ptr<compute_member> make_compute(Args&&... args)
+template <typename... Args> std::shared_ptr<compute_member> make_compute(Args &&... args)
 {
 	return std::make_shared<compute_member>(std::forward<Args>(args)...);
 }
@@ -113,7 +111,8 @@ std::shared_ptr<compute_member> make_compute(Args&&... args)
  *
  * @see compute_member#compute_member(std::shared_ptr<buffers::compute_buffer>, rsize_ref &&, GLint, member_swap_policy)
  */
-std::shared_ptr<compute_member> shadertoy_EXPORT make_member(const swap_chain &chain, std::shared_ptr<buffers::compute_buffer> buffer);
+std::shared_ptr<compute_member>
+shadertoy_EXPORT make_member(const swap_chain &chain, std::shared_ptr<buffers::compute_buffer> buffer);
 } // namespace members
 } // namespace shadertoy
 

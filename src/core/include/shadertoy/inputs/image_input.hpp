@@ -19,7 +19,7 @@ class shadertoy_EXPORT image_input : public basic_input
 	/// Texture object to hold the image data
 	std::unique_ptr<backends::gx::texture> image_texture_;
 
-protected:
+	protected:
 	/**
 	 * @brief Implemented by derived classes to provide the image decoding logic
 	 *
@@ -56,7 +56,7 @@ protected:
 	 */
 	image_input();
 };
-}
-}
+} // namespace inputs
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_INPUTS_IMAGE_INPUT_HPP_ */

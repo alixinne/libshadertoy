@@ -4,7 +4,7 @@ namespace shadertoy
 namespace compiler
 {
 }
-}
+} // namespace shadertoy
 
 #include "shadertoy/compiler/basic_part.hpp"
 #include "shadertoy/compiler/define_part.hpp"

@@ -43,7 +43,7 @@ class shadertoy_EXPORT shader_template
 
 	void check_unique(const std::unique_ptr<basic_part> &part);
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new empty shader_template
 	 */
@@ -54,9 +54,7 @@ public:
 	 *
 	 * @param parts Initial set of template parts
 	 */
-	template<typename... Args>
-	explicit shader_template(Args&&... args)
-		: parts_()
+	template <typename... Args> explicit shader_template(Args &&... args) : parts_()
 	{
 		int _[] = { (push_back(std::unique_ptr<basic_part>(args.clone())), 0)... };
 		(void)_;
@@ -130,7 +128,7 @@ public:
 	{
 		std::vector<std::unique_ptr<basic_part>> ptrs;
 		ptrs.reserve(sizeof...(Parts));
-		int _[] = {(ptrs.emplace_back(parts.clone()), 0)...};
+		int _[] = { (ptrs.emplace_back(parts.clone()), 0)... };
 		(void)_;
 		return specify_parts(std::move(ptrs), pc);
 	}
@@ -228,8 +226,8 @@ public:
 	 */
 	static shader_template parse_file(const std::string &filename);
 };
-}
-}
+} // namespace compiler
+} // namespace shadertoy
 
 #include "shadertoy/compiler/shader_template.ipp"
 

@@ -6,19 +6,13 @@
 using namespace shadertoy::backends::gl4;
 
 null_sampler_error::null_sampler_error()
-	: shadertoy_error("An attempt was made to dereference a null sampler")
+: shadertoy_error("An attempt was made to dereference a null sampler")
 {
 }
 
-void sampler::bind(GLuint unit) const
-{
-	gl_call(glBindSampler, unit, GLuint(*this));
-}
+void sampler::bind(GLuint unit) const { gl_call(glBindSampler, unit, GLuint(*this)); }
 
-void sampler::unbind(GLuint unit) const
-{
-	gl_call(glBindSampler, unit, 0);
-}
+void sampler::unbind(GLuint unit) const { gl_call(glBindSampler, unit, 0); }
 
 void sampler::parameter(GLenum pname, GLint param) const
 {

@@ -2,6 +2,4 @@
 
 using namespace shadertoy::backends::gx;
 
-resource::~resource()
-{
-}
+resource::~resource() {}

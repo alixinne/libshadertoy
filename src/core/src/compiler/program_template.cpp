@@ -15,8 +15,8 @@
 
 using namespace shadertoy;
 using namespace shadertoy::compiler;
-using shadertoy::utils::throw_assert;
 using shadertoy::utils::log;
+using shadertoy::utils::throw_assert;
 
 shader_template program_template::specify_template_parts(const shader_template &source_template) const
 {
@@ -24,7 +24,8 @@ shader_template program_template::specify_template_parts(const shader_template &
 	return specify_template_parts(std::move(parts), source_template);
 }
 
-shader_template program_template::specify_template_parts(std::vector<std::unique_ptr<basic_part>> parts, const shader_template &source_template) const
+shader_template program_template::specify_template_parts(std::vector<std::unique_ptr<basic_part>> parts,
+														 const shader_template &source_template) const
 {
 	return source_template.specify_parts(
 	std::move(parts), [&](const std::string &part_name) -> std::vector<std::unique_ptr<compiler::basic_part>> {
@@ -85,7 +86,7 @@ void program_template::compile(GLenum type)
 
 	// Get sources
 	auto sources(specify_template_parts(it->second).sources());
-	
+
 	if (log::shadertoy()->level() <= spdlog::level::trace)
 	{
 		std::stringstream ss;
@@ -93,7 +94,8 @@ void program_template::compile(GLenum type)
 		{
 			ss << pair.second;
 		}
-		log::shadertoy()->trace("Compiled following code for {}:\n{}", static_cast<const void *>(this), ss.str());
+		log::shadertoy()->trace("Compiled following code for {}:\n{}",
+								static_cast<const void *>(this), ss.str());
 	}
 
 	// Compile shader
@@ -104,9 +106,9 @@ void program_template::compile(GLenum type)
 	compiled_shaders_.emplace(type, std::move(so));
 }
 
-std::unique_ptr<backends::gx::program> program_template::compile(GLenum stage,
-									  std::map<GLenum, std::vector<std::unique_ptr<basic_part>>> parts,
-									  std::map<GLenum, std::string> *compiled_sources) const
+std::unique_ptr<backends::gx::program>
+program_template::compile(GLenum stage, std::map<GLenum, std::vector<std::unique_ptr<basic_part>>> parts,
+						  std::map<GLenum, std::string> *compiled_sources) const
 {
 	std::set<GLenum> allowed_shaders;
 
@@ -172,7 +174,8 @@ std::unique_ptr<backends::gx::program> program_template::compile(GLenum stage,
 				compiled_sources->emplace(pair.first, result);
 			}
 
-			log::shadertoy()->trace("Compiled following code for {}:\n{}", static_cast<const void *>(this), result);
+			log::shadertoy()->trace("Compiled following code for {}:\n{}",
+									static_cast<const void *>(this), result);
 		}
 
 		// Compile shader
@@ -239,7 +242,9 @@ std::unique_ptr<backends::gx::program> program_template::compile(GLenum stage,
 	return program;
 }
 
-std::unique_ptr<backends::gx::program> program_template::compile(GLenum stage, const std::map<GLenum, shader_template> &templates, std::map<GLenum, std::string> *compiled_sources) const
+std::unique_ptr<backends::gx::program>
+program_template::compile(GLenum stage, const std::map<GLenum, shader_template> &templates,
+						  std::map<GLenum, std::string> *compiled_sources) const
 {
 	std::set<GLenum> allowed_shaders;
 
@@ -285,9 +290,7 @@ std::unique_ptr<backends::gx::program> program_template::compile(GLenum stage, c
 				compiled_sources->emplace(pair.first, result);
 			}
 
-			log::shadertoy()->trace("Compiled following code for {}:\n{}",
-									(void*)this,
-									result);
+			log::shadertoy()->trace("Compiled following code for {}:\n{}", (void *)this, result);
 		}
 
 		// Compile shader

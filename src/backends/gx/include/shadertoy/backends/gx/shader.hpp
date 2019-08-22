@@ -15,7 +15,7 @@ SHADERTOY_BACKENDS_GX_NAMESPACE_BEGIN
  */
 class shadertoy_EXPORT shader_compilation_error : public shadertoy::shadertoy_error
 {
-public:
+	public:
 	/**
 	 * @brief Initialize a new instance of the ShaderCompilationError class.
 	 *
@@ -29,18 +29,16 @@ public:
 	 *
 	 * @return Id of the shader that triggered the error
 	 */
-	GLuint shader_id() const
-	{ return shader_id_; }
+	GLuint shader_id() const { return shader_id_; }
 
 	/**
 	 * @brief Get the compilation log for this error.
 	 *
 	 * @return Compilation log as a string.
 	 */
-	const std::string &log() const
-	{ return log_; }
+	const std::string &log() const { return log_; }
 
-private:
+	private:
 	/// Shader id
 	const GLuint shader_id_;
 	/// Compilation log

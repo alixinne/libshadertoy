@@ -13,9 +13,8 @@ using namespace shadertoy::buffers;
 using shadertoy::utils::error_assert;
 
 gl_buffer::gl_buffer(const std::string &id)
-	: graphics_buffer(id),
-	target_fbo_(backends::current->make_framebuffer()),
-	target_rbo_(backends::current->make_renderbuffer())
+: graphics_buffer(id), target_fbo_(backends::current->make_framebuffer()),
+  target_rbo_(backends::current->make_renderbuffer())
 {
 }
 
@@ -41,8 +40,7 @@ void gl_buffer::allocate_textures(const render_context &context, const io_resour
 	target_rbo_->storage(GL_DEPTH_COMPONENT, size.width, size.height);
 }
 
-void gl_buffer::render(const render_context &context, const io_resource &io,
-					   const members::buffer_member &member)
+void gl_buffer::render(const render_context &context, const io_resource &io, const members::buffer_member &member)
 {
 	if (io.swap_policy() == member_swap_policy::default_framebuffer)
 	{
@@ -75,8 +73,7 @@ void gl_buffer::render(const render_context &context, const io_resource &io,
 	render_gl_contents(context, io);
 }
 
-void gl_buffer::attach_framebuffer_outputs(GLenum target,
-										   const backends::gx::framebuffer &target_fbo,
+void gl_buffer::attach_framebuffer_outputs(GLenum target, const backends::gx::framebuffer &target_fbo,
 										   const io_resource &io)
 {
 	std::vector<GLenum> draw_buffers(std::get<1>(std::max_element(io.output_specs().begin(),

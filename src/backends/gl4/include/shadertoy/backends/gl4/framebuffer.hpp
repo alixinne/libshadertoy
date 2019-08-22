@@ -24,10 +24,7 @@ class shadertoy_EXPORT null_framebuffer_error : public shadertoy::shadertoy_erro
  * @brief Represents an OpenGL framebuffer object
  */
 class shadertoy_EXPORT framebuffer
-: public resource<framebuffer,
-	multi_allocator<&glCreateFramebuffers, &glDeleteFramebuffers>,
-	null_framebuffer_error,
-	gx::framebuffer>
+: public resource<framebuffer, multi_allocator<&glCreateFramebuffers, &glDeleteFramebuffers>, null_framebuffer_error, gx::framebuffer>
 {
 	public:
 	framebuffer() : resource() {}
@@ -92,7 +89,7 @@ class shadertoy_EXPORT framebuffer
 	 * @param level
 	 */
 	void texture_2d(GLenum target, GLenum attachment, GLenum texture_target,
-							const gx::texture &texture, GLint level) const override;
+					const gx::texture &texture, GLint level) const override;
 
 	/**
 	 * @brief glDrawBuffers

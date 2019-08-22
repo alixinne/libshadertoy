@@ -24,7 +24,7 @@ class draw_state;
  */
 class shadertoy_EXPORT backend
 {
-public:
+	public:
 	virtual ~backend();
 
 	// Factory methods
@@ -94,8 +94,8 @@ namespace shadertoy
 {
 namespace backends
 {
-	extern thread_local std::unique_ptr<gx::backend> current;
+extern thread_local std::unique_ptr<gx::backend> current;
 }
-}
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_BACKENDS_GX_BACKEND_HPP_ */

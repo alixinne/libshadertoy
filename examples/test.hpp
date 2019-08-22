@@ -5,8 +5,7 @@
 
 bool libshadertoy_test_exit();
 
-template<typename Context>
-struct basic_example_ctx
+template <typename Context> struct basic_example_ctx
 {
 	Context context;
 	shadertoy::swap_chain chain;
@@ -16,7 +15,7 @@ struct basic_example_ctx
 typedef basic_example_ctx<shadertoy::render_context> example_ctx;
 
 #ifndef TEST_NO_GLFW
-template<typename ExampleContext>
+template <typename ExampleContext>
 void example_set_framebuffer_size(GLFWwindow *window, int width, int height)
 {
 	// Get the context from the window user pointer

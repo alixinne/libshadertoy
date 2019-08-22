@@ -1,11 +1,12 @@
 #include <epoxy/gl.h>
+
 #include <GLFW/glfw3.h>
 #include <boost/filesystem.hpp>
 #include <iostream>
 
 #include <shadertoy.hpp>
-#include <shadertoy/utils/log.hpp>
 #include <shadertoy/backends/gl4.hpp>
+#include <shadertoy/utils/log.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -27,9 +28,8 @@ class tiny_geometry : public geometry::basic_geometry
 	std::unique_ptr<gx::buffer> indices_;
 	size_t indices_size_;
 
-public:
-	tiny_geometry(const std::string &geometry_path)
-		: basic_geometry()
+	public:
+	tiny_geometry(const std::string &geometry_path) : basic_geometry()
 	{
 		tinyobj::attrib_t attrib;
 		std::vector<tinyobj::shape_t> shapes;
@@ -38,7 +38,8 @@ public:
 		std::string err;
 		bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, geometry_path.c_str());
 
-		if (!err.empty()) {
+		if (!err.empty())
+		{
 			std::cerr << err << std::endl;
 		}
 
@@ -98,8 +99,7 @@ public:
 		vertices_->unbind(GL_ARRAY_BUFFER);
 	}
 
-	const gx::vertex_array &vertex_array() const
-	{ return *vao_; }
+	const gx::vertex_array &vertex_array() const { return *vao_; }
 
 	void draw() const final
 	{
@@ -117,9 +117,9 @@ int main(int argc, char *argv[])
 		return 2;
 	}
 
-	glfwSetErrorCallback([] (int error, const char *description) {
-						 std::cerr << "GLFW error: " << description << std::endl;
-						 });
+	glfwSetErrorCallback([](int error, const char *description) {
+		std::cerr << "GLFW error: " << description << std::endl;
+	});
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
@@ -152,7 +152,8 @@ int main(int argc, char *argv[])
 			auto &chain(ctx.chain);
 
 			// The default vertex shader is not sufficient, we replace it with our own
-			context.buffer_template()[GL_VERTEX_SHADER] = compiler::shader_template::parse_file(ST_BASE_DIR "/geometry/vertex.glsl");
+			context.buffer_template()[GL_VERTEX_SHADER] =
+			compiler::shader_template::parse_file(ST_BASE_DIR "/geometry/vertex.glsl");
 
 			// Force compilation of new template
 			context.buffer_template().compile(GL_VERTEX_SHADER);
@@ -172,12 +173,11 @@ int main(int argc, char *argv[])
 			// The default_framebuffer policy makes this buffer draw directly to
 			// the window instead of using a texture that is then copied to the
 			// screen.
-			auto image_member =
-				chain.emplace_back(imageBuffer, make_size_ref(ctx.render_size),
-								   member_swap_policy::default_framebuffer);
+			auto image_member = chain.emplace_back(imageBuffer, make_size_ref(ctx.render_size),
+												   member_swap_policy::default_framebuffer);
 
 			// Without a background, the buffer should also clear the previous contents
-			image_member->state().clear_color({.5f, .0f, .5f, 1.f});
+			image_member->state().clear_color({ .5f, .0f, .5f, 1.f });
 			image_member->state().clear_depth(1.f);
 			image_member->state().clear_bits(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -218,20 +218,23 @@ int main(int argc, char *argv[])
 				// glViewport. In this example, we render directly to the
 				// default framebuffer, so we need to set the viewport
 				// ourselves.
-				shadertoy::backends::current->set_viewport(0, 0, ctx.render_size.width, ctx.render_size.height);
+				shadertoy::backends::current->set_viewport(0, 0, ctx.render_size.width,
+														   ctx.render_size.height);
 
 				// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-				glm::mat4 Projection = glm::perspective(glm::radians(25.0f), (float) ctx.render_size.width / (float)ctx.render_size.height, 0.1f, 100.0f);
+				glm::mat4 Projection =
+				glm::perspective(glm::radians(25.0f),
+								 (float)ctx.render_size.width / (float)ctx.render_size.height, 0.1f, 100.0f);
 
 				// Camera matrix
-				glm::mat4 View = glm::lookAt(
-					glm::vec3(3,3,3), // Camera is at (4,3,3), in World Space
-					glm::vec3(0,.75,0), // and looks at the origin
-					glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-					);
+				glm::mat4 View = glm::lookAt(glm::vec3(3, 3, 3), // Camera is at (4,3,3), in World Space
+											 glm::vec3(0, .75, 0), // and looks at the origin
+											 glm::vec3(0, 1, 0) // Head is up (set to 0,-1,0 to look upside-down)
+				);
 
 				// Model matrix : an identity matrix (model will be at the origin)
-				glm::mat4 Model = glm::rotate(glm::mat4(1.f), frameCount * 0.0125f, glm::vec3(0.f, 1.f, 0.f));
+				glm::mat4 Model =
+				glm::rotate(glm::mat4(1.f), frameCount * 0.0125f, glm::vec3(0.f, 1.f, 0.f));
 				// Our ModelViewProjection : multiplication of our 3 matrices
 				mvp_location->set_value(Projection * View * Model);
 

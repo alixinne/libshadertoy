@@ -12,7 +12,7 @@ SHADERTOY_BACKENDS_GL4_NAMESPACE_BEGIN
  */
 class shadertoy_EXPORT draw_state : public gx::draw_state
 {
-protected:
+	protected:
 	void apply_enabled(GLenum cap) const override;
 
 	void apply_clear_color() const override;

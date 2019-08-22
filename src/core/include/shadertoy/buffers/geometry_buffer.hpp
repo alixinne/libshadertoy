@@ -20,12 +20,12 @@ class shadertoy_EXPORT geometry_buffer : public program_buffer
 	/// Geometry object
 	std::weak_ptr<geometry::basic_geometry> geometry_;
 
-protected:
+	protected:
 	void init_geometry(const render_context &context, const io_resource &io) override;
 
 	void render_geometry(const render_context &context, const io_resource &io) override;
 
-public:
+	public:
 	/**
 	 * @brief      Initialize a new geometry buffer
 	 *
@@ -38,8 +38,7 @@ public:
 	 *
 	 * @return     Pointer to the current geometry object
 	 */
-	inline const std::weak_ptr<geometry::basic_geometry> &geometry() const
-	{ return geometry_; }
+	inline const std::weak_ptr<geometry::basic_geometry> &geometry() const { return geometry_; }
 
 	/**
 	 * @brief      Sets the geometry object to use for rendering
@@ -47,9 +46,11 @@ public:
 	 * @param      new_geometry Pointer to the new geometry object
 	 */
 	inline void geometry(std::weak_ptr<geometry::basic_geometry> new_geometry)
-	{ geometry_ = new_geometry; }
+	{
+		geometry_ = new_geometry;
+	}
 };
-}
-}
+} // namespace buffers
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_BUFFERS_GEOMETRY_BUFFER_HPP_ */

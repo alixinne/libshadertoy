@@ -14,10 +14,7 @@ using namespace shadertoy;
 using namespace shadertoy::buffers;
 using shadertoy::utils::error_assert;
 
-geometry_buffer::geometry_buffer(const std::string &id)
-	: program_buffer(id)
-{
-}
+geometry_buffer::geometry_buffer(const std::string &id) : program_buffer(id) {}
 
 void geometry_buffer::init_geometry(const render_context &context, const io_resource &io)
 {
@@ -33,4 +30,3 @@ void geometry_buffer::render_geometry(const render_context &context, const io_re
 
 	ptr->render(time_delta_query());
 }
-

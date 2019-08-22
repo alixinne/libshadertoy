@@ -16,7 +16,7 @@ namespace inputs
  */
 class shadertoy_EXPORT openimageio_input : public file_input
 {
-protected:
+	protected:
 	/**
 	 * @brief Load the image from filename
 	 *
@@ -26,9 +26,10 @@ protected:
 	 *
 	 * @return OpenGL texture representing the image
 	 */
-	std::unique_ptr<backends::gx::texture> load_file(const std::string &filename, bool vflip, GLenum &format) override;
+	std::unique_ptr<backends::gx::texture>
+	load_file(const std::string &filename, bool vflip, GLenum &format) override;
 
-public:
+	public:
 	/**
 	 * @brief Initialize a new instance of the openimageio_input class
 	 *
@@ -52,7 +53,7 @@ public:
 	 */
 	static bool supported();
 };
-}
-}
+} // namespace inputs
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_INPUTS_OPENIMAGEIO_INPUT_HPP_ */
