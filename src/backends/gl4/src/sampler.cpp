@@ -3,6 +3,8 @@
 #include "shadertoy/backends/gl4/sampler.hpp"
 #include "shadertoy/shadertoy_error.hpp"
 
+#include "shadertoy/backends/gl4/backend.hpp"
+
 using namespace shadertoy::backends::gl4;
 
 null_sampler_error::null_sampler_error()
@@ -10,9 +12,15 @@ null_sampler_error::null_sampler_error()
 {
 }
 
-void sampler::bind(GLuint unit) const { gl_call(glBindSampler, unit, GLuint(*this)); }
+void sampler::bind(GLuint unit) const
+{
+	backend::current().bind_sampler_unit(unit, *this);
+}
 
-void sampler::unbind(GLuint unit) const { gl_call(glBindSampler, unit, 0); }
+void sampler::unbind(GLuint unit) const
+{
+	backend::current().bind_sampler_unit(unit, std::nullopt);
+}
 
 void sampler::parameter(GLenum pname, GLint param) const
 {

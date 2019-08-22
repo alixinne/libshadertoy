@@ -5,6 +5,7 @@
 #include "shadertoy/backends/gx/backend.hpp"
 
 #include "shadertoy/backends/gl4/texture.hpp"
+#include "shadertoy/backends/gl4/sampler.hpp"
 
 #include <functional>
 #include <map>
@@ -25,6 +26,9 @@ class shadertoy_EXPORT backend : public gx::backend
 
 	/// Texture unit mappings
 	std::vector<GLenum> texture_unit_mappings_;
+
+	/// Texture unit sampler mappings
+	std::vector<GLenum> sampler_unit_mappings_;
 
 	/// Active texture unit
 	GLenum active_texture_unit_;
@@ -62,6 +66,15 @@ class shadertoy_EXPORT backend : public gx::backend
 	 */
 	void bind_texture_unit(GLuint unit,
 						   std::optional<std::reference_wrapper<const gl4::texture>> texture = std::nullopt);
+
+	/**
+	 * @brief Bind a sampler to a specific texture unit
+	 *
+	 * @param unit    Texture unit index (0-based)
+	 * @param texture Sampler to bind to the unit
+	 */
+	void bind_sampler_unit(GLuint unit,
+						   std::optional<std::reference_wrapper<const gl4::sampler>> sampler = std::nullopt);
 
 	/**
 	 * @brief Unbind a range of texture units

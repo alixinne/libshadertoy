@@ -35,5 +35,5 @@ void framebuffer::texture_2d(GLenum target, GLenum attachment, GLenum texture_ta
 
 void framebuffer::draw_buffers(GLsizei n, const GLenum *bufs) const
 {
-	gl_call(glDrawBuffers, n, bufs);
+	gl_call(glNamedFramebufferDrawBuffers, GLuint(*this), n, bufs);
 }

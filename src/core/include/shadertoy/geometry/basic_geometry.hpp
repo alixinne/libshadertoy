@@ -20,15 +20,7 @@ class shadertoy_EXPORT basic_geometry
 	virtual ~basic_geometry() = default;
 
 	/**
-	 * @brief Get the VAO to bind for rendering the geometry
-	 *
-	 * @return Reference to the VAO to bind to
-	 */
-	virtual const backends::gx::vertex_array &vertex_array() const = 0;
-
-	/**
-	 * @brief Renders the geometry assuming the VAO returned by screen_quad#vertex_array
-	 *        is currently bound.
+	 * @brief Renders the geometry
 	 */
 	virtual void draw() const = 0;
 

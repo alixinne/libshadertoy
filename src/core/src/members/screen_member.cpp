@@ -77,6 +77,7 @@ void screen_member::render_member(const swap_chain &chain, const render_context 
 	// Bind the texture and sampler
 	texptr->bind_unit(0);
 	sampler_->bind(0);
+	backends::current->unbind_texture_units(1);
 
 	// Apply member state
 	state_->apply();

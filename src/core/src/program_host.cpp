@@ -39,9 +39,6 @@ void program_host::init_program(const render_context &context, GLenum stage)
 	const auto &buffer_template(override_program_ ? *override_program_ : context.buffer_template());
 	program_ = buffer_template.compile(stage, std::move(parts), source_map_);
 
-	// Use the program
-	program_->use();
-
 	// Discover program interface
 	program_interface_ = std::make_unique<program_interface>(*program_);
 

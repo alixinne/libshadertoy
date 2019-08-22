@@ -19,12 +19,19 @@ using namespace shadertoy::backends::gl4;
 
 void backend::init_texture_unit_mappings()
 {
+	GLint max_combined_texture_image_units = 0;
+
 	if (texture_unit_mappings_.empty())
 	{
-		GLint max_combined_texture_image_units;
 		glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_combined_texture_image_units);
-
 		texture_unit_mappings_.resize(max_combined_texture_image_units, 0);
+	}
+
+	if (sampler_unit_mappings_.empty())
+	{
+		if (max_combined_texture_image_units == 0)
+			glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_combined_texture_image_units);
+		sampler_unit_mappings_.resize(max_combined_texture_image_units, 0);
 	}
 }
 
@@ -71,6 +78,32 @@ void backend::bind_texture_unit(GLuint unit, std::optional<std::reference_wrappe
 	{
 		// Not tracking, just forward the call
 		gl_call(glBindTextureUnit, unit, texture_id);
+	}
+}
+
+void backend::bind_sampler_unit(GLuint unit, std::optional<std::reference_wrapper<const gl4::sampler>> sampler)
+{
+	GLuint sampler_id = sampler == std::nullopt ? 0 : GLuint(sampler->get());
+
+	if (state_tracking_)
+	{
+		// Initialize sampler mapping table
+		init_texture_unit_mappings();
+
+		// Check unit number
+		check_texture_unit(unit);
+
+		// Bind sampler if necessary
+		if (sampler_unit_mappings_[unit] != sampler_id)
+		{
+			gl_call(glBindSampler, unit, sampler_id);
+			sampler_unit_mappings_[unit] = sampler_id;
+		}
+	}
+	else
+	{
+		// Not tracking, just forward the call
+		gl_call(glBindSampler, unit, sampler_id);
 	}
 }
 

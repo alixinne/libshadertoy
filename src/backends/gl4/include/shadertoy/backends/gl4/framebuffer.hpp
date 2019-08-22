@@ -80,7 +80,7 @@ class shadertoy_EXPORT framebuffer
 	/**
 	 * @brief glFramebufferTexture2D
 	 *
-	 * TODO: Handle binding
+	 * Note: requires binding (non-DSA).
 	 *
 	 * @param target
 	 * @param attachment
@@ -92,9 +92,7 @@ class shadertoy_EXPORT framebuffer
 					const gx::texture &texture, GLint level) const override;
 
 	/**
-	 * @brief glDrawBuffers
-	 *
-	 * TODO: Handle binding
+	 * @brief glNamedFramebufferDrawBuffers
 	 *
 	 * @param n
 	 * @param bufs

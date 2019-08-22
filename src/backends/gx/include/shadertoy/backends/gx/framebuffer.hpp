@@ -60,7 +60,7 @@ class shadertoy_EXPORT framebuffer : public resource
 	/**
 	 * @brief glFramebufferTexture2D
 	 *
-	 * TODO: Handle binding
+	 * Note: requires binding (non-DSA).
 	 *
 	 * @param target
 	 * @param attachment
@@ -72,9 +72,7 @@ class shadertoy_EXPORT framebuffer : public resource
 							const class texture &texture, GLint level) const = 0;
 
 	/**
-	 * @brief glDrawBuffers
-	 *
-	 * TODO: Handle binding
+	 * @brief glNamedFramebufferDrawBuffers
 	 *
 	 * @param n
 	 * @param bufs

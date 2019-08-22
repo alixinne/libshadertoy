@@ -28,7 +28,8 @@ class shadertoy_EXPORT vertex_array : public resource
 	/**
 	 * @brief glDrawElements
 	 *
-	 * TODO: Bind the vertex_array automatically
+	 * Since glDrawElements requires state to be bound, this method
+	 * must also bind the current vertex_array object.
 	 */
 	virtual void draw_elements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices) const = 0;
 };

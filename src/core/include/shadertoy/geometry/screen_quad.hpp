@@ -31,8 +31,6 @@ class shadertoy_EXPORT screen_quad : public basic_geometry
 	 */
 	screen_quad();
 
-	inline const backends::gx::vertex_array &vertex_array() const final { return *quad_array_; }
-
 	void draw() const final;
 };
 } // namespace geometry

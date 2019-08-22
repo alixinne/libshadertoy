@@ -29,14 +29,28 @@ class shadertoy_EXPORT backend
 
 	// Factory methods
 
+	/// Create a new buffer
 	virtual std::unique_ptr<buffer> make_buffer() = 0;
 
+	/// Create a new framebuffer
 	virtual std::unique_ptr<framebuffer> make_framebuffer() = 0;
 
+	/// Create a new program
 	virtual std::unique_ptr<program> make_program() = 0;
 
+	/**
+	 * @brief Create a new attribute location
+	 *
+	 * @param location Location index of the attribute
+	 */
 	virtual std::unique_ptr<attrib_location> make_attrib_location(GLint location) = 0;
 
+	/**
+	 * @brief Create a new uniform location
+	 *
+	 * @param program  Program this uniform is located in
+	 * @param location Location index of the uniform
+	 */
 	virtual std::unique_ptr<uniform_location> make_uniform_location(const program &program, GLint location) = 0;
 
 	/**
@@ -46,8 +60,10 @@ class shadertoy_EXPORT backend
 	 */
 	virtual std::unique_ptr<query> make_query(GLenum target) = 0;
 
+	/// Create a new renderbuffer
 	virtual std::unique_ptr<renderbuffer> make_renderbuffer() = 0;
 
+	/// Create a new sampler
 	virtual std::unique_ptr<sampler> make_sampler() = 0;
 
 	/**
@@ -64,12 +80,19 @@ class shadertoy_EXPORT backend
 	 */
 	virtual std::unique_ptr<texture> make_texture(GLenum target) = 0;
 
+	/// Create a new vertex array
 	virtual std::unique_ptr<vertex_array> make_vertex_array() = 0;
 
+	/// Create a new draw state object
 	virtual std::unique_ptr<draw_state> make_draw_state() = 0;
 
 	// Bind methods
 
+	/**
+	 * @brief Bind the default framebuffer to the given \p target
+	 *
+	 * @param target Target to bind to
+	 */
 	virtual void bind_default_framebuffer(GLenum target) = 0;
 
 	/**
@@ -84,8 +107,21 @@ class shadertoy_EXPORT backend
 
 	// Viewport methods
 
+	/**
+	 * @brief Get the viewport parameters
+	 *
+	 * @param viewport Array to receive the result as [x, y, width, height]
+	 */
 	virtual void get_viewport(GLint viewport[4]) const = 0;
 
+	/**
+	 * @brief Set the viewport parameters
+	 *
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 */
 	virtual void set_viewport(GLint x, GLint y, GLsizei width, GLsizei height) = 0;
 };
 SHADERTOY_BACKENDS_GX_NAMESPACE_END
@@ -94,6 +130,7 @@ namespace shadertoy
 {
 namespace backends
 {
+/// Current shadertoy backend in use
 extern thread_local std::unique_ptr<gx::backend> current;
 }
 } // namespace shadertoy

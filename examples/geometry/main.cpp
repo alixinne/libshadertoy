@@ -99,8 +99,6 @@ class tiny_geometry : public geometry::basic_geometry
 		vertices_->unbind(GL_ARRAY_BUFFER);
 	}
 
-	const gx::vertex_array &vertex_array() const { return *vao_; }
-
 	void draw() const final
 	{
 		vao_->draw_elements(GL_TRIANGLES, indices_size_, GL_UNSIGNED_INT, nullptr);
