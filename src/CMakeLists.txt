@@ -64,7 +64,7 @@ function(shadertoy_subtarget base_target_name)
 		message(STATUS "Creating target ${_target_name}")
 
 		# Create library target
-		add_library(${_target_name} ${_library_type} ${SHADERTOY_DEFAULT_TARGET_ARG}
+		add_library(${_target_name} ${_library_type} ${SHADERTOY_DEFAULT_TARGET_ARG_${_library_type}}
 			$<TARGET_OBJECTS:${base_target_name}-objects>)
 
 		# Create list of libraries to link
@@ -99,7 +99,7 @@ function(shadertoy_subtarget base_target_name)
 			ARCHIVE_OUTPUT_DIRECTORY ${SHADERTOY_LIB_DIR}
 			LIBRARY_OUTPUT_DIRECTORY ${SHADERTOY_LIB_DIR})
 
-		if (SHADERTOY_STANDALONE)
+		if (SHADERTOY_STANDALONE AND SHADERTOY_DEFAULT_TARGET_ARG_${_library_type} STREQUAL "")
 			# Install target
 			install(TARGETS ${_target_name}
 					DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -120,6 +120,29 @@ function(shadertoy_subtarget base_target_name)
 		set_target_properties(${base_target_name}-static PROPERTIES OUTPUT_NAME ${base_target_name}$<$<CONFIG:DEBUG>:d>)
 	endif()
 endfunction()
+
+option(SHADERTOY_BUILD_STATIC "Build static libraries" ON)
+option(SHADERTOY_BUILD_SHARED "Build shared libraries" ON)
+
+if (SHADERTOY_STANDALONE)
+	set(SHADERTOY_DEFAULT_TARGET_ARG "")
+	set(SHADERTOY_DEFAULT_TARGET_ARG_STATIC "")
+	set(SHADERTOY_DEFAULT_TARGET_ARG_SHARED "")
+
+	if (NOT SHADERTOY_BUILD_STATIC)
+		set(SHADERTOY_DEFAULT_TARGET_ARG_STATIC EXCLUDE_FROM_ALL)
+	endif()
+
+	if (NOT SHADERTOY_BUILD_SHARED)
+		set(SHADERTOY_DEFAULT_TARGET_ARG_SHARED EXCLUDE_FROM_ALL)
+	endif()
+else()
+	set(SHADERTOY_DEFAULT_TARGET_ARG EXCLUDE_FROM_ALL)
+	set(SHADERTOY_DEFAULT_TARGET_ARG_STATIC EXCLUDE_FROM_ALL)
+	set(SHADERTOY_DEFAULT_TARGET_ARG_SHARED EXCLUDE_FROM_ALL)
+endif()
+
+set(_library_types SHARED STATIC)
 
 add_subdirectory(base)
 add_subdirectory(backends)
