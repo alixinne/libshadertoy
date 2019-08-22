@@ -1,3 +1,6 @@
+# spdlog requires a thread init library
+find_package(Threads REQUIRED)
+
 shadertoy_subtarget(stbase
 	INTERFACE_INCLUDE_DIRS $<BUILD_INTERFACE:${SHADERTOY_BUILT_INCLUDE_DIR}>
 	EXTRA_SOURCES ${SPDLOG_MAIN_INCLUDE}

@@ -51,20 +51,11 @@ message(STATUS "shadertoy v${ST_VERSION_FULL} (${SHADERTOY_VERSION_STANDALONE})"
 # Export compile commands for autocomplete
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Required packages
-find_package(PkgConfig REQUIRED)
-
-# Find GLM using CMake
-find_package(glm REQUIRED)
-
 # Use bundled spdlog
 set(SPDLOG_BUILD_EXAMPLES OFF)
 set(SPDLOG_BUILD_TESTING OFF)
 set(SPDLOG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/spdlog)
 add_subdirectory(${SPDLOG_DIR} EXCLUDE_FROM_ALL)
-
-# spdlog requires a thread init library
-find_package(Threads REQUIRED)
 
 # Copy headers to include directory for build
 set(SPDLOG_MAIN_INCLUDE ${SHADERTOY_BUILT_INCLUDE_DIR}/shadertoy/spdlog/spdlog.h)

@@ -115,9 +115,9 @@ function(shadertoy_subtarget base_target_name)
 	endif()
 
 	# Rename targets if we use .a archives
-	set_target_properties(${base_target_name}-shared PROPERTIES OUTPUT_NAME ${base_target_name})
+	set_target_properties(${base_target_name}-shared PROPERTIES OUTPUT_NAME ${base_target_name}$<$<CONFIG:DEBUG>:d>)
 	if(${CMAKE_SHARED_LIBRARY_SUFFIX} MATCHES "\\.so")
-		set_target_properties(${base_target_name}-static PROPERTIES OUTPUT_NAME ${base_target_name})
+		set_target_properties(${base_target_name}-static PROPERTIES OUTPUT_NAME ${base_target_name}$<$<CONFIG:DEBUG>:d>)
 	endif()
 endfunction()
 
