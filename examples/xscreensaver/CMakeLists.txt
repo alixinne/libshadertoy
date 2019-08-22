@@ -22,9 +22,13 @@ target_link_libraries(example_xscreensaver
 	${CURL_LIBRARIES}
 	${JSONCPP_LIBRARIES}
 	shadertoy-static
+	stbackend-gl4-static
 	xscreensaver-support)
 
 target_compile_definitions(example_xscreensaver PUBLIC USE_GL=1)
 
 # C++17
 set_property(TARGET example_xscreensaver PROPERTY CXX_STANDARD 17)
+
+set_target_properties(example_xscreensaver PROPERTIES
+	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

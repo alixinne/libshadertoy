@@ -22,7 +22,11 @@ target_link_libraries(example_shadertoy
 	${Boost_LIBRARIES}
 	${CURL_LIBRARIES}
 	${JSONCPP_LIBRARIES}
-	shadertoy-shared)
+	shadertoy-shared
+	stbackend-gl4-shared)
 
 # C++17
 set_property(TARGET example_shadertoy PROPERTY CXX_STANDARD 17)
+
+set_target_properties(example_shadertoy PROPERTIES
+	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

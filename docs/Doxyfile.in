@@ -1,13 +1,15 @@
 PROJECT_NAME           = "libshadertoy"
 PROJECT_NUMBER         = @ST_VERSION_FULL@
 PROJECT_BRIEF          = "A C++ library for multipass OpenGL rendering on desktop"
-PROJECT_LOGO           = @PROJECT_SOURCE_DIR@/docs/logo55.png
-STRIP_FROM_PATH        = @PROJECT_SOURCE_DIR@ \
+PROJECT_LOGO           = @SHADERTOY_DOC_ROOT@/docs/logo55.png
+STRIP_FROM_PATH        = @SHADERTOY_DOC_ROOT@ \
                          @PROJECT_BINARY_DIR@
 INPUT                  = @doxy_main_page@ \
-                         @PROJECT_SOURCE_DIR@/docs \
-                         @PROJECT_SOURCE_DIR@/include
-                         #@PROJECT_BINARY_DIR@
+                         @SHADERTOY_DOC_ROOT@/docs \
+                         @SHADERTOY_DOC_ROOT@/src/base/include \
+                         @SHADERTOY_DOC_ROOT@/src/backends/gx/include \
+                         @SHADERTOY_DOC_ROOT@/src/backends/gl4/include \
+                         @SHADERTOY_DOC_ROOT@/src/core/include
 FILE_PATTERNS          = *.hpp \
                          *.cpp \
                          *.md \
@@ -24,4 +26,12 @@ MULTILINE_CPP_IS_BRIEF = YES
 TAB_SIZE               = 4
 BUILTIN_STL_SUPPORT    = YES
 WARN_NO_PARAMDOC       = YES
-VERBOSE = NO
+VERBOSE                = NO
+
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = YES
+PREDEFINED             = "SHADERTOY_BACKENDS_GX_NAMESPACE_BEGIN=namespace shadertoy { namespace backends { namespace gx {" \
+                         "SHADERTOY_BACKENDS_GX_NAMESPACE_END=} } }" \
+                         "SHADERTOY_BACKENDS_GL4_NAMESPACE_BEGIN=namespace shadertoy { namespace backends { namespace gl4 {" \
+                         "SHADERTOY_BACKENDS_GL4_NAMESPACE_END=} } }"

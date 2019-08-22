@@ -5,11 +5,11 @@
 
 #include <shadertoy.hpp>
 #include <shadertoy/utils/log.hpp>
+#include <shadertoy/backends/gl4.hpp>
 
 #include "test.hpp"
 
 namespace fs = boost::filesystem;
-using shadertoy::gl::gl_call;
 
 int main(int argc, char *argv[])
 {
@@ -44,6 +44,9 @@ int main(int argc, char *argv[])
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(1);
 
+		// Set the backend to raw OpenGL 4
+		shadertoy::backends::current = std::make_unique<shadertoy::backends::gl4::backend>();
+
 		shadertoy::utils::log::shadertoy()->set_level(spdlog::level::trace);
 
 		try
@@ -57,9 +60,9 @@ int main(int argc, char *argv[])
 
 			// Create a simple texture for the compute buffer
 			int tex_width = 16;
-			shadertoy::gl::texture texture(GL_TEXTURE_1D);
-			texture.parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST); // no mipmaps
-			texture.image_1d(GL_TEXTURE_1D, 0, GL_R32F, tex_width, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+			auto texture(shadertoy::backends::current->make_texture(GL_TEXTURE_1D));
+			texture->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST); // no mipmaps
+			texture->image_1d(GL_TEXTURE_1D, 0, GL_R32F, tex_width, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 
 			// Turn the texture into an input
 			auto compute_image(std::make_shared<shadertoy::inputs::texture_input>(std::move(texture), GL_R32F));
@@ -125,7 +128,7 @@ int main(int argc, char *argv[])
 				// glViewport. In this example, we render directly to the
 				// default framebuffer, so we need to set the viewport
 				// ourselves.
-				gl_call(glViewport, 0, 0, ctx.render_size.width, ctx.render_size.height);
+				shadertoy::backends::current->set_viewport(0, 0, ctx.render_size.width, ctx.render_size.height);
 
 				// Render the swap chain
 				context.render(chain);
@@ -141,7 +144,7 @@ int main(int argc, char *argv[])
 					glfwSetWindowShouldClose(window, true);
 			}
 		}
-		catch (shadertoy::gl::shader_compilation_error &sce)
+		catch (shadertoy::backends::gx::shader_compilation_error &sce)
 		{
 			std::cerr << "Failed to compile shader: " << sce.log();
 			code = 2;

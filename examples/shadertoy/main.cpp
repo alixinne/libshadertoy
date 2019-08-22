@@ -14,9 +14,9 @@
 #include "test.hpp"
 
 #include <shadertoy/utils/log.hpp>
+#include <shadertoy/backends/gl4.hpp>
 
 using namespace std;
-using shadertoy::gl::gl_call;
 
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
@@ -103,7 +103,7 @@ int render(GLFWwindow *window, example_ctx &ctx, bool dumpShaders)
 			}
 		}
 	}
-	catch (shadertoy::gl::shader_compilation_error &sce)
+	catch (shadertoy::backends::gx::shader_compilation_error &sce)
 	{
 		u::log::shadertoy()->error("Failed to compile shader: {}", sce.log());
 		code = 2;
@@ -220,6 +220,9 @@ int performRender(bool dumpShaders, Args&&... args)
 
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
+
+	// Set the backend to raw OpenGL 4
+	shadertoy::backends::current = std::make_unique<shadertoy::backends::gl4::backend>();
 
 	shadertoy::utils::log::shadertoy()->set_level(spdlog::level::debug);
 

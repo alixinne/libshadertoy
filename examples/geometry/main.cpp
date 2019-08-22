@@ -5,6 +5,7 @@
 
 #include <shadertoy.hpp>
 #include <shadertoy/utils/log.hpp>
+#include <shadertoy/backends/gl4.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -13,17 +14,17 @@
 #include "tiny_obj_loader.h"
 
 namespace fs = boost::filesystem;
-using shadertoy::gl::gl_call;
 using namespace shadertoy;
+using namespace shadertoy::backends;
 
 // Type that will manage the geometry
 class tiny_geometry : public geometry::basic_geometry
 {
 	/// Vertex array object
-	gl::vertex_array vao_;
+	std::unique_ptr<gx::vertex_array> vao_;
 	/// Buffer objects
-	gl::buffer vertices_;
-	gl::buffer indices_;
+	std::unique_ptr<gx::buffer> vertices_;
+	std::unique_ptr<gx::buffer> indices_;
 	size_t indices_size_;
 
 public:
@@ -66,40 +67,43 @@ public:
 
 		indices_size_ = indices.size();
 
-		vao_.bind();
-		vertices_.bind(GL_ARRAY_BUFFER);
-		indices_.bind(GL_ELEMENT_ARRAY_BUFFER);
+		vao_ = current->make_vertex_array();
+		vao_->bind();
+		vertices_ = current->make_buffer();
+		vertices_->bind(GL_ARRAY_BUFFER);
+		indices_ = current->make_buffer();
+		indices_->bind(GL_ELEMENT_ARRAY_BUFFER);
 
-		vertices_.data(sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-		indices_.data(sizeof(uint32_t) * indices.size(), indices.data(), GL_STATIC_DRAW);
+		vertices_->data(sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+		indices_->data(sizeof(uint32_t) * indices.size(), indices.data(), GL_STATIC_DRAW);
 
 		// bind input "position" to vertex locations (3 floats)
-		gl::attrib_location position(0);
-		position.vertex_pointer(3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)0);
-		position.enable_vertex_array();
+		auto position(current->make_attrib_location(0));
+		position->vertex_pointer(3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)0);
+		position->enable_vertex_array();
 
 		// bind input "texCoord" to vertex texture coordinates (2 floats)
-		gl::attrib_location texCoord(1);
-		texCoord.vertex_pointer(2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat)));
-		texCoord.enable_vertex_array();
+		auto texCoord(current->make_attrib_location(1));
+		texCoord->vertex_pointer(2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat)));
+		texCoord->enable_vertex_array();
 
 		// bind input "normals" to vertex normals (3 floats)
-		gl::attrib_location normals(1);
-		normals.vertex_pointer(3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)(5 * sizeof(GLfloat)));
-		normals.enable_vertex_array();
+		auto normals(current->make_attrib_location(2));
+		normals->vertex_pointer(3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)(5 * sizeof(GLfloat)));
+		normals->enable_vertex_array();
 
 		// Unbind
-		vao_.unbind();
-		indices_.unbind(GL_ELEMENT_ARRAY_BUFFER);
-		vertices_.unbind(GL_ARRAY_BUFFER);
+		vao_->unbind();
+		indices_->unbind(GL_ELEMENT_ARRAY_BUFFER);
+		vertices_->unbind(GL_ARRAY_BUFFER);
 	}
 
-	const gl::vertex_array &vertex_array() const
-	{ return vao_; }
+	const gx::vertex_array &vertex_array() const
+	{ return *vao_; }
 
 	void draw() const final
 	{
-		gl_call(glDrawElements, GL_TRIANGLES, indices_size_, GL_UNSIGNED_INT, nullptr);
+		vao_->draw_elements(GL_TRIANGLES, indices_size_, GL_UNSIGNED_INT, nullptr);
 	}
 };
 
@@ -135,6 +139,9 @@ int main(int argc, char *argv[])
 	{
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(1);
+
+		// Set the backend to raw OpenGL 4
+		shadertoy::backends::current = std::make_unique<shadertoy::backends::gl4::backend>();
 
 		utils::log::shadertoy()->set_level(spdlog::level::trace);
 
@@ -211,7 +218,7 @@ int main(int argc, char *argv[])
 				// glViewport. In this example, we render directly to the
 				// default framebuffer, so we need to set the viewport
 				// ourselves.
-				gl_call(glViewport, 0, 0, ctx.render_size.width, ctx.render_size.height);
+				shadertoy::backends::current->set_viewport(0, 0, ctx.render_size.width, ctx.render_size.height);
 
 				// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 				glm::mat4 Projection = glm::perspective(glm::radians(25.0f), (float) ctx.render_size.width / (float)ctx.render_size.height, 0.1f, 100.0f);
@@ -226,7 +233,7 @@ int main(int argc, char *argv[])
 				// Model matrix : an identity matrix (model will be at the origin)
 				glm::mat4 Model = glm::rotate(glm::mat4(1.f), frameCount * 0.0125f, glm::vec3(0.f, 1.f, 0.f));
 				// Our ModelViewProjection : multiplication of our 3 matrices
-				mvp_location.set_value(Projection * View * Model);
+				mvp_location->set_value(Projection * View * Model);
 
 				// Render the swap chain
 				context.render(chain);
@@ -242,7 +249,7 @@ int main(int argc, char *argv[])
 					glfwSetWindowShouldClose(window, true);
 			}
 		}
-		catch (gl::shader_compilation_error &sce)
+		catch (gx::shader_compilation_error &sce)
 		{
 			std::cerr << "Failed to compile shader: " << sce.log();
 			code = 2;

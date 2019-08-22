@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(shadertoy LANGUAGES CXX)
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules")
+set(SHADERTOY_CMAKE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/modules")
+set(CMAKE_MODULE_PATH ${SHADERTOY_CMAKE_DIR})
 
 include(CMakeDependentOption)
 include(GNUInstallDirs)
@@ -39,12 +40,13 @@ else()
 	set(SHADERTOY_DEFAULT_TARGET_ARG EXCLUDE_FROM_ALL)
 endif()
 
+set(_library_types SHARED STATIC)
+set(SHADERTOY_BUILT_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR})
+set(SHADERTOY_BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
+set(SHADERTOY_LIB_DIR ${CMAKE_CURRENT_BINARY_DIR}/lib)
+
 # Print a message with the version number
 message(STATUS "shadertoy v${ST_VERSION_FULL} (${SHADERTOY_VERSION_STANDALONE})")
-
-# Project directories
-set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # Export compile commands for autocomplete
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -54,9 +56,6 @@ find_package(PkgConfig REQUIRED)
 
 # Find GLM using CMake
 find_package(glm REQUIRED)
-
-# libepoxy extension loader
-find_package(Epoxy REQUIRED)
 
 # Use bundled spdlog
 set(SPDLOG_BUILD_EXAMPLES OFF)
@@ -68,134 +67,32 @@ add_subdirectory(${SPDLOG_DIR} EXCLUDE_FROM_ALL)
 find_package(Threads REQUIRED)
 
 # Copy headers to include directory for build
-set(SPDLOG_MAIN_INCLUDE ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog/spdlog.h)
+set(SPDLOG_MAIN_INCLUDE ${SHADERTOY_BUILT_INCLUDE_DIR}/shadertoy/spdlog/spdlog.h)
 add_custom_command(OUTPUT ${SPDLOG_MAIN_INCLUDE}
 				   MAIN_DEPENDENCY ${SPDLOG_DIR}/include/spdlog/spdlog.h
-				   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog
-				   COMMAND ${CMAKE_COMMAND} -E copy_directory ${SPDLOG_DIR}/include/spdlog ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/spdlog)
+				   COMMAND ${CMAKE_COMMAND} -E make_directory ${SHADERTOY_BUILT_INCLUDE_DIR}/shadertoy/spdlog
+				   COMMAND ${CMAKE_COMMAND} -E copy_directory ${SPDLOG_DIR}/include/spdlog ${SHADERTOY_BUILT_INCLUDE_DIR}/shadertoy/spdlog)
 
-# libOpenImageIO
-find_package(OpenImageIO)
-
-# Copy shaders to source
-file(GLOB RESOURCES_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*)
-add_custom_command(
-	OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/resources.cpp
-		   ${CMAKE_CURRENT_BINARY_DIR}/resources.hpp
-	DEPENDS ${RESOURCES_SOURCES}
-	COMMAND ${CMAKE_COMMAND}
-		-DRESOURCES_INPUT=${CMAKE_CURRENT_SOURCE_DIR}/shaders
-		-DRESOURCES_OUTPUT=${CMAKE_CURRENT_BINARY_DIR}/resources.cpp
-		-DRESOURCES_H_OUTPUT=${CMAKE_CURRENT_BINARY_DIR}/resources.hpp
-		-DRESOURCES_H_ID=_SHADERTOY_RESOURCES_HPP_
-		-P ${CMAKE_MODULE_PATH}/resources.cmake)
-
-set(shadertoy_INCLUDE_DIRS
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> # for Resources.h
-	$<BUILD_INTERFACE:${INCLUDE_DIR}>
-	$<INSTALL_INTERFACE:include>)
-
-file(GLOB_RECURSE SHADERTOY_LIBRARY_HEADERS ${INCLUDE_DIR}/*.hpp ${INCLUDE_DIR}/*.ipp)
-file(GLOB_RECURSE SHADERTOY_LIBRARY_SOURCES ${SRC_DIR}/*.cpp)
-
-add_library(shadertoy-objects OBJECT EXCLUDE_FROM_ALL
-	${SHADERTOY_LIBRARY_HEADERS}
-	${SHADERTOY_LIBRARY_SOURCES}
-
-	${CMAKE_CURRENT_BINARY_DIR}/resources.cpp
-	${POLYMORPHIC_VALUE_INCLUDE}
-	${SPDLOG_MAIN_INCLUDE})
-
-# Enable warnings
-if(MSVC)
-	target_compile_options(shadertoy-objects PRIVATE /W2 /wd4275 /wd4251)
-else()
-	target_compile_options(shadertoy-objects PRIVATE -Wall -Wno-missing-braces -Wno-attributes -pedantic)
+# Copy headers initially
+if(NOT EXISTS ${SPDLOG_MAIN_INCLUDE})
+	execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${SHADERTOY_BUILT_INCLUDE_DIR}/shadertoy/spdlog)
+	execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${SPDLOG_DIR}/include/spdlog ${SHADERTOY_BUILT_INCLUDE_DIR}/shadertoy/spdlog)
 endif()
 
-# Include directories
-target_include_directories(shadertoy-objects PRIVATE
-	${shadertoy_INCLUDE_DIRS}
-	${OPENGL_INCLUDE_DIRS}
-	${Epoxy_INCLUDE_DIRS}
-	${GLM_INCLUDE_DIRS})
+# Sources
+add_subdirectory(src)
 
-if (OpenImageIO_FOUND)
-	message(STATUS "Building with OpenImageIO support")
-	target_include_directories(shadertoy-objects PRIVATE
-		${OpenImageIO_INCLUDE_DIRS})
-	target_compile_definitions(shadertoy-objects PRIVATE
-		LIBSHADERTOY_OPENIMAGEIO=1)
-
-	# https://github.com/openexr/openexr/issues/235 still occurs recent installs
-	set_property(SOURCE ${SRC_DIR}/inputs/openimageio_wrapper.cpp PROPERTY COMPILE_FLAGS -std=c++14)
-else()
-	message(STATUS "Building without OpenImageIO support")
-	target_compile_definitions(shadertoy-objects PRIVATE
-		LIBSHADERTOY_OPENIMAGEIO=0)
-endif()
-
-# C++17
-target_compile_features(shadertoy-objects PUBLIC cxx_std_17)
-
-# -fPIC
-set_property(TARGET shadertoy-objects PROPERTY POSITION_INDEPENDENT_CODE ON)
-
-# Build static and shared libraries
-set(LIBRARY_TYPES "SHARED;STATIC")
-foreach(LIBRARY_TYPE ${LIBRARY_TYPES})
-	set(TARGET_NAME "shadertoy-${LIBRARY_TYPE}")
-	string(TOLOWER ${TARGET_NAME} TARGET_NAME)
-	message(STATUS "Creating target ${TARGET_NAME}")
-
-	# Main libshadertoy
-	add_library(${TARGET_NAME} ${LIBRARY_TYPE} ${SHADERTOY_DEFAULT_TARGET_ARG}
-		$<TARGET_OBJECTS:shadertoy-objects>)
-
-	# Link dependencies
-	target_link_libraries(${TARGET_NAME} PUBLIC
-		${Epoxy_LIBRARIES}
-		${CMAKE_THREAD_LIBS_INIT})
-
-	if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-		target_link_libraries(${TARGET_NAME} PUBLIC stdc++fs)
-	endif()
-
-	if (OpenImageIO_FOUND)
-		target_link_libraries(${TARGET_NAME} PUBLIC ${OIIO_LIBRARIES})
-	endif()
-
-	if (NOT MSVC)
-		target_compile_options(${TARGET_NAME} PUBLIC -Wno-attributes)
-	endif()
-
-	# Include directories for install
-	target_include_directories(${TARGET_NAME} INTERFACE
-		${shadertoy_INCLUDE_DIRS}
-		${GLM_INCLUDE_DIRS})
-
-	# Set library file version
-	set_target_properties(${TARGET_NAME} PROPERTIES
-		SOVERSION ${VERSION_MAJOR}
-		VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
-
-	if (SHADERTOY_STANDALONE)
-		# Install target
-		install(TARGETS ${TARGET_NAME}
-				DESTINATION ${CMAKE_INSTALL_LIBDIR}
-				EXPORT shadertoy)
-	endif()
-endforeach()
-
-set_target_properties(shadertoy-shared PROPERTIES OUTPUT_NAME shadertoy)
-
-# Export header for shared
+# Export header for shared targets
 generate_export_header(shadertoy-shared
 	BASE_NAME shadertoy
 	EXPORT_MACRO_NAME shadertoy_EXPORT
-	EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/shadertoy/shadertoy_export.h)
-target_compile_definitions(shadertoy-objects PUBLIC shadertoy_shared_EXPORTS)
+	EXPORT_FILE_NAME ${SHADERTOY_BUILT_INCLUDE_DIR}/shadertoy/shadertoy_export.h)
 
+# Documentation
+set(SHADERTOY_DOC_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
+add_subdirectory(docs)
+
+# CMake config files
 if (SHADERTOY_STANDALONE)
 	# Export targets
 	export(EXPORT shadertoy FILE ${CMAKE_CURRENT_BINARY_DIR}/shadertoy.cmake)
@@ -207,7 +104,6 @@ if (SHADERTOY_STANDALONE)
 	install(EXPORT shadertoy
 			COMPONENT shadertoy-dev
 			DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/shadertoy)
-
 
 	# Configure the -config.cmake file
 	configure_file(shadertoy-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/shadertoy-config.cmake @ONLY)
@@ -230,37 +126,15 @@ if (SHADERTOY_STANDALONE)
 			PATTERN "build" EXCLUDE
 			PATTERN "*.dump" EXCLUDE)
 
-	# Install headers
-	install(FILES ${INCLUDE_DIR}/shadertoy.hpp
-			COMPONENT shadertoy-dev
-			DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
-	file(GLOB SHADERTOY_HEADERS ${INCLUDE_DIR}/shadertoy/*.hpp ${INCLUDE_DIR}/shadertoy/*.ipp)
-	list(APPEND SHADERTOY_HEADERS
-			${CMAKE_CURRENT_BINARY_DIR}/shadertoy/shadertoy_export.h)
-	install(FILES ${SHADERTOY_HEADERS}
-			COMPONENT shadertoy-dev
-			DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
-
-	file(GLOB SHADERTOY_HEADERS_DIRS RELATIVE ${INCLUDE_DIR}/shadertoy ${INCLUDE_DIR}/shadertoy/*)
-	foreach(SHADERTOY_HEADERS_ITEM ${SHADERTOY_HEADERS_DIRS})
-		if(IS_DIRECTORY ${INCLUDE_DIR}/shadertoy/${SHADERTOY_HEADERS_ITEM})
-			file(GLOB SHADERTOY_HEADER_FILES
-				${INCLUDE_DIR}/shadertoy/${SHADERTOY_HEADERS_ITEM}/*.hpp
-				${INCLUDE_DIR}/shadertoy/${SHADERTOY_HEADERS_ITEM}/*.ipp)
-			install(FILES ${SHADERTOY_HEADER_FILES}
-				    COMPONENT shadertoy-dev
-					DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy/${SHADERTOY_HEADERS_ITEM})
-		endif()
-	endforeach()
-
+	# Install extra headers
 	install(DIRECTORY ${SPDLOG_DIR}/include/spdlog
 			COMPONENT shadertoy-dev
 			DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
-endif()
 
-# Documentation
-add_subdirectory(docs)
+	install(FILES ${SHADERTOY_BUILT_INCLUDE_DIR}/shadertoy/shadertoy_export.h
+			COMPONENT shadertoy-dev
+			DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
+endif()
 
 # Build examples
 if(SHADERTOY_BUILD_EXAMPLES)

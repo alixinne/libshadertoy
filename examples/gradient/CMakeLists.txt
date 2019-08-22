@@ -16,7 +16,11 @@ target_link_libraries(example_gradient
 	${EPOXY_LIBRARIES}
 	${Boost_LIBRARIES}
 	${GLFW3_LIBRARIES}
-	shadertoy-shared)
+	shadertoy-shared
+	stbackend-gl4-shared)
 
 # C++17
 set_property(TARGET example_gradient PROPERTY CXX_STANDARD 17)
+
+set_target_properties(example_gradient PROPERTIES
+	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

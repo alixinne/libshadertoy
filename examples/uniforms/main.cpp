@@ -7,11 +7,11 @@
 
 #include <shadertoy.hpp>
 #include <shadertoy/utils/log.hpp>
+#include <shadertoy/backends/gl4.hpp>
 
 #include "test.hpp"
 
 namespace fs = boost::filesystem;
-using shadertoy::gl::gl_call;
 
 int main(int argc, char *argv[])
 {
@@ -45,6 +45,9 @@ int main(int argc, char *argv[])
 	{
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(1);
+
+		// Set the backend to raw OpenGL 4
+		shadertoy::backends::current = std::make_unique<shadertoy::backends::gl4::backend>();
 
 		shadertoy::utils::log::shadertoy()->set_level(spdlog::level::trace);
 
@@ -113,7 +116,7 @@ int main(int argc, char *argv[])
 					glfwSetWindowShouldClose(window, true);
 			}
 		}
-		catch (shadertoy::gl::shader_compilation_error &sce)
+		catch (shadertoy::backends::gx::shader_compilation_error &sce)
 		{
 			std::cerr << "Failed to compile shader: " << sce.log();
 			code = 2;

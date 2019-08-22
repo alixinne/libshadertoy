@@ -12,19 +12,20 @@
 #include "demo.h"
 
 #include <shadertoy/utils/log.hpp>
+#include <shadertoy/backends/gl4.hpp>
 
 #define TEST_NO_GLFW
 #include "test.hpp"
 
 using namespace std;
-using shadertoy::gl::gl_call;
 
 namespace fs = boost::filesystem;
 namespace u = shadertoy::utils;
+namespace gx = shadertoy::backends::gx;
 
 struct my_context : public example_ctx
 {
-	shadertoy::gl::query fps_query;
+	std::unique_ptr<gx::query> fps_query;
 	GLuint64 last_query_value;
 	int last_query_count;
 
@@ -33,7 +34,7 @@ struct my_context : public example_ctx
 
 	my_context()
 		: example_ctx(),
-		fps_query(GL_TIMESTAMP),
+		fps_query(shadertoy::backends::current->make_query(GL_TIMESTAMP)),
 		last_query_value(0),
 		last_query_count(0),
 		frame_count(0),
@@ -69,17 +70,17 @@ void shadertoy_render_frame()
 	// No measurement of GL_TIMESTAMP yet, add it
 	if (ctx->last_query_value == 0)
 	{
-		ctx->fps_query.query_counter(GL_TIMESTAMP);
+		ctx->fps_query->query_counter(GL_TIMESTAMP);
 	}
 
 	GLint available = 0;
-	ctx->fps_query.get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
+	ctx->fps_query->get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
 
 	if (available)
 	{
 		// The time stamp is available
 		GLuint64 currentTime;
-		ctx->fps_query.get_object_ui64v(GL_QUERY_RESULT, &currentTime);
+		ctx->fps_query->get_object_ui64v(GL_QUERY_RESULT, &currentTime);
 
 		float timeDelta = (1e-9 * (currentTime - ctx->last_query_value)) / (double)(ctx->frame_count - ctx->last_query_count);
 
@@ -89,7 +90,7 @@ void shadertoy_render_frame()
 		ctx->last_query_value = currentTime;
 		ctx->last_query_count = ctx->frame_count;
 
-		ctx->fps_query.query_counter(GL_TIMESTAMP);
+		ctx->fps_query->query_counter(GL_TIMESTAMP);
 	}
 
 	//  iDate
@@ -143,7 +144,7 @@ int shadertoy_load(const char *shader_id, const char *shader_api_key)
 		ctx->chain.set_uniform("iTimeDelta", 1.0f / 30.0f);
 		ctx->chain.set_uniform("iFrameRate", 30.0f);
 	}
-	catch (shadertoy::gl::shader_compilation_error &sce)
+	catch (gx::shader_compilation_error &sce)
 	{
 		std::cerr << "Failed to compile shader: " << sce.log();
 		code = 2;
@@ -187,6 +188,9 @@ int shadertoy_init(const char *api_key, const char *query, const char *sort, int
 
 	// Get returned json
 	Json::Value sr = json_get(curl, ss.str());
+
+	// Set the backend to raw OpenGL 4
+	shadertoy::backends::current = std::make_unique<shadertoy::backends::gl4::backend>();
 
 	// Create context
 	ctx = std::make_unique<my_context>();

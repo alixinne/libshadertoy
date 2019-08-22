@@ -1,0 +1,12 @@
+#include "shadertoy/backends/gx/backend.hpp"
+
+#include "shadertoy/backends/gx/buffer.hpp"
+#include "shadertoy/backends/gx/draw_state.hpp"
+#include "shadertoy/backends/gx/framebuffer.hpp"
+#include "shadertoy/backends/gx/program.hpp"
+#include "shadertoy/backends/gx/query.hpp"
+#include "shadertoy/backends/gx/renderbuffer.hpp"
+#include "shadertoy/backends/gx/sampler.hpp"
+#include "shadertoy/backends/gx/shader.hpp"
+#include "shadertoy/backends/gx/texture.hpp"
+#include "shadertoy/backends/gx/vertex_array.hpp"
