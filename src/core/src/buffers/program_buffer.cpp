@@ -26,13 +26,8 @@ void program_buffer::init(const render_context &context, const io_resource &io)
 							host_.program_intf().uniforms().resources().size());
 }
 
-void program_buffer::render_gl_contents(const render_context &context, const io_resource &io)
+void program_buffer::render_gl_contents(const render_context &context, const io_resource &io, const rsize &size)
 {
-	// Compute the rendering size from the current viewport
-	GLint viewport[4]; // x, y, width, height
-	backends::current->get_viewport(viewport);
-	rsize size(viewport[2], viewport[3]);
-
 	// Prepare the program
 	host_.prepare_render(context);
 

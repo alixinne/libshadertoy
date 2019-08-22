@@ -42,6 +42,8 @@ void gl_buffer::allocate_textures(const render_context &context, const io_resour
 
 void gl_buffer::render(const render_context &context, const io_resource &io, const members::buffer_member &member)
 {
+	rsize size;
+
 	if (io.swap_policy() == member_swap_policy::default_framebuffer)
 	{
 		// Bind default framebuffer, assume viewport has been set correctly
@@ -49,17 +51,22 @@ void gl_buffer::render(const render_context &context, const io_resource &io, con
 
 		// Do not set the viewport, we are drawing to the default framebuffer so it is
 		// configured by the user.
+
+		// Get default viewport target size
+		GLint viewport[4]; // x, y, width, height
+		backends::current->get_viewport(viewport);
+		size = rsize(viewport[2], viewport[3]);
 	}
 	else
 	{
 		target_fbo_->bind(GL_DRAW_FRAMEBUFFER);
 
+		// Set the viewport
+		size = io.output_specs().front().render_size->resolve();
+		target_fbo_->set_viewport(0, 0, size.width, size.height);
+
 		// Set color attachements
 		attach_framebuffer_outputs(GL_DRAW_FRAMEBUFFER, *target_fbo_, io);
-
-		// Set the viewport
-		auto size(io.output_specs().front().render_size->resolve());
-		backends::current->set_viewport(0, 0, size.width, size.height);
 	}
 
 	// Apply member state
@@ -70,7 +77,7 @@ void gl_buffer::render(const render_context &context, const io_resource &io, con
 	state.clear();
 
 	// Render the contents of this buffer
-	render_gl_contents(context, io);
+	render_gl_contents(context, io, size);
 }
 
 void gl_buffer::attach_framebuffer_outputs(GLenum target, const backends::gx::framebuffer &target_fbo,

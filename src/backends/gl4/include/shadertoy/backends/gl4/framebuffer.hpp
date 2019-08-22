@@ -98,6 +98,10 @@ class shadertoy_EXPORT framebuffer
 	 * @param bufs
 	 */
 	void draw_buffers(GLsizei n, const GLenum *bufs) const override;
+
+	void get_viewport(GLint viewport[4]) const override;
+
+	void set_viewport(GLint x, GLint y, GLsizei width, GLsizei height) const override;
 };
 SHADERTOY_BACKENDS_GL4_NAMESPACE_END
 

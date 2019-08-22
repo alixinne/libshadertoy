@@ -1,5 +1,5 @@
-#ifndef _SHADERTOy_GL_VERTEX_ARRAY_HPP_
-#define _SHADERTOy_GL_VERTEX_ARRAY_HPP_
+#ifndef _SHADERTOY_BACKENDS_GL4_VERTEX_ARRAY_HPP_
+#define _SHADERTOY_BACKENDS_GL4_VERTEX_ARRAY_HPP_
 
 #include "shadertoy/backends/gl4/pre.hpp"
 #include "shadertoy/backends/gl4/resource.hpp"
@@ -57,4 +57,4 @@ class shadertoy_EXPORT vertex_array
 };
 SHADERTOY_BACKENDS_GL4_NAMESPACE_END
 
-#endif /* _SHADERTOy_GL_VERTEX_ARRAY_HPP_ */
+#endif /* _SHADERTOY_BACKENDS_GL4_VERTEX_ARRAY_HPP_ */

@@ -37,3 +37,13 @@ void framebuffer::draw_buffers(GLsizei n, const GLenum *bufs) const
 {
 	gl_call(glNamedFramebufferDrawBuffers, GLuint(*this), n, bufs);
 }
+
+void framebuffer::get_viewport(GLint viewport[4]) const
+{
+	glGetIntegerv(GL_VIEWPORT, std::addressof(viewport[0]));
+}
+
+void framebuffer::set_viewport(GLint x, GLint y, GLsizei width, GLsizei height) const
+{
+	gl_call(glViewport, x, y, width, height);
+}

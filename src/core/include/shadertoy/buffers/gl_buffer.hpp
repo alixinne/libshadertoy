@@ -42,8 +42,9 @@ class gl_buffer : public graphics_buffer
 	 *
 	 * @param[in]  context Rendering context to use for rendering this buffer
 	 * @param[in]  io      IO resource object
+	 * @param[in]  size    Rendering size
 	 */
-	virtual void render_gl_contents(const render_context &context, const io_resource &io) = 0;
+	virtual void render_gl_contents(const render_context &context, const io_resource &io, const rsize &size) = 0;
 
 	/**
 	 * @brief     Binds the given texture to the target framebuffer object

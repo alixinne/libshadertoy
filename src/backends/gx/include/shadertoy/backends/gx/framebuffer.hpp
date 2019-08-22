@@ -78,6 +78,10 @@ class shadertoy_EXPORT framebuffer : public resource
 	 * @param bufs
 	 */
 	virtual void draw_buffers(GLsizei n, const GLenum *bufs) const = 0;
+
+	virtual void get_viewport(GLint viewport[4]) const = 0;
+
+	virtual void set_viewport(GLint x, GLint y, GLsizei width, GLsizei height) const = 0;
 };
 SHADERTOY_BACKENDS_GX_NAMESPACE_END
 

@@ -43,8 +43,9 @@ class shadertoy_EXPORT program_buffer : public gl_buffer
 	 *
 	 * @param[in]  context Rendering context to use for rendering this buffer
 	 * @param[in]  io      IO resource object
+	 * @param[in]  size    Rendering size
 	 */
-	void render_gl_contents(const render_context &context, const io_resource &io) override;
+	void render_gl_contents(const render_context &context, const io_resource &io, const rsize &size) override;
 
 	public:
 	/**
