@@ -5,11 +5,11 @@
 
 #include "shadertoy/backends/gl4/backend.hpp"
 
-using namespace shadertoy;
+using namespace shadertoy::backends;
 using namespace shadertoy::backends::gl4;
 
 null_texture_error::null_texture_error()
-: shadertoy_error("An attempt was made to dereference a null texture")
+: shadertoy::shadertoy_error("An attempt was made to dereference a null texture")
 {
 }
 

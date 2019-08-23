@@ -10,6 +10,7 @@
 #include "shadertoy/backends/gx/texture.hpp"
 
 #include <functional>
+#include <vector>
 
 namespace shadertoy
 {
@@ -110,6 +111,9 @@ class shadertoy_EXPORT io_resource
 	 * @param swap_policy     Texture swapping policy, controls how many textures are allocated
 	 */
 	io_resource(member_swap_policy swap_policy = member_swap_policy::double_buffer);
+
+	io_resource(const io_resource &) = delete;
+	io_resource &operator=(const io_resource &) = delete;
 
 	/**
 	 * @brief      Allocate the textures in this IO object

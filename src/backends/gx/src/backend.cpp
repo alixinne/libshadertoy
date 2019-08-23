@@ -8,6 +8,6 @@ namespace shadertoy
 {
 namespace backends
 {
-thread_local std::unique_ptr<gx::backend> current = {};
+shadertoy_EXPORT thread_local std::unique_ptr<gx::backend> current = {};
 }
 } // namespace shadertoy

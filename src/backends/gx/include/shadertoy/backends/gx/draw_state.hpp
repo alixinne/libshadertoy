@@ -216,6 +216,8 @@ class shadertoy_EXPORT draw_state
 	draw_state();
 
 	public:
+	virtual ~draw_state() = default;
+
 	/**
 	 * Apply the stored state to the current pipeline.
 	 *

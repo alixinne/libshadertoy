@@ -131,7 +131,7 @@ namespace shadertoy
 namespace backends
 {
 /// Current shadertoy backend in use
-extern thread_local std::unique_ptr<gx::backend> current;
+shadertoy_EXPORT extern thread_local std::unique_ptr<gx::backend> current;
 }
 } // namespace shadertoy
 

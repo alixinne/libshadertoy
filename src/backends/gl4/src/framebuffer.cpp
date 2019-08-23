@@ -5,6 +5,7 @@
 #include "shadertoy/backends/gl4/texture.hpp"
 #include "shadertoy/shadertoy_error.hpp"
 
+using namespace shadertoy::backends;
 using namespace shadertoy::backends::gl4;
 
 null_framebuffer_error::null_framebuffer_error()

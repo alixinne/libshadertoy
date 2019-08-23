@@ -89,6 +89,9 @@ class shadertoy_EXPORT buffer_member : public basic_member
 	buffer_member(std::shared_ptr<buffers::graphics_buffer> buffer, rsize_ref render_size,
 				  GLint internal_format, member_swap_policy swap_policy);
 
+	buffer_member(const buffer_member &) = delete;
+	buffer_member &operator=(const buffer_member &) = delete;
+
 	virtual ~buffer_member() = default;
 
 	/**
