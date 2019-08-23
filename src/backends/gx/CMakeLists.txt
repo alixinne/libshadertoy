@@ -2,5 +2,5 @@
 find_package(glm REQUIRED)
 
 shadertoy_subtarget(stbackend-gx
-	INTERFACE_INCLUDE_DIRS "${GLM_INCLUDE_DIRS}"
+	INTERFACE_INCLUDE_DIRS "${glm_INCLUDE_DIRS}"
 	SUBTARGET_DEPENDENCIES stbase)

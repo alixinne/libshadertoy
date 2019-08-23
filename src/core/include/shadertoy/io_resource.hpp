@@ -17,7 +17,7 @@ namespace shadertoy
 /**
  * @brief Represents the properties of a texture to use as an output buffer
  */
-struct output_buffer_spec
+struct shadertoy_EXPORT output_buffer_spec
 {
 	/// Size of the texture, in pixels
 	rsize_ref render_size;
@@ -46,7 +46,7 @@ struct output_buffer_spec
 /**
  * @brief Represents a set of textures used as input and outputs of a buffer
  */
-class io_resource
+class shadertoy_EXPORT io_resource
 {
 	struct output_buffer
 	{

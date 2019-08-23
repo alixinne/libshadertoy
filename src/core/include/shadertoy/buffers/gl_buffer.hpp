@@ -19,7 +19,7 @@ namespace buffers
  * This class instantiates a framebuffer and a renderbuffer which are bound
  * before rendering the contents of this buffer.
  */
-class gl_buffer : public graphics_buffer
+class shadertoy_EXPORT gl_buffer : public graphics_buffer
 {
 	/// Target framebuffer
 	std::unique_ptr<backends::gx::framebuffer> target_fbo_;

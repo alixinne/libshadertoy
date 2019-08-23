@@ -13,7 +13,7 @@ namespace shadertoy
  *             file names and line numbers in error messages returned by the
  *             OpenGL GLSL compiler.
  */
-class shader_compiler
+class shadertoy_EXPORT shader_compiler
 {
 	public:
 	/**

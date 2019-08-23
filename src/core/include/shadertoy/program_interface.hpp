@@ -20,7 +20,7 @@ namespace shadertoy
 /**
  * @brief Representation of an OpenGL program interface resource
  */
-struct program_resource
+struct shadertoy_EXPORT program_resource
 {
 	/// Program interface this resource is part of
 	GLenum program_interface;
@@ -64,7 +64,7 @@ uniform_variant;
 /**
  * @brief Represents a uniform interface resource
  */
-struct uniform_resource : public program_resource
+struct shadertoy_EXPORT uniform_resource : public program_resource
 {
 	constexpr static const GLenum INTERFACE_TYPE = GL_UNIFORM;
 
