@@ -135,7 +135,7 @@ function(shadertoy_subtarget base_target_name)
 endfunction()
 
 option(SHADERTOY_BUILD_STATIC "Build static libraries" ON)
-if (TARGET_SUPPORTS_SHARED_LIBS)
+if (NOT EMSCRIPTEN)
 	option(SHADERTOY_BUILD_SHARED "Build shared libraries" ON)
 endif()
 
@@ -158,7 +158,7 @@ else()
 endif()
 
 set(_library_types STATIC)
-if (TARGET_SUPPORTS_SHARED_LIBS)
+if (NOT EMSCRIPTEN)
 	list(APPEND _library_types SHARED)
 endif()
 list(LENGTH _library_types _library_types_count)
