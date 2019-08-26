@@ -27,7 +27,12 @@ function(shadertoy_subtarget base_target_name)
 	# Dependencies interface
 	set(${base_target_name}_DEPS_INCLUDE_DIRS "")
 	foreach(_subtarget_dep ${_shadertoy_subtarget_SUBTARGET_DEPENDENCIES})
-		get_target_property(_subtarget_include ${_subtarget_dep}-shared INTERFACE_INCLUDE_DIRECTORIES)
+		if (_library_types_count GREATER 1)
+			set(_target_suffix "-shared")
+		else()
+			set(_target_suffix "")
+		endif()
+		get_target_property(_subtarget_include ${_subtarget_dep}${_target_suffix} INTERFACE_INCLUDE_DIRECTORIES)
 		list(APPEND ${base_target_name}_DEPS_INCLUDE_DIRS ${_subtarget_include})
 	endforeach()
 
@@ -59,8 +64,14 @@ function(shadertoy_subtarget base_target_name)
 		${_shadertoy_subtarget_PRIVATE_INCLUDE_DIRS})
 
 	foreach(_library_type ${_library_types})
-		set(_target_name "${base_target_name}-${_library_type}")
-		string(TOLOWER ${_target_name} _target_name)
+		if (_library_types_count GREATER 1)
+			set(_target_suffix "-${_library_type}")
+			string(TOLOWER ${_target_name} _target_name)
+		else()
+			set(_target_suffix "")
+		endif()
+
+		set(_target_name "${base_target_name}${_target_suffix}")
 		message(STATUS "Creating target ${_target_name}")
 
 		# Create library target
@@ -70,7 +81,7 @@ function(shadertoy_subtarget base_target_name)
 		# Create list of libraries to link
 		set(${_target_name}_LINK_LIBRARIES ${_shadertoy_subtarget_LINK_LIBRARIES})
 		foreach(_subtarget_dep ${_shadertoy_subtarget_SUBTARGET_DEPENDENCIES})
-			string(TOLOWER ${_subtarget_dep}-${_library_type} _subtarget_lib)
+			string(TOLOWER ${_subtarget_dep}${_target_suffix} _subtarget_lib)
 			list(APPEND ${_target_name}_LINK_LIBRARIES ${_subtarget_lib})
 		endforeach()
 
@@ -114,15 +125,19 @@ function(shadertoy_subtarget base_target_name)
 			DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 	endif()
 
-	# Rename targets if we use .a archives
-	set_target_properties(${base_target_name}-shared PROPERTIES OUTPUT_NAME ${base_target_name}$<$<CONFIG:DEBUG>:d>)
-	if(${CMAKE_SHARED_LIBRARY_SUFFIX} MATCHES "\\.so")
-		set_target_properties(${base_target_name}-static PROPERTIES OUTPUT_NAME ${base_target_name}$<$<CONFIG:DEBUG>:d>)
+	if (_library_types_count GREATER 1)
+		# Rename targets if we use .a archives
+		set_target_properties(${base_target_name}-shared PROPERTIES OUTPUT_NAME ${base_target_name}$<$<CONFIG:DEBUG>:d>)
+		if(${CMAKE_SHARED_LIBRARY_SUFFIX} MATCHES "\\.so")
+			set_target_properties(${base_target_name}-static PROPERTIES OUTPUT_NAME ${base_target_name}$<$<CONFIG:DEBUG>:d>)
+		endif()
 	endif()
 endfunction()
 
 option(SHADERTOY_BUILD_STATIC "Build static libraries" ON)
-option(SHADERTOY_BUILD_SHARED "Build shared libraries" ON)
+if (TARGET_SUPPORTS_SHARED_LIBS)
+	option(SHADERTOY_BUILD_SHARED "Build shared libraries" ON)
+endif()
 
 if (SHADERTOY_STANDALONE)
 	set(SHADERTOY_DEFAULT_TARGET_ARG "")
@@ -142,7 +157,11 @@ else()
 	set(SHADERTOY_DEFAULT_TARGET_ARG_SHARED EXCLUDE_FROM_ALL)
 endif()
 
-set(_library_types SHARED STATIC)
+set(_library_types STATIC)
+if (TARGET_SUPPORTS_SHARED_LIBS)
+	list(APPEND _library_types SHARED)
+endif()
+list(LENGTH _library_types _library_types_count)
 
 add_subdirectory(base)
 add_subdirectory(backends)

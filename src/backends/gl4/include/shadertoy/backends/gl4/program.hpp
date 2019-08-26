@@ -597,8 +597,6 @@ class shadertoy_EXPORT program
 	/**
 	 * @brief glDispatchCompute
 	 *
-	 * TODO: Specify that it uses the program before dispatching.
-	 *
 	 * @param num_groups
 	 */
 	void dispatch_compute(glm::uvec3 num_groups) const override;

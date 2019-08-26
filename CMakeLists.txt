@@ -71,7 +71,7 @@ endif()
 add_subdirectory(src)
 
 # Export header for shared targets
-generate_export_header(shadertoy-shared
+generate_export_header(shadertoy-objects
 	BASE_NAME shadertoy
 	EXPORT_MACRO_NAME shadertoy_EXPORT
 	EXPORT_FILE_NAME ${SHADERTOY_BUILT_INCLUDE_DIR}/shadertoy/shadertoy_export.h)
@@ -114,12 +114,8 @@ if (SHADERTOY_STANDALONE)
 			PATTERN "build" EXCLUDE
 			PATTERN "*.dump" EXCLUDE)
 
-	# Install extra headers
-	install(DIRECTORY ${SPDLOG_DIR}/include/spdlog
-			COMPONENT shadertoy-dev
-			DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
-
-	install(FILES ${SHADERTOY_BUILT_INCLUDE_DIR}/shadertoy/shadertoy_export.h
+	# Install built headers
+	install(DIRECTORY ${SHADERTOY_BUILT_INCLUDE_DIR}/shadertoy/
 			COMPONENT shadertoy-dev
 			DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shadertoy)
 endif()

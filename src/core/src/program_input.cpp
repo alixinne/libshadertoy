@@ -13,8 +13,10 @@ using shadertoy::utils::error_assert;
 
 program_input_type program_input::type_from_sampler(const std::string &sampler_type)
 {
+#if SHADERTOY_HAS_IMAGE_LOAD_STORE
 	if (sampler_type.find("image") != std::string::npos)
 		return program_input_type::image;
+#endif
 	if (sampler_type.find("sampler") != std::string::npos)
 		return program_input_type::sampler;
 	return program_input_type::unknown;

@@ -3,6 +3,7 @@
 #include "shadertoy/backends/gx/buffer.hpp"
 #include "shadertoy/backends/gx/draw_state.hpp"
 #include "shadertoy/backends/gx/framebuffer.hpp"
+#include "shadertoy/backends/gx/opengl_error.hpp"
 #include "shadertoy/backends/gx/program.hpp"
 #include "shadertoy/backends/gx/query.hpp"
 #include "shadertoy/backends/gx/renderbuffer.hpp"

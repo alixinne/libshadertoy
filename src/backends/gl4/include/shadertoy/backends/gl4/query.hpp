@@ -86,7 +86,7 @@ class shadertoy_EXPORT query : public resource<query, query_allocator, null_quer
 	 *
 	 * @param target Query target. Must be GL_TIMESTAMP
 	 */
-	void query_counter(GLenum target) const override;
+	void query_counter(GLenum target) const;
 
 	/**
 	 * @brief glGetQueryObjectiv

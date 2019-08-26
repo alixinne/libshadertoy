@@ -20,6 +20,11 @@ class shadertoy_EXPORT program_buffer : public gl_buffer
 	/// OpenGL program host
 	program_host host_;
 
+#if !SHADERTOY_HAS_PROGRAM_INTERFACE
+	/// Output count
+	size_t output_count_;
+#endif
+
 	protected:
 	/**
 	 * @brief      Initialize the geometry to use for this buffer
@@ -48,12 +53,22 @@ class shadertoy_EXPORT program_buffer : public gl_buffer
 	void render_gl_contents(const render_context &context, const io_resource &io, const rsize &size) override;
 
 	public:
+#if SHADERTOY_HAS_PROGRAM_INTERFACE
 	/**
 	 * @brief      Initialize a new ShaderProgram buffer
 	 *
 	 * @param[in]  id       Identifier for this buffer
 	 */
 	program_buffer(const std::string &id);
+#else
+	/**
+	 * @brief      Initialize a new ShaderProgram buffer
+	 *
+	 * @param[in]  id       Identifier for this buffer
+	 * @param[in]  outputs  Number of outputs for this buffer
+	 */
+	program_buffer(const std::string &id, size_t outputs = 1);
+#endif
 
 	/**
 	 * @brief      Initialize the contents of this buffer

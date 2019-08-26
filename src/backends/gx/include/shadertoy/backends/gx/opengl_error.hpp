@@ -1,11 +1,11 @@
-#ifndef _SHADERTOY_BACKENDS_GL4_OPENGL_ERROR_
-#define _SHADERTOY_BACKENDS_GL4_OPENGL_ERROR_
+#ifndef _SHADERTOY_BACKENDS_GX_OPENGL_ERROR_
+#define _SHADERTOY_BACKENDS_GX_OPENGL_ERROR_
 
-#include "shadertoy/backends/gl4/pre.hpp"
+#include "shadertoy/backends/gx/pre.hpp"
 
 #include "shadertoy/shadertoy_error.hpp"
 
-SHADERTOY_BACKENDS_GL4_NAMESPACE_BEGIN
+SHADERTOY_BACKENDS_GX_NAMESPACE_BEGIN
 /**
  * @brief Error thrown when an OpenGL operation fails.
  */
@@ -20,6 +20,6 @@ class shadertoy_EXPORT opengl_error : public shadertoy::shadertoy_error
 	 */
 	explicit opengl_error(GLenum error, const std::string &extraMsg);
 };
-SHADERTOY_BACKENDS_GL4_NAMESPACE_END
+SHADERTOY_BACKENDS_GX_NAMESPACE_END
 
-#endif /* _SHADERTOY_BACKENDS_GL4_OPENGL_ERROR_ */
+#endif /* _SHADERTOY_BACKENDS_GX_OPENGL_ERROR_ */

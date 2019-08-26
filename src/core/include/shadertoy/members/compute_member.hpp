@@ -3,6 +3,7 @@
 
 #include "shadertoy/pre.hpp"
 
+#if SHADERTOY_HAS_COMPUTE
 #include "shadertoy/members/basic_member.hpp"
 
 #include "shadertoy/buffers/compute_buffer.hpp"
@@ -116,4 +117,5 @@ shadertoy_EXPORT make_member(const swap_chain &chain, std::shared_ptr<buffers::c
 } // namespace members
 } // namespace shadertoy
 
+#endif /* SHADERTOY_HAS_COMPUTE */
 #endif /* _SHADERTOY_MEMBERS_COMPUTE_MEMBER_HPP_ */

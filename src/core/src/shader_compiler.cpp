@@ -44,6 +44,12 @@ void shader_compiler::compile(backends::gx::shader &shader,
 			// Read one message
 			getline(is, msg);
 
+			// Strip ERROR:
+			if (msg.compare(0, sizeof("ERROR: ") - 1, "ERROR: ") == 0)
+			{
+				msg.erase(0, sizeof("ERROR: ") - 1);
+			}
+
 			// Try parsing message
 			std::stringstream msgis(msg);
 

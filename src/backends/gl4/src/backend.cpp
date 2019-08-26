@@ -1,7 +1,6 @@
 #include <epoxy/gl.h>
 
 #include "shadertoy/backends/gl4/backend.hpp"
-#include "shadertoy/backends/gl4/opengl_error.hpp"
 
 #include "shadertoy/backends/gl4/buffer.hpp"
 #include "shadertoy/backends/gl4/draw_state.hpp"
@@ -17,167 +16,47 @@
 using namespace shadertoy::backends;
 using namespace shadertoy::backends::gl4;
 
-void backend::init_texture_unit_mappings()
+void backend_ops::GetIntegerv(GLenum pname, GLint *params) const
 {
-	GLint max_combined_texture_image_units = 0;
-
-	if (texture_unit_mappings_.empty())
-	{
-		glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_combined_texture_image_units);
-		texture_unit_mappings_.resize(max_combined_texture_image_units, 0);
-	}
-
-	if (sampler_unit_mappings_.empty())
-	{
-		if (max_combined_texture_image_units == 0)
-			glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_combined_texture_image_units);
-		sampler_unit_mappings_.resize(max_combined_texture_image_units, 0);
-	}
+	return glGetIntegerv(pname, params);
 }
 
-void backend::check_texture_unit(GLuint unit) const
+GLenum backend_ops::GetError() const { return glGetError(); }
+
+void backend_ops::UseProgram(GLuint program) const
 {
-	if (unit >= texture_unit_mappings_.size())
-	{
-		throw opengl_error(GL_INVALID_VALUE, "Texture unit ID is out of range");
-	}
+	gl_call(glUseProgram, program);
 }
 
-void backend::check_errors() const
-{
-	if (!checks_enabled_)
-		return;
-
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		throw opengl_error(error, std::string());
-	}
-}
-
-void backend::bind_texture_unit(GLuint unit, std::optional<std::reference_wrapper<const gl4::texture>> texture)
+void backend_ops::bind_texture_unit(GLuint unit, std::optional<std::reference_wrapper<const gx::texture>> texture) const
 {
 	GLuint texture_id = texture == std::nullopt ? 0 : GLuint(texture->get());
-
-	if (state_tracking_)
-	{
-		// Initialize texture mapping table
-		init_texture_unit_mappings();
-
-		// Check unit number
-		check_texture_unit(unit);
-
-		// Bind texture if necessary
-		if (texture_unit_mappings_[unit] != texture_id)
-		{
-			gl_call(glBindTextureUnit, unit, texture_id);
-			texture_unit_mappings_[unit] = texture_id;
-		}
-	}
-	else
-	{
-		// Not tracking, just forward the call
-		gl_call(glBindTextureUnit, unit, texture_id);
-	}
+	gl_call(glBindTextureUnit, unit, texture_id);
 }
 
-void backend::bind_sampler_unit(GLuint unit, std::optional<std::reference_wrapper<const gl4::sampler>> sampler)
+void backend_ops::bind_sampler_unit(GLuint unit, std::optional<std::reference_wrapper<const gx::sampler>> sampler) const
 {
 	GLuint sampler_id = sampler == std::nullopt ? 0 : GLuint(sampler->get());
-
-	if (state_tracking_)
-	{
-		// Initialize sampler mapping table
-		init_texture_unit_mappings();
-
-		// Check unit number
-		check_texture_unit(unit);
-
-		// Bind sampler if necessary
-		if (sampler_unit_mappings_[unit] != sampler_id)
-		{
-			gl_call(glBindSampler, unit, sampler_id);
-			sampler_unit_mappings_[unit] = sampler_id;
-		}
-	}
-	else
-	{
-		// Not tracking, just forward the call
-		gl_call(glBindSampler, unit, sampler_id);
-	}
+	gl_call(glBindSampler, unit, sampler_id);
 }
 
-void backend::unbind_texture_units(GLuint start, int count)
-{
-	if (!state_tracking_)
-		throw opengl_error(GL_INVALID_OPERATION, "This context is not tracking state.");
-
-	for (size_t i = start; i < texture_unit_mappings_.size() && (count < 0 || i < (start + count)); ++i)
-	{
-		if (texture_unit_mappings_[i] != 0)
-		{
-			gl_call(glBindTextureUnit, i, 0);
-			texture_unit_mappings_[i] = 0;
-		}
-	}
-}
-
-void backend::bind_texture(GLenum target, std::optional<std::reference_wrapper<const gl4::texture>> texture)
+void backend_ops::bind_texture(GLenum target, std::optional<std::reference_wrapper<const gx::texture>> texture) const
 {
 	GLuint texture_id = texture == std::nullopt ? 0 : GLuint(texture->get());
-
-	if (state_tracking_)
-	{
-		// Initialize texture mapping table
-		init_texture_unit_mappings();
-
-		// Find texture target in mapping table
-		auto it = texture_target_mappings_.find(target);
-
-		// Bind texture if necessary
-		if (texture_unit_mappings_[active_texture_unit_] != texture_id ||
-			it == texture_target_mappings_.end() || it->second != texture_id)
-		{
-			gl_call(glBindTexture, target, texture_id);
-			texture_unit_mappings_[active_texture_unit_] = texture_id;
-			texture_unit_mappings_[target] = texture_id;
-		}
-	}
-	else
-	{
-		// Not tracking, just forward the call
-		gl_call(glBindTexture, target, texture_id);
-	}
+	gl_call(glBindTexture, target, texture_id);
 }
 
-void backend::active_texture(GLuint unit)
-{
-	if (state_tracking_)
-	{
-		// Initialize texture mapping table
-		init_texture_unit_mappings();
-
-		// Check unit number
-		check_texture_unit(unit);
-
-		if (unit != active_texture_unit_)
-		{
-			gl_call(glActiveTexture, GL_TEXTURE0 + unit);
-			active_texture_unit_ = unit;
-		}
-	}
-	else
-	{
-		gl_call(glActiveTexture, GL_TEXTURE0 + unit);
-	}
-}
+void backend_ops::active_texture(GLuint unit) const { gl_call(glActiveTexture, unit); }
 
 backend::backend(bool state_tracking, bool checks_enabled)
-: checks_enabled_(checks_enabled), state_tracking_(state_tracking), active_texture_unit_(0)
+: gx::state_tracker<backend_ops, gx::backend>(backend_ops(), state_tracking, checks_enabled)
 {
 }
 
-std::unique_ptr<gx::buffer> backend::make_buffer() { return std::make_unique<buffer>(); }
+std::unique_ptr<gx::buffer> backend::make_buffer(GLenum _target)
+{
+	return std::make_unique<buffer>();
+}
 
 std::unique_ptr<gx::framebuffer> backend::make_framebuffer()
 {

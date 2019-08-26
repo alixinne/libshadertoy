@@ -26,12 +26,22 @@ class shadertoy_EXPORT geometry_buffer : public program_buffer
 	void render_geometry(const render_context &context, const io_resource &io) override;
 
 	public:
+#if SHADERTOY_HAS_PROGRAM_INTERFACE
 	/**
-	 * @brief      Initialize a new geometry buffer
+	 * @brief      initialize a new geometry buffer
 	 *
-	 * @param[in]  id       Identifier for this buffer
+	 * @param[in]  id       identifier for this buffer
 	 */
 	geometry_buffer(const std::string &id);
+#else
+	/**
+	 * @brief      initialize a new geometry buffer
+	 *
+	 * @param[in]  id       identifier for this buffer
+	 * @param[in]  outputs  Number of outputs for this buffer
+	 */
+	geometry_buffer(const std::string &id, size_t outputs = 1);
+#endif
 
 	/**
 	 * @brief      Get the current geometry object

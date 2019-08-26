@@ -25,12 +25,22 @@ class shadertoy_EXPORT toy_buffer : public program_buffer
 	void render_geometry(const render_context &context, const io_resource &io) override;
 
 	public:
+#if SHADERTOY_HAS_PROGRAM_INTERFACE
 	/**
 	 * @brief      Initialize a new ShaderToy buffer
 	 *
 	 * @param[in]  id       Identifier for this buffer
 	 */
 	toy_buffer(const std::string &id);
+#else
+	/**
+	 * @brief      Initialize a new ShaderToy buffer
+	 *
+	 * @param[in]  id       Identifier for this buffer
+	 * @param[in]  outputs  Number of outputs for this buffer
+	 */
+	toy_buffer(const std::string &id, size_t outputs = 1);
+#endif
 };
 } // namespace buffers
 } // namespace shadertoy

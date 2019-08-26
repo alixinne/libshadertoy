@@ -15,7 +15,9 @@ enum class program_input_type
 {
 	unknown,
 	sampler,
+#if SHADERTOY_HAS_IMAGE_LOAD_STORE
 	image
+#endif
 };
 
 /**

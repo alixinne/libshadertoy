@@ -30,6 +30,7 @@ render_context::render_context() : error_input_(std::make_shared<inputs::error_i
 
 	buffer_template_.shader_defines().emplace("glsl", preprocessor_defines);
 
+#if SHADERTOY_HAS_GLSL_440
 	buffer_template_.emplace(GL_VERTEX_SHADER, compiler::shader_template::parse(
 											   std::string(std::addressof(screen_quad_vert_glsl[0]), screen_quad_vert_glsl_size),
 											   "libshadertoy/shaders/screen_quad.vert.glsl"));
@@ -43,6 +44,17 @@ render_context::render_context() : error_input_(std::make_shared<inputs::error_i
 							 compiler::shader_template::parse(
 							 std::string(std::addressof(shadertoy_comp_glsl[0]), shadertoy_comp_glsl_size),
 							 "libshadertoy/shaders/shadertoy.comp.glsl"));
+#else
+	buffer_template_.emplace(GL_VERTEX_SHADER, compiler::shader_template::parse(
+											   std::string(std::addressof(screen_quad_vert_es3_glsl[0]), screen_quad_vert_es3_glsl_size),
+											   "libshadertoy/shaders/screen_quad.vert.es3.glsl"));
+
+	buffer_template_.emplace(GL_FRAGMENT_SHADER,
+							 compiler::shader_template::parse(
+							 std::string(std::addressof(shadertoy_frag_es3_glsl[0]), shadertoy_frag_es3_glsl_size),
+							 "libshadertoy/shaders/shadertoy.frag.es3.glsl"));
+
+#endif
 
 	// Compile screen quad vertex shader
 	buffer_template_.compile(GL_VERTEX_SHADER);

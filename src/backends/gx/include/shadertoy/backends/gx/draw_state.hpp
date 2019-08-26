@@ -14,8 +14,11 @@ SHADERTOY_BACKENDS_GX_NAMESPACE_BEGIN
 class shadertoy_EXPORT draw_state
 {
 	protected:
+	/// Number of enable flags
+	static constexpr const size_t ENABLE_COUNT = 27;
+
 	/// List of supported enables
-	std::array<bool, 27> enables_;
+	std::array<bool, ENABLE_COUNT + 1> enables_;
 
 	/// Clear color for glClear
 	std::array<float, 4> clear_color_;
@@ -32,8 +35,10 @@ class shadertoy_EXPORT draw_state
 	/// Depth testing function
 	GLenum depth_func_;
 
+#if SHADERTOY_HAS_POLYGON_MODE
 	/// Polygon draw mode
 	GLenum polygon_mode_;
+#endif
 
 	/// Blend equation RGB mode
 	GLenum blend_mode_rgb_;
@@ -56,8 +61,10 @@ class shadertoy_EXPORT draw_state
 	/// Blend color
 	std::array<float, 4> blend_color_;
 
+#if SHADERTOY_HAS_MEMORY_BARRIER
 	/// Memory barrier bits
 	GLenum memory_barrier_;
+#endif
 
 	static constexpr size_t enable_idx(GLenum cap)
 	{
@@ -65,60 +72,92 @@ class shadertoy_EXPORT draw_state
 		{
 		case GL_BLEND:
 			return 0;
+#if defined(GL_COLOR_LOGIC_OP)
 		case GL_COLOR_LOGIC_OP:
 			return 1;
+#endif
 		case GL_CULL_FACE:
 			return 2;
+#if defined(GL_DEBUG_OUTPUT)
 		case GL_DEBUG_OUTPUT:
 			return 3;
+#endif
+#if defined(GL_DEBUG_OUTPUT_SYNCHRONOUS)
 		case GL_DEBUG_OUTPUT_SYNCHRONOUS:
 			return 4;
+#endif
+#if defined(GL_DEPTH_CLAMP)
 		case GL_DEPTH_CLAMP:
 			return 5;
+#endif
 		case GL_DEPTH_TEST:
 			return 6;
 		case GL_DITHER:
 			return 7;
+#if defined(GL_FRAMEBUFFER_SRGB)
 		case GL_FRAMEBUFFER_SRGB:
 			return 8;
+#endif
+#if defined(GL_LINE_SMOOTH)
 		case GL_LINE_SMOOTH:
 			return 9;
+#endif
+#if defined(GL_MULTISAMPLE)
 		case GL_MULTISAMPLE:
 			return 10;
+#endif
 		case GL_POLYGON_OFFSET_FILL:
 			return 11;
+#if defined(GL_POLYGON_OFFSET_LINE)
 		case GL_POLYGON_OFFSET_LINE:
 			return 12;
+#endif
+#if defined(GL_POLYGON_OFFSET_POINT)
 		case GL_POLYGON_OFFSET_POINT:
 			return 13;
+#endif
+#if defined(GL_POLYGON_SMOOTH)
 		case GL_POLYGON_SMOOTH:
 			return 14;
+#endif
+#if defined(GL_PRIMITIVE_RESTART)
 		case GL_PRIMITIVE_RESTART:
 			return 15;
 		case GL_PRIMITIVE_RESTART_FIXED_INDEX:
 			return 16;
+#endif
 		case GL_RASTERIZER_DISCARD:
 			return 17;
 		case GL_SAMPLE_ALPHA_TO_COVERAGE:
 			return 18;
+#if defined(GL_SAMPLE_ALPHA_TO_ONE)
 		case GL_SAMPLE_ALPHA_TO_ONE:
 			return 19;
+#endif
 		case GL_SAMPLE_COVERAGE:
 			return 20;
+#if defined(GL_SAMPLE_SHADING)
 		case GL_SAMPLE_SHADING:
 			return 21;
+#endif
+#if defined(GL_SAMPLE_MASK)
 		case GL_SAMPLE_MASK:
 			return 22;
+#endif
 		case GL_SCISSOR_TEST:
 			return 23;
 		case GL_STENCIL_TEST:
 			return 24;
+#if defined(GL_TEXTURE_CUBE_MAP_SEAMLESS)
 		case GL_TEXTURE_CUBE_MAP_SEAMLESS:
 			return 25;
+#endif
+#if defined(GL_TEXTURE_PROGRAM_POINT_SIZE)
 		case GL_PROGRAM_POINT_SIZE:
 			return 26;
+#endif
 		default:
-			throw shadertoy::shadertoy_error("Invalid cap in enable_idx");
+			return ENABLE_COUNT;
 		}
 	}
 
@@ -128,60 +167,92 @@ class shadertoy_EXPORT draw_state
 		{
 		case GL_BLEND:
 			return false;
+#if defined(GL_COLOR_LOGIC_OP)
 		case GL_COLOR_LOGIC_OP:
 			return false;
+#endif
 		case GL_CULL_FACE:
 			return false;
+#if defined(GL_DEBUG_OUTPUT)
 		case GL_DEBUG_OUTPUT:
 			return false;
+#endif
+#if defined(GL_DEBUG_OUTPUT_SYNCHRONOUS)
 		case GL_DEBUG_OUTPUT_SYNCHRONOUS:
 			return false;
+#endif
+#if defined(GL_DEPTH_CLAMP)
 		case GL_DEPTH_CLAMP:
 			return false;
+#endif
 		case GL_DEPTH_TEST:
 			return false;
 		case GL_DITHER:
 			return true;
+#if defined(GL_FRAMEBUFFER_SRGB)
 		case GL_FRAMEBUFFER_SRGB:
 			return false;
+#endif
+#if defined(GL_LINE_SMOOTH)
 		case GL_LINE_SMOOTH:
 			return false;
+#endif
+#if defined(GL_MULTISAMPLE)
 		case GL_MULTISAMPLE:
 			return true;
+#endif
 		case GL_POLYGON_OFFSET_FILL:
 			return false;
+#if defined(GL_POLYGON_OFFSET_LINE)
 		case GL_POLYGON_OFFSET_LINE:
 			return false;
+#endif
+#if defined(GL_POLYGON_OFFSET_POINT)
 		case GL_POLYGON_OFFSET_POINT:
 			return false;
+#endif
+#if defined(GL_POLYGON_SMOOTH)
 		case GL_POLYGON_SMOOTH:
 			return false;
+#endif
+#if defined(GL_PRIMITIVE_RESTART)
 		case GL_PRIMITIVE_RESTART:
 			return false;
+#endif
 		case GL_PRIMITIVE_RESTART_FIXED_INDEX:
 			return false;
 		case GL_RASTERIZER_DISCARD:
 			return false;
 		case GL_SAMPLE_ALPHA_TO_COVERAGE:
 			return false;
+#if defined(GL_SAMPLE_ALPHA_TO_ONE)
 		case GL_SAMPLE_ALPHA_TO_ONE:
 			return false;
+#endif
 		case GL_SAMPLE_COVERAGE:
 			return false;
+#if defined(GL_SAMPLE_SHADING)
 		case GL_SAMPLE_SHADING:
 			return false;
+#endif
+#if defined(GL_SAMPLE_MASK)
 		case GL_SAMPLE_MASK:
 			return false;
+#endif
 		case GL_SCISSOR_TEST:
 			return false;
 		case GL_STENCIL_TEST:
 			return false;
+#if defined(GL_TEXTURE_CUBE_MAP_SEAMLESS)
 		case GL_TEXTURE_CUBE_MAP_SEAMLESS:
 			return false;
+#endif
+#if defined(GL_PROGRAM_POINT_SIZE)
 		case GL_PROGRAM_POINT_SIZE:
 			return false;
+#endif
 		default:
-			throw shadertoy::shadertoy_error("Invalid cap in enable_default");
+			return false;
 		}
 	}
 
@@ -195,7 +266,9 @@ class shadertoy_EXPORT draw_state
 
 	virtual void apply_depth_func() const = 0;
 
+#if SHADERTOY_HAS_POLYGON_MODE
 	virtual void apply_polygon_mode() const = 0;
+#endif
 
 	virtual void apply_blend_mode_equation() const = 0;
 
@@ -203,7 +276,9 @@ class shadertoy_EXPORT draw_state
 
 	virtual void apply_blend_color() const = 0;
 
+#if SHADERTOY_HAS_MEMORY_BARRIER
 	virtual void apply_memory_barrier() const = 0;
+#endif
 
 	void set_blend_mode(GLenum &target, GLenum new_value) const;
 
@@ -324,6 +399,7 @@ class shadertoy_EXPORT draw_state
 	 */
 	void depth_func(GLenum new_func);
 
+#if SHADERTOY_HAS_POLYGON_MODE
 	/**
 	 * @brief Gets the current polygon mode
 	 *
@@ -339,6 +415,7 @@ class shadertoy_EXPORT draw_state
 	 * @throw shadertoy::shadertoy_error An invalid polygon mode was specified
 	 */
 	void polygon_mode(GLenum new_mode);
+#endif
 
 	/**
 	 * @brief Gets the RGB blend equation mode
@@ -452,6 +529,7 @@ class shadertoy_EXPORT draw_state
 	 */
 	inline void blend_color(const std::array<float, 4> &new_color) { blend_color_ = new_color; }
 
+#if SHADERTOY_HAS_MEMORY_BARRIER
 	/**
 	 * @brief Get the memory barrier bits
 	 *
@@ -470,6 +548,7 @@ class shadertoy_EXPORT draw_state
 	{
 		memory_barrier_ = new_memory & GL_ALL_BARRIER_BITS;
 	}
+#endif
 };
 SHADERTOY_BACKENDS_GX_NAMESPACE_END
 

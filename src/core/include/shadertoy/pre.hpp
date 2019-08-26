@@ -3,6 +3,9 @@
 
 #include "shadertoy/shadertoy_export.h"
 
+#include "shadertoy/config.hpp"
+#include "shadertoy/extensions.hpp"
+
 namespace shadertoy
 {
 namespace buffers

@@ -7,6 +7,8 @@
 #include "shadertoy/backends/gl4/shader.hpp"
 #include "shadertoy/shadertoy_error.hpp"
 
+#include "shadertoy/backends/gl4/backend.hpp"
+
 using namespace shadertoy::backends;
 using namespace shadertoy::backends::gl4;
 
@@ -44,7 +46,7 @@ void program::link() const
 	}
 }
 
-void program::use() const { gl_call(glUseProgram, GLuint(*this)); }
+void program::use() const { backend::current().use_program(GLuint(*this)); }
 
 void program::validate() const
 {

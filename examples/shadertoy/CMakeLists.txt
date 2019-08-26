@@ -22,8 +22,8 @@ target_link_libraries(example_shadertoy
 	${Boost_LIBRARIES}
 	${CURL_LIBRARIES}
 	${JSONCPP_LIBRARIES}
-	shadertoy-shared
-	stbackend-gl4-shared)
+	${SHADERTOY_LIBRARY}
+	${SHADERTOY_GL4_BACKEND})
 
 # C++17
 set_property(TARGET example_shadertoy PROPERTY CXX_STANDARD 17)

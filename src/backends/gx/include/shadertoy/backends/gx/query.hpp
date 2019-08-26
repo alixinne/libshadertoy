@@ -27,13 +27,6 @@ class shadertoy_EXPORT query : public resource
 	virtual void end(GLenum target) const = 0;
 
 	/**
-	 * @brief glQueryCounter
-	 *
-	 * @param target Query target. Must be GL_TIMESTAMP
-	 */
-	virtual void query_counter(GLenum target) const = 0;
-
-	/**
 	 * @brief glGetQueryObjectiv
 	 *
 	 * @param pname  Parameter name

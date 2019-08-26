@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
 			// Create a simple texture for the compute buffer
 			int tex_width = 16;
-			auto texture(shadertoy::backends::current->make_texture(GL_TEXTURE_1D));
+			auto texture(std::make_unique<shadertoy::backends::gl4::texture>(GL_TEXTURE_1D));
 			texture->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST); // no mipmaps
 			texture->image_1d(GL_TEXTURE_1D, 0, GL_R32F, tex_width, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 

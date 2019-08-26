@@ -17,6 +17,7 @@
 namespace shadertoy
 {
 
+#if SHADERTOY_HAS_PROGRAM_INTERFACE
 /**
  * @brief Representation of an OpenGL program interface resource
  */
@@ -329,6 +330,70 @@ class program_interface
 	 */
 	inline const output_interface &outputs() const { return outputs_; }
 };
+#else /* SHADERTOY_HAS_PROGRAM_INTERFACE */
+/**
+ * @brief Represents the set of interfaces of an OpenGL program
+ *
+ * The referenced \c program must remain valid as long as this object is alive.
+ */
+class program_interface
+{
+	const backends::gx::program &program_;
+
+	public:
+	program_interface(const backends::gx::program &program);
+
+	/**
+	 * @brief Get the program corresponding to this interface
+	 */
+	inline const backends::gx::program &program() const { return program_; }
+
+	/**
+	 * @brief Get the location of a uniform in this interface
+	 *
+	 * @param identifier Name or location of the uniform to find. See resource_interface#operator[]
+	 * @tparam TIndex    Type of the identifier for resource finding
+	 *
+	 * @return An instance of backends::gx::uniform_location corresponding to this
+	 * uniform.
+	 */
+	template <typename TIndex>
+	inline std::unique_ptr<backends::gx::uniform_location> get_uniform_location(const TIndex &identifier) const
+	{
+		return program_.get_uniform_location(identifier);
+	}
+
+	/**
+	 * @brief Try to get the location of a uniform in this interface
+	 *
+	 * @param identifier Name or location of the uniform to find. See resource_interface#operator[]
+	 * @tparam TIndex    Type of the identifier for resource finding
+	 *
+	 * @return \c std::nullopt if the uniform could not be found, otherwise
+	 * returns an instance of backends::gx::uniform_location corresponding to this
+	 * uniform.
+	 */
+	template <typename TIndex>
+	inline std::unique_ptr<backends::gx::uniform_location> try_get_uniform_location(const TIndex &identifier) const
+	{
+		if (auto resource = get_uniform_location(identifier))
+		{
+			if (resource->is_active())
+				return resource;
+		}
+
+		return {};
+	}
+};
+
+template <>
+inline std::unique_ptr<backends::gx::uniform_location>
+program_interface::get_uniform_location<std::string>(const std::string &identifier) const
+{
+	return get_uniform_location(identifier.c_str());
+}
+
+#endif /* SHADERTOY_HAS_PROGRAM_INTERFACE */
 
 } // namespace shadertoy
 

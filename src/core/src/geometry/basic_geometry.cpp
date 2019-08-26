@@ -13,10 +13,14 @@ void basic_geometry::render() const
 
 void basic_geometry::render(const backends::gx::query &timer_query) const
 {
+#if SHADERTOY_HAS_TIME_QUERY
 	timer_query.begin(GL_TIME_ELAPSED);
+#endif
 
 	// Draw geometry
 	draw();
 
+#if SHADERTOY_HAS_TIME_QUERY
 	timer_query.end(GL_TIME_ELAPSED);
+#endif
 }

@@ -29,8 +29,12 @@ class shadertoy_EXPORT backend
 
 	// Factory methods
 
-	/// Create a new buffer
-	virtual std::unique_ptr<buffer> make_buffer() = 0;
+	/**
+	 * @brief Create a new buffer
+	 *
+	 * @param target Target for this buffer
+	 */
+	virtual std::unique_ptr<buffer> make_buffer(GLenum target) = 0;
 
 	/// Create a new framebuffer
 	virtual std::unique_ptr<framebuffer> make_framebuffer() = 0;

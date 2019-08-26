@@ -11,7 +11,11 @@
 using namespace shadertoy;
 using namespace shadertoy::buffers;
 
+#if SHADERTOY_HAS_PROGRAM_INTERFACE
 toy_buffer::toy_buffer(const std::string &id) : program_buffer(id) {}
+#else
+toy_buffer::toy_buffer(const std::string &id, size_t outputs) : program_buffer(id, outputs) {}
+#endif
 
 void toy_buffer::init_geometry(const render_context &context, const io_resource &io)
 {

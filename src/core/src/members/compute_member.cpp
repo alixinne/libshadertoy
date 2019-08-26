@@ -2,6 +2,7 @@
 
 #include "shadertoy/members/compute_member.hpp"
 
+#if SHADERTOY_HAS_COMPUTE
 using namespace shadertoy;
 using namespace shadertoy::members;
 
@@ -31,3 +32,4 @@ members::make_member(const swap_chain &chain, std::shared_ptr<buffers::compute_b
 {
 	return make_compute(buffer);
 }
+#endif /* SHADERTOY_HAS_COMPUTE */

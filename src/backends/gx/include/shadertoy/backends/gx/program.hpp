@@ -488,6 +488,7 @@ class shadertoy_EXPORT program : public resource
 	 */
 	virtual void get_binary(GLsizei bufsize, GLsizei *length, GLenum *binaryFormat, void *binary) const = 0;
 
+#if SHADERTOY_HAS_PROGRAM_INTERFACE
 	/**
 	 * @brief glGetProgramInterfaceiv
 	 *
@@ -532,15 +533,16 @@ class shadertoy_EXPORT program : public resource
 	 */
 	virtual void get_program_resource_name(GLenum programInterface, GLuint index, GLsizei bufSize,
 										   GLsizei *length, GLchar *name) const = 0;
+#endif
 
+#if SHADERTOY_HAS_COMPUTE
 	/**
 	 * @brief glDispatchCompute
-	 *
-	 * TODO: Specify that it uses the program before dispatching.
 	 *
 	 * @param num_groups
 	 */
 	virtual void dispatch_compute(glm::uvec3 num_groups) const = 0;
+#endif
 };
 SHADERTOY_BACKENDS_GX_NAMESPACE_END
 

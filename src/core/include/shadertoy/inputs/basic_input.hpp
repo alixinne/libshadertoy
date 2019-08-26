@@ -189,12 +189,14 @@ class shadertoy_EXPORT basic_input
 	 */
 	inline const image_binding &binding() const { return binding_; }
 
+#if SHADERTOY_HAS_IMAGE_LOAD_STORE
 	/**
 	 * @brief Bind the texture to the given image unit
 	 *
 	 * @param unit Image unit to bind to
 	 */
 	backends::gx::texture *bind_image(GLuint unit);
+#endif
 };
 } // namespace inputs
 } // namespace shadertoy

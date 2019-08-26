@@ -32,9 +32,9 @@ void io_resource::output_buffer::allocate(const output_buffer_spec &spec, const 
 	if (source_tex)
 	{
 		GLint width, height;
-		source_tex->get_parameter(0, GL_TEXTURE_WIDTH, &width);
-		source_tex->get_parameter(0, GL_TEXTURE_HEIGHT, &height);
-		source_tex->get_parameter(0, GL_TEXTURE_INTERNAL_FORMAT, &current_format);
+		source_tex->get_parameter(GL_TEXTURE_WIDTH, &width);
+		source_tex->get_parameter(GL_TEXTURE_HEIGHT, &height);
+		source_tex->get_parameter(GL_TEXTURE_INTERNAL_FORMAT, &current_format);
 		current_size = rsize(width, height);
 
 		current_policy = member_swap_policy::single_buffer;
@@ -74,9 +74,9 @@ void io_resource::output_buffer::swap(const output_buffer_spec &spec, const io_r
 						static_cast<const void *>(resource)))
 		{
 			GLint width, height, current_format;
-			source_tex->get_parameter(0, GL_TEXTURE_WIDTH, &width);
-			source_tex->get_parameter(0, GL_TEXTURE_HEIGHT, &height);
-			source_tex->get_parameter(0, GL_TEXTURE_INTERNAL_FORMAT, &current_format);
+			source_tex->get_parameter(GL_TEXTURE_WIDTH, &width);
+			source_tex->get_parameter(GL_TEXTURE_HEIGHT, &height);
+			source_tex->get_parameter(GL_TEXTURE_INTERNAL_FORMAT, &current_format);
 
 			rsize current_size(width, height);
 			warn_assert(current_size == spec.render_size->resolve() && current_format == spec.internal_format,
@@ -116,9 +116,11 @@ void io_resource::output_buffer::init_render_texture(const output_buffer_spec &s
 	texptr->image_2d(GL_TEXTURE_2D, 0, spec.internal_format, size.width, size.height, 0, GL_BGRA,
 					 GL_UNSIGNED_BYTE, nullptr);
 
-	// Clear the frame accumulator so it doesn't contain garbage
+#if SHADERTOY_HAS_CLEAR_TEX_IMAGE
+	// Clear the target texture so it doesn't contain garbage
 	uint8_t black[4] = { 0 };
 	texptr->clear_tex_image(0, GL_BGRA, GL_UNSIGNED_BYTE, std::begin(black));
+#endif
 
 	log::shadertoy()->debug("Initialized {}x{} ({}) render texture at {} for {} (GL id {})", size.width,
 							size.height, spec.internal_format, static_cast<const void *>(texptr.get()),

@@ -37,7 +37,7 @@ void gl_buffer::allocate_textures(const render_context &context, const io_resour
 	error_assert(size.width != 0 && size.height != 0, "Render size for gl_buffer {} ({}) first target is zero",
 				 id(), static_cast<const void *>(this));
 
-	target_rbo_->storage(GL_DEPTH_COMPONENT, size.width, size.height);
+	target_rbo_->storage(GL_DEPTH_COMPONENT16, size.width, size.height);
 }
 
 void gl_buffer::render(const render_context &context, const io_resource &io, const members::buffer_member &member)

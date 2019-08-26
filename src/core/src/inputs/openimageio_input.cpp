@@ -11,17 +11,17 @@ using namespace shadertoy::backends;
 using shadertoy::utils::error_assert;
 using shadertoy::utils::log;
 
-#if LIBSHADERTOY_OPENIMAGEIO
+#if SHADERTOY_HAS_OPENIMAGEIO
 void st_oiio_load_image_to_texture(const std::string &filename, bool vflip, GLenum &output_format,
 								   const gx::texture &texture, int &width, int &height);
-#endif /* LIBSHADERTOY_OPENIMAGEIO */
+#endif /* SHADERTOY_HAS_OPENIMAGEIO */
 
 std::unique_ptr<gx::texture> openimageio_input::load_file(const std::string &filename, bool vflip, GLenum &output_format)
 {
 	// Create a texture object
 	std::unique_ptr<gx::texture> texture;
 
-#if LIBSHADERTOY_OPENIMAGEIO
+#if SHADERTOY_HAS_OPENIMAGEIO
 	log::shadertoy()->trace("Reading {} for input {}", filename, static_cast<const void *>(this));
 
 	texture = backends::current->make_texture(GL_TEXTURE_2D);
@@ -44,7 +44,7 @@ std::unique_ptr<gx::texture> openimageio_input::load_file(const std::string &fil
 #else
 	error_assert(false, "Cannot load {} for input {}: OPENIMAGEIO support is disabled", filename,
 				 static_cast<const void *>(this));
-#endif /* LIBSHADERTOY_OPENIMAGEIO */
+#endif /* SHADERTOY_HAS_OPENIMAGEIO */
 
 	return texture;
 }
@@ -53,4 +53,4 @@ openimageio_input::openimageio_input() = default;
 
 openimageio_input::openimageio_input(const std::string &filename) : file_input(filename) {}
 
-bool openimageio_input::supported() { return LIBSHADERTOY_OPENIMAGEIO; }
+bool openimageio_input::supported() { return SHADERTOY_HAS_OPENIMAGEIO; }

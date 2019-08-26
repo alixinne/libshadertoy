@@ -79,10 +79,16 @@ draw_state::draw_state()
 			enable_default(GL_TEXTURE_CUBE_MAP_SEAMLESS),
 			enable_default(GL_PROGRAM_POINT_SIZE) },
   clear_color_{ 0.f, 0.f, 0.f, 0.f }, clear_depth_(0.f), clear_stencil_(0), clear_bits_(0),
-  depth_func_(GL_LESS), polygon_mode_(GL_FILL), blend_mode_rgb_(GL_FUNC_ADD),
+  depth_func_(GL_LESS),
+#if SHADERTOY_HAS_POLYGON_MODE
+  polygon_mode_(GL_FILL),
+#endif
+  blend_mode_rgb_(GL_FUNC_ADD),
   blend_mode_alpha_(GL_FUNC_ADD), blend_src_rgb_(GL_ONE), blend_dst_rgb_(GL_ZERO),
-  blend_src_alpha_(GL_ONE), blend_dst_alpha_(GL_ZERO), blend_color_{ 0.f, 0.f, 0.f, 0.f },
-  memory_barrier_(0)
+  blend_src_alpha_(GL_ONE), blend_dst_alpha_(GL_ZERO), blend_color_{ 0.f, 0.f, 0.f, 0.f }
+#if SHADERTOY_HAS_MEMORY_BARRIER
+  , memory_barrier_(0)
+#endif
 {
 }
 
@@ -121,11 +127,15 @@ void draw_state::apply() const
 	apply_clear_depth();
 	apply_clear_stencil();
 	apply_depth_func();
+#if SHADERTOY_HAS_POLYGON_MODE
 	apply_polygon_mode();
+#endif
 	apply_blend_mode_equation();
 	apply_blend_mode_function();
 	apply_blend_color();
+#if SHADERTOY_HAS_MEMORY_BARRIER
 	apply_memory_barrier();
+#endif
 }
 
 void draw_state::clear_bits(GLbitfield new_bits)
@@ -157,6 +167,7 @@ void draw_state::depth_func(GLenum new_func)
 	}
 }
 
+#if SHADERTOY_HAS_POLYGON_MODE
 void draw_state::polygon_mode(GLenum new_mode)
 {
 	switch (new_mode)
@@ -170,6 +181,7 @@ void draw_state::polygon_mode(GLenum new_mode)
 		throw shadertoy::shadertoy_error("Invalid polygon mode specified for polygon_mode");
 	}
 }
+#endif
 
 void draw_state::blend_mode_rgb(GLenum new_mode) { set_blend_mode(blend_mode_rgb_, new_mode); }
 

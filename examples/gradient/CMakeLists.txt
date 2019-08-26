@@ -16,8 +16,8 @@ target_link_libraries(example_gradient
 	${EPOXY_LIBRARIES}
 	${Boost_LIBRARIES}
 	${GLFW3_LIBRARIES}
-	shadertoy-shared
-	stbackend-gl4-shared)
+	${SHADERTOY_LIBRARY}
+	${SHADERTOY_GL4_BACKEND})
 
 # C++17
 set_property(TARGET example_gradient PROPERTY CXX_STANDARD 17)

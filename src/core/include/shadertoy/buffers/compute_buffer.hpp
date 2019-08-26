@@ -3,6 +3,7 @@
 
 #include "shadertoy/pre.hpp"
 
+#if SHADERTOY_HAS_COMPUTE
 #include "shadertoy/buffers/basic_buffer.hpp"
 
 #include "shadertoy/program_host.hpp"
@@ -182,4 +183,5 @@ class shadertoy_EXPORT compute_buffer : public basic_buffer
 } // namespace buffers
 } // namespace shadertoy
 
+#endif /* SHADERTOY_HAS_COMPUTE */
 #endif /* _SHADERTOY_BUFFERS_COMPUTE_BUFFER_HPP_ */

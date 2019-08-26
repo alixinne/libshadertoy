@@ -3,7 +3,9 @@
 
 #include "shadertoy/shadertoy_export.h"
 
-#if !defined(__gl_h_) && !defined(__glext_h_)
+#include "shadertoy/config.hpp"
+
+#if !defined(__gl_h_) && !defined(__glext_h_) && !defined(__gl3_h_)
 #include "shadertoy/backends/gx/types.hpp"
 #endif
 

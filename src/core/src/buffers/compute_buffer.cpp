@@ -2,6 +2,7 @@
 
 #include "shadertoy/buffers/compute_buffer.hpp"
 
+#if SHADERTOY_HAS_COMPUTE
 #include "shadertoy/utils/assert.hpp"
 
 using namespace shadertoy;
@@ -34,8 +35,9 @@ void compute_buffer::dispatch(const render_context &context)
 	// Prepare the program
 	host_.prepare_render(context);
 
+#if SHADERTOY_HAS_TIME_QUERY
 	// Try to set iTimeDelta
-	if (auto time_delta_resource = host_.program_intf().uniforms().try_get("iTimeDelta"))
+	if (auto time_delta_resource = host_.program_intf().try_get_uniform_location("iTimeDelta"))
 	{
 		GLint available = 0;
 		time_delta_query().get_object_iv(GL_QUERY_RESULT_AVAILABLE, &available);
@@ -44,10 +46,12 @@ void compute_buffer::dispatch(const render_context &context)
 			// Result available, set uniform value
 			GLuint64 timeDelta;
 			time_delta_query().get_object_ui64v(GL_QUERY_RESULT, &timeDelta);
-			time_delta_resource->get_location(host_.program())->set_value(timeDelta / 1e9f);
+			time_delta_resource->set_value(timeDelta / 1e9f);
 		}
 	}
+#endif
 
 	// Dispatch the program
 	dispatch_compute();
 }
+#endif /* SHADERTOY_HAS_COMPUTE */

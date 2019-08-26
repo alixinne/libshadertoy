@@ -46,9 +46,23 @@ void program_host::init_program(const render_context &context, GLenum stage)
 	size_t current_unit = 0;
 	for (auto it = inputs_.begin(); it != inputs_.end(); ++it, ++current_unit)
 	{
-		if (auto resource = program_interface_->uniforms().try_get(it->sampler_name()))
+		auto name = it->sampler_name();
+
+		if (name.empty())
 		{
-			resource->get_location(*program_)->set_value(static_cast<GLint>(current_unit));
+			if (current_unit < SHADERTOY_ICHANNEL_COUNT)
+			{
+				name = "iChannel" + std::to_string(current_unit);
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		if (auto resource = program_interface_->try_get_uniform_location(name))
+		{
+			resource->set_value(static_cast<GLint>(current_unit));
 		}
 	}
 }
@@ -62,7 +76,10 @@ void program_host::prepare_render(const render_context &context)
 	std::array<glm::vec3, SHADERTOY_ICHANNEL_COUNT> resolutions;
 
 	// Setup the texture targets
-	size_t current_texture_unit = 0, current_image_unit = 0;
+	size_t current_texture_unit = 0;
+#if SHADERTOY_HAS_IMAGE_LOAD_STORE
+	size_t current_image_unit = 0;
+#endif
 	for (auto it = inputs_.begin(); it != inputs_.end(); ++it)
 	{
 		auto &input(it->input());
@@ -79,8 +96,8 @@ void program_host::prepare_render(const render_context &context)
 			{
 				auto texture(input->bind(*current_unit));
 
-				texture->get_parameter(0, GL_TEXTURE_WIDTH, &sz.x);
-				texture->get_parameter(0, GL_TEXTURE_HEIGHT, &sz.y);
+				texture->get_parameter(GL_TEXTURE_WIDTH, &sz.x);
+				texture->get_parameter(GL_TEXTURE_HEIGHT, &sz.y);
 				sz.z = 1.0f;
 			}
 			else
@@ -93,6 +110,7 @@ void program_host::prepare_render(const render_context &context)
 				resolutions[*current_unit] = sz;
 			}
 		}
+#if SHADERTOY_HAS_IMAGE_LOAD_STORE
 		else if (it->type() == program_input_type::image)
 		{
 			current_unit = &current_image_unit;
@@ -102,6 +120,7 @@ void program_host::prepare_render(const render_context &context)
 				input->bind_image(*current_unit);
 			}
 		}
+#endif
 
 		// Skip setting sampler value if we have no unit number to set
 		if (current_unit == nullptr)
@@ -123,11 +142,9 @@ void program_host::prepare_render(const render_context &context)
 	// Unbind extra texture units not in use
 	backends::current->unbind_texture_units(current_texture_unit);
 
-	if (auto channel_resolutions_resource =
-		program_interface_->uniforms().try_get("iChannelResolution"))
+	if (auto channel_resolutions_resource = program_interface_->try_get_uniform_location("iChannelResolution"))
 	{
-		channel_resolutions_resource->get_location(*program_)->set_value(resolutions.size(),
-																		 resolutions.data());
+		channel_resolutions_resource->set_value(resolutions.size(), resolutions.data());
 	}
 }
 

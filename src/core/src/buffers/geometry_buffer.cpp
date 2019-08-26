@@ -14,7 +14,11 @@ using namespace shadertoy;
 using namespace shadertoy::buffers;
 using shadertoy::utils::error_assert;
 
+#if SHADERTOY_HAS_PROGRAM_INTERFACE
 geometry_buffer::geometry_buffer(const std::string &id) : program_buffer(id) {}
+#else
+geometry_buffer::geometry_buffer(const std::string &id, size_t outputs) : program_buffer(id, outputs) {}
+#endif
 
 void geometry_buffer::init_geometry(const render_context &context, const io_resource &io)
 {

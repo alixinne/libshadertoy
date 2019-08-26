@@ -70,9 +70,9 @@ class tiny_geometry : public geometry::basic_geometry
 
 		vao_ = current->make_vertex_array();
 		vao_->bind();
-		vertices_ = current->make_buffer();
+		vertices_ = current->make_buffer(GL_ARRAY_BUFFER);
 		vertices_->bind(GL_ARRAY_BUFFER);
-		indices_ = current->make_buffer();
+		indices_ = current->make_buffer(GL_ELEMENT_ARRAY_BUFFER);
 		indices_->bind(GL_ELEMENT_ARRAY_BUFFER);
 
 		vertices_->data(sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);

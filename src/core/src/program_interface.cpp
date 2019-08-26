@@ -5,6 +5,8 @@
 using namespace shadertoy;
 using namespace shadertoy::backends::gx;
 
+#if SHADERTOY_HAS_PROGRAM_INTERFACE
+
 program_resource::program_resource(const backends::gx::program &program, GLenum program_interface, GLuint resource_index)
 : program_interface(program_interface), resource_index(resource_index)
 {
@@ -149,3 +151,12 @@ program_interface::program_interface(const backends::gx::program &program)
 : program_(program), uniforms_(program_), inputs_(program_), outputs_(program_)
 {
 }
+
+#else /* SHADERTOY_HAS_PROGRAM_INTERFACE */
+
+program_interface::program_interface(const backends::gx::program &program)
+: program_(program)
+{
+}
+
+#endif /* SHADERTOY_HAS_PROGRAM_INTERFACE */

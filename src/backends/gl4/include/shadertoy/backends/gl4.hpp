@@ -10,7 +10,6 @@ namespace gl
 #include "shadertoy/backends/gl4/buffer.hpp"
 #include "shadertoy/backends/gl4/caller.hpp"
 #include "shadertoy/backends/gl4/framebuffer.hpp"
-#include "shadertoy/backends/gl4/opengl_error.hpp"
 #include "shadertoy/backends/gl4/program.hpp"
 #include "shadertoy/backends/gl4/query.hpp"
 #include "shadertoy/backends/gl4/renderbuffer.hpp"

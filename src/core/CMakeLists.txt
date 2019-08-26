@@ -16,21 +16,23 @@ add_custom_command(
 
 set(_core_INCLUDE_DIRS "")
 set(_core_LINK_LIBRARIES "")
-set(_core_DEFINITIONS "")
 
 if (OpenImageIO_FOUND)
 	message(STATUS "Building with OpenImageIO support")
 	list(APPEND _core_INCLUDE_DIRS ${OpenImageIO_INCLUDE_DIRS})
 	list(APPEND _core_LINK_LIBRARIES ${OIIO_LIBRARIES})
-	list(APPEND _core_DEFINITIONS LIBSHADERTOY_OPENIMAGEIO=1)
+	set(SHADERTOY_HAS_OPENIMAGEIO 1)
 
 	# https://github.com/openexr/openexr/issues/235 still occurs recent installs
 	set_property(SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/inputs/openimageio_wrapper.cpp
 				 PROPERTY COMPILE_FLAGS -std=c++14)
 else()
 	message(STATUS "Building without OpenImageIO support")
-	list(APPEND _core_DEFINITIONS LIBSHADERTOY_OPENIMAGEIO=0)
+	set(SHADERTOY_HAS_OPENIMAGEIO 0)
 endif()
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/shadertoy/extensions.hpp.in
+	${SHADERTOY_BUILT_INCLUDE_DIR}/shadertoy/extensions.hpp @ONLY)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
 	list(APPEND _core_LINK_LIBRARIES stdc++fs)
@@ -39,7 +41,6 @@ endif()
 shadertoy_subtarget(shadertoy
 	INTERFACE_INCLUDE_DIRS "${_core_INCLUDE_DIRS}"
 	LINK_LIBRARIES "${_core_LINK_LIBRARIES}"
-	DEFINITIONS "${_core_DEFINITIONS}"
 	EXTRA_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/resources.cpp"
 	SUBTARGET_DEPENDENCIES stbackend-gx)
 

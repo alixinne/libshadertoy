@@ -104,6 +104,7 @@ backends::gx::texture *basic_input::bind(GLuint unit)
 	return tex;
 }
 
+#if SHADERTOY_HAS_IMAGE_LOAD_STORE
 backends::gx::texture *basic_input::bind_image(GLuint unit)
 {
 	auto tex(use());
@@ -120,3 +121,4 @@ backends::gx::texture *basic_input::bind_image(GLuint unit)
 					binding_.format);
 	return tex;
 }
+#endif

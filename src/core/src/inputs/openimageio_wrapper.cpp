@@ -1,4 +1,6 @@
-#if LIBSHADERTOY_OPENIMAGEIO
+#include "shadertoy/extensions.hpp"
+
+#if SHADERTOY_HAS_OPENIMAGEIO
 #include "shadertoy/backends/gx/backend.hpp"
 
 #include <OpenImageIO/imageio.h>
@@ -102,4 +104,4 @@ void st_oiio_load_image_to_texture(const std::string &filename, bool vflip, GLen
 					 input_format, input_type, buffer.data());
 }
 
-#endif /* LIBSHADERTOY_OPENIMAGEIO */
+#endif /* SHADERTOY_HAS_OPENIMAGEIO */

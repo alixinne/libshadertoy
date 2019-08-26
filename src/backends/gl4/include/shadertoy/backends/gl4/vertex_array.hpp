@@ -50,8 +50,6 @@ class shadertoy_EXPORT vertex_array
 
 	/**
 	 * @brief glDrawElements
-	 *
-	 * TODO: Bind the vertex_array automatically
 	 */
 	void draw_elements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices) const override;
 };

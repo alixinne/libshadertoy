@@ -3,6 +3,8 @@
 
 #include "shadertoy/shadertoy_export.h"
 
+#include "shadertoy/config.hpp"
+
 #define SHADERTOY_BACKENDS_GL4_NAMESPACE_BEGIN \
 	namespace shadertoy                        \
 	{                                          \

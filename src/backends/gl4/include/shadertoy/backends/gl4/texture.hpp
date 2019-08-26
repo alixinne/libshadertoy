@@ -133,7 +133,7 @@ class shadertoy_EXPORT texture : public resource<texture, texture_allocator, nul
 	 * @throws opengl_error
 	 * @throws null_texture_error
 	 */
-	void get_parameter(GLint level, GLenum pname, GLint *params) const override;
+	void get_parameter(GLint level, GLenum pname, GLint *params) const;
 
 	/**
 	 * @brief glGetTextureLevelParameterfv
@@ -145,7 +145,30 @@ class shadertoy_EXPORT texture : public resource<texture, texture_allocator, nul
 	 * @throws opengl_error
 	 * @throws null_texture_error
 	 */
-	void get_parameter(GLint level, GLenum pname, GLfloat *params) const override;
+	void get_parameter(GLint level, GLenum pname, GLfloat *params) const;
+
+	/**
+	 * @brief glGetTexParameteriv
+	 *
+	 * @param pname  Parameter name
+	 * @param params Parameters
+	 *
+	 * @throws opengl_error
+	 * @throws null_texture_error
+	 */
+	void get_parameter(GLenum pname, GLint *params) const override;
+
+	/**
+	 * @brief glGetTexParameterfv
+	 *
+	 * @param level  Level
+	 * @param pname  Parameter name
+	 * @param params Parameters
+	 *
+	 * @throws opengl_error
+	 * @throws null_texture_error
+	 */
+	void get_parameter(GLenum pname, GLfloat *params) const override;
 
 	/**
 	 * @brief glTextureImage1DEXT
@@ -163,7 +186,7 @@ class shadertoy_EXPORT texture : public resource<texture, texture_allocator, nul
 	 * @throws null_texture_error
 	 */
 	void image_1d(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLint border,
-				  GLenum format, GLenum type, const GLvoid *data) const override;
+				  GLenum format, GLenum type, const GLvoid *data) const;
 
 	/**
 	 * @brief glTextureImage2DEXT
@@ -217,7 +240,7 @@ class shadertoy_EXPORT texture : public resource<texture, texture_allocator, nul
 	 * @throws opengl_error
 	 * @throws null_texture_error
 	 */
-	void get_image(GLint level, GLenum format, GLenum type, GLsizei bufSize, void *pixels) const override;
+	void get_image(GLint level, GLenum format, GLenum type, GLsizei bufSize, void *pixels) const;
 
 	/**
 	 * @brief glTextureBuffer
@@ -229,7 +252,7 @@ class shadertoy_EXPORT texture : public resource<texture, texture_allocator, nul
 	 * @throws null_texture_error
 	 * @throws null_buffer_error
 	 */
-	void buffer(GLenum internalformat, const gx::buffer &buffer) const override;
+	void buffer(GLenum internalformat, const gx::buffer &buffer) const;
 
 	/**
 	 * @brief glTextureBufferRange
@@ -243,7 +266,7 @@ class shadertoy_EXPORT texture : public resource<texture, texture_allocator, nul
 	 * @throws null_texture_error
 	 * @throws null_buffer_error
 	 */
-	void buffer_range(GLenum internalformat, const gx::buffer &buffer, GLintptr offset, GLsizeiptr size) const override;
+	void buffer_range(GLenum internalformat, const gx::buffer &buffer, GLintptr offset, GLsizeiptr size) const;
 
 	/**
 	 * @brief glBindImageTexture
