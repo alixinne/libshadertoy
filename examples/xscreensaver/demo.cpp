@@ -22,10 +22,11 @@ using namespace std;
 namespace fs = boost::filesystem;
 namespace u = shadertoy::utils;
 namespace gx = shadertoy::backends::gx;
+namespace gl4 = shadertoy::backends::gl4;
 
 struct my_context : public example_ctx
 {
-	std::unique_ptr<gx::query> fps_query;
+	std::unique_ptr<gl4::query> fps_query;
 	GLuint64 last_query_value;
 	int last_query_count;
 
@@ -33,7 +34,7 @@ struct my_context : public example_ctx
 	double last_clock;
 
 	my_context()
-	: example_ctx(), fps_query(shadertoy::backends::current->make_query(GL_TIMESTAMP)),
+	: example_ctx(), fps_query(std::make_unique<gl4::query>(GL_TIMESTAMP)),
 	  last_query_value(0), last_query_count(0), frame_count(0), last_clock(0.0)
 	{
 	}
