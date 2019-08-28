@@ -134,8 +134,19 @@ namespace shadertoy
 {
 namespace backends
 {
-/// Current shadertoy backend in use
-shadertoy_EXPORT extern thread_local std::unique_ptr<gx::backend> current;
+/**
+ * @brief Get the backend used by the current thread.
+ */
+shadertoy_EXPORT const std::unique_ptr<gx::backend> &current();
+
+/**
+ * @brief Set the backend to use for the current thread.
+ *
+ * @param new_backend New backend instance to set
+ *
+ * @return Previous backend used by the thread
+ */
+shadertoy_EXPORT std::unique_ptr<gx::backend> set_current(std::unique_ptr<gx::backend> new_backend);
 }
 } // namespace shadertoy
 

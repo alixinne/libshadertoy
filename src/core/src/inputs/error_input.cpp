@@ -15,7 +15,7 @@ GLenum error_input::load_input()
 {
 	auto format = GL_R8;
 
-	texture_ = backends::current->make_texture(GL_TEXTURE_2D);
+	texture_ = backends::current()->make_texture(GL_TEXTURE_2D);
 
 	// Generate the checkerboard
 	int width = 32, height = 32, size = 16;

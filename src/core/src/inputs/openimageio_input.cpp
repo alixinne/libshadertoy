@@ -24,7 +24,7 @@ std::unique_ptr<gx::texture> openimageio_input::load_file(const std::string &fil
 #if SHADERTOY_HAS_OPENIMAGEIO
 	log::shadertoy()->trace("Reading {} for input {}", filename, static_cast<const void *>(this));
 
-	texture = backends::current->make_texture(GL_TEXTURE_2D);
+	texture = backends::current()->make_texture(GL_TEXTURE_2D);
 
 	try
 	{

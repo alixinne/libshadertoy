@@ -225,7 +225,7 @@ template <typename... Args> int performRender(bool dumpShaders, Args &&... args)
 	glfwSwapInterval(1);
 
 	// Set the backend to raw OpenGL 4
-	shadertoy::backends::current = std::make_unique<shadertoy::backends::gl4::backend>();
+	shadertoy::backends::set_current(std::make_unique<shadertoy::backends::gl4::backend>());
 
 	shadertoy::utils::log::shadertoy()->set_level(spdlog::level::debug);
 

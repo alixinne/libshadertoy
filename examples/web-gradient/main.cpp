@@ -29,7 +29,7 @@ struct ctx
 		{
 			if (backend)
 			{
-				shadertoy::backends::current = std::move(backend);
+				shadertoy::backends::set_current(std::move(backend));
 			}
 
 			// Poll events
@@ -45,7 +45,7 @@ struct ctx
 			// glViewport. In this example, we render directly to the
 			// default framebuffer, so we need to set the viewport
 			// ourselves.
-			shadertoy::backends::current->set_viewport(0, 0, render_size.width, render_size.height);
+			shadertoy::backends::current()->set_viewport(0, 0, render_size.width, render_size.height);
 
 			// Render the swap chain
 			context.render(chain);
@@ -97,7 +97,7 @@ int main()
 		}
 
 		glfwMakeContextCurrent(window);
-		shadertoy::backends::current = std::make_unique<shadertoy::backends::webgl::backend>();
+		shadertoy::backends::set_current(std::make_unique<shadertoy::backends::webgl::backend>());
 
 		context = std::make_unique<ctx>(window);
 
@@ -131,7 +131,7 @@ int main()
 		// glfwSetFramebufferSizeCallback(window, resize_callback);
 
 		// Note: render loop changes threads
-		context->backend = std::move(shadertoy::backends::current);
+		context->backend = shadertoy::backends::set_current({});
 		emscripten_set_main_loop(render, 0, 0);
 	}
 	catch (shadertoy::backends::gx::shader_compilation_error &ex)

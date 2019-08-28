@@ -129,7 +129,7 @@ uniform_variant uniform_resource::make_variant() const
 
 std::unique_ptr<uniform_location> uniform_resource::get_location(const backends::gx::program &program) const
 {
-	return backends::current->make_uniform_location(program, location);
+	return backends::current()->make_uniform_location(program, location);
 }
 
 uniform_resource::uniform_resource(const backends::gx::program &program, GLuint resource_index)

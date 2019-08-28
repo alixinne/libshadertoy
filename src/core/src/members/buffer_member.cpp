@@ -70,7 +70,7 @@ void buffer_member::allocate_member(const swap_chain &chain, const render_contex
 
 buffer_member::buffer_member(std::shared_ptr<buffers::graphics_buffer> buffer, rsize_ref render_size,
 							 GLint internal_format, member_swap_policy swap_policy)
-: buffer_(std::move(std::move(buffer))), io_(swap_policy), state_(backends::current->make_draw_state()),
+: buffer_(std::move(std::move(buffer))), io_(swap_policy), state_(backends::current()->make_draw_state()),
   render_size_(std::move(render_size)), internal_format_(internal_format)
 {
 }

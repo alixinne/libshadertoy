@@ -140,7 +140,7 @@ void program_host::prepare_render(const render_context &context)
 	}
 
 	// Unbind extra texture units not in use
-	backends::current->unbind_texture_units(current_texture_unit);
+	backends::current()->unbind_texture_units(current_texture_unit);
 
 	if (auto channel_resolutions_resource = program_interface_->try_get_uniform_location("iChannelResolution"))
 	{

@@ -8,7 +8,7 @@ using namespace shadertoy;
 using namespace shadertoy::buffers;
 
 basic_buffer::basic_buffer(std::string id)
-: id_(std::move(id)), time_delta_query_(backends::current->make_query(GL_TIME_ELAPSED))
+: id_(std::move(id)), time_delta_query_(backends::current()->make_query(GL_TIME_ELAPSED))
 {
 }
 

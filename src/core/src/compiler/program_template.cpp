@@ -82,7 +82,7 @@ void program_template::compile(GLenum type)
 								 type, static_cast<const void *>(this));
 
 	// Create shader object
-	auto so(backends::current->make_shader(type));
+	auto so(backends::current()->make_shader(type));
 
 	// Get sources
 	auto sources(specify_template_parts(it->second).sources());
@@ -126,7 +126,7 @@ program_template::compile(GLenum stage, std::map<GLenum, std::vector<std::unique
 		throw shadertoy_error("invalid shader stage");
 	}
 
-	auto program(backends::current->make_program());
+	auto program(backends::current()->make_program());
 
 	std::vector<std::unique_ptr<backends::gx::shader>> attached_shaders;
 
@@ -179,7 +179,7 @@ program_template::compile(GLenum stage, std::map<GLenum, std::vector<std::unique
 		}
 
 		// Compile shader
-		auto so(backends::current->make_shader(pair.first));
+		auto so(backends::current()->make_shader(pair.first));
 		shader_compiler::compile(*so, sources);
 
 		// Add shader for attachment
@@ -262,7 +262,7 @@ program_template::compile(GLenum stage, const std::map<GLenum, shader_template> 
 		throw shadertoy_error("invalid shader stage");
 	}
 
-	auto program(backends::current->make_program());
+	auto program(backends::current()->make_program());
 
 	std::vector<std::unique_ptr<backends::gx::shader>> attached_shaders;
 
@@ -294,7 +294,7 @@ program_template::compile(GLenum stage, const std::map<GLenum, shader_template> 
 		}
 
 		// Compile shader
-		auto so(backends::current->make_shader(pair.first));
+		auto so(backends::current()->make_shader(pair.first));
 		shader_compiler::compile(*so, sources);
 
 		// Add shader for attachment

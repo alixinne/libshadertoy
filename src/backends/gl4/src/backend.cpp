@@ -122,5 +122,5 @@ void backend::set_viewport(GLint x, GLint y, GLsizei width, GLsizei height)
 backend &backend::current()
 {
 	// Unsafe, but avoids dynamic_cast.
-	return *reinterpret_cast<backend *>(backends::current.get());
+	return *reinterpret_cast<backend *>(backends::current().get());
 }

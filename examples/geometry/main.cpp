@@ -68,28 +68,28 @@ class tiny_geometry : public geometry::basic_geometry
 
 		indices_size_ = indices.size();
 
-		vao_ = current->make_vertex_array();
+		vao_ = current()->make_vertex_array();
 		vao_->bind();
-		vertices_ = current->make_buffer(GL_ARRAY_BUFFER);
+		vertices_ = current()->make_buffer(GL_ARRAY_BUFFER);
 		vertices_->bind(GL_ARRAY_BUFFER);
-		indices_ = current->make_buffer(GL_ELEMENT_ARRAY_BUFFER);
+		indices_ = current()->make_buffer(GL_ELEMENT_ARRAY_BUFFER);
 		indices_->bind(GL_ELEMENT_ARRAY_BUFFER);
 
 		vertices_->data(sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 		indices_->data(sizeof(uint32_t) * indices.size(), indices.data(), GL_STATIC_DRAW);
 
 		// bind input "position" to vertex locations (3 floats)
-		auto position(current->make_attrib_location(0));
+		auto position(current()->make_attrib_location(0));
 		position->vertex_pointer(3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)0);
 		position->enable_vertex_array();
 
 		// bind input "texCoord" to vertex texture coordinates (2 floats)
-		auto texCoord(current->make_attrib_location(1));
+		auto texCoord(current()->make_attrib_location(1));
 		texCoord->vertex_pointer(2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat)));
 		texCoord->enable_vertex_array();
 
 		// bind input "normals" to vertex normals (3 floats)
-		auto normals(current->make_attrib_location(2));
+		auto normals(current()->make_attrib_location(2));
 		normals->vertex_pointer(3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)(5 * sizeof(GLfloat)));
 		normals->enable_vertex_array();
 
@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
 		glfwSwapInterval(1);
 
 		// Set the backend to raw OpenGL 4
-		shadertoy::backends::current = std::make_unique<shadertoy::backends::gl4::backend>();
+		shadertoy::backends::set_current(std::make_unique<shadertoy::backends::gl4::backend>());
 
 		utils::log::shadertoy()->set_level(spdlog::level::trace);
 
@@ -216,8 +216,8 @@ int main(int argc, char *argv[])
 				// glViewport. In this example, we render directly to the
 				// default framebuffer, so we need to set the viewport
 				// ourselves.
-				shadertoy::backends::current->set_viewport(0, 0, ctx.render_size.width,
-														   ctx.render_size.height);
+				shadertoy::backends::current()->set_viewport(0, 0, ctx.render_size.width,
+															 ctx.render_size.height);
 
 				// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 				glm::mat4 Projection =

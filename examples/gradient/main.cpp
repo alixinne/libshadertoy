@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 		glfwSwapInterval(1);
 
 		// Set the backend to raw OpenGL 4
-		shadertoy::backends::current = std::make_unique<shadertoy::backends::gl4::backend>();
+		shadertoy::backends::set_current(std::make_unique<shadertoy::backends::gl4::backend>());
 
 		shadertoy::utils::log::shadertoy()->set_level(spdlog::level::trace);
 
@@ -101,8 +101,8 @@ int main(int argc, char *argv[])
 				// glViewport. In this example, we render directly to the
 				// default framebuffer, so we need to set the viewport
 				// ourselves.
-				shadertoy::backends::current->set_viewport(0, 0, ctx.render_size.width,
-														   ctx.render_size.height);
+				shadertoy::backends::current()->set_viewport(0, 0, ctx.render_size.width,
+															 ctx.render_size.height);
 
 				// Render the swap chain
 				context.render(chain);

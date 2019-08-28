@@ -8,9 +8,9 @@ using namespace shadertoy;
 using namespace shadertoy::geometry;
 
 screen_quad::screen_quad()
-: quad_array_(backends::current->make_vertex_array()),
-  quad_corners_(backends::current->make_buffer(GL_ARRAY_BUFFER)),
-  quad_indices_(backends::current->make_buffer(GL_ELEMENT_ARRAY_BUFFER))
+: quad_array_(backends::current()->make_vertex_array()),
+  quad_corners_(backends::current()->make_buffer(GL_ARRAY_BUFFER)),
+  quad_indices_(backends::current()->make_buffer(GL_ELEMENT_ARRAY_BUFFER))
 {
 	// clang-format off
 	GLfloat coords[] = {
@@ -40,12 +40,12 @@ screen_quad::screen_quad()
 	quad_indices_->bind(GL_ELEMENT_ARRAY_BUFFER);
 
 	// bind input "position" to vertex locations (3 floats)
-	auto position(backends::current->make_attrib_location(0));
+	auto position(backends::current()->make_attrib_location(0));
 	position->vertex_pointer(3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), static_cast<const void *>(nullptr));
 	position->enable_vertex_array();
 
 	// bind input "texCoord" to vertex texture coordinates (2 floats)
-	auto texCoord(backends::current->make_attrib_location(1));
+	auto texCoord(backends::current()->make_attrib_location(1));
 	texCoord->vertex_pointer(2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),
 							 reinterpret_cast<const void *>(3 * sizeof(GLfloat))); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 	texCoord->enable_vertex_array();

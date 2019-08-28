@@ -109,7 +109,7 @@ void io_resource::output_buffer::init_render_texture(const output_buffer_spec &s
 	// Only create a texture object if it is necessary
 	if (!texptr)
 	{
-		texptr = backends::current->make_texture(GL_TEXTURE_2D);
+		texptr = backends::current()->make_texture(GL_TEXTURE_2D);
 	}
 
 	// Allocate texture storage according to width/height

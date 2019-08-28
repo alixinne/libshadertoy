@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 		glfwSwapInterval(1);
 
 		// Set the backend to raw OpenGL 4
-		shadertoy::backends::current = std::make_unique<shadertoy::backends::gl4::backend>();
+		shadertoy::backends::set_current(std::make_unique<shadertoy::backends::gl4::backend>());
 
 		shadertoy::utils::log::shadertoy()->set_level(spdlog::level::trace);
 
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 			gradientBuffer->source_file(ST_BASE_DIR "/image/image-store.glsl");
 
 			// Add image load/store image target
-			auto texture(shadertoy::backends::current->make_texture(GL_TEXTURE_2D));
+			auto texture(shadertoy::backends::current()->make_texture(GL_TEXTURE_2D));
 			texture->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST); // no mipmaps
 			texture->image_2d(GL_TEXTURE_2D, 0, GL_RGBA32F, 16, 16, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 			auto gradient_image(std::make_shared<shadertoy::inputs::texture_input>(std::move(texture), GL_RGBA32F));

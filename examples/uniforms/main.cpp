@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 		glfwSwapInterval(1);
 
 		// Set the backend to raw OpenGL 4
-		shadertoy::backends::current = std::make_unique<shadertoy::backends::gl4::backend>();
+		shadertoy::backends::set_current(std::make_unique<shadertoy::backends::gl4::backend>());
 
 		shadertoy::utils::log::shadertoy()->set_level(spdlog::level::trace);
 

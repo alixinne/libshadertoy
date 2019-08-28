@@ -68,8 +68,8 @@ void screen_member::render_member(const swap_chain &chain, const render_context 
 	}
 
 	rsize vp_size(viewport_size_->resolve());
-	backends::current->bind_default_framebuffer(GL_DRAW_FRAMEBUFFER);
-	backends::current->set_viewport(viewport_x_, viewport_y_, vp_size.width, vp_size.height);
+	backends::current()->bind_default_framebuffer(GL_DRAW_FRAMEBUFFER);
+	backends::current()->set_viewport(viewport_x_, viewport_y_, vp_size.width, vp_size.height);
 
 	// Use the screen program
 	context.screen_prog().use();
@@ -77,7 +77,7 @@ void screen_member::render_member(const swap_chain &chain, const render_context 
 	// Bind the texture and sampler
 	texptr->bind_unit(0);
 	sampler_->bind(0);
-	backends::current->unbind_texture_units(1);
+	backends::current()->unbind_texture_units(1);
 
 	// Apply member state
 	state_->apply();
@@ -115,9 +115,9 @@ std::vector<member_output_t> screen_member::output(const swap_chain &chain)
 }
 
 screen_member::screen_member(rsize_ref &&viewport_size, std::optional<output_name_t> output_name)
-: output_name_(output_name), output_index_(-1), sampler_(backends::current->make_sampler()),
+: output_name_(output_name), output_index_(-1), sampler_(backends::current()->make_sampler()),
   viewport_x_(0), viewport_y_(0), viewport_size_(std::move(viewport_size)),
-  state_(backends::current->make_draw_state())
+  state_(backends::current()->make_draw_state())
 {
 	sampler_->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	sampler_->parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -127,9 +127,9 @@ screen_member::screen_member(rsize_ref &&viewport_size, std::optional<output_nam
 
 screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size,
 							 std::optional<output_name_t> output_name)
-: output_name_(output_name), output_index_(-1), sampler_(backends::current->make_sampler()),
+: output_name_(output_name), output_index_(-1), sampler_(backends::current()->make_sampler()),
   viewport_x_(viewport_x), viewport_y_(viewport_y), viewport_size_(std::move(viewport_size)),
-  state_(backends::current->make_draw_state())
+  state_(backends::current()->make_draw_state())
 {
 	sampler_->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	sampler_->parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -140,10 +140,10 @@ screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewpor
 screen_member::screen_member(rsize_ref &&viewport_size, std::weak_ptr<members::basic_member> member,
 							 std::optional<output_name_t> output_name)
 : member_(std::move(std::move(member))), output_name_(output_name), output_index_(-1),
-  sampler_(backends::current->make_sampler()),
+  sampler_(backends::current()->make_sampler()),
 
   viewport_x_(0), viewport_y_(0), viewport_size_(std::move(viewport_size)),
-  state_(backends::current->make_draw_state())
+  state_(backends::current()->make_draw_state())
 {
 	sampler_->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	sampler_->parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -154,10 +154,10 @@ screen_member::screen_member(rsize_ref &&viewport_size, std::weak_ptr<members::b
 screen_member::screen_member(int viewport_x, int viewport_y, rsize_ref &&viewport_size,
 							 std::weak_ptr<members::basic_member> member, std::optional<output_name_t> output_name)
 : member_(std::move(std::move(member))), output_name_(output_name), output_index_(-1),
-  sampler_(backends::current->make_sampler()),
+  sampler_(backends::current()->make_sampler()),
 
   viewport_x_(viewport_x), viewport_y_(viewport_y), viewport_size_(std::move(viewport_size)),
-  state_(backends::current->make_draw_state())
+  state_(backends::current()->make_draw_state())
 {
 	sampler_->parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	sampler_->parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);

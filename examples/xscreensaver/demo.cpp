@@ -180,7 +180,7 @@ int shadertoy_init(const char *api_key, const char *query, const char *sort, int
 	Json::Value sr = json_get(curl, ss.str());
 
 	// Set the backend to raw OpenGL 4
-	shadertoy::backends::current = std::make_unique<shadertoy::backends::gl4::backend>();
+	shadertoy::backends::set_current(std::make_unique<shadertoy::backends::gl4::backend>());
 
 	// Create context
 	ctx = std::make_unique<my_context>();

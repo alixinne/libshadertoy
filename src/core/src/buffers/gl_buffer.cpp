@@ -13,8 +13,8 @@ using namespace shadertoy::buffers;
 using shadertoy::utils::error_assert;
 
 gl_buffer::gl_buffer(const std::string &id)
-: graphics_buffer(id), target_fbo_(backends::current->make_framebuffer()),
-  target_rbo_(backends::current->make_renderbuffer())
+: graphics_buffer(id), target_fbo_(backends::current()->make_framebuffer()),
+  target_rbo_(backends::current()->make_renderbuffer())
 {
 }
 
@@ -47,14 +47,14 @@ void gl_buffer::render(const render_context &context, const io_resource &io, con
 	if (io.swap_policy() == member_swap_policy::default_framebuffer)
 	{
 		// Bind default framebuffer, assume viewport has been set correctly
-		backends::current->bind_default_framebuffer(GL_DRAW_FRAMEBUFFER);
+		backends::current()->bind_default_framebuffer(GL_DRAW_FRAMEBUFFER);
 
 		// Do not set the viewport, we are drawing to the default framebuffer so it is
 		// configured by the user.
 
 		// Get default viewport target size
 		GLint viewport[4]; // x, y, width, height
-		backends::current->get_viewport(viewport);
+		backends::current()->get_viewport(viewport);
 		size = rsize(viewport[2], viewport[3]);
 	}
 	else
