@@ -11,7 +11,7 @@ SHADERTOY_BACKENDS_WEBGL_NAMESPACE_BEGIN
 /**
  * @brief Error thrown when an attempt is made to obtain the id of a null query
  */
-class shadertoy_EXPORT null_query_error : public shadertoy::shadertoy_error
+class stbackend_webgl_EXPORT null_query_error : public shadertoy::shadertoy_error
 {
 	public:
 	/**
@@ -23,7 +23,7 @@ class shadertoy_EXPORT null_query_error : public shadertoy::shadertoy_error
 /**
  * @brief Represents an OpenGL query.
  */
-class shadertoy_EXPORT query
+class stbackend_webgl_EXPORT query
 : public resource<query, multi_allocator<&glGenQueries, &glDeleteQueries>, null_query_error, gx::query>
 {
 	public:

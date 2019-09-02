@@ -11,7 +11,7 @@ SHADERTOY_BACKENDS_WEBGL_NAMESPACE_BEGIN
 /**
  * @brief Error thrown when an attempt is made to obtain the id of a null sampler.
  */
-class shadertoy_EXPORT null_sampler_error : public shadertoy::shadertoy_error
+class stbackend_webgl_EXPORT null_sampler_error : public shadertoy::shadertoy_error
 {
 	public:
 	/**
@@ -23,7 +23,7 @@ class shadertoy_EXPORT null_sampler_error : public shadertoy::shadertoy_error
 /**
  * @brief Represents an OpenGL sampler
  */
-class shadertoy_EXPORT sampler
+class stbackend_webgl_EXPORT sampler
 : public resource<sampler, multi_allocator<&glGenSamplers, &glDeleteSamplers>, null_sampler_error, gx::sampler>
 {
 	public:

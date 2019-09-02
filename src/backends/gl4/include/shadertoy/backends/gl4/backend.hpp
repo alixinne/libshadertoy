@@ -23,7 +23,7 @@ struct backend_ops
 /**
  * @brief OpenGL state tracker
  */
-class shadertoy_EXPORT backend : public gx::state_tracker<backend_ops, gx::backend>
+class stbackend_gl4_EXPORT backend : public gx::state_tracker<backend_ops, gx::backend>
 {
 	public:
 	backend(const backend &) = delete;

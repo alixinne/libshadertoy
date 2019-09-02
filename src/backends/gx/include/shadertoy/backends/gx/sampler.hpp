@@ -8,7 +8,7 @@ SHADERTOY_BACKENDS_GX_NAMESPACE_BEGIN
 /**
  * @brief Represents an OpenGL sampler
  */
-class shadertoy_EXPORT sampler : public resource
+class stbackend_gx_EXPORT sampler : public resource
 {
 	public:
 	/**

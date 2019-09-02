@@ -70,12 +70,6 @@ endif()
 # Sources
 add_subdirectory(src)
 
-# Export header for shared targets
-generate_export_header(shadertoy-objects
-	BASE_NAME shadertoy
-	EXPORT_MACRO_NAME shadertoy_EXPORT
-	EXPORT_FILE_NAME ${SHADERTOY_BUILT_INCLUDE_DIR}/shadertoy/shadertoy_export.h)
-
 # Documentation
 set(SHADERTOY_DOC_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(docs)

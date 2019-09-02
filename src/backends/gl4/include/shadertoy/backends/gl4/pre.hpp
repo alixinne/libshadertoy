@@ -1,7 +1,7 @@
 #ifndef _SHADERTOY_BACKENDS_GL4_PRE_HPP_
 #define _SHADERTOY_BACKENDS_GL4_PRE_HPP_
 
-#include "shadertoy/shadertoy_export.h"
+#include "shadertoy/stbackend-gl4_export.h"
 
 #include "shadertoy/config.hpp"
 

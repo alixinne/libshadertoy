@@ -11,7 +11,7 @@ SHADERTOY_BACKENDS_GL4_NAMESPACE_BEGIN
 /**
  * @brief Error thrown when an attempt is made to dereference a null renderbuffer.
  */
-class shadertoy_EXPORT null_renderbuffer_error : public shadertoy::shadertoy_error
+class stbackend_gl4_EXPORT null_renderbuffer_error : public shadertoy::shadertoy_error
 {
 	public:
 	explicit null_renderbuffer_error();
@@ -20,7 +20,7 @@ class shadertoy_EXPORT null_renderbuffer_error : public shadertoy::shadertoy_err
 /**
  * @brief Represents an OpenGL Renderbuffer object.
  */
-class shadertoy_EXPORT renderbuffer
+class stbackend_gl4_EXPORT renderbuffer
 : public resource<renderbuffer, multi_allocator<&glCreateRenderbuffers, &glDeleteRenderbuffers>, null_renderbuffer_error, gx::renderbuffer>
 {
 	public:

@@ -10,7 +10,7 @@ SHADERTOY_BACKENDS_GX_NAMESPACE_BEGIN
 /**
  * @brief Represents an OpenGL texture.
  */
-class shadertoy_EXPORT texture : public resource
+class stbackend_gx_EXPORT texture : public resource
 {
 	public:
 	/**

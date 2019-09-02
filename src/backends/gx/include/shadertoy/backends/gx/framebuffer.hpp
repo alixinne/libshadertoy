@@ -11,7 +11,7 @@ SHADERTOY_BACKENDS_GX_NAMESPACE_BEGIN
 /**
  * @brief Represents an OpenGL framebuffer object
  */
-class shadertoy_EXPORT framebuffer : public resource
+class stbackend_gx_EXPORT framebuffer : public resource
 {
 	public:
 	/**

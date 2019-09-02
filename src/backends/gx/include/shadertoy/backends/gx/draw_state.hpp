@@ -11,7 +11,7 @@ SHADERTOY_BACKENDS_GX_NAMESPACE_BEGIN
 /**
  * @brief Represents the OpenGL state that affects buffer rendering
  */
-class shadertoy_EXPORT draw_state
+class stbackend_gx_EXPORT draw_state
 {
 	protected:
 	/// Number of enable flags

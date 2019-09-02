@@ -11,7 +11,7 @@ SHADERTOY_BACKENDS_GL4_NAMESPACE_BEGIN
 /**
  * @brief Error thrown when an attempt is made to obtain the id of a null query
  */
-class shadertoy_EXPORT null_query_error : public shadertoy::shadertoy_error
+class stbackend_gl4_EXPORT null_query_error : public shadertoy::shadertoy_error
 {
 	public:
 	/**
@@ -23,7 +23,7 @@ class shadertoy_EXPORT null_query_error : public shadertoy::shadertoy_error
 /**
  * @brief Implement the allocation logic for gl4::query objects
  */
-class shadertoy_EXPORT query_allocator
+class stbackend_gl4_EXPORT query_allocator
 {
 	public:
 	/**
@@ -49,7 +49,7 @@ class shadertoy_EXPORT query_allocator
 /**
  * @brief Represents an OpenGL query.
  */
-class shadertoy_EXPORT query : public resource<query, query_allocator, null_query_error, gx::query>
+class stbackend_gl4_EXPORT query : public resource<query, query_allocator, null_query_error, gx::query>
 {
 	public:
 	query(resource_type &&other) : resource(std::forward<resource_type &&>(other)) {}

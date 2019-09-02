@@ -1,7 +1,7 @@
 #ifndef _SHADERTOY_UTILS_LOG_HPP_
 #define _SHADERTOY_UTILS_LOG_HPP_
 
-#include "shadertoy/shadertoy_export.h"
+#include "shadertoy/stbase_export.h"
 
 #include "shadertoy/spdlog/fmt/ostr.h"
 #include "shadertoy/spdlog/spdlog.h"
@@ -12,7 +12,7 @@ namespace utils
 {
 
 /// Logging utility class for shadertoy
-class shadertoy_EXPORT log
+class stbase_EXPORT log
 {
 	static bool initialized_;
 

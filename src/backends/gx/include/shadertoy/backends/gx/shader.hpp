@@ -13,7 +13,7 @@ SHADERTOY_BACKENDS_GX_NAMESPACE_BEGIN
 /**
  * @brief Error thrown when the compilation of a shader fails.
  */
-class shadertoy_EXPORT shader_compilation_error : public shadertoy::shadertoy_error
+class stbackend_gx_EXPORT shader_compilation_error : public shadertoy::shadertoy_error
 {
 	public:
 	/**
@@ -48,7 +48,7 @@ class shadertoy_EXPORT shader_compilation_error : public shadertoy::shadertoy_er
 /**
  * @brief Represents an OpenGL shader.
  */
-class shadertoy_EXPORT shader : public resource
+class stbackend_gx_EXPORT shader : public resource
 {
 	public:
 	/**

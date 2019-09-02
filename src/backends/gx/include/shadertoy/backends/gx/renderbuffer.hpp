@@ -8,7 +8,7 @@ SHADERTOY_BACKENDS_GX_NAMESPACE_BEGIN
 /**
  * @brief Represents an OpenGL Renderbuffer object.
  */
-class shadertoy_EXPORT renderbuffer : public resource
+class stbackend_gx_EXPORT renderbuffer : public resource
 {
 	public:
 	/**

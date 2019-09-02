@@ -14,7 +14,7 @@ SHADERTOY_BACKENDS_WEBGL_NAMESPACE_BEGIN
 /**
  * @brief Error thrown when an attempt is made to dereference a null shader object.
  */
-class shadertoy_EXPORT null_shader_error : public shadertoy::shadertoy_error
+class stbackend_webgl_EXPORT null_shader_error : public shadertoy::shadertoy_error
 {
 	public:
 	/**
@@ -28,7 +28,7 @@ class shadertoy_EXPORT null_shader_error : public shadertoy::shadertoy_error
  * Takes a shader type as a supplementary parameter compared to the standard
  * resource allocators.
  */
-class shadertoy_EXPORT shader_allocator
+class stbackend_webgl_EXPORT shader_allocator
 {
 	public:
 	/**
@@ -52,7 +52,7 @@ class shadertoy_EXPORT shader_allocator
 /**
  * @brief Represents an OpenGL shader.
  */
-class shadertoy_EXPORT shader : public resource<shader, shader_allocator, null_shader_error, gx::shader>
+class stbackend_webgl_EXPORT shader : public resource<shader, shader_allocator, null_shader_error, gx::shader>
 {
 	public:
 	shader(resource_type &&other) : resource(std::forward<resource_type &&>(other)) {}

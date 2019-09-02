@@ -22,7 +22,7 @@ class draw_state;
 /**
  * @brief Base class for backends implementations
  */
-class shadertoy_EXPORT backend
+class stbackend_gx_EXPORT backend
 {
 	public:
 	virtual ~backend();
@@ -137,7 +137,7 @@ namespace backends
 /**
  * @brief Get the backend used by the current thread.
  */
-shadertoy_EXPORT const std::unique_ptr<gx::backend> &current();
+stbackend_gx_EXPORT const std::unique_ptr<gx::backend> &current();
 
 /**
  * @brief Set the backend to use for the current thread.
@@ -146,7 +146,7 @@ shadertoy_EXPORT const std::unique_ptr<gx::backend> &current();
  *
  * @return Previous backend used by the thread
  */
-shadertoy_EXPORT std::unique_ptr<gx::backend> set_current(std::unique_ptr<gx::backend> new_backend);
+stbackend_gx_EXPORT std::unique_ptr<gx::backend> set_current(std::unique_ptr<gx::backend> new_backend);
 }
 } // namespace shadertoy
 

@@ -11,7 +11,7 @@ SHADERTOY_BACKENDS_GL4_NAMESPACE_BEGIN
 /**
  * @brief Error thrown when an attempt is made to obtain the id of a null buffer.
  */
-class shadertoy_EXPORT null_buffer_error : public shadertoy::shadertoy_error
+class stbackend_gl4_EXPORT null_buffer_error : public shadertoy::shadertoy_error
 {
 	public:
 	/**
@@ -23,7 +23,7 @@ class shadertoy_EXPORT null_buffer_error : public shadertoy::shadertoy_error
 /**
  * @brief Represents an OpenGL buffer
  */
-class shadertoy_EXPORT buffer
+class stbackend_gl4_EXPORT buffer
 : public resource<buffer, multi_allocator<&glCreateBuffers, &glDeleteBuffers>, null_buffer_error, gx::buffer>
 {
 	public:

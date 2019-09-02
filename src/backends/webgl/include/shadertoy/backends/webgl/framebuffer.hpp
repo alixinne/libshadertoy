@@ -11,7 +11,7 @@ SHADERTOY_BACKENDS_WEBGL_NAMESPACE_BEGIN
 /**
  * @brief Error thrown when an attempt is made to dereference a null framebuffer.
  */
-class shadertoy_EXPORT null_framebuffer_error : public shadertoy::shadertoy_error
+class stbackend_webgl_EXPORT null_framebuffer_error : public shadertoy::shadertoy_error
 {
 	public:
 	/**
@@ -23,7 +23,7 @@ class shadertoy_EXPORT null_framebuffer_error : public shadertoy::shadertoy_erro
 /**
  * @brief Represents an OpenGL framebuffer object
  */
-class shadertoy_EXPORT framebuffer
+class stbackend_webgl_EXPORT framebuffer
 : public resource<framebuffer, multi_allocator<&glGenFramebuffers, &glDeleteFramebuffers>, null_framebuffer_error, gx::framebuffer>
 {
 	public:

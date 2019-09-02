@@ -10,7 +10,7 @@ SHADERTOY_BACKENDS_WEBGL_NAMESPACE_BEGIN
 /**
  * @brief Represents the OpenGL state that affects buffer rendering
  */
-class shadertoy_EXPORT draw_state : public gx::draw_state
+class stbackend_webgl_EXPORT draw_state : public gx::draw_state
 {
 	protected:
 	void apply_enabled(GLenum cap) const override;

@@ -21,7 +21,7 @@ typedef void (*multi_resource_deleter)(GLsizei, const GLuint *);
  * @brief Represents a resource that is allocated one by one.
  */
 template <single_resource_creator CreateFunction, single_resource_deleter DestroyFunction>
-class shadertoy_EXPORT single_allocator
+class stbackend_webgl_EXPORT single_allocator
 {
 	public:
 	/**
@@ -43,7 +43,7 @@ class shadertoy_EXPORT single_allocator
  * @brief Represents a resource that is allocated in batches.
  */
 template <multi_resource_creator CreateFunction, multi_resource_deleter DestroyFunction>
-class shadertoy_EXPORT multi_allocator
+class stbackend_webgl_EXPORT multi_allocator
 {
 	public:
 	/**
@@ -72,7 +72,7 @@ class shadertoy_EXPORT multi_allocator
  * corresponding OpenGL resource, such as a texture, program, shader, etc.
  */
 template <typename Final, typename Allocator, typename Error, typename BaseResource>
-class shadertoy_EXPORT resource : public BaseResource
+class stbackend_webgl_EXPORT resource : public BaseResource
 {
 	public:
 	/// Type of the allocator object

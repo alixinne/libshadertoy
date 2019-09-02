@@ -1,7 +1,7 @@
 #ifndef _SHADERTOY_SHADERTOY_ERROR_HPP_
 #define _SHADERTOY_SHADERTOY_ERROR_HPP_
 
-#include "shadertoy/shadertoy_export.h"
+#include "shadertoy/stbase_export.h"
 
 #include <stdexcept>
 #include <string>
@@ -11,7 +11,7 @@ namespace shadertoy
 /**
  * @brief Base error class for libshadertoy errors.
  */
-class shadertoy_EXPORT shadertoy_error : public std::runtime_error
+class stbase_EXPORT shadertoy_error : public std::runtime_error
 {
 	public:
 	/**

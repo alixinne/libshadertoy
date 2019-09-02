@@ -48,9 +48,6 @@ function(shadertoy_subtarget base_target_name)
 	# -fPIC
 	set_property(TARGET ${base_target_name}-objects PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-	# Export symbols
-	target_compile_definitions(${base_target_name}-objects PUBLIC shadertoy_shared_EXPORTS)
-
 	# Compile definitions
 	target_compile_definitions(${base_target_name}-objects PRIVATE ${_shadertoy_subtarget_DEFINITIONS})
 
@@ -62,6 +59,16 @@ function(shadertoy_subtarget base_target_name)
 		${SHADERTOY_BUILT_INCLUDE_DIR}
 		${_shadertoy_subtarget_INTERFACE_INCLUDE_DIRS}
 		${_shadertoy_subtarget_PRIVATE_INCLUDE_DIRS})
+
+	# Export header for shared targets
+	string(REPLACE "-" "_" base_target_name_macro "${base_target_name}")
+	generate_export_header(${base_target_name}-objects
+		BASE_NAME ${base_target_name}
+		EXPORT_MACRO_NAME ${base_target_name_macro}_EXPORT
+		EXPORT_FILE_NAME ${SHADERTOY_BUILT_INCLUDE_DIR}/shadertoy/${base_target_name}_export.h)
+
+	# Export symbols
+	target_compile_definitions(${base_target_name}-objects PRIVATE ${base_target_name_macro}_objects_EXPORTS)
 
 	foreach(_library_type ${_library_types})
 		if (_library_types_count GREATER 1)

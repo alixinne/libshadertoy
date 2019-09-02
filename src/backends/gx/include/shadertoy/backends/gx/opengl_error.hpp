@@ -9,7 +9,7 @@ SHADERTOY_BACKENDS_GX_NAMESPACE_BEGIN
 /**
  * @brief Error thrown when an OpenGL operation fails.
  */
-class shadertoy_EXPORT opengl_error : public shadertoy::shadertoy_error
+class stbackend_gx_EXPORT opengl_error : public shadertoy::shadertoy_error
 {
 	public:
 	/**

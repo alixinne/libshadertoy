@@ -1,7 +1,7 @@
 #ifndef _SHADERTOY_BACKENDS_WEBGL_PRE_HPP_
 #define _SHADERTOY_BACKENDS_WEBGL_PRE_HPP_
 
-#include "shadertoy/shadertoy_export.h"
+#include "shadertoy/stbackend-webgl_export.h"
 
 #include "shadertoy/config.hpp"
 

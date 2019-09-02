@@ -8,7 +8,7 @@ SHADERTOY_BACKENDS_GX_NAMESPACE_BEGIN
 /**
  * @brief Represents an OpenGL vertex array object
  */
-class shadertoy_EXPORT vertex_array : public resource
+class stbackend_gx_EXPORT vertex_array : public resource
 {
 	public:
 	/**

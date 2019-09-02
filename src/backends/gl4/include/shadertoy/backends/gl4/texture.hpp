@@ -11,7 +11,7 @@ SHADERTOY_BACKENDS_GL4_NAMESPACE_BEGIN
 /**
  * @brief Error thrown when an attempt is made to dereference a null texture.
  */
-class shadertoy_EXPORT null_texture_error : public shadertoy::shadertoy_error
+class stbackend_gl4_EXPORT null_texture_error : public shadertoy::shadertoy_error
 {
 	public:
 	/**
@@ -26,7 +26,7 @@ class shadertoy_EXPORT null_texture_error : public shadertoy::shadertoy_error
  * resource allocators. Also links statically to glCreateTexture and
  * glDeleteTexture according to the OpenGL spec.
  */
-class shadertoy_EXPORT texture_allocator
+class stbackend_gl4_EXPORT texture_allocator
 {
 	public:
 	/**
@@ -52,7 +52,7 @@ class shadertoy_EXPORT texture_allocator
 /**
  * @brief Represents an OpenGL texture.
  */
-class shadertoy_EXPORT texture : public resource<texture, texture_allocator, null_texture_error, gx::texture>
+class stbackend_gl4_EXPORT texture : public resource<texture, texture_allocator, null_texture_error, gx::texture>
 {
 	public:
 	texture(resource_type &&other) : resource(std::forward<resource_type &&>(other)) {}

@@ -11,7 +11,7 @@ SHADERTOY_BACKENDS_WEBGL_NAMESPACE_BEGIN
 /**
  * @brief Error thrown when an attempt is made to dereference a null vertex_array.
  */
-class shadertoy_EXPORT null_vertex_array_error : public shadertoy::shadertoy_error
+class stbackend_webgl_EXPORT null_vertex_array_error : public shadertoy::shadertoy_error
 {
 	public:
 	/**
@@ -23,7 +23,7 @@ class shadertoy_EXPORT null_vertex_array_error : public shadertoy::shadertoy_err
 /**
  * @brief Represents an OpenGL vertex array object
  */
-class shadertoy_EXPORT vertex_array
+class stbackend_webgl_EXPORT vertex_array
 : public resource<vertex_array, multi_allocator<&glGenVertexArrays, &glDeleteVertexArrays>, null_vertex_array_error, gx::vertex_array>
 {
 	public:

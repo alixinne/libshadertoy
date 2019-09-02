@@ -11,7 +11,7 @@ SHADERTOY_BACKENDS_WEBGL_NAMESPACE_BEGIN
 /**
  * @brief Error thrown when an attempt is made to dereference a null texture.
  */
-class shadertoy_EXPORT null_texture_error : public shadertoy::shadertoy_error
+class stbackend_webgl_EXPORT null_texture_error : public shadertoy::shadertoy_error
 {
 	public:
 	/**
@@ -23,7 +23,7 @@ class shadertoy_EXPORT null_texture_error : public shadertoy::shadertoy_error
 /**
  * @brief Represents an OpenGL texture.
  */
-class shadertoy_EXPORT texture
+class stbackend_webgl_EXPORT texture
 : public resource<texture, multi_allocator<&glGenTextures, &glDeleteTextures>, null_texture_error, gx::texture>
 {
 	mutable GLenum target_;

@@ -7,7 +7,7 @@ SHADERTOY_BACKENDS_GX_NAMESPACE_BEGIN
 /**
  * @brief Represents a named OpenGL resource
  */
-class shadertoy_EXPORT resource
+class stbackend_gx_EXPORT resource
 {
 	public:
 	/**

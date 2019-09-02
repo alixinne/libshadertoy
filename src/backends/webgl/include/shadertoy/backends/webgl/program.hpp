@@ -16,7 +16,7 @@ class program;
 /**
  * @brief Error thrown when an attempt is made to dereference a null program object.
  */
-class shadertoy_EXPORT null_program_error : public shadertoy::shadertoy_error
+class stbackend_webgl_EXPORT null_program_error : public shadertoy::shadertoy_error
 {
 	public:
 	/**
@@ -28,7 +28,7 @@ class shadertoy_EXPORT null_program_error : public shadertoy::shadertoy_error
 /**
  * @brief Represents the location of an attribute.
  */
-class shadertoy_EXPORT attrib_location : public gx::attrib_location
+class stbackend_webgl_EXPORT attrib_location : public gx::attrib_location
 {
 	public:
 	/**
@@ -63,7 +63,7 @@ class shadertoy_EXPORT attrib_location : public gx::attrib_location
 /**
  * @brief Represents the location of an uniform in a program.
  */
-class shadertoy_EXPORT uniform_location : public gx::uniform_location
+class stbackend_webgl_EXPORT uniform_location : public gx::uniform_location
 {
 	void use_program() const;
 
@@ -445,7 +445,7 @@ class shadertoy_EXPORT uniform_location : public gx::uniform_location
 /**
  * @brief Represents an OpenGL program.
  */
-class shadertoy_EXPORT program
+class stbackend_webgl_EXPORT program
 : public resource<program, single_allocator<&glCreateProgram, &glDeleteProgram>, null_program_error, gx::program>
 {
 	public:

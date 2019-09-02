@@ -29,7 +29,7 @@ class program;
 /**
  * @brief Error thrown when the linking step of a program fails.
  */
-class shadertoy_EXPORT program_link_error : public shadertoy::shadertoy_error
+class stbackend_gx_EXPORT program_link_error : public shadertoy::shadertoy_error
 {
 	public:
 	/**
@@ -64,7 +64,7 @@ class shadertoy_EXPORT program_link_error : public shadertoy::shadertoy_error
 /**
  * @brief Error thrown when the validation step of a program fails.
  */
-class shadertoy_EXPORT program_validate_error : public shadertoy::shadertoy_error
+class stbackend_gx_EXPORT program_validate_error : public shadertoy::shadertoy_error
 {
 	public:
 	/**
@@ -99,7 +99,7 @@ class shadertoy_EXPORT program_validate_error : public shadertoy::shadertoy_erro
 /**
  * @brief Represents the location of an attribute.
  */
-class shadertoy_EXPORT attrib_location
+class stbackend_gx_EXPORT attrib_location
 {
 	public:
 	virtual ~attrib_location();
@@ -125,7 +125,7 @@ class shadertoy_EXPORT attrib_location
 /**
  * @brief Represents the location of an uniform in a program.
  */
-class shadertoy_EXPORT uniform_location
+class stbackend_gx_EXPORT uniform_location
 {
 	public:
 	virtual ~uniform_location();
@@ -387,7 +387,7 @@ class shadertoy_EXPORT uniform_location
 /**
  * @brief Represents an OpenGL program.
  */
-class shadertoy_EXPORT program : public resource
+class stbackend_gx_EXPORT program : public resource
 {
 	public:
 	/**
