@@ -71,6 +71,7 @@ const backends::gx::program &render_context::screen_prog() const
 	{
 		log::shadertoy()->trace("Compiling screen programs for context {}", static_cast<const void *>(this));
 
+#if SHADERTOY_HAS_GLSL_440
 		sources::string_source screen_prog_sources(
 		{ { GL_VERTEX_SHADER,
 			{ "libshadertoy/shaders/screen_quad.vert.glsl",
@@ -78,6 +79,15 @@ const backends::gx::program &render_context::screen_prog() const
 		  { GL_FRAGMENT_SHADER,
 			{ "libshadertoy/shaders/screen_quad.frag.glsl",
 			  std::string(std::addressof(screen_quad_frag_glsl[0]), screen_quad_frag_glsl_size) } } });
+#else
+		sources::string_source screen_prog_sources(
+		{ { GL_VERTEX_SHADER,
+			{ "libshadertoy/shaders/screen_quad.vert.es3.glsl",
+			  std::string(std::addressof(screen_quad_vert_es3_glsl[0]), screen_quad_vert_es3_glsl_size) } },
+		  { GL_FRAGMENT_SHADER,
+			{ "libshadertoy/shaders/screen_quad.frag.es3.glsl",
+			  std::string(std::addressof(screen_quad_frag_es3_glsl[0]), screen_quad_frag_es3_glsl_size) } } });
+#endif
 
 		// Compile screen program
 		screen_prog_ = screen_prog_sources.compile_program({ GL_VERTEX_SHADER, GL_FRAGMENT_SHADER });
