@@ -2,9 +2,13 @@
 
 #include <shadertoy.hpp>
 #include <shadertoy/backends/webgl.hpp>
+#include <shadertoy/utils/log.hpp>
 
 #include <GLFW/glfw3.h>
 #include <emscripten.h>
+
+#include <fstream>
+#include <streambuf>
 
 struct ctx
 {
@@ -14,7 +18,9 @@ struct ctx
 	GLFWwindow *window;
 	int frameCount;
 	float t = 0.;
+	float t_offset = 0.;
 	std::unique_ptr<shadertoy::backends::gx::backend> backend;
+	std::string shader_source;
 
 	ctx(GLFWwindow *window) : window(window), frameCount(0), t(0.)
 	{
@@ -36,8 +42,10 @@ struct ctx
 			glfwPollEvents();
 
 			// Update uniforms
-			chain.set_uniform("iTime", t);
+			chain.set_uniform("iTime", t + t_offset);
 			chain.set_uniform("iFrame", frameCount);
+			chain.set_uniform("iTimeDelta", 1.0f / 60.0f);
+			chain.set_uniform("iFrameRate", 60.0f);
 
 			// Set viewport
 			// This is not necessary when the last pass is rendering to a
@@ -68,9 +76,36 @@ struct ctx
 			abort();
 		}
 	}
+
+	void reset()
+	{
+		t_offset = -t;
+		frameCount = 0;
+	}
+
+	void load_source(const char *src)
+	{
+		shader_source.assign(src);
+		shadertoy::sources::set_source(
+		*std::static_pointer_cast<shadertoy::buffers::toy_buffer>(
+		std::static_pointer_cast<shadertoy::members::buffer_member>(chain.members().front())->buffer()),
+		context.buffer_template(), GL_FRAGMENT_SHADER, shader_source);
+
+		// Reload programs
+		context.init(chain);
+	}
+
+	const char *get_source() const { return shader_source.c_str(); }
 };
 
 std::unique_ptr<ctx> context;
+
+extern "C"
+{
+	void reset() { context->reset(); }
+	void load_source(const char *src) { context->load_source(src); }
+	const char *get_source() { return context->get_source(); }
+}
 
 void render() { context->render(); }
 
@@ -99,10 +134,18 @@ int main()
 		glfwMakeContextCurrent(window);
 		shadertoy::backends::set_current(std::make_unique<shadertoy::backends::webgl::backend>());
 
+		shadertoy::utils::log::shadertoy()->set_level(spdlog::level::trace);
+
 		context = std::make_unique<ctx>(window);
 
 		// Set the render size
 		context->render_size = shadertoy::rsize(width, height);
+
+		std::ifstream t("gradient.glsl");
+		t.seekg(0, std::ios::end);
+		context->shader_source.reserve(t.tellg());
+		t.seekg(0, std::ios::beg);
+		context->shader_source.assign((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
 
 		auto &ctx(context->context);
 		auto &chain(context->chain);
@@ -112,8 +155,8 @@ int main()
 		// since we don't have program interface introspection on WebGL (thus we can't
 		// detect outputs).
 		auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image", 1));
-		shadertoy::sources::set_source_file(*imageBuffer, ctx.buffer_template(),
-				GL_FRAGMENT_SHADER, "gradient.glsl");
+		shadertoy::sources::set_source(*imageBuffer, ctx.buffer_template(), GL_FRAGMENT_SHADER,
+									   context->shader_source);
 
 		// Add the image buffer to the swap chain, at the given size The
 		// default_framebuffer policy makes this buffer draw directly to the
@@ -123,10 +166,6 @@ int main()
 
 		// Initialize context
 		ctx.init(chain);
-
-		// Set uniforms
-		chain.set_uniform("iTimeDelta", 1.0f / 60.0f);
-		chain.set_uniform("iFrameRate", 60.0f);
 
 		// Set the resize callback
 		// glfwSetFramebufferSizeCallback(window, resize_callback);

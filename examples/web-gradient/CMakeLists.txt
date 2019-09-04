@@ -11,6 +11,8 @@ target_link_options(example_web_gradient PRIVATE
 	"SHELL:-s EXIT_RUNTIME=1"
 	"SHELL:-s DISABLE_EXCEPTION_CATCHING=0"
 	"SHELL:-s USE_GLFW=3"
+	"SHELL:-s EXPORTED_FUNCTIONS='[\"_main\", \"_reset\", \"_load_source\", \"_get_source\"]'"
+	"SHELL:-s EXTRA_EXPORTED_RUNTIME_METHODS='[\"cwrap\"]'"
 	"SHELL:--embed-file ${CMAKE_CURRENT_SOURCE_DIR}/../gradient.glsl@gradient.glsl")
 
 # C++17
