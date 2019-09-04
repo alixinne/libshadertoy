@@ -61,7 +61,8 @@ int main(int argc, char *argv[])
 
 			// Create the image buffer
 			auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image"));
-			imageBuffer->source_file(ST_BASE_DIR "/gradient.glsl");
+			shadertoy::sources::set_source_file(*imageBuffer, context.buffer_template(),
+												GL_FRAGMENT_SHADER, ST_BASE_DIR "/gradient.glsl");
 
 			// Add the image buffer to the swap chain, at the given size
 			// The default_framebuffer policy makes this buffer draw directly to

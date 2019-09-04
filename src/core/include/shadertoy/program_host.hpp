@@ -4,9 +4,9 @@
 #include "shadertoy/pre.hpp"
 
 #include "shadertoy/backends/gx/program.hpp"
-#include "shadertoy/compiler/program_template.hpp"
 #include "shadertoy/program_input.hpp"
 #include "shadertoy/program_interface.hpp"
+#include "shadertoy/sources/basic_source.hpp"
 
 #include <deque>
 #include <map>
@@ -31,14 +31,8 @@ class shadertoy_EXPORT program_host
 	/// Inputs for this shader
 	std::deque<program_input> inputs_;
 
-	/// Alternative template to use when generating the program for this buffer
-	std::shared_ptr<compiler::program_template> override_program_;
-
-	/// Template part that this buffer should provide to the shader template
-	std::unique_ptr<compiler::basic_part> source_;
-
-	/// Pointer to the map to store compiled sources
-	std::map<GLenum, std::string> *source_map_;
+	/// Source for this buffer should that provides the shader
+	std::unique_ptr<sources::basic_source> source_;
 
 	public:
 	/**
@@ -91,76 +85,18 @@ class shadertoy_EXPORT program_host
 	inline std::deque<program_input> &inputs() { return inputs_; }
 
 	/**
-	 * @brief      Get the current override program template for this buffer
+	 * @brief       Get a reference to the current source for this buffer
 	 *
-	 * @return     Pointer to the override program, or null if this buffer is using the default program template
+	 * @return      Pointer to the source
 	 */
-	inline const std::shared_ptr<compiler::program_template> &override_program() const
-	{
-		return override_program_;
-	}
+	inline const std::unique_ptr<sources::basic_source> &source() const { return source_; }
 
 	/**
-	 * @brief      Set the current override program template for this buffer
+	 * @brief            Set the sources for this buffer
 	 *
-	 * @param new_program Pointer to the override program template, or null if
-	 *                    this buffer should use the default program template
+	 * @param new_source New source object to use for compiling this buffer
 	 */
-	inline void override_program(std::shared_ptr<compiler::program_template> new_program)
-	{
-		override_program_ = new_program;
-	}
-
-	/**
-	 * @brief       Get a reference to the current source part for this buffer
-	 *
-	 * @return      Pointer to the source part
-	 */
-	inline const std::unique_ptr<compiler::basic_part> &source() const { return source_; }
-
-	/**
-	 * @brief       Set the sources for this buffer to the given part
-	 *
-	 * @param new_part New part to use as sources for this buffer
-	 */
-	inline void source(std::unique_ptr<compiler::basic_part> new_part)
-	{
-		source_ = std::move(new_part);
-	}
-
-	/**
-	 * @brief       Set the sources for this buffer from the given part
-	 *
-	 * @param new_source New source string to use for compiling this buffer
-	 */
-	void source(const std::string &new_source);
-
-	/**
-	 * @brief       Set the sources for this buffer from the given part from a file
-	 *
-	 * The target file will be read everytime this buffer is being compiled. Use
-	 * program_buffer#source if you want to cache the file's contents.
-	 *
-	 * @param new_file New file to load the sources from
-	 */
-	void source_file(const std::string &new_file);
-
-	/**
-	 * @brief         Get the current source map pointer
-	 *
-	 * @return        Current source map pointer
-	 */
-	inline std::map<GLenum, std::string> *source_map() const { return source_map_; }
-
-	/**
-	 * @brief         Set the source map pointer for the compiled sources
-	 *
-	 * The pointer must either be null or remain valid until the sources for this
-	 * buffer have been compiled.
-	 *
-	 * @param new_map New source map pointer
-	 */
-	inline void source_map(std::map<GLenum, std::string> *new_map) { source_map_ = new_map; }
+	inline void source(std::unique_ptr<sources::basic_source> new_source) { source_ = std::move(new_source); }
 
 	/**
 	 * @brief         Get the program interface of the hosted program

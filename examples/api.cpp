@@ -228,7 +228,8 @@ int load_remote(shadertoy::render_context &context, shadertoy::swap_chain &chain
 				buffer->inputs().emplace_back();
 
 			// Load code
-			buffer->source(pass["code"].asString());
+			shadertoy::sources::set_source(*buffer, context.buffer_template(),
+					GL_FRAGMENT_SHADER, pass["code"].asString());
 
 			// Load inputs
 			for (int j = 0; j < pass["inputs"].size(); ++j)

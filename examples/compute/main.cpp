@@ -70,7 +70,8 @@ int main(int argc, char *argv[])
 
 			// Create the compute pass
 			auto compute_buffer(std::make_shared<shadertoy::buffers::compute_buffer>("compute"));
-			compute_buffer->source_file(ST_BASE_DIR "/compute/compute.glsl");
+			shadertoy::sources::set_source_file(*compute_buffer, context.buffer_template(),
+					GL_COMPUTE_SHADER, ST_BASE_DIR "/compute/compute.glsl");
 
 			// Set the dispatch size
 			compute_buffer->num_groups(glm::uvec3(tex_width, 1, 1));
@@ -83,7 +84,8 @@ int main(int argc, char *argv[])
 
 			// Create the image buffer
 			auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image"));
-			imageBuffer->source_file(ST_BASE_DIR "/compute/display.glsl");
+			shadertoy::sources::set_source_file(*imageBuffer, context.buffer_template(),
+					GL_FRAGMENT_SHADER, ST_BASE_DIR "/compute/display.glsl");
 
 			// Add the compute image input to the final shader pass
 			imageBuffer->inputs().emplace_back("sampler1D", "computeImage", compute_image);

@@ -61,7 +61,8 @@ int main(int argc, char *argv[])
 
 			// Create an auxiliary buffer that renders a gradient
 			auto gradientBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("gradient"));
-			gradientBuffer->source_file(ST_BASE_DIR "/image/image-store.glsl");
+			shadertoy::sources::set_source_file(*gradientBuffer, context.buffer_template(),
+												GL_FRAGMENT_SHADER, ST_BASE_DIR "/image/image-store.glsl");
 
 			// Add image load/store image target
 			auto texture(shadertoy::backends::current()->make_texture(GL_TEXTURE_2D));
@@ -75,7 +76,8 @@ int main(int argc, char *argv[])
 
 			// Create the image buffer
 			auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image"));
-			imageBuffer->source_file(ST_BASE_DIR "/image/display.glsl");
+			shadertoy::sources::set_source_file(*imageBuffer, context.buffer_template(),
+												GL_FRAGMENT_SHADER, ST_BASE_DIR "/image/display.glsl");
 
 			// clang-format off
 

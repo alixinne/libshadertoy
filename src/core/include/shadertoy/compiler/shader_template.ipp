@@ -8,11 +8,12 @@ namespace shadertoy
 namespace compiler
 {
 
-template<typename PartCallback>
-shader_template shader_template::specify_parts(std::vector<std::unique_ptr<basic_part>> parts, PartCallback pc) const
+template <typename PartCallback>
+shader_template
+shader_template::specify_parts(const std::vector<std::unique_ptr<basic_part>> &parts, PartCallback pc) const
 {
 	// Create a map of new parts
-	std::map<std::string, std::unique_ptr<basic_part>*> new_parts;
+	std::map<std::string, const std::unique_ptr<basic_part> *> new_parts;
 	for (auto &part : parts)
 		new_parts.emplace(part->name(), &part);
 
@@ -29,7 +30,7 @@ shader_template shader_template::specify_parts(std::vector<std::unique_ptr<basic
 			if (new_part_it != new_parts.end())
 			{
 				// We have a specification for this part
-				specified_parts.emplace_back(std::move(*new_part_it->second));
+				specified_parts.emplace_back(std::move((*new_part_it->second)->clone()));
 			}
 			else
 			{
@@ -55,7 +56,7 @@ shader_template shader_template::specify_parts(std::vector<std::unique_ptr<basic
 
 	return shader_template(std::move(specified_parts));
 }
-}
-}
+} // namespace compiler
+} // namespace shadertoy
 
 #endif /* _SHADERTOY_COMPILER_SHADER_TEMPLATE_IPP_ */

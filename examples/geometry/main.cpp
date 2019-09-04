@@ -150,11 +150,11 @@ int main(int argc, char *argv[])
 			auto &chain(ctx.chain);
 
 			// The default vertex shader is not sufficient, we replace it with our own
-			context.buffer_template()[GL_VERTEX_SHADER] =
+			(*context.buffer_template())[GL_VERTEX_SHADER] =
 			compiler::shader_template::parse_file(ST_BASE_DIR "/geometry/vertex.glsl");
 
 			// Force compilation of new template
-			context.buffer_template().compile(GL_VERTEX_SHADER);
+			context.buffer_template()->compile(GL_VERTEX_SHADER);
 
 			// Load geometry
 			auto geometry(std::make_shared<tiny_geometry>(ST_BASE_DIR "/geometry/bunny.obj"));
@@ -164,7 +164,8 @@ int main(int argc, char *argv[])
 
 			// Create the image buffer
 			auto imageBuffer(std::make_shared<buffers::geometry_buffer>("image"));
-			imageBuffer->source_file(ST_BASE_DIR "/gradient.glsl");
+			shadertoy::sources::set_source_file(*imageBuffer, context.buffer_template(),
+												GL_FRAGMENT_SHADER, ST_BASE_DIR "/gradient.glsl");
 			imageBuffer->geometry(geometry);
 
 			// Add the image buffer to the swap chain, at the given size

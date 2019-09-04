@@ -18,17 +18,11 @@ using namespace shadertoy::compiler;
 using shadertoy::utils::log;
 using shadertoy::utils::throw_assert;
 
-shader_template program_template::specify_template_parts(const shader_template &source_template) const
-{
-	std::vector<std::unique_ptr<basic_part>> parts;
-	return specify_template_parts(std::move(parts), source_template);
-}
-
-shader_template program_template::specify_template_parts(std::vector<std::unique_ptr<basic_part>> parts,
+shader_template program_template::specify_template_parts(const std::vector<std::unique_ptr<basic_part>> &parts,
 														 const shader_template &source_template) const
 {
 	return source_template.specify_parts(
-	std::move(parts), [&](const std::string &part_name) -> std::vector<std::unique_ptr<compiler::basic_part>> {
+	parts, [&](const std::string &part_name) -> std::vector<std::unique_ptr<compiler::basic_part>> {
 		auto sep = part_name.find(':');
 		std::vector<std::unique_ptr<compiler::basic_part>> result;
 
@@ -62,6 +56,27 @@ shader_template program_template::specify_template_parts(std::vector<std::unique
 	});
 }
 
+std::vector<std::pair<std::string, std::string>>
+program_template::get_source(const shader_template &shader_template,
+							 const std::vector<std::unique_ptr<basic_part>> &parts) const
+{
+	auto specified_template = specify_template_parts(parts, shader_template);
+	auto sources(specified_template.sources());
+
+	if (log::shadertoy()->level() <= spdlog::level::trace)
+	{
+		std::stringstream ss;
+		for (auto &pair : sources)
+		{
+			ss << pair.second;
+		}
+		log::shadertoy()->trace("Compiled following code for {}:\n{}",
+								static_cast<const void *>(this), ss.str());
+	}
+
+	return sources;
+}
+
 program_template::program_template() = default;
 
 program_template::program_template(std::map<GLenum, shader_template> shader_templates)
@@ -72,6 +87,24 @@ program_template::program_template(std::map<GLenum, shader_template> shader_temp
 bool program_template::emplace(GLenum type, shader_template &&shader_template)
 {
 	return shader_templates_.emplace(type, std::move(shader_template)).second;
+}
+
+std::vector<std::pair<std::string, std::string>>
+program_template::get_source(GLenum type, const std::vector<std::unique_ptr<basic_part>> &parts) const
+{
+	auto it = shader_templates_.find(type);
+	throw_assert<template_error>(it != shader_templates_.end(), "Shader type {} not found in program_template {}",
+								 type, static_cast<const void *>(this));
+
+	return get_source(it->second, parts);
+}
+
+std::shared_ptr<backends::gx::shader> program_template::get_precompiled(GLenum type) const
+{
+	auto it = compiled_shaders_.find(type);
+	if (it == compiled_shaders_.end())
+		return {};
+	return it->second;
 }
 
 void program_template::compile(GLenum type)
@@ -85,18 +118,7 @@ void program_template::compile(GLenum type)
 	auto so(backends::current()->make_shader(type));
 
 	// Get sources
-	auto sources(specify_template_parts(it->second).sources());
-
-	if (log::shadertoy()->level() <= spdlog::level::trace)
-	{
-		std::stringstream ss;
-		for (auto &pair : sources)
-		{
-			ss << pair.second;
-		}
-		log::shadertoy()->trace("Compiled following code for {}:\n{}",
-								static_cast<const void *>(this), ss.str());
-	}
+	auto sources(get_source(it->second, {}));
 
 	// Compile shader
 	shader_compiler::compile(*so, sources);
@@ -104,265 +126,4 @@ void program_template::compile(GLenum type)
 	// Compilation succeeded, add to cache
 	compiled_shaders_.erase(type);
 	compiled_shaders_.emplace(type, std::move(so));
-}
-
-std::unique_ptr<backends::gx::program>
-program_template::compile(GLenum stage, std::map<GLenum, std::vector<std::unique_ptr<basic_part>>> parts,
-						  std::map<GLenum, std::string> *compiled_sources) const
-{
-	std::set<GLenum> allowed_shaders;
-
-	if (stage == GL_FRAGMENT_SHADER)
-	{
-		allowed_shaders.insert(GL_VERTEX_SHADER);
-		allowed_shaders.insert(GL_FRAGMENT_SHADER);
-	}
-	else if (stage == GL_COMPUTE_SHADER)
-	{
-		allowed_shaders.insert(GL_COMPUTE_SHADER);
-	}
-	else
-	{
-		throw shadertoy_error("invalid shader stage");
-	}
-
-	auto program(backends::current()->make_program());
-
-	std::vector<std::unique_ptr<backends::gx::shader>> attached_shaders;
-
-	// Compile and attach fully specified shaders
-	for (const auto &pair : shader_templates_)
-	{
-		if (allowed_shaders.find(pair.first) == allowed_shaders.end())
-			continue;
-
-		// Do not try to recompile precompiled shaders
-		if (compiled_shaders_.find(pair.first) != compiled_shaders_.end())
-		{
-			continue;
-		}
-
-		// Compile sources
-		std::vector<std::pair<std::string, std::string>> sources;
-
-		// Add parts given as argument
-		auto &specified_template = pair.second;
-		auto it = parts.find(pair.first);
-
-		// Get sources
-		if (it != parts.end())
-		{
-			sources = specify_template_parts(std::move(it->second), specified_template).sources();
-		}
-		else
-		{
-			sources = specified_template.sources();
-		}
-
-		if (log::shadertoy()->level() <= spdlog::level::trace || compiled_sources != nullptr)
-		{
-			std::stringstream ss;
-			for (auto &pair : sources)
-			{
-				ss << pair.second;
-			}
-
-			auto result(ss.str());
-
-			if (compiled_sources != nullptr)
-			{
-				compiled_sources->emplace(pair.first, result);
-			}
-
-			log::shadertoy()->trace("Compiled following code for {}:\n{}",
-									static_cast<const void *>(this), result);
-		}
-
-		// Compile shader
-		auto so(backends::current()->make_shader(pair.first));
-		shader_compiler::compile(*so, sources);
-
-		// Add shader for attachment
-		attached_shaders.emplace_back(std::move(so));
-	}
-
-	// Attach pre-compiled shaders
-	for (const auto &pair : compiled_shaders_)
-	{
-		if (allowed_shaders.find(pair.first) == allowed_shaders.end())
-			continue;
-
-		program->attach_shader(*pair.second);
-	}
-
-	// Attach compiled on-the-fly shaders
-	for (const auto &s : attached_shaders)
-	{
-		program->attach_shader(*s);
-	}
-
-	try
-	{
-		// Link program
-		program->link();
-	}
-	catch (const shadertoy::backends::gx::program_link_error &ex)
-	{
-		// Detach shaders
-		for (const auto &s : attached_shaders)
-		{
-			program->detach_shader(*s);
-		}
-
-		for (const auto &pair : compiled_shaders_)
-		{
-			if (allowed_shaders.find(pair.first) == allowed_shaders.end())
-				continue;
-
-			program->detach_shader(*pair.second);
-		}
-
-		throw;
-	}
-
-	// Detach shaders
-	for (const auto &s : attached_shaders)
-	{
-		program->detach_shader(*s);
-	}
-
-	for (const auto &pair : compiled_shaders_)
-	{
-		if (allowed_shaders.find(pair.first) == allowed_shaders.end())
-			continue;
-
-		program->detach_shader(*pair.second);
-	}
-
-	return program;
-}
-
-std::unique_ptr<backends::gx::program>
-program_template::compile(GLenum stage, const std::map<GLenum, shader_template> &templates,
-						  std::map<GLenum, std::string> *compiled_sources) const
-{
-	std::set<GLenum> allowed_shaders;
-
-	if (stage == GL_FRAGMENT_SHADER)
-	{
-		allowed_shaders.insert(GL_VERTEX_SHADER);
-		allowed_shaders.insert(GL_FRAGMENT_SHADER);
-	}
-	else if (stage == GL_COMPUTE_SHADER)
-	{
-		allowed_shaders.insert(GL_COMPUTE_SHADER);
-	}
-	else
-	{
-		throw shadertoy_error("invalid shader stage");
-	}
-
-	auto program(backends::current()->make_program());
-
-	std::vector<std::unique_ptr<backends::gx::shader>> attached_shaders;
-
-	// Compile and attach templates
-	for (const auto &pair : templates)
-	{
-		if (allowed_shaders.find(pair.first) == allowed_shaders.end())
-			continue;
-
-		// Compile sources
-		auto sources(pair.second.sources());
-
-		if (log::shadertoy()->level() <= spdlog::level::trace || compiled_sources != nullptr)
-		{
-			std::stringstream ss;
-			for (auto &pair : sources)
-			{
-				ss << pair.second;
-			}
-
-			auto result(ss.str());
-
-			if (compiled_sources != nullptr)
-			{
-				compiled_sources->emplace(pair.first, result);
-			}
-
-			log::shadertoy()->trace("Compiled following code for {}:\n{}", (void *)this, result);
-		}
-
-		// Compile shader
-		auto so(backends::current()->make_shader(pair.first));
-		shader_compiler::compile(*so, sources);
-
-		// Add shader for attachment
-		attached_shaders.emplace_back(std::move(so));
-	}
-
-	// Attach pre-compiled shaders
-	for (const auto &pair : compiled_shaders_)
-	{
-		if (allowed_shaders.find(pair.first) == allowed_shaders.end())
-			continue;
-
-		// Only attach shaders that are not being overriden
-		if (templates.find(pair.first) == templates.end())
-		{
-			program->attach_shader(*pair.second);
-		}
-	}
-
-	// Attach compiled on-the-fly shaders
-	for (const auto &s : attached_shaders)
-	{
-		program->attach_shader(*s);
-	}
-
-	try
-	{
-		// Link program
-		program->link();
-	}
-	catch (const shadertoy::backends::gx::program_link_error &ex)
-	{
-		// Detach shaders
-		for (const auto &s : attached_shaders)
-		{
-			program->detach_shader(*s);
-		}
-
-		for (const auto &pair : compiled_shaders_)
-		{
-			if (allowed_shaders.find(pair.first) == allowed_shaders.end())
-				continue;
-
-			if (templates.find(pair.first) == templates.end())
-			{
-				program->detach_shader(*pair.second);
-			}
-		}
-
-		throw;
-	}
-
-	// Detach shaders
-	for (const auto &s : attached_shaders)
-	{
-		program->detach_shader(*s);
-	}
-
-	for (const auto &pair : compiled_shaders_)
-	{
-		if (allowed_shaders.find(pair.first) == allowed_shaders.end())
-			continue;
-
-		if (templates.find(pair.first) == templates.end())
-		{
-			program->detach_shader(*pair.second);
-		}
-	}
-
-	return program;
 }

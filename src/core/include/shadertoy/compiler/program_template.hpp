@@ -37,17 +37,18 @@ class shadertoy_EXPORT program_template
 	 * @brief List of compiled shaders. Fully specified templates can be compiled to this
 	 * cache, which will be reused when compiling derived programs.
 	 */
-	std::map<GLenum, std::unique_ptr<backends::gx::shader>> compiled_shaders_;
+	std::map<GLenum, std::shared_ptr<backends::gx::shader>> compiled_shaders_;
 
 	/**
 	 * @brief List of preprocessor definition objects
 	 */
 	std::map<std::string, std::shared_ptr<preprocessor_defines>> shader_defines_;
 
-	shader_template specify_template_parts(const shader_template &source_template) const;
-
-	shader_template specify_template_parts(std::vector<std::unique_ptr<basic_part>> parts,
+	shader_template specify_template_parts(const std::vector<std::unique_ptr<basic_part>> &parts,
 										   const shader_template &source_template) const;
+
+	std::vector<std::pair<std::string, std::string>>
+	get_source(const shader_template &shader_template, const std::vector<std::unique_ptr<basic_part>> &parts) const;
 
 	public:
 	/**
@@ -96,47 +97,43 @@ class shadertoy_EXPORT program_template
 	}
 
 	/**
+	 * @brief Checks if this template has the given shader type template
+	 *
+	 * @param type Shader type to check
+	 *
+	 * @return true if this template contains a shader template for the given type
+	 */
+	inline bool has_shader(GLenum type) const
+	{
+		return shader_templates_.find(type) != shader_templates_.end();
+	}
+
+	/**
+	 * @brief Builds the source of a given shader for the given type
+	 *
+	 * @param type  Shader type to build
+	 * @param parts Parts to fill in the missing parts of the shader template
+	 *
+	 * @return Compiled program sources as (name, source) pairs
+	 */
+	std::vector<std::pair<std::string, std::string>>
+	get_source(GLenum type, const std::vector<std::unique_ptr<basic_part>> &parts) const;
+
+	/**
+	 * @brief Get a precompiled shader object for a given type, if available
+	 *
+	 * @param type Shader type to fetch
+	 *
+	 * @return Precompiled shader object, or null if no such shader is available
+	 */
+	std::shared_ptr<backends::gx::shader> get_precompiled(GLenum type) const;
+
+	/**
 	 * @brief Compiles a fully specified shader in the cache of this program_template
 	 *
 	 * @param type Type of the shader to precompile
 	 */
 	void compile(GLenum type);
-
-	/**
-	 * @brief Compile this program_template into a GL program.
-	 *
-	 * @param stage          Target stage. If GL_FRAGMENT_SHADER, will compile both GL_VERTEX_SHADER
-	 *                       and GL_FRAGMENT_SHADER and link them together. If GL_COMPUTE_SHADER,
-	 * will only compile and link GL_COMPUTE_SHADER.
-	 * @param specifications Map of specifications for each shader template. This is
-	 *                       used to specify missing parts in all templates before
-	 *                       compiling. Pre-compiled shaders are used as-is and cannot
-	 *                       be overwritten.
-	 *
-	 * @param[out] compiled_source Optional. Return value for the compiled sources of the program.
-	 *
-	 * @return Compiled program
-	 */
-	std::unique_ptr<backends::gx::program>
-	compile(GLenum stage, std::map<GLenum, std::vector<std::unique_ptr<basic_part>>> parts,
-			std::map<GLenum, std::string> *compiled_sources = nullptr) const;
-
-	/**
-	 * @brief Compile the given fully specified templates into a GL program.
-	 *
-	 * @param stage     Target stage. If GL_FRAGMENT_SHADER, will compile both GL_VERTEX_SHADER
-	 *                  and GL_FRAGMENT_SHADER and link them together. If GL_COMPUTE_SHADER, will
-	 *                  only compile and link GL_COMPUTE_SHADER.
-	 * @param templates Map of fully specified templates. Entries from this map will
-	 *                  be used instead of the precompiled shaders if there is a conflict.
-	 *
-	 * @param[out] compiled_source Optional. Return value for the compiled sources of the program.
-	 *
-	 * @return Compiled program
-	 */
-	std::unique_ptr<backends::gx::program>
-	compile(GLenum stage, const std::map<GLenum, shader_template> &templates,
-			std::map<GLenum, std::string> *compiled_sources = nullptr) const;
 
 	/**
 	 * @brief Get the list of supported shader define objects

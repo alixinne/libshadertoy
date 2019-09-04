@@ -15,29 +15,17 @@
 
 using namespace shadertoy;
 
-program_host::program_host() : source_map_(nullptr) {}
+program_host::program_host() {}
 
 void program_host::init_program(const render_context &context, GLenum stage)
 {
 	if (stage != GL_FRAGMENT_SHADER && stage != GL_COMPUTE_SHADER)
 		throw shadertoy_error("invalid shader stage");
 
-	// Load the fragment shader for this buffer
-	std::vector<std::unique_ptr<compiler::basic_part>> fs_template_parts;
-
-	// Add the uniform inputs for this buffer
-	fs_template_parts.emplace_back(std::make_unique<compiler::input_part>("buffer:inputs", inputs_));
-	if (source_)
-	{
-		fs_template_parts.emplace_back(source_->clone());
-	}
-
 	// Compile
-	std::map<GLenum, std::vector<std::unique_ptr<compiler::basic_part>>> parts;
-	parts.emplace(stage, std::move(fs_template_parts));
-
-	const auto &buffer_template(override_program_ ? *override_program_ : context.buffer_template());
-	program_ = buffer_template.compile(stage, std::move(parts), source_map_);
+	program_ = source_->compile_program(stage == GL_COMPUTE_SHADER ?
+										std::vector<GLenum>{ GL_COMPUTE_SHADER } :
+										std::vector<GLenum>{ GL_VERTEX_SHADER, GL_FRAGMENT_SHADER });
 
 	// Discover program interface
 	program_interface_ = std::make_unique<program_interface>(*program_);
@@ -146,16 +134,4 @@ void program_host::prepare_render(const render_context &context)
 	{
 		channel_resolutions_resource->set_value(resolutions.size(), resolutions.data());
 	}
-}
-
-void program_host::source(const std::string &new_source)
-{
-	source_ = std::unique_ptr<compiler::basic_part>(
-	std::make_unique<compiler::template_part>("buffer:sources", new_source));
-}
-
-void program_host::source_file(const std::string &new_file)
-{
-	source_ =
-	std::unique_ptr<compiler::basic_part>(std::make_unique<compiler::file_part>("buffer:sources", new_file));
 }

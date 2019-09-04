@@ -85,7 +85,7 @@ class shadertoy_EXPORT render_context
 	mutable std::unique_ptr<geometry::screen_quad> screen_quad_;
 
 	/// Buffer source template
-	compiler::program_template buffer_template_;
+	std::shared_ptr<compiler::program_template> buffer_template_;
 
 	/// Default error input
 	std::shared_ptr<inputs::error_input> error_input_;
@@ -138,14 +138,7 @@ class shadertoy_EXPORT render_context
 	 *
 	 * @return Reference to the shader_template in use by this context
 	 */
-	inline const compiler::program_template &buffer_template() const { return buffer_template_; }
-
-	/**
-	 * @brief  Get a reference to the buffer template
-	 *
-	 * @return Reference to the shader_template in use by this context
-	 */
-	inline compiler::program_template &buffer_template() { return buffer_template_; }
+	inline const std::shared_ptr<compiler::program_template> &buffer_template() const { return buffer_template_; }
 
 	/**
 	 * @brief  Get a reference to the default error_input instance

@@ -100,76 +100,18 @@ class shadertoy_EXPORT program_buffer : public gl_buffer
 	inline std::deque<program_input> &inputs() { return host_.inputs(); }
 
 	/**
-	 * @brief      Get the current override program template for this buffer
+	 * @brief       Get a reference to the current source for this buffer
 	 *
-	 * @return     Pointer to the override program, or null if this buffer is using the default program template
+	 * @return      Pointer to the source
 	 */
-	inline const std::shared_ptr<compiler::program_template> &override_program() const
-	{
-		return host_.override_program();
-	}
+	inline const std::unique_ptr<sources::basic_source> &source() const { return host_.source(); }
 
 	/**
-	 * @brief      Set the current override program template for this buffer
+	 * @brief            Set the sources for this buffer
 	 *
-	 * @param new_program Pointer to the override program template, or null if
-	 *                    this buffer should use the default program template
+	 * @param new_source New source object to use for compiling this buffer
 	 */
-	inline void override_program(std::shared_ptr<compiler::program_template> new_program)
-	{
-		host_.override_program(new_program);
-	}
-
-	/**
-	 * @brief       Get a reference to the current source part for this buffer
-	 *
-	 * @return      Pointer to the source part
-	 */
-	inline const std::unique_ptr<compiler::basic_part> &source() const { return host_.source(); }
-
-	/**
-	 * @brief       Set the sources for this buffer to the given part
-	 *
-	 * @param new_part New part to use as sources for this buffer
-	 */
-	inline void source(std::unique_ptr<compiler::basic_part> new_part)
-	{
-		host_.source(std::move(new_part));
-	}
-
-	/**
-	 * @brief       Set the sources for this buffer from the given part
-	 *
-	 * @param new_source New source string to use for compiling this buffer
-	 */
-	inline void source(const std::string &new_source) { host_.source(new_source); }
-
-	/**
-	 * @brief       Set the sources for this buffer from the given part from a file
-	 *
-	 * The target file will be read everytime this buffer is being compiled. Use
-	 * program_buffer#source if you want to cache the file's contents.
-	 *
-	 * @param new_file New file to load the sources from
-	 */
-	inline void source_file(const std::string &new_file) { host_.source_file(new_file); }
-
-	/**
-	 * @brief         Get the current source map pointer
-	 *
-	 * @return        Current source map pointer
-	 */
-	inline std::map<GLenum, std::string> *source_map() const { return host_.source_map(); }
-
-	/**
-	 * @brief         Set the source map pointer for the compiled sources
-	 *
-	 * The pointer must either be null or remain valid until the sources for this
-	 * buffer have been compiled.
-	 *
-	 * @param new_map New source map pointer
-	 */
-	inline void source_map(std::map<GLenum, std::string> *new_map) { host_.source_map(new_map); }
+	inline void source(std::unique_ptr<sources::basic_source> new_source) { host_.source(std::move(new_source)); }
 
 	/**
 	 * @brief Obtains the list of outputs for this buffer.

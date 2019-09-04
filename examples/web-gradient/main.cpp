@@ -112,7 +112,8 @@ int main()
 		// since we don't have program interface introspection on WebGL (thus we can't
 		// detect outputs).
 		auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image", 1));
-		imageBuffer->source_file("gradient.glsl");
+		shadertoy::sources::set_source_file(*imageBuffer, ctx.buffer_template(),
+				GL_FRAGMENT_SHADER, "gradient.glsl");
 
 		// Add the image buffer to the swap chain, at the given size The
 		// default_framebuffer policy makes this buffer draw directly to the

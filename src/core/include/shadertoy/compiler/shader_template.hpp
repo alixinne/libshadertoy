@@ -107,7 +107,7 @@ class shadertoy_EXPORT shader_template
 	 * @return Copy of this template with unspecified replaced with specified parts from \p parts
 	 */
 	template <typename PartCallback>
-	shader_template specify_parts(std::vector<std::unique_ptr<basic_part>> parts, PartCallback pc) const;
+	shader_template specify_parts(const std::vector<std::unique_ptr<basic_part>> &parts, PartCallback pc) const;
 
 	/**
 	 * @brief Specify some parts in this template

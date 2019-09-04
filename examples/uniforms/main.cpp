@@ -66,7 +66,8 @@ int main(int argc, char *argv[])
 
 			// Create the image buffer
 			auto imageBuffer(std::make_shared<shadertoy::buffers::toy_buffer>("image"));
-			imageBuffer->source_file(ST_BASE_DIR "/uniforms/gradient-uniform.glsl");
+			shadertoy::sources::set_source_file(*imageBuffer, context.buffer_template(), GL_FRAGMENT_SHADER,
+												ST_BASE_DIR "/uniforms/gradient-uniform.glsl");
 
 			// Add the image buffer to the swap chain
 			chain.emplace_back(imageBuffer, shadertoy::make_size_ref(ctx.render_size));

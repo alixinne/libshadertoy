@@ -18,46 +18,51 @@
 
 #include "shadertoy/geometry/screen_quad.hpp"
 
+#include "shadertoy/sources/string_source.hpp"
+
 using namespace shadertoy;
 using namespace shadertoy::utils;
 
-render_context::render_context() : error_input_(std::make_shared<inputs::error_input>())
+render_context::render_context()
+: buffer_template_(std::make_shared<compiler::program_template>()),
+  error_input_(std::make_shared<inputs::error_input>())
 {
 	auto preprocessor_defines(std::make_shared<compiler::preprocessor_defines>());
 
 	// Add LIBSHADERTOY definition
 	preprocessor_defines->definitions().emplace("LIBSHADERTOY", "1");
 
-	buffer_template_.shader_defines().emplace("glsl", preprocessor_defines);
+	buffer_template_->shader_defines().emplace("glsl", preprocessor_defines);
 
 #if SHADERTOY_HAS_GLSL_440
-	buffer_template_.emplace(GL_VERTEX_SHADER, compiler::shader_template::parse(
-											   std::string(std::addressof(screen_quad_vert_glsl[0]), screen_quad_vert_glsl_size),
-											   "libshadertoy/shaders/screen_quad.vert.glsl"));
+	buffer_template_->emplace(GL_VERTEX_SHADER, compiler::shader_template::parse(
+												std::string(std::addressof(screen_quad_vert_glsl[0]), screen_quad_vert_glsl_size),
+												"libshadertoy/shaders/screen_quad.vert.glsl"));
 
-	buffer_template_.emplace(GL_FRAGMENT_SHADER,
-							 compiler::shader_template::parse(
-							 std::string(std::addressof(shadertoy_frag_glsl[0]), shadertoy_frag_glsl_size),
-							 "libshadertoy/shaders/shadertoy.frag.glsl"));
+	buffer_template_->emplace(GL_FRAGMENT_SHADER,
+							  compiler::shader_template::parse(
+							  std::string(std::addressof(shadertoy_frag_glsl[0]), shadertoy_frag_glsl_size),
+							  "libshadertoy/shaders/shadertoy.frag.glsl"));
 
-	buffer_template_.emplace(GL_COMPUTE_SHADER,
-							 compiler::shader_template::parse(
-							 std::string(std::addressof(shadertoy_comp_glsl[0]), shadertoy_comp_glsl_size),
-							 "libshadertoy/shaders/shadertoy.comp.glsl"));
+	buffer_template_->emplace(GL_COMPUTE_SHADER,
+							  compiler::shader_template::parse(
+							  std::string(std::addressof(shadertoy_comp_glsl[0]), shadertoy_comp_glsl_size),
+							  "libshadertoy/shaders/shadertoy.comp.glsl"));
 #else
-	buffer_template_.emplace(GL_VERTEX_SHADER, compiler::shader_template::parse(
-											   std::string(std::addressof(screen_quad_vert_es3_glsl[0]), screen_quad_vert_es3_glsl_size),
-											   "libshadertoy/shaders/screen_quad.vert.es3.glsl"));
+	buffer_template_->emplace(GL_VERTEX_SHADER, compiler::shader_template::parse(
+												std::string(std::addressof(screen_quad_vert_es3_glsl[0]),
+															screen_quad_vert_es3_glsl_size),
+												"libshadertoy/shaders/screen_quad.vert.es3.glsl"));
 
-	buffer_template_.emplace(GL_FRAGMENT_SHADER,
-							 compiler::shader_template::parse(
-							 std::string(std::addressof(shadertoy_frag_es3_glsl[0]), shadertoy_frag_es3_glsl_size),
-							 "libshadertoy/shaders/shadertoy.frag.es3.glsl"));
+	buffer_template_->emplace(GL_FRAGMENT_SHADER,
+							  compiler::shader_template::parse(
+							  std::string(std::addressof(shadertoy_frag_es3_glsl[0]), shadertoy_frag_es3_glsl_size),
+							  "libshadertoy/shaders/shadertoy.frag.es3.glsl"));
 
 #endif
 
 	// Compile screen quad vertex shader
-	buffer_template_.compile(GL_VERTEX_SHADER);
+	buffer_template_->compile(GL_VERTEX_SHADER);
 }
 
 const backends::gx::program &render_context::screen_prog() const
@@ -66,15 +71,16 @@ const backends::gx::program &render_context::screen_prog() const
 	{
 		log::shadertoy()->trace("Compiling screen programs for context {}", static_cast<const void *>(this));
 
-		// Compile screen program
-		std::map<GLenum, compiler::shader_template> overrides;
-		overrides.emplace(GL_FRAGMENT_SHADER,
-						  compiler::shader_template(
-						  compiler::template_part("shadertoy:screenquad",
-												  std::string(std::addressof(screen_quad_frag_glsl[0]),
-															  screen_quad_frag_glsl_size))));
+		sources::string_source screen_prog_sources(
+		{ { GL_VERTEX_SHADER,
+			{ "libshadertoy/shaders/screen_quad.vert.glsl",
+			  std::string(std::addressof(screen_quad_vert_glsl[0]), screen_quad_vert_glsl_size) } },
+		  { GL_FRAGMENT_SHADER,
+			{ "libshadertoy/shaders/screen_quad.frag.glsl",
+			  std::string(std::addressof(screen_quad_frag_glsl[0]), screen_quad_frag_glsl_size) } } });
 
-		screen_prog_ = buffer_template_.compile(GL_FRAGMENT_SHADER, overrides);
+		// Compile screen program
+		screen_prog_ = screen_prog_sources.compile_program({ GL_VERTEX_SHADER, GL_FRAGMENT_SHADER });
 	}
 
 	return *screen_prog_;

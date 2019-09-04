@@ -10,6 +10,7 @@ namespace shadertoy
 #include "shadertoy/geometry.hpp"
 #include "shadertoy/inputs.hpp"
 #include "shadertoy/members.hpp"
+#include "shadertoy/sources.hpp"
 #include "shadertoy/utils.hpp"
 
 #include "shadertoy/io_resource.hpp"
