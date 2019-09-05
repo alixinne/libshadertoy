@@ -5,6 +5,8 @@
 
 #include "shadertoy/inputs/basic_input.hpp"
 
+#include <string>
+
 namespace shadertoy
 {
 

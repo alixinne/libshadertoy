@@ -29,6 +29,9 @@ class shadertoy_EXPORT stack_source : public basic_source
 	 */
 	stack_source(std::vector<std::unique_ptr<basic_source>> sources);
 
+	stack_source(const stack_source &) = delete;
+	stack_source &operator=(const stack_source &) = delete;
+
 	std::vector<std::pair<std::string, std::string>> get_source(GLenum shader_type) const final;
 
 	std::shared_ptr<backends::gx::shader> get_precompiled(GLenum shader_type) const final;

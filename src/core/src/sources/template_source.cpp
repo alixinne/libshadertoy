@@ -1,9 +1,6 @@
-#include <sstream>
-
-#include "shadertoy/shadertoy_error.hpp"
 #include "shadertoy/sources/template_source.hpp"
 
-using namespace shadertoy::backends;
+using namespace shadertoy;
 using namespace shadertoy::sources;
 
 template_source::template_source(std::shared_ptr<compiler::program_template> prog_template,
@@ -20,7 +17,7 @@ std::vector<std::pair<std::string, std::string>> template_source::get_source(GLe
 	return template_->get_source(shader_type, it->second);
 }
 
-std::shared_ptr<gx::shader> template_source::get_precompiled(GLenum shader_type) const
+std::shared_ptr<backends::gx::shader> template_source::get_precompiled(GLenum shader_type) const
 {
 	return template_->get_precompiled(shader_type);
 }
