@@ -45,9 +45,6 @@ set(SHADERTOY_LIB_DIR ${CMAKE_CURRENT_BINARY_DIR}/lib)
 # Print a message with the version number
 message(STATUS "shadertoy v${ST_VERSION_FULL} (${SHADERTOY_VERSION_STANDALONE})")
 
-# Export compile commands for autocomplete
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
 # Use bundled spdlog
 set(SPDLOG_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(SPDLOG_BUILD_TESTING OFF CACHE BOOL "" FORCE)

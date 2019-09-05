@@ -133,9 +133,11 @@ function(shadertoy_subtarget base_target_name)
 
 	if (_library_types_count GREATER 1)
 		# Rename targets if we use .a archives
-		set_target_properties(${base_target_name}-shared PROPERTIES OUTPUT_NAME ${base_target_name}$<$<CONFIG:DEBUG>:d>)
+		set_target_properties(${base_target_name}-shared PROPERTIES
+			OUTPUT_NAME ${base_target_name}$<$<AND:$<CONFIG:DEBUG>,$<STREQUAL:ON,${SHADERTOY_STANDALONE}>>:d>)
 		if(${CMAKE_SHARED_LIBRARY_SUFFIX} MATCHES "\\.so")
-			set_target_properties(${base_target_name}-static PROPERTIES OUTPUT_NAME ${base_target_name}$<$<CONFIG:DEBUG>:d>)
+			set_target_properties(${base_target_name}-static PROPERTIES
+				OUTPUT_NAME ${base_target_name}$<$<AND:$<CONFIG:DEBUG>,$<STREQUAL:ON,${SHADERTOY_STANDALONE}>>:d>)
 		endif()
 	endif()
 endfunction()
