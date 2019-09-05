@@ -41,6 +41,8 @@ class shadertoy_EXPORT basic_buffer
 	basic_buffer(std::string id);
 
 	public:
+	virtual ~basic_buffer() = default;
+
 	/**
 	 * @brief      Obtain the identifier of this buffer
 	 *

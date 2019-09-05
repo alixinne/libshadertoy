@@ -58,6 +58,8 @@ class shadertoy_EXPORT basic_member
 	virtual void allocate_member(const swap_chain &chain, const render_context &context) = 0;
 
 	public:
+	virtual ~basic_member() = default;
+
 	/**
 	 * @brief Render this member
 	 *
