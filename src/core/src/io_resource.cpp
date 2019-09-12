@@ -103,6 +103,127 @@ void io_resource::output_buffer::swap(const output_buffer_spec &spec, const io_r
 	}
 }
 
+std::pair<GLenum, GLenum> get_preferred_format(GLenum internal_format)
+{
+	switch (internal_format)
+	{
+		case GL_R8:
+			return {GL_RED, GL_UNSIGNED_BYTE};
+		case GL_R8_SNORM:
+			return {GL_RED, GL_BYTE};
+		case GL_R16F:
+			return {GL_RED, GL_HALF_FLOAT};
+		case GL_R32F:
+			return {GL_RED, GL_FLOAT};
+		case GL_R8UI:
+			return {GL_RED_INTEGER, GL_UNSIGNED_BYTE};
+		case GL_R8I:
+			return {GL_RED_INTEGER, GL_BYTE};
+		case GL_R16UI:
+			return {GL_RED_INTEGER, GL_UNSIGNED_SHORT};
+		case GL_R16I:
+			return {GL_RED_INTEGER, GL_SHORT};
+		case GL_R32UI:
+			return {GL_RED_INTEGER, GL_UNSIGNED_INT};
+		case GL_R32I:
+			return {GL_RED_INTEGER, GL_INT};
+
+		case GL_RG8:
+			return {GL_RG, GL_UNSIGNED_BYTE};
+		case GL_RG8_SNORM:
+			return {GL_RG, GL_BYTE};
+		case GL_RG16F:
+			return {GL_RG, GL_HALF_FLOAT};
+		case GL_RG32F:
+			return {GL_RG, GL_FLOAT};
+		case GL_RG8UI:
+			return {GL_RG_INTEGER, GL_UNSIGNED_BYTE};
+		case GL_RG8I:
+			return {GL_RG_INTEGER, GL_BYTE};
+		case GL_RG16UI:
+			return {GL_RG_INTEGER, GL_UNSIGNED_SHORT};
+		case GL_RG16I:
+			return {GL_RG_INTEGER, GL_SHORT};
+		case GL_RG32UI:
+			return {GL_RG_INTEGER, GL_UNSIGNED_INT};
+		case GL_RG32I:
+			return {GL_RG_INTEGER, GL_INT};
+
+		case GL_RGB8:
+		case GL_SRGB8:
+		case GL_RGB565:
+			return {GL_RGB, GL_UNSIGNED_BYTE};
+		case GL_RGB8_SNORM:
+			return {GL_RGB, GL_BYTE};
+		case GL_R11F_G11F_B10F:
+			return {GL_RGB, GL_FLOAT};
+		case GL_RGB9_E5:
+			return {GL_RGB, GL_FLOAT};
+		case GL_RGB16F:
+			return {GL_RGB, GL_HALF_FLOAT};
+		case GL_RGB32F:
+			return {GL_RGB, GL_FLOAT};
+		case GL_RGB8UI:
+			return {GL_RGB_INTEGER, GL_UNSIGNED_BYTE};
+		case GL_RGB8I:
+			return {GL_RGB_INTEGER, GL_BYTE};
+		case GL_RGB16UI:
+			return {GL_RGB_INTEGER, GL_UNSIGNED_SHORT};
+		case GL_RGB16I:
+			return {GL_RGB_INTEGER, GL_SHORT};
+		case GL_RGB32UI:
+			return {GL_RGB_INTEGER, GL_UNSIGNED_INT};
+		case GL_RGB32I:
+			return {GL_RGB_INTEGER, GL_INT};
+
+		case GL_RGBA8:
+			return {GL_RGBA, GL_UNSIGNED_BYTE};
+		case GL_SRGB8_ALPHA8:
+			return {GL_RGBA, GL_UNSIGNED_BYTE};
+		case GL_RGBA8_SNORM:
+			return {GL_RGBA, GL_BYTE};
+		case GL_RGB5_A1:
+			return {GL_RGBA, GL_UNSIGNED_BYTE};
+		case GL_RGBA4:
+			return {GL_RGBA, GL_UNSIGNED_BYTE};
+		case GL_RGB10_A2:
+			return {GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV};
+		case GL_RGBA16F:
+			return {GL_RGBA, GL_HALF_FLOAT};
+		case GL_RGBA32F:
+			return {GL_RGBA, GL_FLOAT};
+		case GL_RGBA8UI:
+			return {GL_RGBA_INTEGER, GL_UNSIGNED_BYTE};
+		case GL_RGBA8I:
+			return {GL_RGBA_INTEGER, GL_BYTE};
+		case GL_RGB10_A2UI:
+			return {GL_RGBA_INTEGER, GL_UNSIGNED_INT_2_10_10_10_REV};
+		case GL_RGBA16UI:
+			return {GL_RGBA_INTEGER, GL_UNSIGNED_SHORT};
+		case GL_RGBA16I:
+			return {GL_RGBA_INTEGER, GL_SHORT};
+		case GL_RGBA32UI:
+			return {GL_RGBA_INTEGER, GL_UNSIGNED_INT};
+		case GL_RGBA32I:
+			return {GL_RGBA_INTEGER, GL_INT};
+
+		case GL_DEPTH_COMPONENT16:
+			return {GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT};
+		case GL_DEPTH_COMPONENT24:
+			return {GL_DEPTH_COMPONENT, GL_UNSIGNED_INT};
+		case GL_DEPTH_COMPONENT32F:
+			return {GL_DEPTH_COMPONENT, GL_FLOAT};
+
+		case GL_DEPTH24_STENCIL8:
+			return {GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8};
+		case GL_DEPTH32F_STENCIL8:
+			return {GL_DEPTH_STENCIL, GL_FLOAT_32_UNSIGNED_INT_24_8_REV};
+
+		default:
+			return {internal_format, GL_UNSIGNED_BYTE};
+	}
+}
+
 void io_resource::output_buffer::init_render_texture(const output_buffer_spec &spec, rsize size,
 													 std::unique_ptr<backends::gx::texture> &texptr)
 {
@@ -113,13 +234,14 @@ void io_resource::output_buffer::init_render_texture(const output_buffer_spec &s
 	}
 
 	// Allocate texture storage according to width/height
-	texptr->image_2d(GL_TEXTURE_2D, 0, spec.internal_format, size.width, size.height, 0, GL_BGRA,
-					 GL_UNSIGNED_BYTE, nullptr);
+	auto format = get_preferred_format(spec.internal_format);
+	texptr->image_2d(GL_TEXTURE_2D, 0, spec.internal_format, size.width, size.height, 0, format.first,
+					 format.second, nullptr);
 
 #if SHADERTOY_HAS_CLEAR_TEX_IMAGE
 	// Clear the target texture so it doesn't contain garbage
 	uint8_t black[4] = { 0 };
-	texptr->clear_tex_image(0, GL_BGRA, GL_UNSIGNED_BYTE, std::begin(black));
+	texptr->clear_tex_image(0, format.first, GL_UNSIGNED_BYTE, std::begin(black));
 #endif
 
 	log::shadertoy()->debug("Initialized {}x{} ({}) render texture at {} for {} (GL id {})", size.width,
