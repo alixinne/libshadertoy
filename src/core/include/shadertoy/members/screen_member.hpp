@@ -166,7 +166,7 @@ class shadertoy_EXPORT screen_member : public basic_member
 	 *
 	 * @param new_name New output name. Must be less than the number of outputs the target member has.
 	 */
-	inline void output_name(size_t new_name) { output_name_ = new_name; }
+	inline void output_name(output_name_t new_name) { output_name_ = new_name; }
 
 	/**
 	 * @brief Obtain a reference to the sampler object of this member
