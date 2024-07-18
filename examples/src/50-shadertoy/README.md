@@ -37,4 +37,4 @@ functionality in libshadertoy. Note that in order to support progressive JPEG
 
 ## Copyright
 
-libshadertoy - Vincent Tavernier <vince.tavernier@gmail.com>
+libshadertoy - Alixinne <alixinne@pm.me>

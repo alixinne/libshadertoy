@@ -1,6 +1,6 @@
 # libshadertoy
 
-[![Build Status](https://travis-ci.com/vtavernier/libshadertoy.svg?token=qW3fGvxWik6fwUsruShT&branch=master)](https://travis-ci.com/vtavernier/libshadertoy) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/395ff6e1a5ff42cc935229139ad0a5de)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vtavernier/libshadertoy&amp;utm_campaign=Badge_Grade) ![Bintray](https://img.shields.io/bintray/v/vtavernier/libshadertoy/libshadertoy.svg) [![master docs](https://img.shields.io/badge/docs-master-blue.svg)](https://vtavernier.github.io/libshadertoy/) [![develop docs](https://img.shields.io/badge/docs-develop-blue.svg)](https://vtavernier.github.io/libshadertoy/develop/) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.com/alixinne/libshadertoy.svg?token=qW3fGvxWik6fwUsruShT&branch=master)](https://travis-ci.com/alixinne/libshadertoy) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/395ff6e1a5ff42cc935229139ad0a5de)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=alixinne/libshadertoy&amp;utm_campaign=Badge_Grade) ![Bintray](https://img.shields.io/bintray/v/alixinne/libshadertoy/libshadertoy.svg) [![master docs](https://img.shields.io/badge/docs-master-blue.svg)](https://alixinne.github.io/libshadertoy/) [![develop docs](https://img.shields.io/badge/docs-develop-blue.svg)](https://alixinne.github.io/libshadertoy/develop/) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 *libshadertoy* is a C++ library for rendering multipass programs using OpenGL
 desktop. Its defaults allow running programs written for the
@@ -16,7 +16,7 @@ Debian packages.
 
 ## Documentation
 
-Read the [online documentation](https://vtavernier.github.io/libshadertoy/).
+Read the [online documentation](https://alixinne.github.io/libshadertoy/).
 
 ## Usage
 
@@ -35,4 +35,4 @@ such as `iFrame`, `iTime` and such.
 
 ## Copyright
 
-libshadertoy - Vincent Tavernier <vince.tavernier@gmail.com>
+libshadertoy - Alixinne <alixinne@pm.me>

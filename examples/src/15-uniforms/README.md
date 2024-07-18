@@ -15,4 +15,4 @@ with a custom shader, using libshadertoy.
 
 ## Copyright
 
-libshadertoy - Vincent Tavernier <vince.tavernier@gmail.com>
+libshadertoy - Alixinne <alixinne@pm.me>

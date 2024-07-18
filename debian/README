@@ -5,7 +5,7 @@ libshadertoy is a C++ library for rendering ShaderToy programs on an OpenGL
 desktop. This repository also contains the needed files to package this library
 as native Debian packages.
 
-See the README on https://github.com/vtavernier/libshadertoy or the installed
+See the README on https://github.com/alixinne/libshadertoy or the installed
 docs in /usr/share/doc/shadertoy/html/index.html for more detail.
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Tue, 11 Jul 2017 15:05:18 +0200
+ -- Alixinne <alixinne@pm.me>  Tue, 11 Jul 2017 15:05:18 +0200

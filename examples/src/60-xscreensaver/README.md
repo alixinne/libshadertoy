@@ -22,7 +22,7 @@ Add it to your ~/.xscreensaver, see `main.c` for possible options.
 
 ## Copyright
 
-libshadertoy - Vincent Tavernier <vince.tavernier@gmail.com>
+libshadertoy - Alixinne <alixinne@pm.me>
 
 All code in the `xscreensaver/` directory is from the 5.38 release
 of xscreensaver by Jamie Zawinski ([website](https://www.jwz.org/xscreensaver/)).

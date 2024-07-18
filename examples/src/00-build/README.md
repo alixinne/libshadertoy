@@ -15,4 +15,4 @@ occurred.
 
 ## Copyright
 
-libshadertoy - Vincent Tavernier <vince.tavernier@gmail.com>
+libshadertoy - Alixinne <alixinne@pm.me>

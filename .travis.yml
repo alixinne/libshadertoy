@@ -6,7 +6,7 @@ services:
 env:
   global:
     - PACKAGE_NAME=libshadertoy
-    - BINTRAY_ORG=vtavernier
+    - BINTRAY_ORG=alixinne
 
 cache:
   directories:
@@ -101,5 +101,5 @@ deploy:
     - "build/*.7z"
     - "*.deb"
   on:
-    repo: vtavernier/libshadertoy
+    repo: alixinne/libshadertoy
     tags: true

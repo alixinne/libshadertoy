@@ -1,13 +1,13 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: libshadertoy
-Source: <https://github.com/vtavernier/libshadertoy>
+Source: <https://github.com/alixinne/libshadertoy>
 
 Files: *
-Copyright: 2017 Vincent Tavernier <vince.tavernier@gmail.com
+Copyright: 2017 Alixinne <alixinne@pm.me
 License: MIT
 
 Files: debian/*
-Copyright: 2017 Vincent Tavernier <vince.tavernier@gmail.com>
+Copyright: 2017 Alixinne <alixinne@pm.me>
 License: MIT
 
 License: MIT

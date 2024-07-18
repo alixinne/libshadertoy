@@ -13,9 +13,9 @@ sudo apt-key adv --recv-keys --keyserver pool.sks-keyservers.net --recv 0xF35C41
 
 # Add repository to apt config
 #  Debian Buster
-sudo sh -c 'echo "deb https://dl.bintray.com/vtavernier/libshadertoy buster main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
+sudo sh -c 'echo "deb https://dl.bintray.com/alixinne/libshadertoy buster main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
 #  Ubuntu Bionic (18.04)
-sudo sh -c 'echo "deb https://dl.bintray.com/vtavernier/libshadertoy bionic main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
+sudo sh -c 'echo "deb https://dl.bintray.com/alixinne/libshadertoy bionic main" >/etc/apt/sources.list.d/libshadertoy-apt.list'
 
 # Update and install
 sudo apt update
@@ -28,7 +28,7 @@ To build the library from source, first clone the repository as well as its
 dependencies:
 
 ```bash
-git clone --recursive https://github.com/vtavernier/libshadertoy.git
+git clone --recursive https://github.com/alixinne/libshadertoy.git
 ```
 
 In order to compile the project, the following tools and libraries are required:

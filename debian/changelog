@@ -12,7 +12,7 @@ libshadertoy (1.0.0~rc7) unstable; urgency=medium
   * Update logging levels
   * Switch to GitHub
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Tue, 04 Jun 2019 13:57:03 +0200
+ -- Alixinne <alixinne@pm.me>  Tue, 04 Jun 2019 13:57:03 +0200
 
 libshadertoy (1.0.0~rc6) unstable; urgency=medium
 
@@ -25,7 +25,7 @@ libshadertoy (1.0.0~rc6) unstable; urgency=medium
   * Add support for Debian Buster
   * Drop support for libunwind
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Tue, 21 Aug 2018 16:30:57 +0200
+ -- Alixinne <alixinne@pm.me>  Tue, 21 Aug 2018 16:30:57 +0200
 
 libshadertoy (1.0.0~rc5) unstable; urgency=medium
 
@@ -45,13 +45,13 @@ libshadertoy (1.0.0~rc5) unstable; urgency=medium
   * Add example 20-geometry to demonstrate the use of geometry_buffer
   * Simplify shader template specification
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Mon, 23 Jul 2018 20:04:41 +0200
+ -- Alixinne <alixinne@pm.me>  Mon, 23 Jul 2018 20:04:41 +0200
 
 libshadertoy (1.0.0~rc4) unstable; urgency=medium
 
   * Fix build on Windows
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Tue, 29 May 2018 02:53:04 +0200
+ -- Alixinne <alixinne@pm.me>  Tue, 29 May 2018 02:53:04 +0200
 
 libshadertoy (1.0.0~rc3) unstable; urgency=medium
 
@@ -62,18 +62,18 @@ libshadertoy (1.0.0~rc3) unstable; urgency=medium
   * Default input filters to GL_NEAREST
   * Add "#define LIBSHADERTOY 1" to generated shaders
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Fri, 27 Apr 2018 14:09:51 +0200
+ -- Alixinne <alixinne@pm.me>  Fri, 27 Apr 2018 14:09:51 +0200
 
 libshadertoy (1.0.0~rc2) unstable; urgency=medium
 
   * Fix test 50-shadertoy
   * Simplify interface for swap_chain manipulation
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Wed, 25 Apr 2018 15:41:18 +0200
+ -- Alixinne <alixinne@pm.me>  Wed, 25 Apr 2018 15:41:18 +0200
 
 libshadertoy (1.0.0~rc1) unstable; urgency=medium
 
-  Vincent Tavernier <vince.tavernier@gmail.com>
+  Alixinne <alixinne@pm.me>
 
     * Add static version of the library
     * Add xscreensaver example
@@ -93,20 +93,20 @@ libshadertoy (1.0.0~rc1) unstable; urgency=medium
 
     * Add support for .exr files as input textures
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Thu, 08 Mar 2018 15:00:00 +0100
+ -- Alixinne <alixinne@pm.me>  Thu, 08 Mar 2018 15:00:00 +0100
 
 libshadertoy (0.1.8) unstable; urgency=medium
 
   * Add support for defining uniforms at run-time. See example15-uniforms
   * Fix buffer timing measuring extra geometry binding
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Wed, 21 Feb 2018 16:15:05 +0100
+ -- Alixinne <alixinne@pm.me>  Wed, 21 Feb 2018 16:15:05 +0100
 
 libshadertoy (0.1.7) unstable; urgency=medium
 
   * Add default parameter for buffer query from context
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Thu, 08 Feb 2018 13:15:00 +0200
+ -- Alixinne <alixinne@pm.me>  Thu, 08 Feb 2018 13:15:00 +0200
 
 libshadertoy (0.1.6) unstable; urgency=medium
 
@@ -116,38 +116,38 @@ libshadertoy (0.1.6) unstable; urgency=medium
   * Fix various bugs when building from source
   * Fix examples deleting GL context before Shadertoy context
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Thu, 08 Feb 2018 12:30:00 +0200
+ -- Alixinne <alixinne@pm.me>  Thu, 08 Feb 2018 12:30:00 +0200
 
 libshadertoy (0.1.5) unstable; urgency=medium
 
   * Update dependencies for Xenial and Stretch
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Wed, 07 Feb 2018 15:00:00 +0200
+ -- Alixinne <alixinne@pm.me>  Wed, 07 Feb 2018 15:00:00 +0200
 
 libshadertoy (0.1.4) unstable; urgency=medium
 
   * Add support for Ubuntu Trusty (14.04 LTS)
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Tue, 06 Feb 2018 02:05:00 +0200
+ -- Alixinne <alixinne@pm.me>  Tue, 06 Feb 2018 02:05:00 +0200
 
 libshadertoy (0.1.3) unstable; urgency=medium
 
   * Remove API version from .so basename, include SOVERSION definition
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Fri, 31 Nov 2017 13:45:00 +0200
+ -- Alixinne <alixinne@pm.me>  Fri, 31 Nov 2017 13:45:00 +0200
 
 libshadertoy (0.1.2) unstable; urgency=medium
 
   * Fix package build including the wrong version of libshadertoy.so
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Thu, 30 Nov 2017 18:00:00 +0200
+ -- Alixinne <alixinne@pm.me>  Thu, 30 Nov 2017 18:00:00 +0200
 
 libshadertoy (0.1.1) unstable; urgency=medium
 
   * Fix compatibility issues
   * Add missing documentation
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Thu, 30 Nov 2017 13:45:00 +0200
+ -- Alixinne <alixinne@pm.me>  Thu, 30 Nov 2017 13:45:00 +0200
 
 libshadertoy (0.1.0) unstable; urgency=medium
 
@@ -155,19 +155,19 @@ libshadertoy (0.1.0) unstable; urgency=medium
   * Remove dependency on oglplus and dependent packages, use raw OpenGL instead
   * Remove serialization code and associated Boost dependency
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Wed, 29 Nov 2017 17:05:00 +0200
+ -- Alixinne <alixinne@pm.me>  Wed, 29 Nov 2017 17:05:00 +0200
 
 libshadertoy (0.0.10) unstable; urgency=medium
 
   * Fix CMakeLists.txt include order
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Fri, 23 Oct 2017 15:00:00 +0200
+ -- Alixinne <alixinne@pm.me>  Fri, 23 Oct 2017 15:00:00 +0200
 
 libshadertoy (0.0.9) unstable; urgency=medium
 
   * Various bug fixes
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Fri, 23 Oct 2017 12:35:00 +0200
+ -- Alixinne <alixinne@pm.me>  Fri, 23 Oct 2017 12:35:00 +0200
 
 libshadertoy (0.0.8) unstable; urgency=medium
 
@@ -175,37 +175,37 @@ libshadertoy (0.0.8) unstable; urgency=medium
   * Fix global header not including the TextureEngine header
   * Fix buildpackage script
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Fri, 23 Oct 2017 10:55:00 +0200
+ -- Alixinne <alixinne@pm.me>  Fri, 23 Oct 2017 10:55:00 +0200
 
 libshadertoy (0.0.7) unstable; urgency=medium
 
   * Fix iResolution not being set on Initialize
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Fri, 13 Oct 2017 15:52:00 +0200
+ -- Alixinne <alixinne@pm.me>  Fri, 13 Oct 2017 15:52:00 +0200
 
 libshadertoy (0.0.6) unstable; urgency=medium
 
   * Fix iResolution not being updated on resolution change through Allocate
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Fri, 13 Oct 2017 14:05:00 +0200
+ -- Alixinne <alixinne@pm.me>  Fri, 13 Oct 2017 14:05:00 +0200
 
 libshadertoy (0.0.5) unstable; urgency=medium
 
   * Fix support for iGlobalTime as well as iTime
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Thu, 12 Oct 2017 15:00:00 +0200
+ -- Alixinne <alixinne@pm.me>  Thu, 12 Oct 2017 15:00:00 +0200
 
 libshadertoy (0.0.4) unstable; urgency=medium
 
   * Fix example 50-shadertoy
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Wed, 04 Oct 2017 17:43:00 +0200
+ -- Alixinne <alixinne@pm.me>  Wed, 04 Oct 2017 17:43:00 +0200
 
 libshadertoy (0.0.3) unstable; urgency=medium
 
   * Add dump program binary context options
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Wed, 04 Oct 2017 14:05:00 +0200
+ -- Alixinne <alixinne@pm.me>  Wed, 04 Oct 2017 14:05:00 +0200
 
 libshadertoy (0.0.2) unstable; urgency=medium
 
@@ -214,10 +214,10 @@ libshadertoy (0.0.2) unstable; urgency=medium
   * Add libjpeg support for loading progressive JPEGs
   * Fix: TextureEngine does not have any handlers registered by default
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Thu, 20 Jul 2017 11:33:20 +0200
+ -- Alixinne <alixinne@pm.me>  Thu, 20 Jul 2017 11:33:20 +0200
 
 libshadertoy (0.0.1) unstable; urgency=medium
 
   * Initial Release.
 
- -- Vincent Tavernier <vince.tavernier@gmail.com>  Tue, 11 Jul 2017 15:05:18 +0200
+ -- Alixinne <alixinne@pm.me>  Tue, 11 Jul 2017 15:05:18 +0200

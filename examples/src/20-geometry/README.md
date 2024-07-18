@@ -17,4 +17,4 @@ internet connection to download the Stanford bunny model and the code of
 
 ## Copyright
 
-libshadertoy - Vincent Tavernier <vince.tavernier@gmail.com>
+libshadertoy - Alixinne <alixinne@pm.me>

@@ -1,5 +1,5 @@
 /* shadertoy screenhack for xscreensaver
- * Copyright (c) 2018 Vincent Tavernier <vince.tavernier@gmail.com>
+ * Copyright (c) 2018 Alixinne <alixinne@pm.me>
  *
  * Based on the original hack dangerball by Jamie Zawinski <jwz@jwz.org>
  * for xscreensaver.
